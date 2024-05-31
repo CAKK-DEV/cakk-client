@@ -1,0 +1,35 @@
+// swift-tools-version: 5.9
+import PackageDescription
+
+#if TUIST
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let packageSettings = PackageSettings(
+  productTypes: [
+    "Lottie": .framework,
+    "SnapKit": .framework,
+    "Haptico": .framework,
+    "Moya": .framework,
+    "Swinject": .framework
+  ],
+  baseSettings: .settings(
+    configurations: [
+      .debug(name: .debug),
+      .release(name: .release)
+    ]
+  )
+)
+#endif
+
+let package = Package(
+  name: "Dependencies",
+  dependencies: [
+    .package(url: "https://github.com/airbnb/lottie-ios", from: "4.4.3"),
+    .package(url: "https://github.com/SnapKit/SnapKit", from: "5.7.1"),
+    .package(url: "https://github.com/iSapozhnik/Haptico", from: "1.0.1"),
+    .package(url: "https://github.com/Moya/Moya", from: "15.0.3"),
+    .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.22.2"),
+    .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8")
+  ]
+)
