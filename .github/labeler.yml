@@ -1,47 +1,58 @@
+# enable labeler on issues, prs, or both.
 enable:
   issues: false
   prs: true
 
+# 레이블을 성공적으로 붙이고 PR에 보낼 코멘트를 설정
+comments:
+  prs: |
+    Labeler has applied any labels matching special text in your title and description.
+    Please review the labels and make any necessary changes.
+
+# 레이블
 labels:
-  '🖌️ assets':
+  "🖌️ assets":
     include:
-      - '\bassets\b'
-  '🎊 breaking change':
+      - 'assets'
+  "🎊 breaking change":
     include:
-      - '\bbreaking change\b'
-  '🐞 bug':
+      - '^breaking\s?change\(.*\)$'
+  "🐞 fix":
     include:
-      - '\bbug\b'
-  '🧱 build':
+      - '^fix\(.*\)$'
+  "🧱 build":
     include:
-      - '\bbuild\b'
-  '🧹 chore':
+      - '^build\(.*\)$'
+  "🧹 chore":
     include:
-      - '\bchore\b'
-  '🤖 ci':
+      - '^chore\(.*\)$'
+  "🤖 ci":
     include:
-      - '\bci\b'
-  '🎨 design':
+      - '^ci\(.*\)$'
+  "🎨 design":
     include:
-      - '\bdesign\b'
-  '📓 documentation':
+      - '^design\(.*\)$'
+  "📓 documentation":
     include:
-      - '\bdocs\b'
-  '✨ feature':
+      - '^docs\(.*\)$'
+  "✨ feature":
     include:
-      - '\bfeat\b'
-  '⚡ performance':
+      - '^feat\(.*\)$'
+  "⚡ performance":
     include:
-      - '\bperf\b'
-  '🏗️ refactor':
+      - '^perf\(.*\)$'
+  "🏗️ refactor":
     include:
-      - '\brefactor\b'
-  '🗑️ remove':
+      - '^refactor\(.*\)$'
+  "🗑️ remove":
     include:
-      - '\bremove\b'
-  '✍️ rename':
+      - '^remove\(.*\)$'
+  "✍️ rename":
     include:
-      - '\brename\b'
-  '💈 style':
+      - '^rename\(.*\)$'
+  "💈 style":
     include:
-      - '\bstyle\b'
+      - '^style\(.*\)$'
+  "🧪 test":
+    include:
+      - '^test\(.*\)$'
