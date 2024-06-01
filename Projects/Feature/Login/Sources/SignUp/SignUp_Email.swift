@@ -74,7 +74,7 @@ struct SignUp_Email: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      CKButtonLargeStroked(title: "다음", action: {
+      Button {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         let animationDuration: CGFloat = 1
@@ -88,8 +88,11 @@ struct SignUp_Email: View {
             stepRouter.pushStep()
           }
         }
-      })
-      .frame(width: 148)
+      } label: {
+        Text("다음")
+          .frame(width: 148)
+      }
+      .buttonStyle(CAKKButtonStyle_Large())
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
       .padding(28)
