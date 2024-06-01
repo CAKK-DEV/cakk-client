@@ -40,7 +40,7 @@ struct Onboarding_WhatWeDo2: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      Button {
+      CKButtonLargeStroked(title: "다음", action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         let animationDuration: CGFloat = 1
@@ -54,14 +54,11 @@ struct Onboarding_WhatWeDo2: View {
             stepRouter.pushStep()
           }
         }
-      } label: {
-        Text("다음")
-          .frame(width: 148)
-      }
-      .buttonStyle(CAKKButtonStyle_Large())
+      })
+      .frame(width: 148)
       .largeButtonShadow()
-      .modifier(BouncyPressEffect())
       .padding(28)
+      .activeAfter(0.75)
     }
     .onAppear {
       withAnimation(.bouncy(duration: 1)) {

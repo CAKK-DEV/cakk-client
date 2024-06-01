@@ -24,12 +24,6 @@ extension View {
 // MARK: - Preview
 
 #Preview {
-  Button {
-    // no action
-  } label: {
-    Text("title")
-      .frame(minWidth: 120)
-  }
-  .buttonStyle(CAKKButtonStyle_Large())
-  .buttonStyle(PlainButtonStyle())
+  CKButtonLarge(title: "Title")
+    .buttonStyle(PlainButtonStyle())
 }
