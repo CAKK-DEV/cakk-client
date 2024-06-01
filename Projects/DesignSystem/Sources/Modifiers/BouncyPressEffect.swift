@@ -48,9 +48,8 @@ public struct BouncyPressEffect: ViewModifier {
     // no action
   } label: {
     Text("title")
-      .padding(12)
-      .foregroundStyle(.white)
-      .background(Color.blue)
+      .frame(width: 120)
   }
+  .buttonStyle(CAKKButtonStyle_Large())
   .modifier(BouncyPressEffect())
 }
