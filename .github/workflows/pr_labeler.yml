@@ -1,74 +1,18 @@
-name: "Pull Request Labeler"
+name: Labeler
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  issues:
+    types: [opened, edited, milestoned]
+  pull_request_target:
+    types: [opened]
 
 jobs:
+
   labeler:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Get list of commits
-      id: commits
-      run: echo "::set-output name=commits::$(git log --pretty=format:'%s' origin/${{ github.event.pull_request.base.ref }}..${{ github.event.pull_request.head.ref }} | tr '\n' ' ')"
-
-    - name: Apply labels based on commit messages
-      id: apply-labels
-      run: |
-        commits=${{ steps.commits.outputs.commits }}
-        echo "Commits: $commits"
-        labels=""
-        for commit in $commits; do
-          if [[ $commit == *"assets"* ]]; then
-            labels="$labels🖌️ assets,"
-          fi
-          if [[ $commit == *"breaking change"* ]]; then
-            labels="$labels🎊 breaking change,"
-          fi
-          if [[ $commit == *"bug"* ]]; then
-            labels="$labels🐞 bug,"
-          fi
-          if [[ $commit == *"build"* ]]; then
-            labels="$labels🧱 build,"
-          fi
-          if [[ $commit == *"chore"* ]]; then
-            labels="$labels🧹 chore,"
-          fi
-          if [[ $commit == *"ci"* ]]; then
-            labels="$labels🤖 ci,"
-          fi
-          if [[ $commit == *"design"* ]]; then
-            labels="$labels🎨 design,"
-          fi
-          if [[ $commit == *"docs"* ]]; then
-            labels="$labels📓 documentation,"
-          fi
-          if [[ $commit == *"feature"* ]]; then
-            labels="$labels✨ feature,"
-          fi
-          if [[ $commit == *"perf"* ]]; then
-            labels="$labels⚡ performance,"
-          fi
-          if [[ $commit == *"refactor"* ]]; then
-            labels="$labels🏗️ refactor,"
-          fi
-          if [[ $commit == *"remove"* ]]; then
-            labels="$labels🗑️ remove,"
-          fi
-          if [[ $commit == *"rename"* ]]; then
-            labels="$labels✍️ rename,"
-          fi
-          if [[ $commit == *"style"* ]]; then
-            labels="$labels💈 style,"
-          fi
-        done
-        labels=${labels%,} # Remove the trailing comma
-        echo "Labels to apply: $labels"
-        echo "::set-output name=labels::$labels"
-
-    - name: Set PR labels
-      uses: actions-ecosystem/action-add-labels@v1
-      with:
-        labels: ${{ steps.apply-labels.outputs.labels }}
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check Labels
+        id: labeler
+        uses: jimschubert/labeler-action@v2
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
