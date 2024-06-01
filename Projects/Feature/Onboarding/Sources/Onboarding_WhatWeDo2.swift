@@ -58,6 +58,7 @@ struct Onboarding_WhatWeDo2: View {
       .frame(width: 148)
       .largeButtonShadow()
       .padding(28)
+      .activeAfter(0.75)
     }
     .onAppear {
       withAnimation(.bouncy(duration: 1)) {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
 
 import DesignSystem
 import Router
@@ -71,6 +72,7 @@ struct OnboardingStep_Welcome: View {
       .frame(width: 148)
       .largeButtonShadow()
       .padding(.vertical, 28)
+      .activeAfter(1.5)
       // isShowing animation
       .opacity(isShowing ? 1.0 : 0)
       .animation(.easeInOut.delay(1.5), value: isShowing)

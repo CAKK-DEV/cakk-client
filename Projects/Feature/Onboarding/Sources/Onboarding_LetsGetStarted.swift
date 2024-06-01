@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
 
 import DesignSystem
 import Router
@@ -60,6 +61,7 @@ struct Onboarding_LetsGetStarted: View {
       .frame(width: 148)
       .largeButtonShadow()
       .padding(28)
+      .activeAfter(0.75)
       // idDisappearing animation
       .blur(radius: isDisappearing ? 100 : 0)
       .scaleEffect(isDisappearing ? 0.01: 1.0)
