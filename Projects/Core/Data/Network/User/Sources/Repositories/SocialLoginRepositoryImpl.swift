@@ -42,7 +42,14 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
         }
       }
-      .decode(type: DomainUser.SocialLoginResponse.self, decoder: JSONDecoder())
+      .decode(type: SocialLoginResponseDTO.self, decoder: JSONDecoder())
+      .tryMap { response in
+        guard let data = response.data else {
+          throw NetworkError.dataIsNil
+        }
+        
+        return data.toDomain()
+      }
       .mapError { error in
         if let networkError = error as? NetworkError {
           return networkError.toSocialLoginSignInError()
@@ -66,7 +73,14 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
         }
       }
-      .decode(type: DomainUser.SocialLoginResponse.self, decoder: JSONDecoder())
+      .decode(type: SocialLoginResponseDTO.self, decoder: JSONDecoder())
+      .tryMap { response in
+        guard let data = response.data else {
+          throw NetworkError.dataIsNil
+        }
+        
+        return data.toDomain()
+      }
       .mapError { error in
         if let networkError = error as? NetworkError {
           return networkError.toSocialLoginSignUpError()
