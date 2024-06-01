@@ -34,11 +34,8 @@ public final class SocialLoginSignInUseCaseImpl: SocialLoginSignInUseCase {
     repository.signIn(credential: credential)
       .handleEvents(receiveOutput: { [weak self] response in
         // 로그인 성공 후 결과값으로 받은 토큰들 저장
-        if let accessToken = response.data?.accessToken,
-           let refreshToken = response.data?.refreshToken {
-          self?.oauthTokenRepository.saveAccessToken(accessToken)
-          self?.oauthTokenRepository.saveRefreshToken(refreshToken)
-        }
+        self?.oauthTokenRepository.saveAccessToken(response.accessToken)
+        self?.oauthTokenRepository.saveRefreshToken(response.refreshToken)
       })
       .map { _ in }
       .eraseToAnyPublisher()

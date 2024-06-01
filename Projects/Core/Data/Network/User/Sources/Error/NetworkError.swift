@@ -12,6 +12,7 @@ public enum NetworkError: Error {
   case customServerError(ServerErrorCode, String)
   case unexpected(Error)
   case decodingError(Error)
+  case dataIsNil
   
   public enum ClientErrorCode: String {
     case notExistBearerSuffix = "1100"
