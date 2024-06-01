@@ -1,0 +1,58 @@
+# enable labeler on issues, prs, or both.
+enable:
+  issues: false
+  prs: true
+
+# 레이블을 성공적으로 붙이고 PR에 보낼 코멘트를 설정
+comments:
+  prs: |
+    Labeler has applied any labels matching special text in your title and description.
+    Please review the labels and make any necessary changes.
+
+# 레이블
+labels:
+  "🖌️ assets":
+    include:
+      - 'assets'
+  "🎊 breaking change":
+    include:
+      - '^breaking\s?change\(.*\)$'
+  "🐞 fix":
+    include:
+      - '^fix\(.*\)$'
+  "🧱 build":
+    include:
+      - '^build\(.*\)$'
+  "🧹 chore":
+    include:
+      - '^chore\(.*\)$'
+  "🤖 ci":
+    include:
+      - '^ci\(.*\)$'
+  "🎨 design":
+    include:
+      - '^design\(.*\)$'
+  "📓 documentation":
+    include:
+      - '^docs\(.*\)$'
+  "✨ feature":
+    include:
+      - '^feat\(.*\)$'
+  "⚡ performance":
+    include:
+      - '^perf\(.*\)$'
+  "🏗️ refactor":
+    include:
+      - '^refactor\(.*\)$'
+  "🗑️ remove":
+    include:
+      - '^remove\(.*\)$'
+  "✍️ rename":
+    include:
+      - '^rename\(.*\)$'
+  "💈 style":
+    include:
+      - '^style\(.*\)$'
+  "🧪 test":
+    include:
+      - '^test\(.*\)$'
