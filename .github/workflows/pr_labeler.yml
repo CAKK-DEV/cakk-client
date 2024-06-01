@@ -1,9 +1,7 @@
 name: Labeler
 on:
-  issues:
-    types: [opened, edited, milestoned]
   pull_request_target:
-    types: [opened]
+    types: [opened, ready_for_review]
 
 jobs:
 
