@@ -33,6 +33,7 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case serverError
     case loggedIn
     case newUser
+    case noKakaoAvailable
   }
   
   @Published private(set) var signUpState: SignUpState = .idle
@@ -226,7 +227,7 @@ extension SocialLoginViewModel {
           .store(in: &cancellables)
       }
     } else {
-      signInState = .failure
+      signInState = .noKakaoAvailable
     }
   }
 }

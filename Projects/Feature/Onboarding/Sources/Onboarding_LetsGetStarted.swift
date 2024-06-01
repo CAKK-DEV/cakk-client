@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
 
 import DesignSystem
 import Router
@@ -42,7 +43,7 @@ struct Onboarding_LetsGetStarted: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      Button {
+      CKButtonLargeStroked(title: "로그인", action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         let animationDuration: CGFloat = 2
@@ -56,14 +57,11 @@ struct Onboarding_LetsGetStarted: View {
             router.replace(with: OnboardingPublicDestination.login)
           }
         }
-      } label: {
-        Text("로그인")
-          .frame(width: 148)
-      }
-      .buttonStyle(CAKKButtonStyle_Large())
+      })
+      .frame(width: 148)
       .largeButtonShadow()
-      .modifier(BouncyPressEffect())
       .padding(28)
+      .activeAfter(0.75)
       // idDisappearing animation
       .blur(radius: isDisappearing ? 100 : 0)
       .scaleEffect(isDisappearing ? 0.01: 1.0)

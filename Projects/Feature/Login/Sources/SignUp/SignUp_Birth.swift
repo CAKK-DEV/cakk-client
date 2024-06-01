@@ -76,7 +76,7 @@ struct SignUp_Birth: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      Button {
+      CKButtonLargeStroked(title: "완료", action: {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         
         let animationDuration: CGFloat = 1
@@ -90,11 +90,8 @@ struct SignUp_Birth: View {
             stepRouter.pushStep()
           }
         }
-      } label: {
-        Text("완료")
-          .frame(width: 148)
-      }
-      .buttonStyle(CAKKButtonStyle_Large())
+      })
+      .frame(width: 148)
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
       .padding(28)

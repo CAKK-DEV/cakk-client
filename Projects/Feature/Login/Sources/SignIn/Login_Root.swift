@@ -112,27 +112,26 @@ struct Login_Root: View {
       }
     }
     .onChange(of: viewModel.signInState) { loginState in
-      switch loginState {
-      case .loading:
+      if loginState == .loading {
         LoadingManager.shared.startLoading()
+        return
+      }
+      
+      LoadingManager.shared.stopLoading()
+      
+      switch loginState {
       case .loggedIn:
-        LoadingManager.shared.stopLoading()
-        dismiss()
         router.replace(with: LoginPublicDestination.home)
       case .newUser:
-        LoadingManager.shared.stopLoading()
-        withoutAnimation {
-          stepRouter.pushStep()
-        }
+        stepRouter.pushStep()
       case .failure:
-        // alert
-        LoadingManager.shared.stopLoading()
+        showDialog(title: "로그인 실패", message: "로그인에 실패하였습니다.\n다시 시도해주세요.")
       case .serverError:
-        // alert
-        LoadingManager.shared.stopLoading()
+        showDialog(title: "서버 에러", message: "서버에 문제가 생겼어요🥲\n나중에 다시 시도해주세요.")
       case .appleSingInExpired:
-        LoadingManager.shared.stopLoading()
         isShowingAppleSignInExpiredAlert = true
+      case .noKakaoAvailable:
+        showDialog(title: "카카오 로그인 실패", message: "카카오톡이 설치되어있지 않아요.\n카카오톡 설치후 다시 시도해주세요.")
       default:
         break
       }
@@ -165,6 +164,13 @@ struct Login_Root: View {
         }
     }
     .modifier(BouncyPressEffect())
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func showDialog(title: String, message: String) {
+    DialogManager.shared.showDialog(title: title, message: message, primaryButtonTitle: "확인", primaryButtonAction: .cancel)
   }
 }
 

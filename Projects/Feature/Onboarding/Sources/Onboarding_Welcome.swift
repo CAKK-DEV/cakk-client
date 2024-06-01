@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
 
 import DesignSystem
 import Router
@@ -60,21 +61,18 @@ struct OnboardingStep_Welcome: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      Button {
+      CKButtonLargeStroked(title: "다음", action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         withAnimation {
           // ➡️ push step
           stepRouter.pushStep()
         }
-      } label: {
-        Text("다음")
-          .frame(width: 148)
-      }
-      .buttonStyle(CAKKButtonStyle_Large())
+      })
+      .frame(width: 148)
       .largeButtonShadow()
-      .modifier(BouncyPressEffect())
       .padding(.vertical, 28)
+      .activeAfter(1.5)
       // isShowing animation
       .opacity(isShowing ? 1.0 : 0)
       .animation(.easeInOut.delay(1.5), value: isShowing)
