@@ -7,6 +7,6 @@ let project = Project.app(
     "UILaunchStoryboardName": "LaunchScreen"
   ],
   dependencies: [
-    .project(target: "FeatureOnboarding", path: "../Onboarding")
+    Project.FeatureOnboarding
   ]
 )

@@ -4,12 +4,12 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureLogin",
   dependencies: [
-    .project(target: "SwiftUIUtil", path: "../../Shared/Util/SwiftUIUtil"),
-    .project(target: "DIContainer", path: "../../Shared/DIContainer"),
-    .project(target: "DesignSystem", path: "../../DesignSystem"),
-    .project(target: "Router", path: "../Router"),
-    .project(target: "NetworkUser", path: "../../Core/Data/Network/User"),
-    .project(target: "DomainUser", path: "../../Core/Domain/User"),
+    Project.SwiftUIUtil,
+    Project.DIContainer,
+    Project.DesignSystem,
+    Project.Router,
+    Project.NetworkUser,
+    Project.DomainUser,
     .external(name: "KakaoSDKCommon"),
     .external(name: "KakaoSDKAuth"),
     .external(name: "KakaoSDKUser"),

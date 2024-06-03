@@ -8,6 +8,6 @@ let project = Project.app(
     "BASE_URL": "$(BASE_URL)"
   ],
   dependencies: [
-    .project(target: "FeatureCakeShop", path: "../CakeShop")
+    Project.FeatureCakeShop
   ]
 )

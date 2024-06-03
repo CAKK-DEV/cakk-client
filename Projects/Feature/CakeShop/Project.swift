@@ -4,8 +4,8 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureCakeShop",
   dependencies: [
-    .project(target: "SwiftUIUtil", path: "../../Shared/Util/SwiftUIUtil"),
-    .project(target: "DIContainer", path: "../../Shared/DIContainer"),
+    Project.SwiftUIUtil,
+    Project.DIContainer,
     .project(target: "DesignSystem", path: "../../DesignSystem"),
     .project(target: "Router", path: "../Router"),
     .project(target: "NetworkCakeShop", path: "../../Core/Data/Network/CakeShop"),
