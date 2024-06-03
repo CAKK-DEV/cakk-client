@@ -43,7 +43,7 @@ struct Onboarding_LetsGetStarted: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      CKButtonLargeStroked(title: "로그인", action: {
+      CKButtonLargeStroked(title: "로그인", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         let animationDuration: CGFloat = 2
@@ -58,7 +58,6 @@ struct Onboarding_LetsGetStarted: View {
           }
         }
       })
-      .frame(width: 148)
       .largeButtonShadow()
       .padding(28)
       .activeAfter(0.75)

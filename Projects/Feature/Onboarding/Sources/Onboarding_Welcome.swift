@@ -61,7 +61,7 @@ struct OnboardingStep_Welcome: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      CKButtonLargeStroked(title: "다음", action: {
+      CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         withAnimation {
@@ -69,10 +69,9 @@ struct OnboardingStep_Welcome: View {
           stepRouter.pushStep()
         }
       })
-      .frame(width: 148)
       .largeButtonShadow()
       .padding(.vertical, 28)
-      .activeAfter(1.5)
+      .activeAfter(0.75)
       // isShowing animation
       .opacity(isShowing ? 1.0 : 0)
       .animation(.easeInOut.delay(1.5), value: isShowing)
