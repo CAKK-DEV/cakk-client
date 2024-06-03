@@ -60,6 +60,7 @@ extension Project {
       "UIInterfaceOrientationPortrait"
     ]
     mergedInfoPlist["UISupportedInterfaceOrientations"] = .array(supportedOrientations.map { .string($0) })
+    mergedInfoPlist["UIUserInterfaceStyle"] = .string("Light")
     
     let target = Target.target(
       name: name,
