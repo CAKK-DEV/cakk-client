@@ -112,7 +112,7 @@ struct SignUp_Gender: View {
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       
-      CKButtonLargeStroked(title: "다음", action: {
+      CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
         
         let animationDuration: CGFloat = 1
@@ -127,7 +127,6 @@ struct SignUp_Gender: View {
           }
         }
       })
-      .frame(width: 148)
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
       .padding(28)
