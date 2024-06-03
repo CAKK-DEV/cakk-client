@@ -15,16 +15,19 @@ public struct CKButtonLargeMessage: View {
   private let title: String
   private let message: String
   private let action: (() -> Void)?
+  private let fixedSize: CGFloat?
   
   
   // MARK: - Initializers
   
   public init(title: String,
               message: String,
+              fixedSize: CGFloat? = nil,
               action: (() -> Void)? = nil) {
     self.title = title
     self.message = message
     self.action = action
+    self.fixedSize = fixedSize
   }
   
   
@@ -34,23 +37,23 @@ public struct CKButtonLargeMessage: View {
     Button {
       action?()
     } label: {
-      RoundedRectangle(cornerRadius: 20)
-        .fill(DesignSystemAsset.black.swiftUIColor)
-        .overlay {
-          VStack(spacing: 5) {
-            Text(title)
-              .font(.pretendard(size: 17, weight: .bold))
-              .frame(maxWidth: .infinity)
-              .lineLimit(1)
-            
-            Text(message)
-              .font(.pretendard(size: 12, weight: .medium))
-              .frame(maxWidth: .infinity)
-              .lineLimit(1)
-          }
-          .foregroundStyle(Color.white)
-        }
-        .frame(minWidth: 40, maxHeight: 64)
+      VStack(spacing: 5) {
+        Text(title)
+          .font(.pretendard(size: 17, weight: .bold))
+          .lineLimit(1)
+        
+        Text(message)
+          .font(.pretendard(size: 12, weight: .medium))
+          .lineLimit(1)
+      }
+      .padding(.horizontal, 20)
+      .foregroundStyle(Color.white)
+      .frame(height: 64)
+      .background {
+        RoundedRectangle(cornerRadius: 20)
+          .fill(DesignSystemAsset.black.swiftUIColor)
+          .frame(width: fixedSize)
+      }
     }
     .modifier(BouncyPressEffect())
   }
@@ -59,5 +62,8 @@ public struct CKButtonLargeMessage: View {
 // MARK: - Preview
 
 #Preview {
-  CKButtonLargeMessage(title: "Title", message: "message")
+  VStack {
+    CKButtonLargeMessage(title: "Title", message: "self sizing")
+    CKButtonLargeMessage(title: "Title", message: "fixed size", fixedSize: 200)
+  }
 }

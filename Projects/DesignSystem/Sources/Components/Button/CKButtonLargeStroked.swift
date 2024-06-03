@@ -14,14 +14,17 @@ public struct CKButtonLargeStroked: View {
   
   private let title: String
   private let action: (() -> Void)?
+  private let fixedSize: CGFloat?
   
   
   // MARK: - Initializers
   
   public init(title: String,
+              fixedSize: CGFloat? = nil,
               action: (() -> Void)? = nil) {
     self.title = title
     self.action = action
+    self.fixedSize = fixedSize
   }
   
   
@@ -31,21 +34,22 @@ public struct CKButtonLargeStroked: View {
     Button {
       action?()
     } label: {
-      RoundedRectangle(cornerRadius: 20)
-        .fill(DesignSystemAsset.black.swiftUIColor)
-        .overlay {
-          Text(title)
-            .font(.pretendard(size: 20, weight: .bold))
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity)
-            .lineLimit(1)
-        }
-        .overlay {
+      Text(title)
+        .font(.pretendard(size: 20, weight: .bold))
+        .foregroundStyle(Color.white)
+        .padding(.horizontal, 20)
+        .frame(height: 64)
+        .lineLimit(1)
+        .background {
           RoundedRectangle(cornerRadius: 20)
-            .stroke(Color.white.opacity(0.24), lineWidth: 2)
-            .padding(1)
+            .fill(DesignSystemAsset.black.swiftUIColor)
+            .overlay {
+              RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.white.opacity(0.24), lineWidth: 2)
+                .padding(1)
+            }
+            .frame(width: fixedSize)
         }
-        .frame(minWidth: 40, maxHeight: 64)
     }
     .modifier(BouncyPressEffect())
   }
@@ -54,5 +58,8 @@ public struct CKButtonLargeStroked: View {
 // MARK: - Preview
 
 #Preview {
-  CKButtonLargeStroked(title: "Title")
+  VStack {
+    CKButtonLargeStroked(title: "Self sizing")
+    CKButtonLargeStroked(title: "Fixed size", fixedSize: 200)
+  }
 }
