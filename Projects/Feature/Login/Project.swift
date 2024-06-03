@@ -10,8 +10,6 @@ let project = Project.framework(
     .project(target: "Router", path: "../Router"),
     .project(target: "NetworkUser", path: "../../Core/Data/Network/User"),
     .project(target: "DomainUser", path: "../../Core/Domain/User"),
-    .external(name: "Moya"),
-    .external(name: "CombineMoya"),
     .external(name: "KakaoSDKCommon"),
     .external(name: "KakaoSDKAuth"),
     .external(name: "KakaoSDKUser"),
