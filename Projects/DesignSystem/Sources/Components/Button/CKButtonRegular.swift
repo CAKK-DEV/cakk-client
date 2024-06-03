@@ -14,14 +14,17 @@ public struct CKButtonRegular: View {
   
   private let title: String
   private let action: (() -> Void)?
+  private let fixedSize: CGFloat?
   
   
   // MARK: - Initializers
   
   public init(title: String,
+              fixedSize: CGFloat? = nil,
               action: (() -> Void)? = nil) {
     self.title = title
     self.action = action
+    self.fixedSize = fixedSize
   }
   
   
@@ -31,16 +34,17 @@ public struct CKButtonRegular: View {
     Button {
       action?()
     } label: {
-      RoundedRectangle(cornerRadius: 14)
-        .fill(DesignSystemAsset.black.swiftUIColor)
-        .overlay {
-          Text(title)
-            .font(.pretendard(size: 15, weight: .bold))
-            .foregroundStyle(Color.white)
-            .frame(maxWidth: .infinity)
-            .lineLimit(1)
+      Text(title)
+        .font(.pretendard(size: 15, weight: .bold))
+        .foregroundStyle(Color.white)
+        .padding(.horizontal, 20)
+        .frame(height: 52)
+        .lineLimit(1)
+        .background {
+          RoundedRectangle(cornerRadius: 14)
+            .fill(DesignSystemAsset.black.swiftUIColor)
+            .frame(width: fixedSize)
         }
-        .frame(minWidth: 40, maxHeight: 52)
     }
     .modifier(BouncyPressEffect())
   }
@@ -49,5 +53,8 @@ public struct CKButtonRegular: View {
 // MARK: - Preview
 
 #Preview {
-  CKButtonRegular(title: "Title")
+  VStack {
+    CKButtonRegular(title: "Self sizing")
+    CKButtonRegular(title: "Fixed size", fixedSize: 200)
+  }
 }
