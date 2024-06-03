@@ -24,9 +24,9 @@ let project = Project.app(
     ]
   ],
   dependencies: [
-    .project(target: "DIContainer", path: "../../Shared/DIContainer"),
-    .project(target: "FeatureLogin", path: "../Login"),
-    .project(target: "OAuthToken", path: "../../Core/Data/Token/OAuthToken")
+    Project.DIContainer,
+    Project.FeatureLogin,
+    Project.KeyChainOAuthToken
   ],
   entitlements: "App.entitlements"
 )
