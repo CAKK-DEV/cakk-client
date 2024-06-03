@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     .project(target: "DomainUser", path: "../../../Domain/User"),
     .project(target: "DomainOAuthToken", path: "../../../Domain/OAuthToken"),
-    .external(name: "Moya"),
-    .external(name: "CombineMoya")
+    .project(target: "MoyaUtil", path: "../../../../Shared/MoyaUtil")
   ]
 )

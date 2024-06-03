@@ -8,8 +8,6 @@
 import Foundation
 import Moya
 
-import DomainUser
-
 public final class MoyaLoggingPlugin: PluginType {
   
   // MARK: - Initializers

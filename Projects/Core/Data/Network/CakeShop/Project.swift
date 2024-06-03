@@ -8,7 +8,8 @@ let project = Project.framework(
   ],
   dependencies: [
     .project(target: "DomainCakeShop", path: "../../../Domain/CakeShop"),
-    .project(target: "DomainOAuthToken", path: "../../../Domain/OAuthToken")
+    .project(target: "DomainOAuthToken", path: "../../../Domain/OAuthToken"),
+    .project(target: "MoyaUtil", path: "../../../../Shared/MoyaUtil")
   ],
   supportsResources: true
 )
