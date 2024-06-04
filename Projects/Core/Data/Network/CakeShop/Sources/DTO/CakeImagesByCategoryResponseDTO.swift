@@ -9,13 +9,13 @@
 import Foundation
 
 struct CakeImagesByCategoryResponseDTO: Decodable {
-  let code: String
-  let message: String
+  let returnCode: String
+  let returnMessage: String
   let data: Data
   
   struct Data: Decodable {
     let cakeImages: [CakeImageDTO]
-    let lastCakeId: Int
+    let lastCakeId: Int?
     let size: Int
   }
 }
