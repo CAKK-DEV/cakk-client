@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-import FeatureLogin
+import FeatureUser
 
 import DomainUser
 import DomainOAuthToken

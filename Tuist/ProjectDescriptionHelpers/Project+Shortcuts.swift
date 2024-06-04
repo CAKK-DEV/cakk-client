@@ -79,9 +79,9 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/CakeShop")
   )
   
-  static let FeatureLogin: TargetDependency = .project(
-    target: "FeatureLogin",
-    path: .relativeToRoot("Projects/Feature/Login")
+  static let FeatureUser: TargetDependency = .project(
+    target: "FeatureUser",
+    path: .relativeToRoot("Projects/Feature/User")
   )
   
   static let FeatureOnboarding: TargetDependency = .project(
@@ -98,9 +98,9 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/CakeShopExample")
   )
   
-  static let ExampleLogin: TargetDependency = .project(
-    target: "ExampleLogin",
-    path: .relativeToRoot("Projects/Feature/LoginExample")
+  static let ExampleUser: TargetDependency = .project(
+    target: "ExampleUser",
+    path: .relativeToRoot("Projects/Feature/UserExample")
   )
   
   static let ExampleOnboarding: TargetDependency = .project(

@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "FeatureLogin",
+  name: "FeatureUser",
   dependencies: [
     Project.SwiftUIUtil,
     Project.DIContainer,

@@ -8,7 +8,7 @@
 import SwiftUI
 
 import FeatureOnboarding
-import FeatureLogin
+import FeatureUser
 import Router
 import DesignSystem
 import DIContainer

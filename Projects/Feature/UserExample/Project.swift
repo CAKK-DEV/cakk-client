@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.app(
-  name: "ExampleLogin",
+  name: "ExampleUser",
   infoPlist: [
     "UILaunchStoryboardName": "LaunchScreen",
     "BASE_URL": "$(BASE_URL)",
@@ -25,7 +25,7 @@ let project = Project.app(
   ],
   dependencies: [
     Project.DIContainer,
-    Project.FeatureLogin,
+    Project.FeatureUser,
     Project.KeyChainOAuthToken
   ],
   entitlements: "App.entitlements"
