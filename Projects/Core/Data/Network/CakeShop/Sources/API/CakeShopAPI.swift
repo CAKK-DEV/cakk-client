@@ -22,7 +22,7 @@ extension CakeShopAPI: TargetType {
   public var path: String {
     switch self {
     case .fetchCakeImages:
-      return "/cakes/search/categories"
+      return "/api/v1/cakes/search/categories"
     }
   }
   
