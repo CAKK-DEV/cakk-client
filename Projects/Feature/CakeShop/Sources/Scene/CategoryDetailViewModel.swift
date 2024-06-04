@@ -63,6 +63,7 @@ public final class CategoryDetailViewModel: ObservableObject {
     
     // 기존에 진행중이던 작업 취소
     currentFetchCancellable?.cancel()
+    currentFetchMoreCancellable?.cancel()
     
     currentFetchCancellable = useCase.execute(category: category, count: 10, lastCakeId: nil)
       .subscribe(on: DispatchQueue.global())
