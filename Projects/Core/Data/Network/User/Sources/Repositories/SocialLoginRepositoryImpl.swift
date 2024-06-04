@@ -34,21 +34,15 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
-          return response.data
-        case 400, 500:
-          let errorResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw NetworkError.customError(for: errorResponse.returnCode, message: errorResponse.returnMessage)
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          guard let data = decodedResponse.data else {
+            throw NetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          
+          return data.toDomain()
         default:
-          throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
+          throw NetworkError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
         }
-      }
-      .decode(type: SocialLoginResponseDTO.self, decoder: JSONDecoder())
-      .tryMap { response in
-        guard let data = response.data else {
-          throw NetworkError.dataIsNil
-        }
-        
-        return data.toDomain()
       }
       .mapError { error in
         if let networkError = error as? NetworkError {
@@ -65,21 +59,15 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
-          return response.data
-        case 400, 500:
-          let errorResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw NetworkError.customError(for: errorResponse.returnCode, message: errorResponse.returnMessage)
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          guard let data = decodedResponse.data else {
+            throw NetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          
+          return data.toDomain()
         default:
-          throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
+          throw NetworkError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
         }
-      }
-      .decode(type: SocialLoginResponseDTO.self, decoder: JSONDecoder())
-      .tryMap { response in
-        guard let data = response.data else {
-          throw NetworkError.dataIsNil
-        }
-        
-        return data.toDomain()
       }
       .mapError { error in
         if let networkError = error as? NetworkError {
