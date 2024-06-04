@@ -46,4 +46,13 @@ extension SocialLoginAPI: TargetType {
   public var headers: [String: String]? {
     return ["Content-Type": "application/json"]
   }
+  
+  public var sampleData: Data {
+    switch self {
+    case .signUp:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SignUpSampleResponse", withExtension: "json")!)
+    case .signIn:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SignInSampleResponse", withExtension: "json")!)
+    }
+  }
 }

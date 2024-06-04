@@ -7,5 +7,6 @@ let project = Project.framework(
     Project.DomainUser,
     Project.DomainOAuthToken,
     Project.MoyaUtil
-  ]
+  ],
+  supportsResources: true
 )
