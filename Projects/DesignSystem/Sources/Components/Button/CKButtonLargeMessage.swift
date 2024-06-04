@@ -41,10 +41,12 @@ public struct CKButtonLargeMessage: View {
         Text(title)
           .font(.pretendard(size: 17, weight: .bold))
           .lineLimit(1)
+          .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         
         Text(message)
           .font(.pretendard(size: 12, weight: .medium))
           .lineLimit(1)
+          .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
       }
       .padding(.horizontal, 20)
       .foregroundStyle(Color.white)
@@ -65,5 +67,6 @@ public struct CKButtonLargeMessage: View {
   VStack {
     CKButtonLargeMessage(title: "Title", message: "self sizing")
     CKButtonLargeMessage(title: "Title", message: "fixed size", fixedSize: 200)
+    CKButtonLargeMessage(title: "Title", message: "Infinity size", fixedSize: .infinity)
   }
 }

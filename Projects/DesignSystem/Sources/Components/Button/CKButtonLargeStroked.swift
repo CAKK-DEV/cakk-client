@@ -39,6 +39,7 @@ public struct CKButtonLargeStroked: View {
         .foregroundStyle(Color.white)
         .padding(.horizontal, 20)
         .frame(height: 64)
+        .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         .lineLimit(1)
         .background {
           RoundedRectangle(cornerRadius: 20)
@@ -61,5 +62,6 @@ public struct CKButtonLargeStroked: View {
   VStack {
     CKButtonLargeStroked(title: "Self sizing")
     CKButtonLargeStroked(title: "Fixed size", fixedSize: 200)
+    CKButtonLargeStroked(title: "Infinity size", fixedSize: .infinity)
   }
 }
