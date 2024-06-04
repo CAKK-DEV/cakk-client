@@ -19,6 +19,8 @@ struct OnboardingStep_Welcome: View {
   @State private var waveHand = false
   @State private var timer = Timer.publish(every: 0.31, on: .main, in: .common).autoconnect()
   @State private var isShowing = false
+  @State private var handPosition = CGSize.zero
+  @State private var isDragging = false
   
   @EnvironmentObject private var stepRouter: StepRouter
   
@@ -30,13 +32,14 @@ struct OnboardingStep_Welcome: View {
       VStack(spacing: 0) {
         Text("✋")
           .font(.system(size: 100))
+          .offset(x: handPosition.width, y: handPosition.height)
           // isShowing animation
           .scaleEffect(isShowing ? 1.0 : 0.2)
           .opacity(isShowing ? 1.0 : 0)
           .offset(x: 0, y: isShowing ? 0 : 40)
           .animation(.bouncy(duration: 0.67).delay(0.67), value: isShowing)
           // 👋 hand waving animation
-          .rotationEffect(.degrees(waveHand ? -30 : 10), anchor: .bottom)
+          .rotationEffect(.degrees(isDragging ? 0 : waveHand ? -30 : 10), anchor: .bottom)
           .animation(Animation.easeInOut(duration: 0.5).repeatForever(autoreverses: true), value: waveHand)
           .onReceive(timer) { _ in
             if waveHandCount < 4 { // 한 번에 총 4번 흔들도록 (2번 빠르게, 잠깐 멈춤, 2번 빠르게)
@@ -87,6 +90,24 @@ struct OnboardingStep_Welcome: View {
         self.timer.upstream.connect().cancel()
       }
     }
+    .background(Color.clear)
+    .gesture(
+      DragGesture()
+        .onChanged { value in
+          withAnimation {
+            isDragging = true
+          }
+          handPosition = value.translation
+        }
+        .onEnded { value in
+          withAnimation {
+            isDragging = false
+          }
+          withAnimation(.spring()) {
+            handPosition = .zero
+          }
+        }
+    )
   }
 }
 
