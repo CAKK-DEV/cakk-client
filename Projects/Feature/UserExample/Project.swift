@@ -26,7 +26,8 @@ let project = Project.app(
   dependencies: [
     Project.DIContainer,
     Project.FeatureUser,
-    Project.KeyChainOAuthToken
+    Project.KeyChainOAuthToken,
+    Project.NetworkUser
   ],
   entitlements: "App.entitlements"
 )
