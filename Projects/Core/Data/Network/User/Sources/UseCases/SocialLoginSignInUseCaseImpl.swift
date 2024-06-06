@@ -21,8 +21,10 @@ public final class SocialLoginSignInUseCaseImpl: SocialLoginSignInUseCase {
   
   // MARK: - Initializers
   
-  public init(socialLoginRepository: SocialLoginRepository,
-              userSession: UserSession) {
+  public init(
+    socialLoginRepository: SocialLoginRepository,
+    userSession: UserSession) 
+  {
     self.repository = socialLoginRepository
     self.userSession = userSession
   }

@@ -46,7 +46,10 @@ public final class CategoryDetailViewModel: ObservableObject {
   
   // MARK: - Initializers
   
-  public init(initialCategory: CakeCategory, diContainer: DIContainerProtocol) {
+  public init(
+    initialCategory: CakeCategory,
+    diContainer: DIContainerProtocol)
+  {
     _category = .init(initialValue: initialCategory)
     self.diContainer = diContainer
     self.useCase = diContainer.resolve(CakeImagesByCategoryUseCase.self)!

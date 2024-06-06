@@ -13,7 +13,11 @@ public struct CakeImage: Decodable, Identifiable {
   public let shopId: Int
   public let imageUrl: String
   
-  public init(id: Int, shopId: Int, imageUrl: String) {
+  public init(
+    id: Int,
+    shopId: Int,
+    imageUrl: String)
+  {
     self.id = id
     self.shopId = shopId
     self.imageUrl = imageUrl

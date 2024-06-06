@@ -19,9 +19,11 @@ public struct CKButtonLarge: View {
   
   // MARK: - Initializers
   
-  public init(title: String,
-              fixedSize: CGFloat? = nil,
-              action: (() -> Void)? = nil) {
+  public init(
+    title: String,
+    fixedSize: CGFloat? = nil,
+    action: (() -> Void)? = nil
+  ) {
     self.title = title
     self.action = action
     self.fixedSize = fixedSize

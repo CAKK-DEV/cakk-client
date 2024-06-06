@@ -30,8 +30,10 @@ public struct SignUpStepCoordinator: View {
   
   // MARK: - Initializers
   
-  public init(containsEmailInput: Bool = false,
-              onFinish: @escaping () -> Void) {
+  public init(
+    containsEmailInput: Bool = false,
+    onFinish: @escaping () -> Void)
+  {
     if containsEmailInput {
       _coordinator = .init(wrappedValue: StepRouter(steps: [
         AnyView(SignUp_Email()),
