@@ -27,9 +27,10 @@ let project = Project.app(
   ],
   dependencies: [
     Project.DIContainer,
-    Project.FeatureLogin,
+    Project.FeatureUser,
     Project.FeatureOnboarding,
-    Project.KeyChainOAuthToken
+    Project.KeyChainOAuthToken,
+    Project.UserDefaultsUserSession
   ],
   entitlements: "App.entitlements"
 )

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum Gender {
+public enum Gender: Codable, CaseIterable {
   case male
   case female
   case unknown

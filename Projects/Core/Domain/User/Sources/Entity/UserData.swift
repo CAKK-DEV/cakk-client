@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct UserData {
+public struct UserData: Codable {
   public var nickname: String
   public var email: String
   public var birthday: Date

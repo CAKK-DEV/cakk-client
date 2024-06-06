@@ -39,6 +39,7 @@ public struct CKButtonRegular: View {
         .foregroundStyle(Color.white)
         .padding(.horizontal, 20)
         .frame(height: 52)
+        .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         .lineLimit(1)
         .background {
           RoundedRectangle(cornerRadius: 14)
@@ -56,5 +57,6 @@ public struct CKButtonRegular: View {
   VStack {
     CKButtonRegular(title: "Self sizing")
     CKButtonRegular(title: "Fixed size", fixedSize: 200)
+    CKButtonRegular(title: "Infinity size", fixedSize: .infinity)
   }
 }

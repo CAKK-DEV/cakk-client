@@ -16,15 +16,15 @@ public final class SocialLoginSignInUseCaseImpl: SocialLoginSignInUseCase {
   // MARK: - Repository
   
   private let repository: SocialLoginRepository
-  private let oauthTokenRepository: OAuthTokenRepository
+  private let userSession: UserSession
   
   
   // MARK: - Initializers
   
   public init(socialLoginRepository: SocialLoginRepository,
-              oauthTokenRepository: OAuthTokenRepository) {
+              userSession: UserSession) {
     self.repository = socialLoginRepository
-    self.oauthTokenRepository = oauthTokenRepository
+    self.userSession = userSession
   }
   
 
@@ -34,8 +34,8 @@ public final class SocialLoginSignInUseCaseImpl: SocialLoginSignInUseCase {
     repository.signIn(credential: credential)
       .handleEvents(receiveOutput: { [weak self] response in
         // 로그인 성공 후 결과값으로 받은 토큰들 저장
-        self?.oauthTokenRepository.saveAccessToken(response.accessToken)
-        self?.oauthTokenRepository.saveRefreshToken(response.refreshToken)
+        self?.userSession.update(accessToken: response.accessToken)
+        self?.userSession.update(refreshToken: response.accessToken)
       })
       .map { _ in }
       .eraseToAnyPublisher()

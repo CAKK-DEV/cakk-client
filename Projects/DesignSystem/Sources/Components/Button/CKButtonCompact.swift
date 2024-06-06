@@ -40,6 +40,7 @@ public struct CKButtonCompact: View {
         .lineLimit(1)
         .padding(.horizontal, 20)
         .frame(height: 48)
+        .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         .background {
           RoundedRectangle(cornerRadius: 14)
             .fill(DesignSystemAsset.black.swiftUIColor)
@@ -57,5 +58,6 @@ public struct CKButtonCompact: View {
   VStack {
     CKButtonCompact(title: "Self sizing")
     CKButtonCompact(title: "Fixed size", fixedSize: 200)
+    CKButtonCompact(title: "Infinity size", fixedSize: .infinity)
   }
 }
