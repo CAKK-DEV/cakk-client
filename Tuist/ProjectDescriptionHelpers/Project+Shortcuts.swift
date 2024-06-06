@@ -23,6 +23,11 @@ public extension Project {
     target: "TokenUtil",
     path: .relativeToRoot("Projects/Shared/Util/TokenUtil")
   )
+
+  static let UIKitUtil: TargetDependency = .project(
+    target: "UIKitUtil",
+    path: .relativeToRoot("Projects/Shared/Util/UIKitUtil")
+  )
   
   
   // MARK: - DesignSystem
@@ -70,6 +75,14 @@ public extension Project {
     target: "OAuthToken",
     path: .relativeToRoot("Projects/Core/Data/KeyChain/OAuthToken")
   )
+
+  
+  // MARK: - Core / Data / UserDefaults
+
+  static let UserDefaultsUserSession: TargetDependency = .project(
+    target: "UserDefaultsUserSession",
+    path: .relativeToRoot("Projects/Core/Data/UserDefaults/UserSession")
+  )
   
   
   // MARK: - Feature
@@ -106,6 +119,14 @@ public extension Project {
   static let ExampleOnboarding: TargetDependency = .project(
     target: "ExampleOnboarding",
     path: .relativeToRoot("Projects/Feature/OnboardingExample")
+  )
+
+  
+  // MARK: - Feature / Preview Supports
+
+  static let PreviewSupportUser: TargetDependency = .project(
+    target: "PreviewSupportUser",
+    path: .relativeToRoot("Projects/Feature/UserPreviewSupport")
   )
   
   
