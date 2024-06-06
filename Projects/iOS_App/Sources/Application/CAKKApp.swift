@@ -96,7 +96,10 @@ struct CAKKApp: App {
     }
     
     diContainer.register(SocialLoginViewModel.self) { resolver in
-      SocialLoginViewModel(diContainer: resolver)
+      let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
+      let signUpUseCase = resolver.resolve(SocialLoginSignUpUseCase.self)!
+      return SocialLoginViewModel(signInUseCase: signInUseCase,
+                                  signUpUseCase: signUpUseCase)
     }
   }
   
