@@ -21,7 +21,11 @@ public class StepRouter: ObservableObject {
   
   // MARK: - Initializers
   
-  public init(steps: [AnyView], parentCoordinator: StepRouter? = nil, onFinish: (() -> Void)? = nil) {
+  public init(
+    steps: [AnyView],
+    parentCoordinator: StepRouter? = nil,
+    onFinish: (() -> Void)? = nil)
+  {
     self.steps = steps
     self.parentCoordinator = parentCoordinator
     self.onFinish = onFinish

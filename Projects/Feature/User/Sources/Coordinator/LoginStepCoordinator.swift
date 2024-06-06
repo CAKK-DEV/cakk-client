@@ -41,8 +41,10 @@ public struct LoginStepCoordinator: View {
   
   // MARK: - Initializers
   
-  public init(diContainer: DIContainerProtocol,
-              onFinish: @escaping () -> Void) {
+  public init(
+    diContainer: DIContainerProtocol,
+    onFinish: @escaping () -> Void) 
+  {
     self.diContainer = diContainer
     _stepRouter = .init(wrappedValue: StepRouter(steps: [AnyView(Login_Root())], onFinish: onFinish))
     _socialLoginViewModel = .init(wrappedValue: diContainer.resolve(SocialLoginViewModel.self)!)

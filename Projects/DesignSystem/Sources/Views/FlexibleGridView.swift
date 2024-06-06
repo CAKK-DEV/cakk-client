@@ -24,7 +24,13 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
   
   // MARK: - Initializers
   
-  public init(columns: Int = 2, verticalSpacing: CGFloat = 8, horizontalSpacing: CGFloat = 8, data: Data, @ViewBuilder content: @escaping (Data.Element) -> Content) {
+  public init(
+    columns: Int = 2,
+    verticalSpacing: CGFloat = 8,
+    horizontalSpacing: CGFloat = 8,
+    data: Data,
+    @ViewBuilder content: @escaping (Data.Element) -> Content)
+  {
     self.columns = columns
     self.verticalSpacing = verticalSpacing
     self.horizontalSpacing = horizontalSpacing

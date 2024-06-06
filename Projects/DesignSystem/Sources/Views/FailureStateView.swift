@@ -20,10 +20,12 @@ public struct FailureStateView: View {
   
   // MARK: - Initializers
   
-  public init(title: String,
-       buttonTitle: String? = nil,
-       buttonAction: (() -> Void)? = nil,
-       buttonDescription: String? = nil) {
+  public init(
+    title: String,
+    buttonTitle: String? = nil,
+    buttonAction: (() -> Void)? = nil,
+    buttonDescription: String? = nil) 
+  {
     self.title = title
     self.buttonTitle = buttonTitle
     self.buttonAction = buttonAction

@@ -24,12 +24,14 @@ public struct DialogView: View {
   
   // MARK: - Initializers
   
-  public init(title: String, 
-              message: String = "",
-              primaryButtonTitle: String,
-              primaryButtonAction: @escaping () -> Void,
-              secondaryButtonTitle: String? = nil,
-              secondaryButtonAction: (() -> Void)? = nil) {
+  public init(
+    title: String,
+    message: String = "",
+    primaryButtonTitle: String,
+    primaryButtonAction: @escaping () -> Void,
+    secondaryButtonTitle: String? = nil,
+    secondaryButtonAction: (() -> Void)? = nil) 
+  {
     self.title = title
     self.message = message
     self.primaryButtonTitle = primaryButtonTitle
