@@ -35,16 +35,16 @@ public struct LoginStepCoordinator: View {
                                                               Color(hex: "FE85A5"),
                                                               Color(hex: "FED6C3")
                                                              ])
-  @StateObject private var stepRouter = StepRouter(steps: [
-    AnyView(Login_Root())
-  ])
+  @StateObject private var stepRouter: StepRouter
   @StateObject private var socialLoginViewModel: SocialLoginViewModel
   
   
   // MARK: - Initializers
   
-  public init(diContainer: DIContainerProtocol) {
+  public init(diContainer: DIContainerProtocol,
+              onFinish: @escaping () -> Void) {
     self.diContainer = diContainer
+    _stepRouter = .init(wrappedValue: StepRouter(steps: [AnyView(Login_Root())], onFinish: onFinish))
     _socialLoginViewModel = .init(wrappedValue: diContainer.resolve(SocialLoginViewModel.self)!)
   }
   
@@ -59,21 +59,28 @@ public struct LoginStepCoordinator: View {
         .environmentObject(stepRouter)
         .environmentObject(socialLoginViewModel)
     }
-    .onChange(of: socialLoginViewModel.signInState) { loginState in
-      if loginState == .newUser {
-        if socialLoginViewModel.loginType == .kakao {
-          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: true)))
-        } else {
-          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: false)))
-        }
-      }
-    }
   }
 }
 
 
 // MARK: - Preview
 
-//#Preview {
-//  LoginStepCoordinator()
-//}
+#if DEBUG
+import PreviewSupportUser
+import DomainUser
+
+#Preview {
+  let diContainer = SwinjectDIContainer()
+  diContainer.register(SocialLoginSignInUseCase.self) { _ in
+    MockSocialLoginSignInUseCase()
+  }
+  diContainer.register(SocialLoginSignUpUseCase.self) { _ in
+    MockSocialLoginSignUpUseCase()
+  }
+  diContainer.register(SocialLoginViewModel.self) { _ in
+    SocialLoginViewModel(diContainer: diContainer)
+  }
+  
+  return LoginStepCoordinator(diContainer: diContainer, onFinish: { })
+}
+#endif

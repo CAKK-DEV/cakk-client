@@ -17,35 +17,6 @@ struct SignUp_Gender: View {
   @EnvironmentObject private var stepRouter: StepRouter
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
-  enum Gender: CaseIterable {
-    case woman
-    case man
-    case unknown
-    
-    var description: String {
-      switch self {
-      case .woman:
-        return "여성"
-      case .man:
-        return "남성"
-      case .unknown:
-        return "미공개"
-      }
-    }
-    
-    var icon: String {
-      switch self {
-      case .woman:
-        return "🙋‍♀️"
-      case .man:
-        return "🙋‍♂️"
-      case .unknown:
-        return "👤"
-      }
-    }
-  }
-  
   @State private var selectedGender: Gender?
   
   
@@ -75,25 +46,25 @@ struct SignUp_Gender: View {
           .blur(radius: isDisappearing ? 100 : 0)
         
         HStack(spacing: 24) {
-          genderSelectorItem(gender: .woman, isSelected: selectedGender == .woman)
+          genderSelectorItem(gender: .male, isSelected: selectedGender == .female)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
             .offset(x: isShowing ? 0 : 40)
             .animation(.spring.delay(0.3), value: isShowing)
             // isDisappearing animation
-            .offset(x: selectedGender == .woman && isDisappearing ? 100 : 0)
-            .offset(y: selectedGender == .woman && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+            .offset(x: selectedGender == .female && isDisappearing ? 100 : 0)
+            .offset(y: selectedGender == .female && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
           
-          genderSelectorItem(gender: .man, isSelected: selectedGender == .man)
+          genderSelectorItem(gender: .female, isSelected: selectedGender == .female)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
             .animation(.spring.delay(0.3), value: isShowing)
             // isDisappearing animation
-            .offset(y: selectedGender == .man && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+            .offset(y: selectedGender == .male && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
           
@@ -163,11 +134,11 @@ struct SignUp_Gender: View {
           .fill(selectedGender == gender ? .white : .white.opacity(0.4))
           .size(60)
           .overlay {
-            Text(gender.icon)
+            Text(gender.emoji)
               .font(.system(size: 27))
           }
         
-        Text(gender.description)
+        Text(gender.displayName)
           .font(.pretendard(size: 15, weight: .bold))
           .foregroundStyle(Color.black)
       }
@@ -179,15 +150,37 @@ struct SignUp_Gender: View {
 
 // MARK: - Preview
 
-struct SignUp_Gender_Preview: PreviewProvider {
-  static let coordinator = StepRouter(steps: [])
+#if DEBUG
+import PreviewSupportUser
+import DomainUser
+import DIContainer
+
+private struct PreviewContent: View {
+  @StateObject var stepRouter = StepRouter(steps: [])
+  @StateObject var viewModel: SocialLoginViewModel
   
-  static var previews: some View {
-    ZStack {
-      Color.gray.ignoresSafeArea()
-      
-      SignUp_Gender()
-        .environmentObject(coordinator)
+  init() {
+    let diContainer = SwinjectDIContainer()
+    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
+      MockSocialLoginSignInUseCase()
     }
+    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
+      MockSocialLoginSignUpUseCase()
+    }
+    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+  }
+
+  var body: some View {
+    SignUp_Gender()
+      .environmentObject(stepRouter)
+      .environmentObject(viewModel)
   }
 }
+
+#Preview {
+  ZStack {
+    Color.gray.ignoresSafeArea()
+    PreviewContent()
+  }
+}
+#endif

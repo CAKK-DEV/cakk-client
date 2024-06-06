@@ -116,15 +116,38 @@ struct SignUp_Email: View {
   }
 }
 
-struct SignUp_Email_Preview: PreviewProvider {
-  static let coordinator = StepRouter(steps: [])
+
+#if DEBUG
+import PreviewSupportUser
+import DomainUser
+import DIContainer
+
+private struct PreviewContent: View {
+  @StateObject var stepRouter = StepRouter(steps: [])
+  @StateObject var viewModel: SocialLoginViewModel
   
-  static var previews: some View {
-    ZStack {
-      Color.gray.ignoresSafeArea()
-      
-      SignUp_Email()
-        .environmentObject(coordinator)
+  init() {
+    let diContainer = SwinjectDIContainer()
+    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
+      MockSocialLoginSignInUseCase()
     }
+    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
+      MockSocialLoginSignUpUseCase()
+    }
+    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+  }
+
+  var body: some View {
+    SignUp_Email()
+      .environmentObject(stepRouter)
+      .environmentObject(viewModel)
   }
 }
+
+#Preview {
+  ZStack {
+    Color.gray.ignoresSafeArea()
+    PreviewContent()
+  }
+}
+#endif

@@ -77,7 +77,7 @@ struct Login_Root: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         Button {
-          router.replace(with: LoginPublicDestination.home)
+          stepRouter.pushStep()
         } label: {
           Text("로그인 없이 둘러보기")
             .font(.system(size: 15, weight: .bold))
@@ -121,9 +121,19 @@ struct Login_Root: View {
       
       switch loginState {
       case .loggedIn:
-        router.replace(with: LoginPublicDestination.home)
-      case .newUser:
         stepRouter.pushStep()
+      case .newUser:
+        if viewModel.loginType == .kakao {
+          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: true, onFinish: {
+            stepRouter.pushStep()
+          })))
+        } else {
+          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: false, onFinish: {
+            stepRouter.pushStep()
+          })))
+        }
+        stepRouter.pushStep()
+        
       case .failure:
         showDialog(title: "로그인 실패", message: "로그인에 실패하였습니다.\n다시 시도해주세요.")
       case .serverError:
@@ -175,19 +185,40 @@ struct Login_Root: View {
 }
 
 
-// MARK: - Preview
+#if DEBUG
 
-//struct Onboarding_Login_Preview: PreviewProvider {
-//  static let coordinator = StepRouter(steps: [])
-//  static let router = Router()
-//  
-//  static var previews: some View {
-//    ZStack {
-//      Color.gray.ignoresSafeArea()
-//      
-//      Login_Root()
-//        .environmentObject(coordinator)
-//        .environmentObject(router)
-//    }
-//  }
-//}
+import PreviewSupportUser
+import DomainUser
+import DIContainer
+
+private struct PreviewContent: View {
+  @StateObject var parentCoordinator = StepRouter(steps: [])
+  @StateObject var viewModel: SocialLoginViewModel
+  
+  init() {
+    let diContainer = SwinjectDIContainer()
+    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
+      MockSocialLoginSignInUseCase()
+    }
+    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
+      MockSocialLoginSignUpUseCase()
+    }
+    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+  }
+
+  var body: some View {
+    ZStack {
+      Color.gray.ignoresSafeArea()
+      
+      Login_Root()
+        .environmentObject(parentCoordinator)
+        .environmentObject(viewModel)
+    }
+  }
+}
+
+#Preview {
+  PreviewContent()
+}
+#endif
+

@@ -30,20 +30,21 @@ public struct SignUpStepCoordinator: View {
   
   // MARK: - Initializers
   
-  public init(containsEmailInput: Bool = false) {
+  public init(containsEmailInput: Bool = false,
+              onFinish: @escaping () -> Void) {
     if containsEmailInput {
       _coordinator = .init(wrappedValue: StepRouter(steps: [
         AnyView(SignUp_Email()),
         AnyView(SignUp_Gender()),
         AnyView(SignUp_Birth()),
         AnyView(SignUp_Processing())
-      ]))
+      ], onFinish: onFinish))
     } else {
       _coordinator = .init(wrappedValue: StepRouter(steps: [
         AnyView(SignUp_Gender()),
         AnyView(SignUp_Birth()),
         AnyView(SignUp_Processing())
-      ]))
+      ], onFinish: onFinish))
     }
   }
   
@@ -64,15 +65,34 @@ public struct SignUpStepCoordinator: View {
 
 // MARK: - Preview
 
-struct SignUpView_Preview: PreviewProvider {
-  static var parentCoordinator = StepRouter(steps: [])
+#if DEBUG
+import PreviewSupportUser
+import DomainUser
+import DIContainer
+
+private struct PreviewContent: View {
+  @StateObject var parentCoordinator = StepRouter(steps: [])
+  @StateObject var viewModel: SocialLoginViewModel
   
-  static var previews: some View {
-    ZStack {
-      Color.gray
-      
-      SignUpStepCoordinator()
-        .environmentObject(parentCoordinator)
+  init() {
+    let diContainer = SwinjectDIContainer()
+    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
+      MockSocialLoginSignInUseCase()
     }
+    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
+      MockSocialLoginSignUpUseCase()
+    }
+    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+  }
+  
+  var body: some View {
+    SignUpStepCoordinator(onFinish: { })
+      .environmentObject(parentCoordinator)
+      .environmentObject(viewModel)
   }
 }
+
+#Preview {
+  PreviewContent()
+}
+#endif

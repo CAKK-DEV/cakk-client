@@ -7,13 +7,14 @@
 //
 
 import SwiftUI
+import DesignSystem
+
 import Router
 
 struct SignUp_Processing: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @EnvironmentObject private var stepRouter: StepRouter
   @EnvironmentObject private var viewModel: SocialLoginViewModel
   
@@ -37,10 +38,25 @@ struct SignUp_Processing: View {
     }
     .onChange(of: viewModel.signUpState) { state in
       switch state {
-      case .failure, .serverError:
-        stepRouter.popToRoot()
+      case .failure:
+        DialogManager.shared.showDialog(
+          title: "회원가입 실패",
+          message: "회원가입에 실패하였어요.\n다시 시도해주세요.",
+          primaryButtonTitle: "확인",
+          primaryButtonAction: .custom({
+            stepRouter.popToRoot()
+          }))
+      case .serverError:
+        DialogManager.shared.showDialog(
+          title: "서버 에러",
+          message: "서버에러가 발생했어요.\n나중에 다시 시도해주세요.",
+          primaryButtonTitle: "확인",
+          primaryButtonAction: .custom({
+            stepRouter.popToRoot()
+          }))
       case .success:
-        router.replace(with: LoginPublicDestination.home)
+        print("signed in")
+        stepRouter.pushStep()
       default:
         break
       }
@@ -51,9 +67,37 @@ struct SignUp_Processing: View {
 
 // MARK: - Preview
 
-//#Preview {
-//  ZStack {
-//    Color.gray.ignoresSafeArea()
-//    SignUp_Processing()
-//  }
-//}
+#if DEBUG
+import PreviewSupportUser
+import DomainUser
+import DIContainer
+
+private struct PreviewContent: View {
+  @StateObject var stepRouter = StepRouter(steps: [])
+  @StateObject var viewModel: SocialLoginViewModel
+  
+  init() {
+    let diContainer = SwinjectDIContainer()
+    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
+      MockSocialLoginSignInUseCase()
+    }
+    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
+      MockSocialLoginSignUpUseCase()
+    }
+    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+  }
+
+  var body: some View {
+    SignUp_Processing()
+      .environmentObject(stepRouter)
+      .environmentObject(viewModel)
+  }
+}
+
+#Preview {
+  ZStack {
+    Color.gray.ignoresSafeArea()
+    PreviewContent()
+  }
+}
+#endif
