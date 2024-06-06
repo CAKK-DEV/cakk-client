@@ -11,17 +11,17 @@ import Combine
 
 import DomainUser
 
-struct MockSocialLoginSignUseCase: SocialLoginSignInUseCase {
+public struct MockSocialLoginSignInUseCase: SocialLoginSignInUseCase {
+  private let delay: TimeInterval
+  
+  public init(delay: TimeInterval = 1.0) {
+    self.delay = delay
+  }
+  
   public func execute(credential: DomainUser.CredentialData) -> AnyPublisher<Void, DomainUser.SocialLoginSignInError> {
     return Just(())
-      .delay(for: 1, scheduler: RunLoop.main)
+      .delay(for: .seconds(delay), scheduler: RunLoop.main)
       .setFailureType(to: DomainUser.SocialLoginSignInError.self)
       .eraseToAnyPublisher()
-  }
-}
-
-public extension SocialLoginSignInUseCase {
-  static var mock: SocialLoginSignInUseCase {
-    return MockSocialLoginSignUseCase()
   }
 }
