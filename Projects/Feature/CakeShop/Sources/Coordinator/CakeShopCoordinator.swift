@@ -40,8 +40,9 @@ public struct CakeShopCoordinator: View {
           switch destination {
           case .categoryDetail(let initialCategory):
             diContainer.register(CategoryDetailViewModel.self) { resolver in
-              CategoryDetailViewModel(initialCategory: initialCategory,
-                                      diContainer: diContainer)
+              let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
+              return CategoryDetailViewModel(initialCategory: initialCategory,
+                                             useCase: useCase)
             }
             return CakeCategoryDetailView(diContainer: diContainer)
               .navigationBarBackButtonHidden()
