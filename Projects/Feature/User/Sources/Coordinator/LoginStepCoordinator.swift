@@ -79,8 +79,11 @@ import DomainUser
   diContainer.register(SocialLoginSignUpUseCase.self) { _ in
     MockSocialLoginSignUpUseCase()
   }
-  diContainer.register(SocialLoginViewModel.self) { _ in
-    SocialLoginViewModel(diContainer: diContainer)
+  diContainer.register(SocialLoginViewModel.self) { resolver in
+    let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
+    let signUpUseCase = resolver.resolve(SocialLoginSignUpUseCase.self)!
+    return SocialLoginViewModel(signInUseCase: signInUseCase,
+                         signUpUseCase: signUpUseCase)
   }
   
   return LoginStepCoordinator(diContainer: diContainer, onFinish: { })

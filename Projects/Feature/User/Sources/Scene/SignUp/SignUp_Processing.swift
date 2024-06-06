@@ -70,21 +70,15 @@ struct SignUp_Processing: View {
 #if DEBUG
 import PreviewSupportUser
 import DomainUser
-import DIContainer
 
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
   
   init() {
-    let diContainer = SwinjectDIContainer()
-    diContainer.register(SocialLoginSignInUseCase.self) { resolver in
-      MockSocialLoginSignInUseCase()
-    }
-    diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
-      MockSocialLoginSignUpUseCase()
-    }
-    _viewModel = .init(wrappedValue: SocialLoginViewModel(diContainer: diContainer))
+    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
+                                         signUpUseCase: MockSocialLoginSignUpUseCase())
+    _viewModel = .init(wrappedValue: viewModel)
   }
 
   var body: some View {

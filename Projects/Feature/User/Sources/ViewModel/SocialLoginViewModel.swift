@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 import DomainUser
-import DIContainer
 
 import AuthenticationServices
 import KakaoSDKUser
@@ -65,9 +64,12 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
   
   // MARK: - Initializers
   
-  public init(diContainer: DIContainerProtocol) {
-    self.signInUseCase = diContainer.resolve(SocialLoginSignInUseCase.self)!
-    self.signUpUseCase = diContainer.resolve(SocialLoginSignUpUseCase.self)!
+  public init(
+    signInUseCase: SocialLoginSignInUseCase,
+    signUpUseCase: SocialLoginSignUpUseCase)
+  {
+    self.signInUseCase = signInUseCase
+    self.signUpUseCase = signUpUseCase
   }
 }
 

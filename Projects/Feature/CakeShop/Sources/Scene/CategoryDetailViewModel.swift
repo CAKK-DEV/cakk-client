@@ -15,13 +15,9 @@ import Combine
 import Combine
 import SwiftUI
 
-import DIContainer
-
 public final class CategoryDetailViewModel: ObservableObject {
   
   // MARK: - Properties
-  
-  private let diContainer: DIContainerProtocol
   
   @Published var category: CakeCategory {
     didSet {
@@ -48,11 +44,10 @@ public final class CategoryDetailViewModel: ObservableObject {
   
   public init(
     initialCategory: CakeCategory,
-    diContainer: DIContainerProtocol)
-  {
+    useCase: CakeImagesByCategoryUseCase
+  ) {
     _category = .init(initialValue: initialCategory)
-    self.diContainer = diContainer
-    self.useCase = diContainer.resolve(CakeImagesByCategoryUseCase.self)!
+    self.useCase = useCase
     
     fetchCakeImages()
   }

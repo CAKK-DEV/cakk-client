@@ -126,8 +126,9 @@ import Moya
   }
   
   diContainer.register(CategoryDetailViewModel.self) { resolver in
-    CategoryDetailViewModel(initialCategory: .threeDimensional,
-                            diContainer: diContainer)
+    let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
+    return CategoryDetailViewModel(initialCategory: .threeDimensional,
+                            useCase: useCase)
   }
   
   return CakeCategoryDetailView(diContainer: diContainer)

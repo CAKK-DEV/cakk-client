@@ -40,7 +40,8 @@ struct ExampleApp: App {
   
   private func setupDiContainer() {
     diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
-      MoyaProvider<CakeShopAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) },
+                                plugins: [MoyaLoggingPlugin()])
     }
     
     diContainer.register(CakeImagesByCategoryRepository.self) { resolver in
