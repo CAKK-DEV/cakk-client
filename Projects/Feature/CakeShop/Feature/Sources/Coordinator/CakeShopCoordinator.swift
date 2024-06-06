@@ -56,10 +56,9 @@ public struct CakeShopCoordinator: View {
 
 
 // MARK: - Preview
+
 #if DEBUG
-import DomainCakeShop
-import NetworkCakeShop
-import Moya
+import PreviewSupportCakeShop
 
 struct CakeShopCoordinator_Preview: PreviewProvider {
   struct ContentView: View {
@@ -68,17 +67,8 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
     
     init() {
       diContainer = Container()
-      
-      diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
-        MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 2) })
-      }
-      
-      diContainer.register(CakeImagesByCategoryRepository.self) { resolver in
-        CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
-      }
-      
-      diContainer.register(CakeImagesByCategoryUseCase.self) { resolver in
-        CakeImagesByCategoryUseCaseImpl(repository: resolver.resolve(CakeImagesByCategoryRepository.self)!)
+      diContainer.register(CakeImagesByCategoryUseCase.self) { _ in
+        MockCakeImagesByCategoryUseCase()
       }
     }
     

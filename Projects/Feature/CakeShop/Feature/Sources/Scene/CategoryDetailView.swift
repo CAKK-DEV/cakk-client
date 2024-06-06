@@ -106,29 +106,30 @@ struct CakeCategoryDetailView: View {
 // MARK: - Preview
 
 #if DEBUG
-import DomainCakeShop
-import NetworkCakeShop
-import Moya
+import PreviewSupportCakeShop
+
+// Success scenario
+#Preview {
+  let diContainer = Container()
+  
+  diContainer.register(CategoryDetailViewModel.self) { resolver in
+    let useCase = MockCakeImagesByCategoryUseCase()
+    return CategoryDetailViewModel(initialCategory: .threeDimensional,
+                                   useCase: useCase)
+  }
+  
+  return CakeCategoryDetailView(diContainer: diContainer)
+}
+
+// Failure scenario
 
 #Preview {
   let diContainer = Container()
   
-  diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
-    MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 2) })
-  }
-  
-  diContainer.register(CakeImagesByCategoryRepository.self) { resolver in
-    CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
-  }
-  
-  diContainer.register(CakeImagesByCategoryUseCase.self) { resolver in
-    CakeImagesByCategoryUseCaseImpl(repository: resolver.resolve(CakeImagesByCategoryRepository.self)!)
-  }
-  
   diContainer.register(CategoryDetailViewModel.self) { resolver in
-    let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
+    let useCase = MockCakeImagesByCategoryUseCase(scenario: .failure)
     return CategoryDetailViewModel(initialCategory: .threeDimensional,
-                            useCase: useCase)
+                                   useCase: useCase)
   }
   
   return CakeCategoryDetailView(diContainer: diContainer)
