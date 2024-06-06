@@ -5,12 +5,12 @@ let project = Project.framework(
   name: "FeatureUser",
   dependencies: [
     Project.SwiftUIUtil,
-    Project.DIContainer,
     Project.DesignSystem,
     Project.Router,
     Project.DomainUser,
     Project.UIKitUtil,
     Project.PreviewSupportUser,
+    .external(name: "Swinject"),
     .external(name: "KakaoSDKCommon"),
     .external(name: "KakaoSDKAuth"),
     .external(name: "KakaoSDKUser"),

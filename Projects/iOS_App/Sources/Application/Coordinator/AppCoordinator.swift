@@ -11,7 +11,7 @@ import FeatureOnboarding
 import FeatureUser
 import Router
 import DesignSystem
-import DIContainer
+import Swinject
 
 // MARK: - Destinations
 
@@ -54,7 +54,7 @@ struct AppCoordinator: View {
   
   // MARK: - Properties
   
-  private let diConatiner: DIContainerProtocol
+  private let diConatiner: Container
   @StateObject private var router = Router()
   
   @State private var root: RootDestination = .home
@@ -62,7 +62,7 @@ struct AppCoordinator: View {
   
   // MARK: - Initializers
   
-  init(diContainer: DIContainerProtocol) {
+  init(diContainer: Container) {
     self.diConatiner = diContainer
   }
   

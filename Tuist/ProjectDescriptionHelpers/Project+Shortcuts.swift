@@ -4,11 +4,6 @@ public extension Project {
   
   // MARK: - Shared
   
-  static let DIContainer: TargetDependency = .project(
-    target: "DIContainer",
-    path: .relativeToRoot("Projects/Shared/DIContainer")
-  )
-  
   static let MoyaUtil: TargetDependency = .project(
     target: "MoyaUtil",
     path: .relativeToRoot("Projects/Shared/Util/MoyaUtil")

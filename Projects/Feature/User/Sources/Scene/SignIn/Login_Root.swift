@@ -9,7 +9,6 @@ import SwiftUI
 
 import DesignSystem
 import Router
-import DIContainer
 
 import SwiftUIUtil
 

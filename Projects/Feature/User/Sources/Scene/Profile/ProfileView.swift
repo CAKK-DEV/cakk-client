@@ -12,7 +12,6 @@ import DesignSystem
 import SwiftUIUtil
 
 import Router
-import DIContainer
 
 import DomainUser
 

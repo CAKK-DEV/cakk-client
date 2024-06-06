@@ -11,7 +11,7 @@ import Router
 
 import DomainCakeShop
 
-import DIContainer
+import Swinject
 
 enum Destination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
@@ -22,12 +22,12 @@ public struct CakeShopCoordinator: View {
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  private let diContainer: DIContainerProtocol
+  private let diContainer: Container
   
   
   // MARK: - Initializers
   
-  public init(diContainer: DIContainerProtocol) {
+  public init(diContainer: Container) {
     self.diContainer = diContainer
   }
   
@@ -43,7 +43,8 @@ public struct CakeShopCoordinator: View {
               let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
               return CategoryDetailViewModel(initialCategory: initialCategory,
                                              useCase: useCase)
-            }
+            }.inObjectScope(.transient)
+            
             return CakeCategoryDetailView(diContainer: diContainer)
               .navigationBarBackButtonHidden()
               .environmentObject(router)
@@ -63,10 +64,10 @@ import Moya
 struct CakeShopCoordinator_Preview: PreviewProvider {
   struct ContentView: View {
     @StateObject private var router = Router()
-    private let diContainer: DIContainerProtocol
+    private let diContainer: Container
     
     init() {
-      diContainer = SwinjectDIContainer()
+      diContainer = Container()
       
       diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
         MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 2) })

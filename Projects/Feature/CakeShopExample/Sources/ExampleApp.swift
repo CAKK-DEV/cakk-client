@@ -7,7 +7,7 @@ import FeatureCakeShop
 import Moya
 import MoyaUtil
 
-import DIContainer
+import Swinject
 import Router
 
 @main
@@ -16,13 +16,13 @@ struct ExampleApp: App {
   // MARK: - Properties
   
   @StateObject var router = Router()
-  private var diContainer: DIContainerProtocol
+  private var diContainer: Container
   
   
   // MARK: - Initializers
   
   init() {
-    diContainer = SwinjectDIContainer()
+    diContainer = Container()
     setupDiContainer()
   }
   

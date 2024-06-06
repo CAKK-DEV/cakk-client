@@ -24,10 +24,10 @@ let project = Project.app(
     ]
   ],
   dependencies: [
-    Project.DIContainer,
     Project.FeatureUser,
     Project.KeyChainOAuthToken,
-    Project.NetworkUser
+    Project.NetworkUser,
+    .external(name: "Swinject")
   ],
   entitlements: "App.entitlements"
 )

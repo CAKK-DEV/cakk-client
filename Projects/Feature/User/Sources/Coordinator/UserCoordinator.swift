@@ -9,7 +9,7 @@
 import SwiftUI
 
 import Router
-import DIContainer
+import Swinject
 
 enum Destination {
   case editProfile
@@ -31,12 +31,12 @@ public struct UserCoordinator: View {
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  private let diContainer: DIContainerProtocol
+  private let diContainer: Container
   
 
   // MARK: - Initializers
   
-  public init(diContainer: DIContainerProtocol) {
+  public init(diContainer: Container) {
     self.diContainer = diContainer
   }
   
@@ -74,10 +74,10 @@ import DomainUser
 private struct PreviewContent: View {
   
   @StateObject private var router = Router()
-  let diContainer: DIContainerProtocol
+  let diContainer: Container
   
   init() {
-    diContainer = SwinjectDIContainer()
+    diContainer = Container()
     
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       MockSocialLoginSignInUseCase()
