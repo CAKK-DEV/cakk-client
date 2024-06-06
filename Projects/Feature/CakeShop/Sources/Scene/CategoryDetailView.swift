@@ -9,19 +9,19 @@
 import SwiftUI
 import DesignSystem
 
-import DIContainer
+import Swinject
 
 struct CakeCategoryDetailView: View {
   
   // MARK: - Properties
   
-  private let diContainer: DIContainerProtocol
+  private let diContainer: Container
   @StateObject private var viewModel: CategoryDetailViewModel
   
   
   // MARK: - Initializers
   
-  init(diContainer: DIContainerProtocol) {
+  init(diContainer: Container) {
     self.diContainer = diContainer
     let viewModel = diContainer.resolve(CategoryDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -111,7 +111,7 @@ import NetworkCakeShop
 import Moya
 
 #Preview {
-  let diContainer = SwinjectDIContainer()
+  let diContainer = Container()
   
   diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
     MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 2) })

@@ -4,6 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "PreviewSupportUser",
   dependencies: [
-    Project.DomainUser
+    Project.DomainUser,
+    .external(name: "Swinject")
   ]
 )

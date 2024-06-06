@@ -18,8 +18,6 @@ import DomainOAuthToken
 import NetworkUser
 import OAuthToken
 
-import DIContainer
-
 import Moya
 import MoyaUtil
 
@@ -29,19 +27,21 @@ import KakaoSDKAuth
 
 import UserDefaultsUserSession
 
+import Swinject
+
 @main
 struct ExampleApp: App {
   
   // MARK: - Properties
   
   @StateObject var router = Router()
-  private var diContainer: DIContainerProtocol
+  private var diContainer: Container
   
   
   // MARK: - Initializers
   
   init() {
-    diContainer = SwinjectDIContainer()
+    diContainer = Container()
     initKakaoSDK()
     setupDIContainer()
   }
@@ -101,8 +101,11 @@ struct ExampleApp: App {
     }
     
     diContainer.register(SocialLoginViewModel.self) { resolver in
-      SocialLoginViewModel(diContainer: resolver)
-    }
+      let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
+      let signUpUseCase = resolver.resolve(SocialLoginSignUpUseCase.self)!
+      return SocialLoginViewModel(signInUseCase: signInUseCase,
+                                  signUpUseCase: signUpUseCase)
+    }.inObjectScope(.transient)
   }
   
   private func initKakaoSDK() {

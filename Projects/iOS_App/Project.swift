@@ -26,11 +26,11 @@ let project = Project.app(
     ]
   ],
   dependencies: [
-    Project.DIContainer,
     Project.FeatureUser,
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
-    Project.UserDefaultsUserSession
+    Project.UserDefaultsUserSession,
+    .external(name: "Swinject")
   ],
   entitlements: "App.entitlements"
 )
