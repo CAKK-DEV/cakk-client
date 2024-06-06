@@ -75,7 +75,9 @@ struct AppCoordinator: View {
       case .onboarding:
         OnboardingStepCoordinator()
       case .login:
-        LoginStepCoordinator(diContainer: diConatiner)
+        LoginStepCoordinator(diContainer: diConatiner) {
+          router.replace(with: RootDestination.home)
+        }
       case .home:
         Text("Home")
       }
@@ -83,14 +85,18 @@ struct AppCoordinator: View {
     .navigationDestination(for: Destination.self) { destination in
       switch destination {
       case Destination.login:
-        LoginStepCoordinator(diContainer: diConatiner)
+        LoginStepCoordinator(diContainer: diConatiner, onFinish: {
+          router.navigateBack()
+        })
       }
     }
     .fullScreenCover(item: $router.presentedSheet, content: { destination in
       if let destination = destination.destination as? SheetDestination {
         switch destination {
         case .login:
-          LoginStepCoordinator(diContainer: diConatiner)
+          LoginStepCoordinator(diContainer: diConatiner, onFinish: {
+            router.presentedSheet = nil
+          })
         }
       }
     })

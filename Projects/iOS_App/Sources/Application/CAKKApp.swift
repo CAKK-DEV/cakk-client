@@ -25,6 +25,8 @@ import GoogleSignIn
 import KakaoSDKCommon
 import KakaoSDKAuth
 
+import UserDefaultsUserSession
+
 @main
 struct CAKKApp: App {
   
@@ -83,14 +85,14 @@ struct CAKKApp: App {
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
       let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
       return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          oauthTokenRepository: oauthTokenRepository)
+                                          userSession: UserDefaultsUserSession.shared)
     }
     
     diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
       let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
       return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          oauthTokenRepository: oauthTokenRepository)
+                                          userSession: UserDefaultsUserSession.shared)
     }
     
     diContainer.register(SocialLoginViewModel.self) { resolver in
