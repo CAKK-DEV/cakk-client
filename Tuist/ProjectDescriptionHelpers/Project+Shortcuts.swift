@@ -84,17 +84,17 @@ public extension Project {
   
   static let FeatureCakeShop: TargetDependency = .project(
     target: "FeatureCakeShop",
-    path: .relativeToRoot("Projects/Feature/CakeShop")
+    path: .relativeToRoot("Projects/Feature/CakeShop/Feature")
   )
   
   static let FeatureUser: TargetDependency = .project(
     target: "FeatureUser",
-    path: .relativeToRoot("Projects/Feature/User")
+    path: .relativeToRoot("Projects/Feature/User/Feature")
   )
   
   static let FeatureOnboarding: TargetDependency = .project(
     target: "FeatureOnboarding",
-    path: .relativeToRoot("Projects/Feature/Onboarding")
+    path: .relativeToRoot("Projects/Feature/Onboarding/Feature")
   )
   
   
@@ -103,17 +103,17 @@ public extension Project {
   
   static let ExampleCakeShop: TargetDependency = .project(
     target: "ExampleCakeShop",
-    path: .relativeToRoot("Projects/Feature/CakeShopExample")
+    path: .relativeToRoot("Projects/Feature/CakeShop/Example")
   )
   
   static let ExampleUser: TargetDependency = .project(
     target: "ExampleUser",
-    path: .relativeToRoot("Projects/Feature/UserExample")
+    path: .relativeToRoot("Projects/Feature/User/Example")
   )
   
   static let ExampleOnboarding: TargetDependency = .project(
     target: "ExampleOnboarding",
-    path: .relativeToRoot("Projects/Feature/OnboardingExample")
+    path: .relativeToRoot("Projects/Feature/Onboarding/Example")
   )
 
   
@@ -121,7 +121,7 @@ public extension Project {
 
   static let PreviewSupportUser: TargetDependency = .project(
     target: "PreviewSupportUser",
-    path: .relativeToRoot("Projects/Feature/UserPreviewSupport")
+    path: .relativeToRoot("Projects/Feature/User/PreviewSupport")
   )
   
   
