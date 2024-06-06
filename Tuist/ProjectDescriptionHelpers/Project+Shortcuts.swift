@@ -100,7 +100,6 @@ public extension Project {
   
   // MARK: - Feature / Example
   
-  
   static let ExampleCakeShop: TargetDependency = .project(
     target: "ExampleCakeShop",
     path: .relativeToRoot("Projects/Feature/CakeShop/Example")
@@ -122,6 +121,11 @@ public extension Project {
   static let PreviewSupportUser: TargetDependency = .project(
     target: "PreviewSupportUser",
     path: .relativeToRoot("Projects/Feature/User/PreviewSupport")
+  )
+
+  static let PreviewSupportCakeShop: TargetDependency = .project(
+    target: "PreviewSupportCakeShop",
+    path: .relativeToRoot("Projects/Feature/CakeShop/PreviewSupport")
   )
   
   
