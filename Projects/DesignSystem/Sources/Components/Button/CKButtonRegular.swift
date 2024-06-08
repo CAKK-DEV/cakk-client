@@ -48,6 +48,7 @@ public struct CKButtonRegular: View {
             .fill(DesignSystemAsset.black.swiftUIColor)
             .frame(width: fixedSize)
         }
+        .frame(width: fixedSize)
     }
     .modifier(BouncyPressEffect())
   }

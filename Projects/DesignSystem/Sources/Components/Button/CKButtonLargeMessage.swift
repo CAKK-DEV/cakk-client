@@ -58,6 +58,7 @@ public struct CKButtonLargeMessage: View {
           .fill(DesignSystemAsset.black.swiftUIColor)
           .frame(width: fixedSize)
       }
+      .frame(width: fixedSize)
     }
     .modifier(BouncyPressEffect())
   }
