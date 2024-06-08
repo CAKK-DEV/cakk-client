@@ -8,6 +8,7 @@ let project = Project.app(
     "BASE_URL": "$(BASE_URL)"
   ],
   dependencies: [
-    Project.FeatureCakeShop
+    Project.FeatureCakeShop,
+    Project.NetworkCakeShop
   ]
 )
