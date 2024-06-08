@@ -9,12 +9,14 @@
 import SwiftUI
 import DesignSystem
 
+import Router
 import Swinject
 
 struct CakeCategoryDetailView: View {
   
   // MARK: - Properties
   
+  @EnvironmentObject private var router: Router
   private let diContainer: Container
   @StateObject private var viewModel: CategoryDetailViewModel
   
@@ -73,15 +75,17 @@ struct CakeCategoryDetailView: View {
                       .clipShape(RoundedRectangle(cornerRadius: 14))
                       .onAppear {
                         if cakeImage.id == viewModel.cakeImages.last?.id {
-                          print("show more")
                           viewModel.fetchMoreCakeImages()
                         }
                       }
                   default:
                     RoundedRectangle(cornerRadius: 14)
                       .fill(DesignSystemAsset.gray20.swiftUIColor)
-                      .frame(height: CGFloat.random(in: 150...300))
+                      .aspectRatio(3/4, contentMode: .fit)
                   }
+                }
+                .onTapGesture {
+                  router.presentSheet(destination: SheetDestination.quickInfo(shopId: cakeImage.shopId, cakeImageUrl: cakeImage.imageUrl))
                 }
               }
               
