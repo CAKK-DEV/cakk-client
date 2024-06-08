@@ -13,6 +13,18 @@ import DomainCakeShop
 
 import Swinject
 
+
+enum SheetDestination: Identifiable {
+  case quickInfo(shopId: Int, cakeImageUrl: String)
+  
+  var id: String {
+    switch self {
+    case .quickInfo:
+      return "ImageDetail"
+    }
+  }
+}
+
 enum Destination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
 }
@@ -36,6 +48,20 @@ public struct CakeShopCoordinator: View {
   public var body: some View {
     NavigationStack(path: $router.navPath) {
       CakeShopHomeView()
+        .sheet(item: $router.presentedSheet) { sheet in
+          if let destination = sheet.destination as? SheetDestination {
+            switch destination {
+            case .quickInfo(let shopId, let cakeImageUrl):
+              let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
+                let useCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
+                return CakeShopQuickInfoViewModel(shopId: shopId,
+                                                  cakeImageUrl: cakeImageUrl,
+                                                  useCase: useCase)
+              }
+              CakeShopQuickInfoView(diContainer: diContainer)
+            }
+          }
+        }
         .navigationDestination(for: Destination.self) { destination in
           switch destination {
           case .categoryDetail(let initialCategory):
@@ -69,6 +95,9 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
       diContainer = Container()
       diContainer.register(CakeImagesByCategoryUseCase.self) { _ in
         MockCakeImagesByCategoryUseCase()
+      }
+      diContainer.register(CakeShopQuickInfoUseCase.self) { _ in
+        MockCakeShopQuickInfoUseCase()
       }
     }
     

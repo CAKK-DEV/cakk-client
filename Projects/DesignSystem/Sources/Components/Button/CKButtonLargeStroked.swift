@@ -53,6 +53,7 @@ public struct CKButtonLargeStroked: View {
             }
             .frame(width: fixedSize)
         }
+        .frame(width: fixedSize)
     }
     .modifier(BouncyPressEffect())
   }

@@ -49,6 +49,7 @@ public struct CKButtonCompact: View {
             .frame(minWidth: 40)
             .frame(width: fixedSize)
         }
+        .frame(width: fixedSize)
     }
     .modifier(BouncyPressEffect())
   }

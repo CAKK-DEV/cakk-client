@@ -48,8 +48,16 @@ struct ExampleApp: App {
       CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
     }
     
+    diContainer.register(CakeShopQuickInfoRepository.self) { resolver in
+      CakeShopQuickInfoRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
+    }
+    
     diContainer.register(CakeImagesByCategoryUseCase.self) { resolver in
       CakeImagesByCategoryUseCaseImpl(repository: resolver.resolve(CakeImagesByCategoryRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopQuickInfoUseCase.self) { resolver in
+      CakeShopQuickInfoUseCaseImpl(repository: resolver.resolve(CakeShopQuickInfoRepository.self)!)
     }
   }
 }

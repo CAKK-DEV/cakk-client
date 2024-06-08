@@ -30,6 +30,8 @@ let project = Project.app(
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserDefaultsUserSession,
+    Project.NetworkUser,
+    Project.NetworkCakeShop,
     .external(name: "Swinject")
   ],
   entitlements: "App.entitlements"
