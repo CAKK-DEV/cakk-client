@@ -117,7 +117,8 @@ struct SignUp_Email: View {
 }
 
 
-#if DEBUG
+// MARK: - Preview
+
 import PreviewSupportUser
 import DomainUser
 
@@ -144,4 +145,3 @@ private struct PreviewContent: View {
     PreviewContent()
   }
 }
-#endif

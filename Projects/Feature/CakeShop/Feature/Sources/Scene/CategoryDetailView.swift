@@ -109,7 +109,6 @@ struct CakeCategoryDetailView: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportCakeShop
 
 // Success scenario
@@ -138,4 +137,3 @@ import PreviewSupportCakeShop
   
   return CakeCategoryDetailView(diContainer: diContainer)
 }
-#endif

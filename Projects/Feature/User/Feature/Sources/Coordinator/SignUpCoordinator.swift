@@ -67,7 +67,6 @@ public struct SignUpStepCoordinator: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportUser
 import DomainUser
 
@@ -91,4 +90,3 @@ private struct PreviewContent: View {
 #Preview {
   PreviewContent()
 }
-#endif

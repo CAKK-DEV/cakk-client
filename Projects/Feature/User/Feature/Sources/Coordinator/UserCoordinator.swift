@@ -67,7 +67,6 @@ public struct UserCoordinator: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportUser
 import DomainUser
 
@@ -104,4 +103,3 @@ private struct PreviewContent: View {
 #Preview {
   PreviewContent()
 }
-#endif
