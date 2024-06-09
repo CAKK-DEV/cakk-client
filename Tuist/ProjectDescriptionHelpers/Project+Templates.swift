@@ -8,7 +8,7 @@ extension Project {
   private static let organizationName = "cakk"
   
   public static func app(name: String,
-                         iOSTargetVersion: String = "16.0",
+                         iOSTargetVersion: String = "16.4",
                          infoPlist: [String : Plist.Value] = [:],
                          dependencies: [TargetDependency] = [],
                          packages: [Package] = [],
@@ -27,7 +27,7 @@ extension Project {
   }
   
   public static func framework(name: String,
-                               iOSTargetVersion: String = "16.0",
+                               iOSTargetVersion: String = "16.4",
                                infoPlist: [String : Plist.Value] = [:],
                                dependencies: [TargetDependency] = [],
                                supportsResources: Bool = false,
