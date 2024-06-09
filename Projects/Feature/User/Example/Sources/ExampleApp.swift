@@ -73,8 +73,11 @@ struct ExampleApp: App {
   
   private func setupDIContainer() {
     diContainer.register(MoyaProvider<SocialLoginAPI>.self) { _ in
+      #if STUB
       MoyaProvider<SocialLoginAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
-//      MoyaProvider<SocialLoginAPI>(plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<SocialLoginAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
     }
     
     diContainer.register(SocialLoginRepository.self) { resolver in
