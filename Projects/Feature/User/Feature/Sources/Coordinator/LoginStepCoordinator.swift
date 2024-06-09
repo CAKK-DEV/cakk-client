@@ -68,7 +68,6 @@ public struct LoginStepCoordinator: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportUser
 import DomainUser
 
@@ -89,4 +88,3 @@ import DomainUser
   
   return LoginStepCoordinator(diContainer: diContainer, onFinish: { })
 }
-#endif

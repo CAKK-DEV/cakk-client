@@ -8,7 +8,7 @@ extension Project {
   private static let organizationName = "cakk"
   
   public static func app(name: String,
-                         iOSTargetVersion: String = "16.0",
+                         iOSTargetVersion: String = "16.4",
                          infoPlist: [String : Plist.Value] = [:],
                          dependencies: [TargetDependency] = [],
                          packages: [Package] = [],
@@ -23,11 +23,22 @@ extension Project {
     return Project(name: name,
                    organizationName: organizationName,
                    packages: packages,
-                   targets: targets)
+                   settings: .settings(configurations: [
+                    .build(.prod, name: name),
+                    .build(.stub, name: name),
+                    .build(.release, name: name)
+                   ]),
+                   targets: targets,
+                   schemes: [
+                    .makeScheme(.prod, name: name),
+                    .makeScheme(.stub, name: name),
+                    .makeScheme(.release, name: name)
+                   ]
+    )
   }
   
   public static func framework(name: String,
-                               iOSTargetVersion: String = "16.0",
+                               iOSTargetVersion: String = "16.4",
                                infoPlist: [String : Plist.Value] = [:],
                                dependencies: [TargetDependency] = [],
                                supportsResources: Bool = false,
@@ -42,6 +53,11 @@ extension Project {
     return Project(name: name,
                    organizationName: organizationName,
                    packages: packages,
+                   settings: .settings(configurations: [
+                    .build(.prod, name: name),
+                    .build(.stub, name: name),
+                    .build(.release, name: name)
+                   ]),
                    targets: targets)
   }
 }
@@ -76,8 +92,9 @@ extension Project {
       settings: .init(.settings(
         base: ["DEVELOPMENT_TEAM": "YOUR_TEM_ID"],
         configurations: [
-          .debug(name: "Debug", xcconfig: .relativeToRoot("XCConfig/Secrets.xcconfig")),
-          .release(name: "Release", xcconfig: .relativeToRoot("XCConfig/Secrets.xcconfig"))
+          .build(.prod, name: name),
+          .build(.stub, name: name),
+          .build(.release, name: name)
         ],
         defaultSettings: .recommended)
       )
@@ -103,8 +120,9 @@ extension Project {
       settings: .init(.settings(
         base: ["DEVELOPMENT_TEAM": "YOUR_TEAM_ID"],
         configurations: [
-          .debug(name: "Debug", xcconfig: .relativeToRoot("XCConfig/Secrets.xcconfig")),
-          .release(name: "Release", xcconfig: .relativeToRoot("XCConfig/Secrets.xcconfig"))
+          .build(.prod, name: name),
+          .build(.release, name: name),
+          .build(.stub, name: name)
         ],
         defaultSettings: .recommended)
       )

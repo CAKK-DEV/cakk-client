@@ -11,12 +11,14 @@ let packageSettings = PackageSettings(
     "SnapKit": .framework,
     "Haptico": .framework,
     "Moya": .framework,
+    "CombineMoya": .framework,
     "Swinject": .framework
   ],
   baseSettings: .settings(
     configurations: [
-      .debug(name: .debug),
-      .release(name: .release)
+      .build(.stub),
+      .build(.prod),
+      .build(.release)
     ]
   )
 )

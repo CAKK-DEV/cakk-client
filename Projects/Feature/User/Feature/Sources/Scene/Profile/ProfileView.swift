@@ -151,8 +151,6 @@ public struct ProfileView: View {
 
 // MARK: - Preview
 
-#if DEBUG
 #Preview {
   ProfileView()
 }
-#endif

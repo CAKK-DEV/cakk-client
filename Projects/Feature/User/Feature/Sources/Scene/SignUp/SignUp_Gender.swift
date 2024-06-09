@@ -150,7 +150,6 @@ struct SignUp_Gender: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportUser
 import DomainUser
 
@@ -177,4 +176,3 @@ private struct PreviewContent: View {
     PreviewContent()
   }
 }
-#endif

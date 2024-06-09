@@ -83,7 +83,6 @@ public struct CakeShopCoordinator: View {
 
 // MARK: - Preview
 
-#if DEBUG
 import PreviewSupportCakeShop
 
 struct CakeShopCoordinator_Preview: PreviewProvider {
@@ -113,4 +112,3 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
     ContentView()
   }
 }
-#endif
