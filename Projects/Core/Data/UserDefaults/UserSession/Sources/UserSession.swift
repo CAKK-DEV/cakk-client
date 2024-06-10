@@ -1,44 +1,45 @@
 //
-//  UserDefaultsUserSession.swift
-//  UserDefaultsUserSession
+//  UserSession.swift
+//  UserSession
 //
 //  Created by 이승기 on 6/5/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
+import SwiftUI
+
 import DomainUser
 import OAuthToken
 
-public final class UserDefaultsUserSession: UserSession {
+public final class UserSession: ObservableObject {
   
   // MARK: - Initializers
   
-  private init() { }
+  private init() { 
+    setupInitialValues()
+  }
   
   
   // MARK: - Properties
   
-  public static var shared = UserDefaultsUserSession()
+  public static var shared = UserSession()
   private let oauthToken = OAuthTokenRepositoryImpl()
   
   
   // MARK: - UserDefaults Keys
   
-  private let isLoggedInKey = "com.cakk.user.is_logged_in"
+  private let isSignedInKey = "com.cakk.user.is_signed_in"
   private let userDataKey = "com.cakk.user.user_data"
+  private let loginProviderKey = "com.cakk.user.login_provider"
   
   
   // MARK: - Login State
   
-  public var isSignedIn: Bool {
-    get {
-      UserDefaults.standard.bool(forKey: isLoggedInKey)
-    }
-  }
-  
+  @Published public var isSignedIn: Bool = false
   public func update(signInState isSignedIn: Bool) {
-    UserDefaults.standard.set(isSignedIn, forKey: isLoggedInKey)
+    UserDefaults.standard.set(isSignedIn, forKey: isSignedInKey)
+    self.isSignedIn = isSignedIn
   }
   
   
@@ -92,5 +93,30 @@ public final class UserDefaultsUserSession: UserSession {
   
   public func update(refreshToken: String) {
     oauthToken.saveAccessToken(refreshToken)
+  }
+  
+  
+  // MARK: - Login Provider
+  
+  public var loginProvider: LoginProvider? {
+    get {
+      if let rawValue = UserDefaults.standard.value(forKey: loginProviderKey) as? Int {
+        return LoginProvider(rawValue: rawValue)
+      } else {
+        return nil
+      }
+    }
+  }
+  
+  public func update(loginProvider: LoginProvider) {
+    UserDefaults.standard.set(loginProvider.rawValue, forKey: loginProviderKey)
+  }
+  
+  
+  
+  // MARK: - Private Methods
+  
+  private func setupInitialValues() {
+    isSignedIn = UserDefaults.standard.bool(forKey: isSignedInKey)
   }
 }
