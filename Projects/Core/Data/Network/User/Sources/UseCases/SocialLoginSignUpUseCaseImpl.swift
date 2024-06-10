@@ -12,22 +12,19 @@ import Moya
 import DomainUser
 import DomainOAuthToken
 
+import UserSession
+
 public final class SocialLoginSignUpUseCaseImpl: SocialLoginSignUpUseCase {
   
   // MARK: - Properties
   
   private let socialLoginRepository: SocialLoginRepository
-  private let userSession: UserSession
   
   
   // MARK: - Initializers
   
-  public init(
-    socialLoginRepository: SocialLoginRepository,
-    userSession: UserSession) 
-  {
+  public init(socialLoginRepository: SocialLoginRepository) {
     self.socialLoginRepository = socialLoginRepository
-    self.userSession = userSession
   }
   
   
@@ -43,10 +40,12 @@ public final class SocialLoginSignUpUseCaseImpl: SocialLoginSignUpUseCase {
       gender: userData.gender)
     
     return socialLoginRepository.signUp(auth: auth)
-      .handleEvents(receiveOutput: { [weak self] response in
+      .handleEvents(receiveOutput: { response in
         // 로그인 성공 후 결과값으로 받은 토큰들 저장
-        self?.userSession.update(accessToken: response.accessToken)
-        self?.userSession.update(refreshToken: response.accessToken)
+        UserSession.shared.update(accessToken: response.accessToken)
+        UserSession.shared.update(refreshToken: response.refreshToken)
+        UserSession.shared.update(signInState: true)
+        UserSession.shared.update(loginProvider: credential.loginProvider)
       })
       .map { _ in () }
       .eraseToAnyPublisher()

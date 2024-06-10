@@ -15,6 +15,7 @@ public struct CKButtonRegular: View {
   private let title: String
   private let action: (() -> Void)?
   private let fixedSize: CGFloat?
+  @Binding var isLoading: Bool
   
   
   // MARK: - Initializers
@@ -22,11 +23,13 @@ public struct CKButtonRegular: View {
   public init(
     title: String,
     fixedSize: CGFloat? = nil,
-    action: (() -> Void)? = nil)
-  {
+    action: (() -> Void)? = nil,
+    isLoading: Binding<Bool>? = nil
+  ) {
     self.title = title
     self.action = action
     self.fixedSize = fixedSize
+    _isLoading = isLoading ?? .constant(false)
   }
   
   
@@ -43,12 +46,19 @@ public struct CKButtonRegular: View {
         .frame(height: 52)
         .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         .lineLimit(1)
+        .opacity(isLoading ? 0 : 1.0)
         .background {
           RoundedRectangle(cornerRadius: 14)
             .fill(DesignSystemAsset.black.swiftUIColor)
             .frame(width: fixedSize)
         }
         .frame(width: fixedSize)
+        .overlay {
+          if isLoading {
+            ProgressView()
+              .tint(.white)
+          }
+        }
     }
     .modifier(BouncyPressEffect())
   }
@@ -61,5 +71,6 @@ public struct CKButtonRegular: View {
     CKButtonRegular(title: "Self sizing")
     CKButtonRegular(title: "Fixed size", fixedSize: 200)
     CKButtonRegular(title: "Infinity size", fixedSize: .infinity)
+    CKButtonRegular(title: "Self sizing", isLoading: .constant(true))
   }
 }

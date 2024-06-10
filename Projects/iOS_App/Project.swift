@@ -29,7 +29,7 @@ let project = Project.app(
     Project.FeatureUser,
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
-    Project.UserDefaultsUserSession,
+    Project.UserSession,
     Project.NetworkUser,
     Project.NetworkCakeShop,
     .external(name: "Swinject")

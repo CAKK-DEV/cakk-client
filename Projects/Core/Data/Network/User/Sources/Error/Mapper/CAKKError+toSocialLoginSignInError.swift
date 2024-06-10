@@ -9,14 +9,14 @@
 import Foundation
 import DomainUser
 
-public extension NetworkError {
+public extension CAKKError {
   func toSocialLoginSignInError()  -> SocialLoginSignInError {
     switch self {
-    case .customClientError(let clientErrorCode, let string):
+    case .customClientError(let clientErrorCode, _):
       if clientErrorCode == .notExistUser {
         return .newUser
       }
-    case .customServerError(let serverErrorCode, let string):
+    case .customServerError:
       return .serverError
     default:
       return .failure

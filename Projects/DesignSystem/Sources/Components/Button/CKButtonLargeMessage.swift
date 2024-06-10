@@ -16,6 +16,7 @@ public struct CKButtonLargeMessage: View {
   private let message: String
   private let action: (() -> Void)?
   private let fixedSize: CGFloat?
+  @Binding var isLoading: Bool
   
   
   // MARK: - Initializers
@@ -24,12 +25,14 @@ public struct CKButtonLargeMessage: View {
     title: String,
     message: String,
     fixedSize: CGFloat? = nil,
-    action: (() -> Void)? = nil) 
-  {
+    action: (() -> Void)? = nil,
+    isLoading: Binding<Bool>? = nil
+  ) {
     self.title = title
     self.message = message
     self.action = action
     self.fixedSize = fixedSize
+    _isLoading = isLoading ?? .constant(false)
   }
   
   
@@ -44,11 +47,13 @@ public struct CKButtonLargeMessage: View {
           .font(.pretendard(size: 17, weight: .bold))
           .lineLimit(1)
           .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
+          .opacity(isLoading ? 0 : 1.0)
         
         Text(message)
           .font(.pretendard(size: 12, weight: .medium))
           .lineLimit(1)
           .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
+          .opacity(isLoading ? 0 : 1.0)
       }
       .padding(.horizontal, 20)
       .foregroundStyle(Color.white)
@@ -59,6 +64,12 @@ public struct CKButtonLargeMessage: View {
           .frame(width: fixedSize)
       }
       .frame(width: fixedSize)
+      .overlay {
+        if isLoading {
+          ProgressView()
+            .tint(.white)
+        }
+      }
     }
     .modifier(BouncyPressEffect())
   }
@@ -71,5 +82,6 @@ public struct CKButtonLargeMessage: View {
     CKButtonLargeMessage(title: "Title", message: "self sizing")
     CKButtonLargeMessage(title: "Title", message: "fixed size", fixedSize: 200)
     CKButtonLargeMessage(title: "Title", message: "Infinity size", fixedSize: .infinity)
+    CKButtonLargeMessage(title: "Title", message: "self sizing", isLoading: .constant(true))
   }
 }

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public enum LoginProvider {
-  case apple
+public enum LoginProvider: Int {
+  case apple = 1
   case google
   case kakao
 }

@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "UserDefaultsUserSession",
+  name: "UserSession",
   dependencies: [
     Project.DomainUser,
     Project.KeyChainOAuthToken

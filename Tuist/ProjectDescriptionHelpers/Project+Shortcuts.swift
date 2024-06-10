@@ -74,8 +74,8 @@ public extension Project {
   
   // MARK: - Core / Data / UserDefaults
 
-  static let UserDefaultsUserSession: TargetDependency = .project(
-    target: "UserDefaultsUserSession",
+  static let UserSession: TargetDependency = .project(
+    target: "UserSession",
     path: .relativeToRoot("Projects/Core/Data/UserDefaults/UserSession")
   )
   
