@@ -31,6 +31,14 @@ public extension Project {
     target: "DesignSystem",
     path: .relativeToRoot("Projects/DesignSystem")
   )
+
+
+  // MARK: - Core
+
+   static let DIContainer: TargetDependency = .project(
+    target: "DIContainer",
+    path: .relativeToRoot("Projects/Core/DIContainer")
+  )
   
   
   // MARK: - Core / Domain

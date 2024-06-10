@@ -10,21 +10,21 @@ import SwiftUI
 import DesignSystem
 
 import Router
-import Swinject
+
+import DIContainer
 
 struct CakeCategoryDetailView: View {
   
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  private let diContainer: Container
   @StateObject private var viewModel: CategoryDetailViewModel
   
   
   // MARK: - Initializers
   
-  init(diContainer: Container) {
-    self.diContainer = diContainer
+  init() {
+    let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CategoryDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
   }
@@ -113,7 +113,7 @@ import PreviewSupportCakeShop
 
 // Success scenario
 #Preview {
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   
   diContainer.register(CategoryDetailViewModel.self) { resolver in
     let useCase = MockCakeImagesByCategoryUseCase()
@@ -121,13 +121,13 @@ import PreviewSupportCakeShop
                                    useCase: useCase)
   }
   
-  return CakeCategoryDetailView(diContainer: diContainer)
+  return CakeCategoryDetailView()
 }
 
 // Failure scenario
 
 #Preview {
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   
   diContainer.register(CategoryDetailViewModel.self) { resolver in
     let useCase = MockCakeImagesByCategoryUseCase(scenario: .failure)
@@ -135,5 +135,5 @@ import PreviewSupportCakeShop
                                    useCase: useCase)
   }
   
-  return CakeCategoryDetailView(diContainer: diContainer)
+  return CakeCategoryDetailView()
 }

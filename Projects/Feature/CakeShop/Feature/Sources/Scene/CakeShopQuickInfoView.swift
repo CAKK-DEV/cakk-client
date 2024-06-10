@@ -12,7 +12,7 @@ import SwiftUIUtil
 
 import DomainCakeShop
 
-import Swinject
+import DIContainer
 
 struct CakeShopQuickInfoView: View {
   
@@ -26,7 +26,8 @@ struct CakeShopQuickInfoView: View {
   
   // MARK: - Initializers
   
-  init(diContainer: Container) {
+  init() {
+    let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopQuickInfoViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
   }
@@ -175,12 +176,12 @@ struct CakeShopQuickInfoView: View {
 import PreviewSupportCakeShop
 
 #Preview {
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopQuickInfoViewModel.self) { _ in
     let useCase = MockCakeShopQuickInfoUseCase(delay: 2)
     return CakeShopQuickInfoViewModel(shopId: 0,
                                       cakeImageUrl: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                                       useCase: useCase)
   }
-  return CakeShopQuickInfoView(diContainer: diContainer)
+  return CakeShopQuickInfoView()
 }

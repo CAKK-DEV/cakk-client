@@ -11,7 +11,8 @@ import FeatureOnboarding
 import FeatureUser
 import Router
 import DesignSystem
-import Swinject
+
+import DIContainer
 
 // MARK: - Destinations
 
@@ -54,17 +55,9 @@ struct AppCoordinator: View {
   
   // MARK: - Properties
   
-  private let diConatiner: Container
   @StateObject private var router = Router()
   
   @State private var root: RootDestination = .home
-  
-  
-  // MARK: - Initializers
-  
-  init(diContainer: Container) {
-    self.diConatiner = diContainer
-  }
   
   
   // MARK: - Views
@@ -75,7 +68,7 @@ struct AppCoordinator: View {
       case .onboarding:
         OnboardingStepCoordinator()
       case .login:
-        LoginStepCoordinator(diContainer: diConatiner) {
+        LoginStepCoordinator() {
           router.replace(with: RootDestination.home)
         }
       case .home:
@@ -85,7 +78,7 @@ struct AppCoordinator: View {
     .navigationDestination(for: Destination.self) { destination in
       switch destination {
       case Destination.login:
-        LoginStepCoordinator(diContainer: diConatiner, onFinish: {
+        LoginStepCoordinator(onFinish: {
           router.navigateBack()
         })
       }
@@ -94,7 +87,7 @@ struct AppCoordinator: View {
       if let destination = destination.destination as? SheetDestination {
         switch destination {
         case .login:
-          LoginStepCoordinator(diContainer: diConatiner, onFinish: {
+          LoginStepCoordinator(onFinish: {
             router.presentedSheet = nil
           })
         }

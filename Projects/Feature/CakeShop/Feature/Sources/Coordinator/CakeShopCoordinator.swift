@@ -11,7 +11,7 @@ import Router
 
 import DomainCakeShop
 
-import Swinject
+import DIContainer
 
 
 enum SheetDestination: Identifiable {
@@ -34,14 +34,12 @@ public struct CakeShopCoordinator: View {
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  private let diContainer: Container
+  private let diContainer = DIContainer.shared.container
   
   
   // MARK: - Initializers
   
-  public init(diContainer: Container) {
-    self.diContainer = diContainer
-  }
+  public init() { }
   
   // MARK: - Views
   
@@ -88,10 +86,9 @@ import PreviewSupportCakeShop
 struct CakeShopCoordinator_Preview: PreviewProvider {
   struct ContentView: View {
     @StateObject private var router = Router()
-    private let diContainer: Container
+    private let diContainer = DIContainer.shared.container
     
     init() {
-      diContainer = Container()
       diContainer.register(CakeImagesByCategoryUseCase.self) { _ in
         MockCakeImagesByCategoryUseCase()
       }
@@ -102,7 +99,7 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
     
     var body: some View {
       NavigationStack(path: $router.navPath) {
-        CakeShopCoordinator(diContainer: diContainer)
+        CakeShopCoordinator()
           .environmentObject(router)
       }
     }

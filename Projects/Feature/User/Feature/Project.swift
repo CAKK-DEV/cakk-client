@@ -10,7 +10,7 @@ let project = Project.framework(
     Project.DomainUser,
     Project.UIKitUtil,
     Project.PreviewSupportUser,
-    External.swinject,
+    Project.DIContainer,
     External.kakaoSDKCommon,
     External.kakaoSDKAuth,
     External.kakaoSDKUser,

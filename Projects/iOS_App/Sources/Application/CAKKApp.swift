@@ -16,7 +16,7 @@ import DomainOAuthToken
 import NetworkUser
 import OAuthToken
 
-import Swinject
+import DIContainer
 
 import Moya
 import MoyaUtil
@@ -30,15 +30,9 @@ import UserSession
 @main
 struct CAKKApp: App {
   
-  // MARK: - Properties
-  
-  let diContainer: Container
-  
-  
   // MARK: - Initializers
   
   init() {
-    diContainer = Container()
     setupDIContainer()
     initKakaoSDK()
   }
@@ -48,7 +42,7 @@ struct CAKKApp: App {
   
   var body: some Scene {
     WindowGroup {
-      AppCoordinator(diContainer: diContainer)
+      AppCoordinator()
         .onOpenURL { url in
           // Kakao 인증 리디렉션 URL 처리
           if AuthApi.isKakaoTalkLoginUrl(url) {
@@ -68,6 +62,8 @@ struct CAKKApp: App {
   // MARK: - Private
   
   private func setupDIContainer() {
+    let diContainer = DIContainer.shared.container
+    
     diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
       MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])

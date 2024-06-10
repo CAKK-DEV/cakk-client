@@ -16,7 +16,7 @@ import Router
 import DomainUser
 import UserSession
 
-import Swinject
+import DIContainer
 
 public struct ProfileView: View {
   
@@ -31,7 +31,8 @@ public struct ProfileView: View {
   
   // MARK: - Initializers
   
-  public init(diContainer: Container) {
+  public init() {
+    let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(ProfileViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
   }
@@ -179,39 +180,39 @@ import PreviewSupportUser
 // 로그아웃 상태
 #Preview {
   UserSession.shared.update(signInState: false)
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
                             updateUserProfileUseCase: updateUserProfileUseCase)
   }
-  return ProfileView(diContainer: diContainer)
+  return ProfileView()
 }
 
 
 // 일반 유저 로그인 상태
 #Preview {
   UserSession.shared.update(signInState: true)
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
                             updateUserProfileUseCase: updateUserProfileUseCase)
   }
-  return ProfileView(diContainer: diContainer)
+  return ProfileView()
 }
 
 // 비즈니스 유저 로그인 상태
 #Preview {
   UserSession.shared.update(signInState: true)
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .businessOwner)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
                             updateUserProfileUseCase: updateUserProfileUseCase)
   }
-  return ProfileView(diContainer: diContainer)
+  return ProfileView()
 }

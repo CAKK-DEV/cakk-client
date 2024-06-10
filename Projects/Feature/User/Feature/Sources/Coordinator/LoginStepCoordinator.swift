@@ -9,7 +9,8 @@ import SwiftUI
 
 import DesignSystem
 import Router
-import Swinject
+
+import DIContainer
 
 public enum LoginPublicDestination: Identifiable {
   case home
@@ -26,8 +27,6 @@ public struct LoginStepCoordinator: View {
   
   // MARK: - Properties
   
-  private let diContainer: Container
-  
   /// login step이 변해도 gradient background는 새로 업데이트 되는것을 막기 위해 State var로 관리
   @State var gradientBackground = AnimatedGradientBackground(
     backgroundColor: Color(hex: "FEB0CD"),
@@ -42,11 +41,8 @@ public struct LoginStepCoordinator: View {
   
   // MARK: - Initializers
   
-  public init(
-    diContainer: Container,
-    onFinish: @escaping () -> Void)
-  {
-    self.diContainer = diContainer
+  public init(onFinish: @escaping () -> Void) {
+    let diContainer = DIContainer.shared.container
     _stepRouter = .init(wrappedValue: StepRouter(steps: [AnyView(Login_Root())], onFinish: onFinish))
     _socialLoginViewModel = .init(wrappedValue: diContainer.resolve(SocialLoginViewModel.self)!)
   }
@@ -72,7 +68,7 @@ import PreviewSupportUser
 import DomainUser
 
 #Preview {
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(SocialLoginSignInUseCase.self) { _ in
     MockSocialLoginSignInUseCase()
   }
@@ -86,5 +82,5 @@ import DomainUser
                          signUpUseCase: signUpUseCase)
   }
   
-  return LoginStepCoordinator(diContainer: diContainer, onFinish: { })
+  return LoginStepCoordinator(onFinish: { })
 }
