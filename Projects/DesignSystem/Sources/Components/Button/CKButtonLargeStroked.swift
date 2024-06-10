@@ -15,6 +15,7 @@ public struct CKButtonLargeStroked: View {
   private let title: String
   private let action: (() -> Void)?
   private let fixedSize: CGFloat?
+  @Binding var isLoading: Bool
   
   
   // MARK: - Initializers
@@ -22,11 +23,13 @@ public struct CKButtonLargeStroked: View {
   public init(
     title: String,
     fixedSize: CGFloat? = nil,
-    action: (() -> Void)? = nil) 
-  {
+    action: (() -> Void)? = nil,
+    isLoading: Binding<Bool>? = nil
+  ) {
     self.title = title
     self.action = action
     self.fixedSize = fixedSize
+    _isLoading = isLoading ?? .constant(false)
   }
   
   
@@ -43,6 +46,7 @@ public struct CKButtonLargeStroked: View {
         .frame(height: 64)
         .frame(maxWidth: fixedSize == .infinity ? .infinity : nil)
         .lineLimit(1)
+        .opacity(isLoading ? 0 : 1.0)
         .background {
           RoundedRectangle(cornerRadius: 20)
             .fill(DesignSystemAsset.black.swiftUIColor)
@@ -54,6 +58,12 @@ public struct CKButtonLargeStroked: View {
             .frame(width: fixedSize)
         }
         .frame(width: fixedSize)
+        .overlay {
+          if isLoading {
+            ProgressView()
+              .tint(.white)
+          }
+        }
     }
     .modifier(BouncyPressEffect())
   }
@@ -66,5 +76,6 @@ public struct CKButtonLargeStroked: View {
     CKButtonLargeStroked(title: "Self sizing")
     CKButtonLargeStroked(title: "Fixed size", fixedSize: 200)
     CKButtonLargeStroked(title: "Infinity size", fixedSize: .infinity)
+    CKButtonLargeStroked(title: "Self sizing", isLoading: .constant(true))
   }
 }
