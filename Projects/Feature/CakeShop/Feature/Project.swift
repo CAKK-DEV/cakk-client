@@ -9,6 +9,6 @@ let project = Project.framework(
     Project.Router,
     Project.DomainCakeShop,
     Project.PreviewSupportCakeShop,
-    External.swinject
+    Project.DIContainer
   ]
 )

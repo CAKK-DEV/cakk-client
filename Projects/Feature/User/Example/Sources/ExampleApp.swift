@@ -26,7 +26,7 @@ import KakaoSDKAuth
 
 import UserSession
 
-import Swinject
+import DIContainer
 
 @main
 struct ExampleApp: App {
@@ -34,13 +34,12 @@ struct ExampleApp: App {
   // MARK: - Properties
   
   @StateObject var router = Router()
-  private var diContainer: Container
+  private var diContainer = DIContainer.shared.container
   
   
   // MARK: - Initializers
   
   init() {
-    diContainer = Container()
     initKakaoSDK()
     setupDIContainer()
   }
@@ -50,7 +49,7 @@ struct ExampleApp: App {
   
   var body: some Scene {
     WindowGroup {
-      UserCoordinator(diContainer: diContainer)
+      UserCoordinator()
         .onOpenURL { url in
           // Kakao 인증 리디렉션 URL 처리
           if AuthApi.isKakaoTalkLoginUrl(url) {

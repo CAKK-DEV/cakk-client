@@ -9,7 +9,8 @@
 import SwiftUI
 
 import Router
-import Swinject
+
+import DIContainer
 
 enum Destination {
   case editProfile
@@ -31,24 +32,22 @@ public struct UserCoordinator: View {
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  private let diContainer: Container
+  private let diContainer = DIContainer.shared.container
   
 
   // MARK: - Initializers
   
-  public init(diContainer: Container) {
-    self.diContainer = diContainer
-  }
+  public init() { }
   
   
   // MARK: - Views
   
   public var body: some View {
     NavigationStack(path: $router.navPath) {
-      ProfileView(diContainer: diContainer)
+      ProfileView()
         .fullScreenCover(item: $router.presentedSheet) { destination in
           if let _ = destination.destination as? SheetDestination {
-            LoginStepCoordinator(diContainer: diContainer, onFinish: {
+            LoginStepCoordinator(onFinish: {
               router.presentedSheet = nil
             })
           }
@@ -56,7 +55,7 @@ public struct UserCoordinator: View {
         .navigationDestination(for: Destination.self) { destination in
           switch destination {
           case .editProfile:
-            EditProfileView(diContainer: diContainer)
+            EditProfileView()
               .navigationBarBackButtonHidden()
           }
         }
@@ -73,11 +72,9 @@ import DomainUser
 private struct PreviewContent: View {
   
   @StateObject private var router = Router()
-  let diContainer: Container
+  private let diContainer = DIContainer.shared.container
   
   init() {
-    diContainer = Container()
-    
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       MockSocialLoginSignInUseCase()
     }
@@ -95,7 +92,7 @@ private struct PreviewContent: View {
   }
   
   var body: some View {
-    UserCoordinator(diContainer: diContainer)
+    UserCoordinator()
       .environmentObject(router)
   }
 }

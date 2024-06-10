@@ -2,9 +2,8 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "PreviewSupportUser",
+  name: "DIContainer",
   dependencies: [
-    Project.DomainUser,
-    Project.DIContainer
+    External.swinject
   ]
 )

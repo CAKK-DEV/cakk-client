@@ -7,8 +7,9 @@ import FeatureCakeShop
 import Moya
 import MoyaUtil
 
-import Swinject
 import Router
+
+import DIContainer
 
 @main
 struct ExampleApp: App {
@@ -16,13 +17,11 @@ struct ExampleApp: App {
   // MARK: - Properties
   
   @StateObject var router = Router()
-  private var diContainer: Container
   
   
   // MARK: - Initializers
   
   init() {
-    diContainer = Container()
     setupDiContainer()
   }
   
@@ -31,7 +30,7 @@ struct ExampleApp: App {
   
   var body: some Scene {
     WindowGroup {
-      CakeShopCoordinator(diContainer: diContainer)
+      CakeShopCoordinator()
         .environmentObject(router)
     }
   }
@@ -39,6 +38,8 @@ struct ExampleApp: App {
   // MARK: - Private Methods
   
   private func setupDiContainer() {
+    let diContainer = DIContainer.shared.container
+
     diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
       #if STUB
       MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])

@@ -14,7 +14,7 @@ import Router
 
 import DomainUser
 
-import Swinject
+import DIContainer
 
 struct EditProfileView: View {
   
@@ -28,7 +28,8 @@ struct EditProfileView: View {
   
   // MARK: - Initializers
   
-  init(diContainer: Container) {
+  init() {
+    let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(ProfileViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
   }
@@ -225,14 +226,14 @@ struct EditProfileView: View {
 import PreviewSupportUser
 
 #Preview {
-  let diContainer = Container()
+  let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     return ProfileViewModel(userProfileUseCase: profileUseCase,
                             updateUserProfileUseCase: updateUserProfileUseCase)
   }
-  return EditProfileView(diContainer: diContainer)
+  return EditProfileView()
 }
 
 

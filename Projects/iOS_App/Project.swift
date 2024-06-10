@@ -32,7 +32,7 @@ let project = Project.app(
     Project.UserSession,
     Project.NetworkUser,
     Project.NetworkCakeShop,
-    External.swinject
+    Project.DIContainer
   ],
   entitlements: "App.entitlements"
 )
