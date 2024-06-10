@@ -90,7 +90,7 @@ extension Project {
       entitlements: entitlements,
       dependencies: dependencies,
       settings: .init(.settings(
-        base: ["DEVELOPMENT_TEAM": "YOUR_TEM_ID"],
+        base: ["DEVELOPMENT_TEAM": "YOUR_TEAM_ID"],
         configurations: [
           .build(.prod, name: name),
           .build(.stub, name: name),

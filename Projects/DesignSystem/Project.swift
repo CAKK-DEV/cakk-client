@@ -17,8 +17,8 @@ let project = Project.framework(
     ]
   ],
   dependencies: [
-    .external(name: "Lottie"),
-    .external(name: "SnapKit")
+    External.lottie,
+    External.snapKit
   ],
   supportsResources: true
 )
