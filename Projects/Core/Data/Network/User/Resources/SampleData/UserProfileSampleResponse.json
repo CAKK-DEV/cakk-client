@@ -1,0 +1,12 @@
+{
+  "returnCode" : "1000",
+  "returnMessage" : "요청에 성공하셨습니다.",
+  "data" : {
+    "profileImageUrl" : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUc4RioVg6PhLayVsjCDWh-XnjUqGoay_rCLopQTDJEGcFqHfP-fuutIssuFwyweq6tDc&usqp=CAU",
+    "nickname" : "봇치",
+    "email" : "bochi@gmail.com",
+    "gender" : "FEMALE",
+    "birthday" : "2022-08-26",
+    "role" : "USER"
+  }
+}

@@ -17,12 +17,12 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
   
   // MARK: - Properties
   
-  let provider: MoyaProvider<SocialLoginAPI>
+  let provider: MoyaProvider<UserAPI>
   
   
   // MARK: - Initializers
   
-  public init(provider: MoyaProvider<SocialLoginAPI>) {
+  public init(provider: MoyaProvider<UserAPI>) {
     self.provider = provider
   }
   
@@ -36,19 +36,19 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
           guard let data = decodedResponse.data else {
-            throw NetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+            throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
           
           return data.toDomain()
         default:
-          throw NetworkError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
+          throw CAKKError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
         }
       }
       .mapError { error in
-        if let networkError = error as? NetworkError {
+        if let networkError = error as? CAKKError {
           return networkError.toSocialLoginSignInError()
         } else {
-          return NetworkError.error(for: error).toSocialLoginSignInError()
+          return CAKKError.error(for: error).toSocialLoginSignInError()
         }
       }
       .eraseToAnyPublisher()
@@ -61,19 +61,19 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
           guard let data = decodedResponse.data else {
-            throw NetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+            throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
           
           return data.toDomain()
         default:
-          throw NetworkError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
+          throw CAKKError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
         }
       }
       .mapError { error in
-        if let networkError = error as? NetworkError {
+        if let networkError = error as? CAKKError {
           return networkError.toSocialLoginSignUpError()
         } else {
-          return NetworkError.error(for: error).toSocialLoginSignUpError()
+          return CAKKError.error(for: error).toSocialLoginSignUpError()
         }
       }
       .eraseToAnyPublisher()
