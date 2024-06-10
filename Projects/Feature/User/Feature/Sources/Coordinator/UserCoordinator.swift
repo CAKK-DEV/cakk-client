@@ -45,7 +45,7 @@ public struct UserCoordinator: View {
   
   public var body: some View {
     NavigationStack(path: $router.navPath) {
-      ProfileView()
+      ProfileView(diContainer: diContainer)
         .fullScreenCover(item: $router.presentedSheet) { destination in
           if let _ = destination.destination as? SheetDestination {
             LoginStepCoordinator(diContainer: diContainer, onFinish: {
@@ -56,7 +56,7 @@ public struct UserCoordinator: View {
         .navigationDestination(for: Destination.self) { destination in
           switch destination {
           case .editProfile:
-            EditProfileView()
+            EditProfileView(diContainer: diContainer)
               .navigationBarBackButtonHidden()
           }
         }

@@ -14,6 +14,9 @@ import SwiftUIUtil
 import Router
 
 import DomainUser
+import UserSession
+
+import Swinject
 
 public struct ProfileView: View {
   
@@ -21,18 +24,23 @@ public struct ProfileView: View {
   
   @State private var isLoggedIn = false
   @EnvironmentObject private var router: Router
-  @State private var isSignedIn = false
+  
+  @StateObject private var viewModel: ProfileViewModel
+  @StateObject private var userSession = UserSession.shared
   
   
   // MARK: - Initializers
   
-  public init() { }
+  public init(diContainer: Container) {
+    let viewModel = diContainer.resolve(ProfileViewModel.self)!
+    _viewModel = .init(wrappedValue: viewModel)
+  }
   
   
   // MARK: - Views
   
   public var body: some View {
-    if isSignedIn {
+    if userSession.isSignedIn {
       ZStack {
         AnimatedGradientBackground(
           backgroundColor: Color(hex: "FEB0CD"),
@@ -43,16 +51,25 @@ public struct ProfileView: View {
           ])
         
         VStack(spacing: 0) {
-          ProfileImageView()
+          ProfileImageView(imageUrlString: viewModel.userProfile?.profileImageUrl)
             .zIndex(1)
-           
+          
           VStack(spacing: 0) {
-            Text("UserName")
-              .font(.pretendard(size: 32, weight: .bold))
-              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-              .frame(maxWidth: .infinity)
-              .padding(.horizontal, 28)
-              .padding(.top, 84)
+            if let nickname = viewModel.userProfile?.nickname {
+              Text(nickname)
+                .font(.pretendard(size: 32, weight: .bold))
+                .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 28)
+                .padding(.top, 84)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
+            } else {
+              RoundedRectangle(cornerRadius: 12)
+                .frame(width: 200, height: 28)
+                .foregroundStyle(DesignSystemAsset.gray20.swiftUIColor)
+                .padding(.top, 84)
+            }
             
             HStack(spacing: 24) {
               Button {
@@ -70,6 +87,7 @@ public struct ProfileView: View {
               .modifier(BouncyPressEffect())
             }
             .padding(.top, 24)
+            .disabled(viewModel.userProfileFetchingState == .loading)
             
             ScrollView {
               VStack(spacing: 0) {
@@ -81,10 +99,10 @@ public struct ProfileView: View {
                 .buttonStyle(ListItemButtonStyle())
                 
                 Link("피드백 남기기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
-                .buttonStyle(ListItemButtonStyle())
+                  .buttonStyle(ListItemButtonStyle())
                 
                 Link("문의하기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
-                .buttonStyle(ListItemButtonStyle())
+                  .buttonStyle(ListItemButtonStyle())
               }
             }
             .padding(.top, 40)
@@ -96,6 +114,11 @@ public struct ProfileView: View {
           .padding(.top, -64)
         }
         .padding(.top, 56)
+      }
+      .onAppear {
+        if viewModel.userProfile == nil {
+          viewModel.fetchUserProfile()
+        }
       }
     } else {
       VStack(spacing: 0) {
@@ -151,6 +174,44 @@ public struct ProfileView: View {
 
 // MARK: - Preview
 
+import PreviewSupportUser
+
+// 로그아웃 상태
 #Preview {
-  ProfileView()
+  UserSession.shared.update(signInState: false)
+  let diContainer = Container()
+  diContainer.register(ProfileViewModel.self) { resolver in
+    let userProfileUseCase = MockUserProfileUseCase(role: .user)
+    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
+                            updateUserProfileUseCase: updateUserProfileUseCase)
+  }
+  return ProfileView(diContainer: diContainer)
+}
+
+
+// 일반 유저 로그인 상태
+#Preview {
+  UserSession.shared.update(signInState: true)
+  let diContainer = Container()
+  diContainer.register(ProfileViewModel.self) { resolver in
+    let userProfileUseCase = MockUserProfileUseCase(role: .user)
+    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
+                            updateUserProfileUseCase: updateUserProfileUseCase)
+  }
+  return ProfileView(diContainer: diContainer)
+}
+
+// 비즈니스 유저 로그인 상태
+#Preview {
+  UserSession.shared.update(signInState: true)
+  let diContainer = Container()
+  diContainer.register(ProfileViewModel.self) { resolver in
+    let userProfileUseCase = MockUserProfileUseCase(role: .businessOwner)
+    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
+                            updateUserProfileUseCase: updateUserProfileUseCase)
+  }
+  return ProfileView(diContainer: diContainer)
 }
