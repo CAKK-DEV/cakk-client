@@ -10,10 +10,10 @@ let project = Project.framework(
     Project.DomainUser,
     Project.UIKitUtil,
     Project.PreviewSupportUser,
-    .external(name: "Swinject"),
-    .external(name: "KakaoSDKCommon"),
-    .external(name: "KakaoSDKAuth"),
-    .external(name: "KakaoSDKUser"),
+    External.swinject,
+    External.kakaoSDKCommon,
+    External.kakaoSDKAuth,
+    External.kakaoSDKUser,
     .package(product: "GoogleSignIn")
   ],
   packages: [

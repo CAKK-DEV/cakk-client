@@ -5,6 +5,6 @@ let project = Project.framework(
   name: "PreviewSupportCakeShop",
   dependencies: [
     Project.DomainCakeShop,
-    .external(name: "Swinject")
+    External.swinject
   ]
 )

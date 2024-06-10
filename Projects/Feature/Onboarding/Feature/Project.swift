@@ -7,6 +7,6 @@ let project = Project.framework(
     Project.SwiftUIUtil,
     Project.DesignSystem,
     Project.Router,
-    .external(name: "Haptico")
+    External.haptico
   ]
 )
