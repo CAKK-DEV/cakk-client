@@ -16,7 +16,6 @@ import DomainUser
 import DomainOAuthToken
 
 import NetworkUser
-import OAuthToken
 
 import Moya
 import MoyaUtil
@@ -25,7 +24,7 @@ import GoogleSignIn
 import KakaoSDKCommon
 import KakaoSDKAuth
 
-import UserDefaultsUserSession
+import UserSession
 
 import Swinject
 
@@ -72,35 +71,27 @@ struct ExampleApp: App {
   // MARK: - Private Method
   
   private func setupDIContainer() {
-    diContainer.register(MoyaProvider<SocialLoginAPI>.self) { _ in
+    diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<SocialLoginAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
       #else
-      MoyaProvider<SocialLoginAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
       #endif
     }
     
     diContainer.register(SocialLoginRepository.self) { resolver in
-      let provider = resolver.resolve(MoyaProvider<SocialLoginAPI>.self)!
+      let provider = resolver.resolve(MoyaProvider<UserAPI>.self)!
       return SocialLoginRepositoryImpl(provider: provider)
-    }
-    
-    diContainer.register(OAuthTokenRepository.self) { _ in
-      OAuthTokenRepositoryImpl()
     }
     
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
-      let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
-      return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          userSession: UserDefaultsUserSession.shared)
+      return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
     diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
-      let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
-      return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          userSession: UserDefaultsUserSession.shared)
+      return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
     diContainer.register(SocialLoginViewModel.self) { resolver in
@@ -109,6 +100,28 @@ struct ExampleApp: App {
       return SocialLoginViewModel(signInUseCase: signInUseCase,
                                   signUpUseCase: signUpUseCase)
     }.inObjectScope(.transient)
+    
+    diContainer.register(UserProfileRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<UserAPI>.self)!
+      return UserProfileRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(UserProfileUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return UserProfileUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(UpdateUserProfileUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return UpdateUserProfileUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(ProfileViewModel.self) { resolver in
+      let userProfileUseCase = resolver.resolve(UserProfileUseCase.self)!
+      let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
+      return ProfileViewModel(userProfileUseCase: userProfileUseCase,
+                              updateUserProfileUseCase: updateUserProfileUseCase)
+    }.inObjectScope(.container)
   }
   
   private func initKakaoSDK() {

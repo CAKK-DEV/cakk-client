@@ -27,6 +27,7 @@ let project = Project.app(
     Project.FeatureUser,
     Project.KeyChainOAuthToken,
     Project.NetworkUser,
+    Project.UserSession,
     .external(name: "Swinject")
   ],
   entitlements: "App.entitlements"
