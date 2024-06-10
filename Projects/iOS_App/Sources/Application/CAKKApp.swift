@@ -25,7 +25,7 @@ import GoogleSignIn
 import KakaoSDKCommon
 import KakaoSDKAuth
 
-import UserDefaultsUserSession
+import UserSession
 
 @main
 struct CAKKApp: App {
@@ -68,16 +68,16 @@ struct CAKKApp: App {
   // MARK: - Private
   
   private func setupDIContainer() {
-    diContainer.register(MoyaProvider<SocialLoginAPI>.self) { _ in
+    diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<SocialLoginAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
       #else
-      MoyaProvider<SocialLoginAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
       #endif
     }
     
     diContainer.register(SocialLoginRepository.self) { resolver in
-      let provider = resolver.resolve(MoyaProvider<SocialLoginAPI>.self)!
+      let provider = resolver.resolve(MoyaProvider<UserAPI>.self)!
       return SocialLoginRepositoryImpl(provider: provider)
     }
     
@@ -88,15 +88,13 @@ struct CAKKApp: App {
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
       let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
-      return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          userSession: UserDefaultsUserSession.shared)
+      return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
     diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
       let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
-      return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository,
-                                          userSession: UserDefaultsUserSession.shared)
+      return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
     diContainer.register(SocialLoginViewModel.self) { resolver in
