@@ -24,7 +24,9 @@ struct CakeCategorySection: View {
   
   var body: some View {
     VStack(spacing: 16) {
-      SectionHeader(title: "종류별로 보기")
+      SectionHeaderLarge(title: "종류별로 보기")
+        .padding(.horizontal, 16)
+      
       categoryItemGrid(horizontalSizeClass: horizontalSizeClass)
         .padding(.horizontal, 20)
     }

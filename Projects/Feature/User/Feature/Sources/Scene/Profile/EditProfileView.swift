@@ -103,6 +103,7 @@ struct EditProfileView: View {
                 .padding(.top, 20)
               
               CKTextField(text: $viewModel.editedUserProfile.nickname, placeholder: "이름", headerTitle: "이름")
+              
               CKTextField(text: $viewModel.editedUserProfile.email, headerTitle: "이메일", isDisabled: true)
               
               genderPicker()
@@ -169,7 +170,7 @@ struct EditProfileView: View {
               .padding(.top, 128)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             .padding(.bottom, 100)
           }
           

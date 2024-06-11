@@ -63,15 +63,18 @@ public struct CKTextField: View {
 
 private struct Preview_Content: View {
   
-  @State private var text = ""
+  @State private var text = "abc"
   
   var body: some View {
-    VStack {
-      CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title")
-      CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title", supportsMultiline: true)
-      CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title", isDisabled: true)
+    ZStack {
+      Color.black.ignoresSafeArea()
+      
+      VStack {
+        CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title")
+        CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title", supportsMultiline: true)
+        CKTextField(text: $text, placeholder: "placeholder", headerTitle: "title", isDisabled: true)
+      }
     }
-    .padding()
   }
 }
 
