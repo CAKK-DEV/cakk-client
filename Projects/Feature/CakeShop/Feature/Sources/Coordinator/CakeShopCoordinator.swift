@@ -56,7 +56,7 @@ public struct CakeShopCoordinator: View {
                                                   cakeImageUrl: cakeImageUrl,
                                                   useCase: useCase)
               }
-              CakeShopQuickInfoView(diContainer: diContainer)
+              CakeShopQuickInfoView()
             }
           }
         }
@@ -69,7 +69,7 @@ public struct CakeShopCoordinator: View {
                                              useCase: useCase)
             }.inObjectScope(.transient)
             
-            return CakeCategoryDetailView(diContainer: diContainer)
+            return CakeCategoryDetailView()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           }
