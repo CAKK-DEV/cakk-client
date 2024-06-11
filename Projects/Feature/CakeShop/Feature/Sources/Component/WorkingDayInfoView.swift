@@ -17,7 +17,6 @@ struct WorkingDayInfoView: View {
   
   private var workingDays: [WorkingDay]
   
-  
   // MARK: - Initializers
   
   init(workingDays: [WorkingDay]) {
@@ -42,25 +41,4 @@ struct WorkingDayInfoView: View {
 
 #Preview {
   WorkingDayInfoView(workingDays: [.tue, .wed, .fri, .sat, .sun])
-}
-
-extension WorkingDay {
-  var displayName: String {
-    switch self {
-    case .mon:
-      "월"
-    case .tue:
-      "화"
-    case .wed:
-      "수"
-    case .thu:
-      "목"
-    case .fri:
-      "금"
-    case .sat:
-      "토"
-    case .sun:
-      "일"
-    }
-  }
 }
