@@ -75,11 +75,12 @@ struct CategorySelectionNavigationView: View {
       }
       .overlay {
         HStack {
-          LinearGradient(colors:[Color.white, Color.white, Color.clear], startPoint: .leading, endPoint: .trailing)
+          LinearGradient(colors:[Color.white, Color.clear], startPoint: .leading, endPoint: .trailing)
             .frame(width: 24)
           Spacer()
         }
       }
+      .clipShape(Capsule())
     }
     .frame(maxWidth: .infinity, minHeight: 52)
     .background(Color.white)
