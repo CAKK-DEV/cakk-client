@@ -28,6 +28,8 @@ import UserSession
 
 import DIContainer
 
+import PreviewSupportUser // TODO: delete
+
 @main
 struct ExampleApp: App {
   
@@ -115,11 +117,18 @@ struct ExampleApp: App {
       return UpdateUserProfileUseCaseImpl(repository: repository)
     }
     
+    diContainer.register(WithdrawUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return WithdrawUseCaseImpl(repository: repository)
+    }
+    
     diContainer.register(ProfileViewModel.self) { resolver in
       let userProfileUseCase = resolver.resolve(UserProfileUseCase.self)!
       let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
+      let withdrawUseCase = resolver.resolve(WithdrawUseCase.self)!
       return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                              updateUserProfileUseCase: updateUserProfileUseCase)
+                              updateUserProfileUseCase: updateUserProfileUseCase,
+                              withdrawUseCase: withdrawUseCase)
     }.inObjectScope(.container)
   }
   
