@@ -184,8 +184,10 @@ import PreviewSupportUser
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    let withdrawUseCase = MockWithdrawUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase)
+                            updateUserProfileUseCase: updateUserProfileUseCase,
+                            withdrawUseCase: withdrawUseCase)
   }
   return ProfileView()
 }
@@ -198,8 +200,10 @@ import PreviewSupportUser
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    let withdrawUseCase = MockWithdrawUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase)
+                            updateUserProfileUseCase: updateUserProfileUseCase,
+                            withdrawUseCase: withdrawUseCase)
   }
   return ProfileView()
 }
@@ -211,8 +215,10 @@ import PreviewSupportUser
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .businessOwner)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    let withdrawUseCase = MockWithdrawUseCase()
     return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase)
+                            updateUserProfileUseCase: updateUserProfileUseCase,
+                            withdrawUseCase: withdrawUseCase)
   }
   return ProfileView()
 }
