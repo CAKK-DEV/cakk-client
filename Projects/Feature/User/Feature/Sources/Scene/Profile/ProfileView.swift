@@ -106,6 +106,13 @@ public struct ProfileView: View {
                   .buttonStyle(ListItemButtonStyle())
               }
             }
+            .overlay {
+              VStack {
+                LinearGradient(colors: [.white, .clear], startPoint: .top, endPoint: .bottom)
+                  .frame(height: 20)
+                Spacer()
+              }
+            }
             .padding(.top, 40)
           }
           .frame(maxWidth: .infinity, maxHeight: .infinity)
