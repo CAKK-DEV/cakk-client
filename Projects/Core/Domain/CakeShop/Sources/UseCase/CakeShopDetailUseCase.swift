@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol CakeShopDetailUseCase {
-  func execute() -> AnyPublisher<CakeShopDetail, CakeShopDetailError>
+  func execute(shopId: Int) -> AnyPublisher<CakeShopDetail, CakeShopDetailError>
 }

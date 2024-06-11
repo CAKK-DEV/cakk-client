@@ -38,7 +38,7 @@ public struct MockCakeShopDetailUseCase: CakeShopDetailUseCase {
   
   // MARK: - Public Methods
   
-  public func execute() -> AnyPublisher<CakeShopDetail, CakeShopDetailError> {
+  public func execute(shopId: Int) -> AnyPublisher<CakeShopDetail, CakeShopDetailError> {
     switch scenario {
     case .failure:
       Fail(error: CakeShopDetailError.failure)
