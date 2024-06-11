@@ -69,6 +69,11 @@ public final class UserSession: ObservableObject {
     }
   }
   
+  public func clearUserData() {
+    cachedUserData = nil
+    UserDefaults.standard.removeObject(forKey: userDataKey)
+  }
+  
   
   // MARK: - AccessToken
   
@@ -82,6 +87,10 @@ public final class UserSession: ObservableObject {
     oauthToken.saveAccessToken(accessToken)
   }
   
+  private func clearAccessToken() {
+    oauthToken.deleteAccessToken()
+  }
+  
   
   // MARK: - RefreshToken
   
@@ -93,6 +102,10 @@ public final class UserSession: ObservableObject {
   
   public func update(refreshToken: String) {
     oauthToken.saveAccessToken(refreshToken)
+  }
+  
+  public func clearRefreshToken() {
+    oauthToken.deleteRefreshToken()
   }
   
   
@@ -112,6 +125,21 @@ public final class UserSession: ObservableObject {
     UserDefaults.standard.set(loginProvider.rawValue, forKey: loginProviderKey)
   }
   
+  public func clearLoginProvider() {
+    UserDefaults.standard.removeObject(forKey: loginProviderKey)
+  }
+  
+  
+  // MARK: - SignOut
+  
+  public func clearSession() {
+    clearUserData()
+    clearLoginProvider()
+    clearAccessToken()
+    clearRefreshToken()
+    
+    isSignedIn = false
+  }
   
   
   // MARK: - Private Methods

@@ -107,7 +107,8 @@ struct EditProfileView: View {
               
               HStack(spacing: 0) {
                 Button("로그아웃") {
-                  // no action
+                  viewModel.signOut()
+                  router.navigateBack()
                 }
                 .font(.pretendard(size: 15, weight: .medium))
                 .padding(.horizontal, 12)

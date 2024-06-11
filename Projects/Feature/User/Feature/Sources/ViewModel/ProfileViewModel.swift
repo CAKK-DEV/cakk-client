@@ -11,6 +11,8 @@ import Combine
 
 import DomainUser
 
+import UserSession
+
 public final class ProfileViewModel: ObservableObject {
   
   // MARK: - Properties
@@ -99,5 +101,9 @@ public final class ProfileViewModel: ObservableObject {
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
+  }
+  
+  public func signOut() {
+    UserSession.shared.clearSession()
   }
 }
