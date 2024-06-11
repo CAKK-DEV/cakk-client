@@ -16,6 +16,7 @@ import CombineMoya
 
 public final class UserProfileRepositoryImpl: UserProfileRepository {
   
+  
   // MARK: - Properties
   
   private let provider: MoyaProvider<UserAPI>
@@ -61,6 +62,31 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
         switch response.statusCode {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(UpdateUserProfileResponseDTO.self, from: response.data)
+          if decodedResponse.returnCode != "1000" {
+            throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          return Void()
+          
+        default:
+          throw CAKKError.unexpected(NSError(domain: "UserProfile", code: response.statusCode))
+        }
+      }
+      .mapError { error in
+        if let cakkError = error as? CAKKError {
+          return cakkError.toUserProfileError()
+        } else {
+          return CAKKError.error(for: error).toUserProfileError()
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  public func withdraw(accessToken: String) -> AnyPublisher<Void, DomainUser.UserProfileError> {
+    provider.requestPublisher(.withdraw(accessToken: accessToken))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedResponse = try JSONDecoder().decode(WithdrawResponseDTO.self, from: response.data)
           if decodedResponse.returnCode != "1000" {
             throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }

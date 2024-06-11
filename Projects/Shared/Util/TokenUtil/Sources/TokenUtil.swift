@@ -53,7 +53,7 @@ public final class TokenUtil {
     ]
     SecItemDelete(keyChainQuery)
     let status: OSStatus = SecItemAdd(keyChainQuery, nil)
-    assert(status == noErr, "Failed to save token")
+    print("Failed to save token = \(status)")
   }
   
   public func read(_ service: String, account: String, type tokenType: TokenType = .general) -> String? {
@@ -82,6 +82,6 @@ public final class TokenUtil {
       kSecAttrAccount: account
     ]
     let status = SecItemDelete(keyChainQuery)
-    assert(status == noErr, "Failed to delete the token, status code = \(status)")
+    print("Failed to delete the token, status code = \(status)")
   }
 }

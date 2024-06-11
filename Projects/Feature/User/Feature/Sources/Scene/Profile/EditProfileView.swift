@@ -8,12 +8,15 @@
 
 import SwiftUI
 import DesignSystem
+
 import SwiftUIUtil
 import UIKitUtil
+
 import Router
 
 import DomainUser
 
+import UserSession
 import DIContainer
 
 struct EditProfileView: View {
@@ -107,18 +110,60 @@ struct EditProfileView: View {
               
               HStack(spacing: 0) {
                 Button("로그아웃") {
-                  // no action
+                  DialogManager.shared.showDialog(
+                    title: "로그아웃",
+                    message: "정말로 로그아웃 할까요?",
+                    primaryButtonTitle: "확인",
+                    primaryButtonAction: .custom({
+                      viewModel.signOut()
+                      router.navigateBack()
+                    }), secondaryButtonTitle: "취소",
+                    secondaryButtonAction: .cancel)
                 }
                 .font(.pretendard(size: 15, weight: .medium))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
                 
                 Button("회원탈퇴") {
-                  // no action
+                  DialogManager.shared.showDialog(
+                    title: "회원탈퇴",
+                    message: "정말로 회원탈퇴 하시겠습니까?\n회원탈퇴를 하시면 모든 데이터가 삭제되며 복구할 수 없게돼요.",
+                    primaryButtonTitle: "확인",
+                    primaryButtonAction: .custom({
+                      viewModel.withdraw()
+                    }), secondaryButtonTitle: "취소",
+                    secondaryButtonAction: .cancel)
                 }
                 .font(.pretendard(size: 15, weight: .medium))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
+                .onChange(of: viewModel.withdrawState) { state in
+                  switch state {
+                  case .loading:
+                    LoadingManager.shared.startLoading()
+                  case .failure(let error):
+                    LoadingManager.shared.stopLoading()
+                    
+                    if error == .serverError {
+                      DialogManager.shared.showDialog(
+                        title: "서버 에러",
+                        message: "서버 에러가 발생했어요.\n나중에 다시 시도해 주세요.",
+                        primaryButtonTitle: "확인",
+                        primaryButtonAction: .cancel)
+                    } else {
+                      DialogManager.shared.showDialog(
+                        title: "회원탈퇴 실패",
+                        message: "회원탈퇴에 실패하였어요..\n다시 시도해 주세요.",
+                        primaryButtonTitle: "확인",
+                        primaryButtonAction: .cancel)
+                    }
+                  case .success:
+                    LoadingManager.shared.stopLoading()
+                    router.navigateBack()
+                  default:
+                    LoadingManager.shared.stopLoading()
+                  }
+                }
               }
               .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
               .padding(.top, 128)
@@ -230,16 +275,10 @@ import PreviewSupportUser
   diContainer.register(ProfileViewModel.self) { resolver in
     let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    let withdrawUseCase = MockWithdrawUseCase()
     return ProfileViewModel(userProfileUseCase: profileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase)
+                            updateUserProfileUseCase: updateUserProfileUseCase, 
+                            withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()
-}
-
-
-func ??<T>(lhs: Binding<Optional<T>>, rhs: T) -> Binding<T> {
-  Binding(
-    get: { lhs.wrappedValue ?? rhs },
-    set: { lhs.wrappedValue = $0 }
-  )
 }

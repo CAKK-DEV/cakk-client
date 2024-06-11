@@ -11,12 +11,15 @@ import Combine
 
 import DomainUser
 
+import UserSession
+
 public final class ProfileViewModel: ObservableObject {
   
   // MARK: - Properties
   
   private let userProfileUseCase: UserProfileUseCase
   private let updateUserProfileUseCase: UpdateUserProfileUseCase
+  private let withdrawUseCase: WithdrawUseCase
   
   @Published private(set) var userProfile: UserProfile?
   @Published var editedUserProfile: UserProfile!
@@ -37,6 +40,14 @@ public final class ProfileViewModel: ObservableObject {
     case failure(error: UserProfileError)
   }
   
+  @Published private(set) var withdrawState: WithdrawState = .idle
+  enum WithdrawState: Equatable {
+    case idle
+    case loading
+    case success
+    case failure(error: UserProfileError)
+  }
+  
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -44,10 +55,12 @@ public final class ProfileViewModel: ObservableObject {
   
   public init(
     userProfileUseCase: UserProfileUseCase,
-    updateUserProfileUseCase: UpdateUserProfileUseCase
+    updateUserProfileUseCase: UpdateUserProfileUseCase,
+    withdrawUseCase: WithdrawUseCase
   ) {
     self.userProfileUseCase = userProfileUseCase
     self.updateUserProfileUseCase = updateUserProfileUseCase
+    self.withdrawUseCase = withdrawUseCase
   }
   
   
@@ -63,6 +76,7 @@ public final class ProfileViewModel: ObservableObject {
         print(completion)
         if case .failure(let error) = completion {
           self?.userProfileFetchingState = .failure(error: error)
+          self?.signOut()
         } else {
           self?.userProfileFetchingState = .success
         }
@@ -96,6 +110,25 @@ public final class ProfileViewModel: ObservableObject {
         } else {
           self?.userProfile = self?.editedUserProfile
           self?.userProfileUpdatingState = .success
+        }
+      } receiveValue: { _ in }
+      .store(in: &cancellables)
+  }
+  
+  public func signOut() {
+    UserSession.shared.clearSession()
+  }
+  
+  public func withdraw() {
+    withdrawState = .loading
+    
+    withdrawUseCase.execute()
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.withdrawState = .failure(error: error)
+        } else {
+          UserSession.shared.clearSession()
+          self?.withdrawState = .success
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
