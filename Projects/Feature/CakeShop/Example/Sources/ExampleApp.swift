@@ -11,6 +11,8 @@ import Router
 
 import DIContainer
 
+import PreviewSupportCakeShop
+
 @main
 struct ExampleApp: App {
   
@@ -62,6 +64,10 @@ struct ExampleApp: App {
     
     diContainer.register(CakeShopQuickInfoUseCase.self) { resolver in
       CakeShopQuickInfoUseCaseImpl(repository: resolver.resolve(CakeShopQuickInfoRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopDetailUseCase.self) { resolver in
+      MockCakeShopDetailUseCase()
     }
   }
 }

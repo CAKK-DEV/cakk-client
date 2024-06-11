@@ -27,6 +27,8 @@ enum SheetDestination: Identifiable {
 
 enum Destination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
+  case shopDetail(shopId: Int)
+  
 }
 
 public struct CakeShopCoordinator: View {
@@ -63,13 +65,21 @@ public struct CakeShopCoordinator: View {
         .navigationDestination(for: Destination.self) { destination in
           switch destination {
           case .categoryDetail(let initialCategory):
-            diContainer.register(CategoryDetailViewModel.self) { resolver in
+            let _ = diContainer.register(CategoryDetailViewModel.self) { resolver in
               let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
               return CategoryDetailViewModel(initialCategory: initialCategory,
                                              useCase: useCase)
             }.inObjectScope(.transient)
+            CakeCategoryDetailView()
+              .navigationBarBackButtonHidden()
+              .environmentObject(router)
             
-            return CakeCategoryDetailView()
+          case .shopDetail(shopId: let shopId):
+            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
+              let useCase = resolver.resolve(CakeShopDetailUseCase.self)!
+              return CakeShopDetailViewModel(shopId: shopId, cakeShopDetailUseCase: useCase)
+            }.inObjectScope(.transient)
+            CakeShopDetailView()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           }
@@ -94,6 +104,10 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
       }
       diContainer.register(CakeShopQuickInfoUseCase.self) { _ in
         MockCakeShopQuickInfoUseCase()
+      }
+      
+      diContainer.register(CakeShopDetailUseCase.self) { _ in
+        MockCakeShopDetailUseCase()
       }
     }
     

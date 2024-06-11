@@ -14,7 +14,7 @@ import Router
 
 import DomainCakeShop
 
-struct CakeShopDetailView: View {
+public struct CakeShopDetailView: View {
   
   // MARK: - Properties
   
@@ -25,7 +25,7 @@ struct CakeShopDetailView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -34,7 +34,7 @@ struct CakeShopDetailView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     ZStack {
       VStack(spacing: 0) {
         NavigationBar(leadingContent: {
@@ -141,7 +141,7 @@ import PreviewSupportCakeShop
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
-    return CakeShopDetailViewModel(cakeShopDetailUseCase: cakeShopDetailUseCase)
+    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
   }
   
   return CakeShopDetailView()

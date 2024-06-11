@@ -15,6 +15,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   
   // MARK: - Properties
   
+  private let shopId: Int
   private let cakeShopDetailUseCase: CakeShopDetailUseCase
   
   @Published private(set) var cakeShopDetail: CakeShopDetail?
@@ -32,7 +33,11 @@ public final class CakeShopDetailViewModel: ObservableObject {
   
   // MARK: - Initializers
   
-  init(cakeShopDetailUseCase: CakeShopDetailUseCase) {
+  public init(
+    shopId: Int,
+    cakeShopDetailUseCase: CakeShopDetailUseCase
+  ) {
+    self.shopId = shopId
     self.cakeShopDetailUseCase = cakeShopDetailUseCase
   }
   
@@ -42,7 +47,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   public func fetchCakeShopDetail() {
     cakeShopDetailFetchingState = .loading
     
-    cakeShopDetailUseCase.execute()
+    cakeShopDetailUseCase.execute(shopId: shopId)
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in

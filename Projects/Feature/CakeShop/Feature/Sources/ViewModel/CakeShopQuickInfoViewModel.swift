@@ -15,7 +15,7 @@ final class CakeShopQuickInfoViewModel: ObservableObject {
   
   // MARK: - Properties
   
-  private let shopId: Int
+  private(set) var shopId: Int
   private let useCase: CakeShopQuickInfoUseCase
   
   @Published private(set) var shopInfo: CakeShopQuickInfo?
