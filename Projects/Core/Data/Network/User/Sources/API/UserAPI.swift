@@ -13,6 +13,7 @@ public enum UserAPI {
   case signIn(credential: CredentialDTO)
   case fetchUserProfile(accessToken: String)
   case updateUserProfile(newUserProfile: NewUserProfileDTO, accessToken: String)
+  case withdraw(accessToken: String)
 }
 
 extension UserAPI: TargetType {
@@ -31,6 +32,9 @@ extension UserAPI: TargetType {
       
     case .fetchUserProfile, .updateUserProfile:
       return "/api/v1/me"
+      
+    case .withdraw:
+      return "/api/v1/me/withdrawal"
     }
   }
   
@@ -41,6 +45,9 @@ extension UserAPI: TargetType {
       
     case .fetchUserProfile:
       return .get
+      
+    case .withdraw:
+      return .delete
     }
   }
   
@@ -57,6 +64,9 @@ extension UserAPI: TargetType {
       
     case .updateUserProfile(_, let newUserProfile):
       return .requestJSONEncodable(newUserProfile)
+      
+    case .withdraw:
+      return .requestPlain
     }
   }
   
@@ -65,7 +75,9 @@ extension UserAPI: TargetType {
     case .signUp, .signIn:
       return ["Content-Type": "application/json"]
       
-    case .fetchUserProfile(let accessToken), .updateUserProfile(_, let accessToken):
+    case .fetchUserProfile(let accessToken),
+        .updateUserProfile(_, let accessToken),
+        .withdraw(let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"
@@ -77,15 +89,15 @@ extension UserAPI: TargetType {
     switch self {
     case .signUp:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SignUpSampleResponse", withExtension: "json")!)
-    
+      
     case .signIn:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SignInSampleResponse", withExtension: "json")!)
       
     case .fetchUserProfile:
       return try! Data(contentsOf: Bundle.module.url(forResource: "UserProfileSampleResponse", withExtension: "json")!)
       
-    case .updateUserProfile:
-      return try! Data(contentsOf: Bundle.module.url(forResource: "UpdateUserProfileSampleResponse", withExtension: "json")!)
+    case .updateUserProfile, .withdraw:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "BasicSampleResponse", withExtension: "json")!)
     }
   }
 }
