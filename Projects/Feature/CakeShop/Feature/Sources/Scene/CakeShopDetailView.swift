@@ -20,8 +20,9 @@ public struct CakeShopDetailView: View {
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
-  
   @StateObject var viewModel: CakeShopDetailViewModel
+  
+  @State private var selectedDetailSection = CakeShopContentsSection.DetailSection.images
   
   
   // MARK: - Initializers
@@ -50,9 +51,15 @@ public struct CakeShopDetailView: View {
         
         if let cakeShopDetail = viewModel.cakeShopDetail {
           ScrollView {
-            headerView(cakeShopDetail: cakeShopDetail)
-              .padding(.horizontal, 24)
-              .padding(.top, 24)
+            VStack(spacing: 24) {
+              headerView(cakeShopDetail: cakeShopDetail)
+                .padding(.horizontal, 24)
+                .padding(.top, 24)
+              
+              CakeShopContentsSection(selectedSection: $selectedDetailSection)
+                .environmentObject(viewModel)
+            }
+            .padding(.bottom, 100)
           }
         } else {
           Color.clear
@@ -61,6 +68,35 @@ public struct CakeShopDetailView: View {
               ProgressView()
             }
         }
+      }
+      
+      VStack {
+        Spacer()
+        
+        HStack {
+          Button {
+            // heart action
+          } label: {
+            RoundedRectangle(cornerRadius: 20)
+              .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
+              .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 20)))
+              .frame(width: 76, height: 64)
+              .overlay {
+                Image(systemName: "heart")
+                  .font(.system(size: 24))
+                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              }
+          }
+          .modifier(BouncyPressEffect())
+          
+          CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
+            withAnimation(.snappy) {
+              selectedDetailSection = .order
+            }
+          }
+        }
+        .padding(.horizontal, 28)
+        .padding(.bottom, 16)
       }
     }
     .onFirstAppear {
@@ -158,34 +194,43 @@ public struct CakeShopDetailView: View {
 
 // MARK: - Preview
 
+// Success Scenario
+
 import PreviewSupportCakeShop
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
-    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
+    let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
+    let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
+    
+    let viewModel = CakeShopDetailViewModel(shopId: 0,
+                                            cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                            cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+    viewModel.fetchCakeShopDetail()
+    return viewModel
   }
   
   return CakeShopDetailView()
 }
+
+// NoExists, Failure Scenario
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .noExists)
-    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
-  }
-  
-  return CakeShopDetailView()
-}
-
-
-#Preview {
-  let diContainer = DIContainer.shared.container
-  diContainer.register(CakeShopDetailViewModel.self) { resolver in
-    let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .failure)
-    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
+    let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
+    let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
+    
+    let viewModel = CakeShopDetailViewModel(shopId: 0,
+                                            cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                            cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+    viewModel.fetchCakeShopDetail()
+    return viewModel
   }
   
   return CakeShopDetailView()

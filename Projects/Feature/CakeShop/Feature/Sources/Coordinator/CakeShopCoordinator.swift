@@ -76,8 +76,14 @@ public struct CakeShopCoordinator: View {
             
           case .shopDetail(shopId: let shopId):
             let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let useCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              return CakeShopDetailViewModel(shopId: shopId, cakeShopDetailUseCase: useCase)
+              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
+              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
+              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+              
+              return CakeShopDetailViewModel(shopId: shopId,
+                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
             }.inObjectScope(.transient)
             CakeShopDetailView()
               .navigationBarBackButtonHidden()
@@ -108,6 +114,14 @@ struct CakeShopCoordinator_Preview: PreviewProvider {
       
       diContainer.register(CakeShopDetailUseCase.self) { _ in
         MockCakeShopDetailUseCase()
+      }
+      
+      diContainer.register(CakeImagesByShopIdUseCase.self) { _ in
+        MockCakeImagesByShopIdUseCase()
+      }
+      
+      diContainer.register(CakeShopAdditionalInfoUseCase.self) { _ in
+        MockCakeShopAdditionalInfoUseCase()
       }
     }
     
