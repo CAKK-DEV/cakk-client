@@ -146,11 +146,7 @@ struct EditProfileView: View {
                     LoadingManager.shared.stopLoading()
                     
                     if error == .serverError {
-                      DialogManager.shared.showDialog(
-                        title: "서버 에러",
-                        message: "서버 에러가 발생했어요.\n나중에 다시 시도해 주세요.",
-                        primaryButtonTitle: "확인",
-                        primaryButtonAction: .cancel)
+                      DialogManager.shared.showDialog(.serverError(completion: nil))
                     } else {
                       DialogManager.shared.showDialog(
                         title: "회원탈퇴 실패",
