@@ -1,5 +1,5 @@
 //
-//  CakeShopDetailInfo+Mocking.swift
+//  CakeShopAdditionalInfo+Mocking.swift
 //  PreviewSupportCakeShop
 //
 //  Created by 이승기 on 6/12/24.
