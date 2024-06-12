@@ -74,8 +74,8 @@ struct ExampleApp: App {
       CakeShopDetailUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
     }
     
-    diContainer.register(CakeImagesByShopIdUseCase.self) { _ in
-      MockCakeImagesByShopIdUseCase()
+    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
+      CakeImagesByShopIdUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
     }
     
     diContainer.register(CakeShopAdditionalInfoUseCase.self) { resolver in
