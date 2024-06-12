@@ -12,4 +12,5 @@ import Combine
 public protocol CakeShopDetailRepository {
   func fetch(shopId: Int) -> AnyPublisher<CakeShopDetail, CakeShopDetailError>
   func fetchAdditionalInfo(shopId: Int) -> AnyPublisher<CakeShopAdditionalInfo, Error>
+  func fetchCakeImages(shopId: Int, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error>
 }
