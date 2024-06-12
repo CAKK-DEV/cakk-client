@@ -118,7 +118,7 @@ extension CakeShopAPI: TargetType {
     case .fetchCakeShopQuickInfo:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopQuickInfo", withExtension: "json")!)
       
-    case .fetchCakeShopDetail(shopId: let shopId):
+    case .fetchCakeShopDetail:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopDetail", withExtension: "json")!)
       
     case .fetchAdditionalInfo:
