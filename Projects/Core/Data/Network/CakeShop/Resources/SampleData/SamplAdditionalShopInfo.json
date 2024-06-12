@@ -1,0 +1,36 @@
+{
+  "returnCode" : "1000",
+  "returnMessage" : "요청에 성공하셨습니다.",
+  "data" : {
+    "shopAddress" : "서울특별시 강남구 어쩌고로 72",
+    "latitude" : 37.514575,
+    "longitude" : 127.0495556,
+    "shopOperationDays" : [
+      {
+        "operationDay" : "SAT",
+        "operationStartTime": "10:00:00",
+        "operationEndTime": "22:00:00"
+      },
+      {
+        "operationDay" : "MON",
+        "operationStartTime": "10:00:00",
+        "operationEndTime": "22:00:00"
+      },
+      {
+        "operationDay" : "WED",
+        "operationStartTime": "10:00:00",
+        "operationEndTime": "22:00:00"
+      },
+      {
+        "operationDay" : "FRI",
+        "operationStartTime": "10:00:00",
+        "operationEndTime": "22:00:00"
+      },
+      {
+        "operationDay" : "SUN",
+        "operationStartTime": "10:00:00",
+        "operationEndTime": "22:00:00"
+      }
+    ]
+  }
+}

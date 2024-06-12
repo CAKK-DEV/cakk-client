@@ -13,6 +13,7 @@ public enum CakeShopAPI {
   case fetchCakeImages(category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
   case fetchCakeShopQuickInfo(shopId: Int)
   case fetchCakeShopDetail(shopId: Int)
+  case fetchAdditionalInfo(shopId: Int)
 }
 
 extension CakeShopAPI: TargetType {
@@ -31,6 +32,9 @@ extension CakeShopAPI: TargetType {
       
     case .fetchCakeShopDetail(let shopId):
       return "/api/v1/shops/\(shopId)"
+    
+    case .fetchAdditionalInfo(let shopId):
+      return "/api/v1/shops/\(shopId)/info"
     }
   }
   
@@ -43,6 +47,9 @@ extension CakeShopAPI: TargetType {
       return .get
       
     case .fetchCakeShopDetail:
+      return .get
+      
+    case .fetchAdditionalInfo:
       return .get
     }
   }
@@ -64,6 +71,9 @@ extension CakeShopAPI: TargetType {
       return .requestPlain
       
     case .fetchCakeShopDetail:
+      return .requestPlain
+    
+    case .fetchAdditionalInfo:
       return .requestPlain
     }
   }
@@ -93,6 +103,9 @@ extension CakeShopAPI: TargetType {
       
     case .fetchCakeShopDetail(shopId: let shopId):
       return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopDetail", withExtension: "json")!)
+      
+    case .fetchAdditionalInfo:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SamplAdditionalShopInfo", withExtension: "json")!)
     }
   }
 }
