@@ -41,6 +41,7 @@ public struct MockCakeImagesByCategoryUseCase: CakeImagesByCategoryUseCase {
     switch scenario {
     case .failure:
       return Fail(error: NSError(domain: "preview", code: -1))
+        .delay(for: .seconds(delay), scheduler: RunLoop.main)
         .eraseToAnyPublisher()
       
     case .success:
