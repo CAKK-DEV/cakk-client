@@ -12,6 +12,7 @@ import Moya
 public enum CakeShopAPI {
   case fetchCakeImages(category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
   case fetchCakeShopQuickInfo(shopId: Int)
+  case fetchCakeShopDetail(shopId: Int)
 }
 
 extension CakeShopAPI: TargetType {
@@ -25,8 +26,11 @@ extension CakeShopAPI: TargetType {
     case .fetchCakeImages:
       return "/api/v1/cakes/search/categories"
       
-    case .fetchCakeShopQuickInfo(shopId: let shopId):
+    case .fetchCakeShopQuickInfo(let shopId):
       return "/api/v1/shops/\(shopId)/simple"
+      
+    case .fetchCakeShopDetail(let shopId):
+      return "/api/v1/shops/\(shopId)"
     }
   }
   
@@ -35,7 +39,10 @@ extension CakeShopAPI: TargetType {
     case .fetchCakeImages:
       return .get
       
-    case .fetchCakeShopQuickInfo(shopId: let shopId):
+    case .fetchCakeShopQuickInfo:
+      return .get
+      
+    case .fetchCakeShopDetail:
       return .get
     }
   }
@@ -53,7 +60,10 @@ extension CakeShopAPI: TargetType {
       
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
-    case .fetchCakeShopQuickInfo(shopId: let shopId):
+    case .fetchCakeShopQuickInfo:
+      return .requestPlain
+      
+    case .fetchCakeShopDetail:
       return .requestPlain
     }
   }
@@ -80,6 +90,9 @@ extension CakeShopAPI: TargetType {
       
     case .fetchCakeShopQuickInfo:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopQuickInfo", withExtension: "json")!)
+      
+    case .fetchCakeShopDetail(shopId: let shopId):
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopDetail", withExtension: "json")!)
     }
   }
 }
