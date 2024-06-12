@@ -9,11 +9,11 @@
 import Foundation
 
 public enum WorkingDay: CaseIterable {
+  case sun
   case mon
   case tue
   case wed
   case thu
   case fri
   case sat
-  case sun
 }
