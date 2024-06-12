@@ -69,5 +69,13 @@ struct ExampleApp: App {
     diContainer.register(CakeShopDetailUseCase.self) { resolver in
       MockCakeShopDetailUseCase()
     }
+    
+    diContainer.register(CakeImagesByShopIdUseCase.self) { _ in
+      MockCakeImagesByShopIdUseCase()
+    }
+    
+    diContainer.register(CakeShopAdditionalInfoUseCase.self) { _ in
+      MockCakeShopAdditionalInfoUseCase()
+    }
   }
 }
