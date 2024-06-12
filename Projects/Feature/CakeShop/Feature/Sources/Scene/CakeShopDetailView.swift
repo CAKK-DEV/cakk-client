@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
 import DesignSystem
 
 import DIContainer
@@ -62,8 +63,30 @@ public struct CakeShopDetailView: View {
         }
       }
     }
-    .onAppear {
+    .onFirstAppear {
       viewModel.fetchCakeShopDetail()
+    }
+    .onChange(of: viewModel.cakeShopDetailFetchingState) { state in
+      switch state {
+      case .failure(let error):
+        LoadingManager.shared.stopLoading()
+        
+        if error == .noExists {
+          DialogManager.shared.showDialog(
+            title: "존재하지 않는 케이크샵",
+            message: "존재하지 않는 케이크샵이에요.",
+            primaryButtonTitle: "확인",
+            primaryButtonAction: .custom({
+              router.navigateBack()
+            }))
+        } else {
+          DialogManager.shared.showDialog(.unknownError(completion: {
+            router.navigateBack()
+          }))
+        }
+      default:
+        break
+      }
     }
   }
   
@@ -141,6 +164,27 @@ import PreviewSupportCakeShop
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
+    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
+  }
+  
+  return CakeShopDetailView()
+}
+
+#Preview {
+  let diContainer = DIContainer.shared.container
+  diContainer.register(CakeShopDetailViewModel.self) { resolver in
+    let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .noExists)
+    return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
+  }
+  
+  return CakeShopDetailView()
+}
+
+
+#Preview {
+  let diContainer = DIContainer.shared.container
+  diContainer.register(CakeShopDetailViewModel.self) { resolver in
+    let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .failure)
     return CakeShopDetailViewModel(shopId: 0, cakeShopDetailUseCase: cakeShopDetailUseCase)
   }
   

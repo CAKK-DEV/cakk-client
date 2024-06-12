@@ -21,7 +21,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   @Published private(set) var cakeShopDetail: CakeShopDetail?
   
   @Published private(set) var cakeShopDetailFetchingState: CakeShopDetailFetchingState = .idle
-  enum CakeShopDetailFetchingState {
+  enum CakeShopDetailFetchingState: Equatable {
     case idle
     case loading
     case failure(error: CakeShopDetailError)
