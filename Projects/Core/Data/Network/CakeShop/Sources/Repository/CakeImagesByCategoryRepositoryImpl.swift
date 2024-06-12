@@ -31,9 +31,9 @@ public final class CakeImagesByCategoryRepositoryImpl: CakeImagesByCategoryRepos
   // MARK: - Public Methods
   
   public func fetch(category: DomainCakeShop.CakeCategory, count: Int, lastCakeId: Int?) -> AnyPublisher<[DomainCakeShop.CakeImage], any Error> {
-    provider.requestPublisher(.fetchCakeImages(category: category.toDTO(), count: count, lastCakeId: lastCakeId))
+    provider.requestPublisher(.fetchCakeImagesByCategory(category.toDTO(), count: count, lastCakeId: lastCakeId))
       .map { $0.data }
-      .decode(type: CakeImagesByCategoryResponseDTO.self, decoder: JSONDecoder())
+      .decode(type: CakeImagesResponseDTO.self, decoder: JSONDecoder())
       .tryMap { response in
         response.toDomain()
       }

@@ -10,7 +10,8 @@ import Foundation
 import Moya
 
 public enum CakeShopAPI {
-  case fetchCakeImages(category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
+  case fetchCakeImagesByCategory(_ category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
+  case fetchCakeImagesByShopId(_ shopId: Int, count: Int, lastCakeId: Int?)
   case fetchCakeShopQuickInfo(shopId: Int)
   case fetchCakeShopDetail(shopId: Int)
   case fetchAdditionalInfo(shopId: Int)
@@ -24,8 +25,11 @@ extension CakeShopAPI: TargetType {
   
   public var path: String {
     switch self {
-    case .fetchCakeImages:
+    case .fetchCakeImagesByCategory:
       return "/api/v1/cakes/search/categories"
+      
+    case .fetchCakeImagesByShopId:
+      return "/api/v1/cakes/search/shops"
       
     case .fetchCakeShopQuickInfo(let shopId):
       return "/api/v1/shops/\(shopId)/simple"
@@ -40,7 +44,10 @@ extension CakeShopAPI: TargetType {
   
   public var method: Moya.Method {
     switch self {
-    case .fetchCakeImages:
+    case .fetchCakeImagesByCategory:
+      return .get
+      
+    case .fetchCakeImagesByShopId:
       return .get
       
     case .fetchCakeShopQuickInfo:
@@ -56,7 +63,7 @@ extension CakeShopAPI: TargetType {
   
   public var task: Moya.Task {
     switch self {
-    case .fetchCakeImages(let category, let count, let lastCakeId):
+    case .fetchCakeImagesByCategory(let category, let count, let lastCakeId):
       var params: [String: Any] = [
         "category": category.rawValue,
         "pageSize": count
@@ -64,7 +71,16 @@ extension CakeShopAPI: TargetType {
       if let lastCakeId {
         params["cakeId"] = lastCakeId
       }
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
+    case .fetchCakeImagesByShopId(let shopId, let count, let lastCakeId):
+      var params: [String: Any] = [
+        "cakeShopId": shopId,
+        "pageSize": count
+      ]
+      if let lastCakeId {
+        params["cakeId"] = lastCakeId
+      }
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchCakeShopQuickInfo:
@@ -84,7 +100,8 @@ extension CakeShopAPI: TargetType {
   
   public var sampleData: Data {
     switch self {
-    case .fetchCakeImages(_, _, let lastCakeId):
+    case .fetchCakeImagesByCategory(_, _, let lastCakeId),
+        .fetchCakeImagesByShopId(_, _, let lastCakeId):
       if let lastCakeId {
         switch lastCakeId {
         case 10:
@@ -105,7 +122,7 @@ extension CakeShopAPI: TargetType {
       return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopDetail", withExtension: "json")!)
       
     case .fetchAdditionalInfo:
-      return try! Data(contentsOf: Bundle.module.url(forResource: "SamplAdditionalShopInfo", withExtension: "json")!)
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleAdditionalShopInfo", withExtension: "json")!)
     }
   }
 }
