@@ -54,4 +54,29 @@ final public class CakeShopDetailRepositoryImpl: CakeShopDetailRepository {
       }
       .eraseToAnyPublisher()
   }
+  
+  public func fetchAdditionalInfo(shopId: Int) -> AnyPublisher<CakeShopAdditionalInfo, Error> {
+    provider.requestPublisher(.fetchAdditionalInfo(shopId: shopId))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedResponse = try JSONDecoder().decode(CakeShopAdditionalInfoDTO.self.self, from: response.data)
+          guard let data = decodedResponse.data else {
+            throw CakeShopNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          
+          return data.toDomain()
+        default:
+          throw CakeShopNetworkError.unexpected(NSError(domain: "CakeShopAPI", code: response.statusCode))
+        }
+      }
+      .mapError { error in
+        if let networkError = error as? CakeShopNetworkError {
+          return networkError.toDomainError()
+        } else {
+          return CakeShopNetworkError.error(for: error).toDomainError()
+        }
+      }
+      .eraseToAnyPublisher()
+  }
 }
