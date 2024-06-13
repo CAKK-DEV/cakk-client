@@ -24,6 +24,8 @@ public struct CakeShopDetailView: View {
   
   @State private var selectedDetailSection = CakeShopContentsSection.DetailSection.images
   
+  @State private var navigationTitleOpacity: CGFloat = 0
+  
   
   // MARK: - Initializers
   
@@ -49,10 +51,19 @@ public struct CakeShopDetailView: View {
               .font(.system(size: 20))
               .foregroundColor(DesignSystemAsset.black.swiftUIColor)
           }
+        }, centerContent: {
+          if let shopDetail = viewModel.cakeShopDetail {
+            Text(shopDetail.shopName)
+              .font(.pretendard(size: 17, weight: .bold))
+              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              .opacity(navigationTitleOpacity)
+          }
         })
         
         if let cakeShopDetail = viewModel.cakeShopDetail {
-          ScrollView {
+          ScrollViewOffset { offset in
+            navigationTitleOpacity = min(1, -offset / 100)
+          } content: {
             VStack(spacing: 24) {
               headerView(cakeShopDetail: cakeShopDetail)
                 .padding(.horizontal, 24)
