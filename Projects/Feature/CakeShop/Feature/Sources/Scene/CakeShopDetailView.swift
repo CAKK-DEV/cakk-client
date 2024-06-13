@@ -39,7 +39,9 @@ public struct CakeShopDetailView: View {
   public var body: some View {
     ZStack {
       VStack(spacing: 0) {
-        NavigationBar(leadingContent: {
+        NavigationBar(
+          isDividerShown: false,
+          leadingContent: {
           Button {
             router.navigateBack()
           } label: {
