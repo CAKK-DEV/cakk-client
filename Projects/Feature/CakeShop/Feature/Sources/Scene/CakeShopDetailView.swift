@@ -75,30 +75,18 @@ public struct CakeShopDetailView: View {
       VStack {
         Spacer()
         
-        HStack {
-          Button {
-            // heart action
-          } label: {
-            RoundedRectangle(cornerRadius: 20)
-              .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
-              .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 20)))
-              .frame(width: 76, height: 64)
-              .overlay {
-                Image(systemName: "heart")
-                  .font(.system(size: 24))
-                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-              }
+        if let shopDetail = viewModel.cakeShopDetail {
+          ZStack {
+            bottomPromptButton(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection == .order ? 0 : 200)
+              .animation(.smooth, value: selectedDetailSection)
           }
-          .modifier(BouncyPressEffect())
-          
-          CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
-            withAnimation(.snappy) {
-              selectedDetailSection = .order
-            }
+          .background {
+            bottomGeneralButtons(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection != .order ? 0 : 200)
+              .animation(.snappy, value: selectedDetailSection)
           }
         }
-        .padding(.horizontal, 28)
-        .padding(.bottom, 16)
       }
     }
     .onFirstAppear {
@@ -190,6 +178,63 @@ public struct CakeShopDetailView: View {
       }
       .padding(.horizontal, 4)
     }
+  }
+  
+  private func bottomPromptButton(shopDetail: CakeShopDetail) -> some View {
+    HStack {
+      Text("\(shopDetail.shopName)(이)가 어서 입점하길 원한다면?\n따봉을 눌러 사장님을 재촉해 보세요!")
+        .font(.pretendard(size: 15, weight: .medium))
+        .foregroundStyle(.white)
+        .multilineTextAlignment(.leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
+      
+      Button {
+        // 따봉 action
+      } label: {
+        VStack(spacing: 5) {
+          DesignSystemAsset.thumbsUp.swiftUIImage
+            .resizable()
+            .scaledToFit()
+            .size(24)
+          
+          Text("3,300")
+            .font(.pretendard(size: 13, weight: .bold))
+        }
+        .foregroundStyle(.white)
+        .padding(4)
+      }
+      .modifier(BouncyPressEffect())
+    }
+    .padding(.vertical, 8)
+    .padding(.horizontal, 28)
+    .background(DesignSystemAsset.black.swiftUIColor.ignoresSafeArea())
+  }
+  
+  private func bottomGeneralButtons(shopDetail: CakeShopDetail) -> some View {
+    HStack {
+      Button {
+        // heart action
+      } label: {
+        RoundedRectangle(cornerRadius: 20)
+          .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
+          .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 20)))
+          .frame(width: 76, height: 64)
+          .overlay {
+            Image(systemName: "heart")
+              .font(.system(size: 24))
+              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+          }
+      }
+      .modifier(BouncyPressEffect())
+      
+      CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
+        withAnimation(.snappy) {
+          selectedDetailSection = .order
+        }
+      }
+    }
+    .padding(.horizontal, 28)
+    .padding(.bottom, 16)
   }
 }
 
