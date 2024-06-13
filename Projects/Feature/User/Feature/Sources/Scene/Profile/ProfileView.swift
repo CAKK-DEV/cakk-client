@@ -74,7 +74,17 @@ public struct ProfileView: View {
             
             HStack(spacing: 24) {
               Button {
-                // action
+                DialogManager.shared.showDialog(
+                  title: "케이크 샵 등록 문의",
+                  message: "케이크크 문의 채널을 통해서 등록되지 않은 케이크 샵 등록을 요청할 수 있어요.",
+                  primaryButtonTitle: "문의 채널로 이동",
+                  primaryButtonAction: .custom({
+                    if let url = URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr") {
+                      UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                    }
+                  }),
+                  secondaryButtonTitle: "취소",
+                  secondaryButtonAction: .cancel)
               } label: {
                 headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
               }
