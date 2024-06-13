@@ -100,7 +100,7 @@ struct CakeCategoryDetailView: View {
         }
       }
     }
-    .onAppear {
+    .onFirstAppear {
       viewModel.fetchCakeImages()
     }
   }

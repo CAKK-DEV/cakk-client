@@ -47,13 +47,9 @@ struct SignUp_Processing: View {
             stepRouter.popToRoot()
           }))
       case .serverError:
-        DialogManager.shared.showDialog(
-          title: "서버 에러",
-          message: "서버에러가 발생했어요.\n나중에 다시 시도해주세요.",
-          primaryButtonTitle: "확인",
-          primaryButtonAction: .custom({
-            stepRouter.popToRoot()
-          }))
+        DialogManager.shared.showDialog(.serverError(completion: {
+          stepRouter.popToRoot()
+        }))
       case .success:
         print("signed in")
         stepRouter.pushStep()

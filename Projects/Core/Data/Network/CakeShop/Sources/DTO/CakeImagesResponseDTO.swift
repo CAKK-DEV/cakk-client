@@ -1,5 +1,5 @@
 //
-//  CakeImagesByCategoryResponseDTO.swift
+//  CakeImagesResponseDTO.swift
 //  NetworkCakeShop
 //
 //  Created by 이승기 on 6/2/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CakeImagesByCategoryResponseDTO: Decodable {
+struct CakeImagesResponseDTO: Decodable {
   let returnCode: String
   let returnMessage: String
   let data: Data

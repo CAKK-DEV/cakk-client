@@ -11,6 +11,8 @@ import Router
 
 import DIContainer
 
+import PreviewSupportCakeShop
+
 @main
 struct ExampleApp: App {
   
@@ -52,6 +54,10 @@ struct ExampleApp: App {
       CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
     }
     
+    diContainer.register(CakeShopDetailRepository.self) { resolver in
+      CakeShopDetailRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
+    }
+    
     diContainer.register(CakeShopQuickInfoRepository.self) { resolver in
       CakeShopQuickInfoRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
     }
@@ -62,6 +68,18 @@ struct ExampleApp: App {
     
     diContainer.register(CakeShopQuickInfoUseCase.self) { resolver in
       CakeShopQuickInfoUseCaseImpl(repository: resolver.resolve(CakeShopQuickInfoRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopDetailUseCase.self) { resolver in
+      CakeShopDetailUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
+    
+    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
+      CakeImagesByShopIdUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopAdditionalInfoUseCase.self) { resolver in
+      CakeShopAdditionalInfoUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
     }
   }
 }

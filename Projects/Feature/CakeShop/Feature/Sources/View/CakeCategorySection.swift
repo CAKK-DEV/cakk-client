@@ -24,7 +24,9 @@ struct CakeCategorySection: View {
   
   var body: some View {
     VStack(spacing: 16) {
-      SectionHeader(title: "종류별로 보기")
+      SectionHeaderLarge(title: "종류별로 보기")
+        .padding(.horizontal, 16)
+      
       categoryItemGrid(horizontalSizeClass: horizontalSizeClass)
         .padding(.horizontal, 20)
     }
@@ -85,38 +87,3 @@ struct CakeCategorySection: View {
   }
 }
 
-extension CakeCategory: Identifiable {
-  public var id: String {
-    return displayName
-  }
-  
-  var displayName: String {
-    switch self {
-    case .threeDimensional: "입체"
-    case .character: "캐릭터"
-    case .photo: "포토"
-    case .lunchbox: "도시락"
-    case .figure: "피규어"
-    case .flower: "플라워"
-    case .lettering: "레터링"
-    case .riceCake: "떡케이크"
-    case .tiara: "티아라"
-    case .etc: "기타"
-    }
-  }
-  
-  var emoji: String {
-    switch self {
-    case .threeDimensional: "🐰"
-    case .character: "🧸"
-    case .photo: "📷"
-    case .lunchbox: "🍱"
-    case .figure: "🤖"
-    case .flower: "🌷"
-    case .lettering: "✍️"
-    case .riceCake: "🍚"
-    case .tiara: "👑"
-    case .etc: "🍰"
-    }
-  }
-}

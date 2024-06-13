@@ -103,6 +103,7 @@ struct EditProfileView: View {
                 .padding(.top, 20)
               
               CKTextField(text: $viewModel.editedUserProfile.nickname, placeholder: "이름", headerTitle: "이름")
+              
               CKTextField(text: $viewModel.editedUserProfile.email, headerTitle: "이메일", isDisabled: true)
               
               genderPicker()
@@ -145,11 +146,7 @@ struct EditProfileView: View {
                     LoadingManager.shared.stopLoading()
                     
                     if error == .serverError {
-                      DialogManager.shared.showDialog(
-                        title: "서버 에러",
-                        message: "서버 에러가 발생했어요.\n나중에 다시 시도해 주세요.",
-                        primaryButtonTitle: "확인",
-                        primaryButtonAction: .cancel)
+                      DialogManager.shared.showDialog(.serverError(completion: nil))
                     } else {
                       DialogManager.shared.showDialog(
                         title: "회원탈퇴 실패",
@@ -169,7 +166,7 @@ struct EditProfileView: View {
               .padding(.top, 128)
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             .padding(.bottom, 100)
           }
           

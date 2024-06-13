@@ -12,12 +12,14 @@ import SwiftUIUtil
 
 import DomainCakeShop
 
+import Router
 import DIContainer
 
 struct CakeShopQuickInfoView: View {
   
   // MARK: - Properties
   
+  @EnvironmentObject private var router: Router
   @StateObject var viewModel: CakeShopQuickInfoViewModel
   
   @Environment(\.dismiss) private var dismiss
@@ -94,7 +96,9 @@ struct CakeShopQuickInfoView: View {
             }
         }
         
-        CKButtonLargeStroked(title: "방문", fixedSize: 148)
+        CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
+          router.navigate(to: Destination.shopDetail(shopId: viewModel.shopId))
+        })
       }
       .padding(.bottom, 24)
     }

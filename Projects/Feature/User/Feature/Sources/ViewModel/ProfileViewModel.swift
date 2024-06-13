@@ -73,7 +73,6 @@ public final class ProfileViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        print(completion)
         if case .failure(let error) = completion {
           self?.userProfileFetchingState = .failure(error: error)
           self?.signOut()

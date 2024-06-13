@@ -9,7 +9,7 @@
 import Foundation
 import DomainCakeShop
 
-extension CakeImagesByCategoryResponseDTO {
+extension CakeImagesResponseDTO {
   func toDomain() -> [CakeImage] {
     return self.data.cakeImages.map { .init(id: $0.cakeId, shopId: $0.cakeShopId, imageUrl: $0.cakeImageUrl) }
   }

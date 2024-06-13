@@ -31,6 +31,7 @@ public final class Router: ObservableObject {
   }
   
   public func navigate(to destination: any Hashable) {
+    presentedSheet = nil
     navPath.append(destination)
   }
   
