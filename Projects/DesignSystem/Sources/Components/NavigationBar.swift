@@ -15,54 +15,55 @@ public struct NavigationBar<LeadingContent, CenterContent, TrailingContent>: Vie
   private let leadingContent: () -> LeadingContent?
   private let centerContent: () -> CenterContent?
   private let trailingContent: () -> TrailingContent?
+  private let isDividerShown: Bool
   
   
   // MARK: - Initializers
   
   public init(
+    isDividerShown: Bool = true,
     @ViewBuilder leadingContent: @escaping () -> LeadingContent? = { EmptyView() },
     @ViewBuilder centerContent: @escaping () -> CenterContent? = { EmptyView() },
     @ViewBuilder trailingContent: @escaping () -> TrailingContent? = { EmptyView() }
   ) {
+    self.isDividerShown = isDividerShown
     self.leadingContent = leadingContent
     self.centerContent = centerContent
     self.trailingContent = trailingContent
   }
   
   
-  
   // MARK: - Views
   
   public var body: some View {
-    HStack{
-      Spacer()
-        .overlay {
-          HStack {
-            leadingContent()
-            Spacer()
-          }
-        }
-      
-      centerContent()
-      
-      Spacer()
-        .overlay {
-          HStack {
-            Spacer()
-            trailingContent()
-          }
-        }
-    }
-    .padding(.horizontal, 16)
-    .frame(maxWidth: .infinity, minHeight: 52)
-    .background(Color.white)
-    .overlay {
-      VStack(spacing: 0) {
+    VStack(spacing: 0) {
+      HStack{
         Spacer()
-        Rectangle()
-          .fill(DesignSystemAsset.gray10.swiftUIColor)
-          .frame(maxWidth: .infinity, maxHeight: 1)
+          .overlay {
+            HStack {
+              leadingContent()
+              Spacer()
+            }
+          }
+        
+        centerContent()
+        
+        Spacer()
+          .overlay {
+            HStack {
+              Spacer()
+              trailingContent()
+            }
+          }
       }
+      .padding(.horizontal, 16)
+      .frame(maxWidth: .infinity, minHeight: 52)
+      .background(Color.white)
+      
+      Rectangle()
+        .fill(DesignSystemAsset.gray20.swiftUIColor)
+        .frame(maxWidth: .infinity, maxHeight: 1)
+        .opacity(isDividerShown ? 1.0 : 0.0)
     }
   }
 }
@@ -72,7 +73,7 @@ public struct NavigationBar<LeadingContent, CenterContent, TrailingContent>: Vie
 
 #Preview {
   ZStack {
-    Color.black.ignoresSafeArea()
+    Color.gray.ignoresSafeArea()
    
     VStack {
       NavigationBar(leadingContent: {
