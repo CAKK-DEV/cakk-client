@@ -102,6 +102,9 @@ struct CakeShopContentsSection: View {
                     viewModel.fetchMoreCakeImages()
                   }
                 }
+                .onTapGesture {
+                  router.presentFullScreenSheet(destination: FullScreenSheetDestination.imageFullScreen(imageUrl: cakeImage.imageUrl))
+                }
             default:
               RoundedRectangle(cornerRadius: 14)
                 .fill(DesignSystemAsset.gray20.swiftUIColor)

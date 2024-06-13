@@ -25,6 +25,10 @@ struct CakeShopQuickInfoView: View {
   @Environment(\.dismiss) private var dismiss
   @State private var currentDetent: PresentationDetent = .fraction(0.7)
   
+  @State private var imageOffset: CGPoint = .zero
+  @State private var imageScale: CGFloat = 0
+  @State private var imageScalePosition: CGPoint = .zero
+  
   
   // MARK: - Initializers
   
@@ -156,6 +160,14 @@ struct CakeShopQuickInfoView: View {
           .clipShape(RoundedRectangle(cornerRadius: 22))
           .shadow(color: .black.opacity(0.1), radius: 20, y: 4)
           .transition(.opacity)
+          .offset(x: imageOffset.x, y: imageOffset.y)
+          .overlay {
+            GeometryReader { proxy in
+              let size = proxy.size
+              ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
+            }
+          }
+          .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
       case .failure:
         // Error handling
         RoundedRectangle(cornerRadius: 22)
@@ -172,6 +184,7 @@ struct CakeShopQuickInfoView: View {
           .aspectRatio(3/4, contentMode: .fit)
       }
     }
+    .zIndex(.infinity)
   }
 }
 

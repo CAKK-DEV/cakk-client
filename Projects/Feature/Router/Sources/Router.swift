@@ -22,12 +22,17 @@ public class AnyIdentifiable: Identifiable, Equatable {
 public final class Router: ObservableObject {
   @Published public var navPath = NavigationPath()
   @Published public var presentedSheet: AnyIdentifiable?
+  @Published public var presentedFullScreenSheet: AnyIdentifiable?
   @Published public var root: AnyIdentifiable?
   
   public init() {}
   
   public func presentSheet(destination: any Identifiable) {
     presentedSheet = AnyIdentifiable(destination: destination)
+  }
+  
+  public func presentFullScreenSheet(destination: any Identifiable) {
+    presentedFullScreenSheet = AnyIdentifiable(destination: destination)
   }
   
   public func navigate(to destination: any Hashable) {
