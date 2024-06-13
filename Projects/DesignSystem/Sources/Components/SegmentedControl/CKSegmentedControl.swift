@@ -50,7 +50,7 @@ public struct CKSegmentedControl: View {
                            : DesignSystemAsset.gray50.swiftUIColor)
           .frame(maxWidth: .infinity)
           .frame(height: sizeOption == .regular ? 60 : 40)
-          .background(Color.white)
+          .contentShape(Rectangle())
           .overlay {
             if selection == item {
               VStack(spacing: 0) {
@@ -70,6 +70,14 @@ public struct CKSegmentedControl: View {
       }
     }
     .padding(.horizontal, 28)
+    .background {
+      VStack(spacing: 0) {
+        Spacer()
+        Rectangle()
+          .fill(DesignSystemAsset.gray20.swiftUIColor)
+          .frame(height: 1)
+      }
+    }
     .background(Color.white)
     .frame(maxWidth: .infinity)
   }
@@ -92,7 +100,7 @@ public struct CKSegmentedControl: View {
     
     var body: some View {
       ZStack {
-        Color.black.ignoresSafeArea()
+        Color.gray.ignoresSafeArea()
         
         VStack {
           CKSegmentedControl(items: items, selection: $selection)
