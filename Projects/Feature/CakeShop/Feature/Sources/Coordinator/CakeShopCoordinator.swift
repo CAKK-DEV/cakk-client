@@ -16,11 +16,22 @@ import DIContainer
 
 enum SheetDestination: Identifiable {
   case quickInfo(shopId: Int, cakeImageUrl: String)
-  
+
   var id: String {
     switch self {
     case .quickInfo:
       return "ImageDetail"
+    }
+  }
+}
+
+enum FullScreenSheetDestination: Identifiable {
+  case imageFullScreen(imageUrl: String)
+  
+  var id: String {
+    switch self {
+    case .imageFullScreen:
+      return "ImageFullScreen"
     }
   }
 }
@@ -62,6 +73,14 @@ public struct CakeShopCoordinator: View {
             }
           }
         }
+        .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
+          if let destination = sheet.destination as? FullScreenSheetDestination {
+            switch destination {
+            case .imageFullScreen(let imageUrl):
+              ImageZoomableView(imageUrl: imageUrl)
+            }
+          }
+        })
         .navigationDestination(for: Destination.self) { destination in
           switch destination {
           case .categoryDetail(let initialCategory):
