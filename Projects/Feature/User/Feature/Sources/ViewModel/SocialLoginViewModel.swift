@@ -101,7 +101,6 @@ extension SocialLoginViewModel {
           }
         }
       } receiveValue: { [weak self] _ in
-        // TODO: response 받아서 토큰 저장
         self?.signUpState = .success
       }
       .store(in: &cancellables)
@@ -130,7 +129,6 @@ extension SocialLoginViewModel {
         self.signInState = .failure
         return
       }
-      
       
       guard let idToken = result.user.idToken?.tokenString else {
         self.signInState = .failure

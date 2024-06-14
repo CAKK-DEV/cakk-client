@@ -188,6 +188,17 @@ struct EditProfileView: View {
                 LoadingManager.shared.stopLoading()
               case .loading:
                 LoadingManager.shared.startLoading()
+              case .failure(let error):
+                LoadingManager.shared.stopLoading()
+                if error == .serverError {
+                  DialogManager.shared.showDialog(.serverError(completion: nil))
+                } else {
+                  DialogManager.shared.showDialog(
+                    title: "프로필 업데이트 실패",
+                    message: "프로필 업데이트에 하였어요.\n다시 시도해주세요.",
+                    primaryButtonTitle: "확인",
+                    primaryButtonAction: .cancel)
+                }
               default:
                 LoadingManager.shared.stopLoading()
               }
@@ -267,6 +278,8 @@ struct EditProfileView: View {
 
 import PreviewSupportUser
 
+// 프로필 업데이트 성공 시나리오
+
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
@@ -275,6 +288,22 @@ import PreviewSupportUser
     let withdrawUseCase = MockWithdrawUseCase()
     return ProfileViewModel(userProfileUseCase: profileUseCase,
                             updateUserProfileUseCase: updateUserProfileUseCase, 
+                            withdrawUseCase: withdrawUseCase)
+  }
+  return EditProfileView()
+}
+
+
+// 프로필 업데이트 실패 시나리오
+
+#Preview {
+  let diContainer = DIContainer.shared.container
+  diContainer.register(ProfileViewModel.self) { resolver in
+    let profileUseCase = MockUserProfileUseCase(role: .user)
+    let updateUserProfileUseCase = MockUpdateUserProfileUseCase(scenario: .failure)
+    let withdrawUseCase = MockWithdrawUseCase()
+    return ProfileViewModel(userProfileUseCase: profileUseCase,
+                            updateUserProfileUseCase: updateUserProfileUseCase,
                             withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()

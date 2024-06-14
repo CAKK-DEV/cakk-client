@@ -111,9 +111,6 @@ struct CakeShopContentsSection: View {
                 .aspectRatio(3/4, contentMode: .fit)
             }
           }
-          .onTapGesture {
-            // TODO: 이미지 전체 사이즈 뷰로 이동
-          }
         }
         
         if viewModel.imageFetchingState == .loading {
@@ -212,25 +209,26 @@ import PreviewSupportCakeShop
   struct PreviewContent: View {
     
     @State private var selectedSection = CakeShopContentsSection.DetailSection.detail
+    @StateObject var viewModel: CakeShopDetailViewModel
     
     init() {
-      let diContainer = DIContainer.shared.container
-      diContainer.register(CakeShopDetailViewModel.self) { resolver in
-        let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
-        let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
-        let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
-        let viewModel = CakeShopDetailViewModel(shopId: 0,
-                                                cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                                cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                                cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
-        viewModel.fetchCakeShopDetail()
-        return viewModel
-      }
+      let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
+      let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
+      let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
+      let viewModel = CakeShopDetailViewModel(shopId: 0,
+                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+      _viewModel = .init(wrappedValue: viewModel)
     }
     
     var body: some View {
       ScrollView {
         CakeShopContentsSection(selectedSection: $selectedSection)
+          .environmentObject(viewModel)
+      }
+      .onAppear {
+        viewModel.fetchCakeShopDetail()
       }
     }
   }
@@ -243,24 +241,23 @@ import PreviewSupportCakeShop
   struct PreviewContent: View {
     
     @State private var selectedSection = CakeShopContentsSection.DetailSection.detail
+    @StateObject var viewModel: CakeShopDetailViewModel
     
     init() {
-      let diContainer = DIContainer.shared.container
-      diContainer.register(CakeShopDetailViewModel.self) { resolver in
-        let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .failure)
-        let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
-        let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
-        let viewModel = CakeShopDetailViewModel(shopId: 0,
-                                                cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                                cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                                cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
-        return viewModel
-      }
+      let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .failure)
+      let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
+      let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
+      let viewModel = CakeShopDetailViewModel(shopId: 0,
+                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+      _viewModel = .init(wrappedValue: viewModel)
     }
     
     var body: some View {
       ScrollView {
         CakeShopContentsSection(selectedSection: $selectedSection)
+          .environmentObject(viewModel)
       }
     }
   }

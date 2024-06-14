@@ -46,6 +46,7 @@ public struct MockUpdateUserProfileUseCase: UpdateUserProfileUseCase {
         .eraseToAnyPublisher()
     case .failure:
       Fail(error: UserProfileError.failure)
+        .delay(for: .seconds(delay), scheduler: RunLoop.main)
         .eraseToAnyPublisher()
     }
   }
