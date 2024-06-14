@@ -116,6 +116,7 @@ public final class ProfileViewModel: ObservableObject {
   
   public func signOut() {
     UserSession.shared.clearSession()
+    userProfile = nil
   }
   
   public func withdraw() {
@@ -127,6 +128,7 @@ public final class ProfileViewModel: ObservableObject {
           self?.withdrawState = .failure(error: error)
         } else {
           UserSession.shared.clearSession()
+          self?.userProfile = nil
           self?.withdrawState = .success
         }
       } receiveValue: { _ in }
