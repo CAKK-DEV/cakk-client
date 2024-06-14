@@ -27,6 +27,7 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureUser,
+    Project.FeatureCakeShop,
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserSession,
