@@ -45,15 +45,22 @@ public final class TokenUtil {
   // MARK: - Public Methods
   
   public func create(_ service: String, account: String, value: String, type tokenType: TokenType = .general) {
-    let keyChainQuery: NSDictionary = [
-      kSecClass: tokenType.kSecClass,
-      kSecAttrService: service,
-      kSecAttrAccount: account,
-      kSecValueData: value.data(using: .utf8, allowLossyConversion: false)!
+    let keyChainQuery: [String: Any] = [
+      kSecClass as String: tokenType.kSecClass,
+      kSecAttrService as String: service,
+      kSecAttrAccount as String: account,
+      kSecValueData as String: value.data(using: .utf8, allowLossyConversion: false)!
     ]
-    SecItemDelete(keyChainQuery)
-    let status: OSStatus = SecItemAdd(keyChainQuery, nil)
-    print("Failed to save token = \(status)")
+    SecItemDelete(keyChainQuery as CFDictionary) // Ensure old item is deleted
+    let status: OSStatus = SecItemAdd(keyChainQuery as CFDictionary, nil)
+    if status == errSecSuccess {
+      print("Token saved successfully.")
+    } else {
+      print("Failed to save token, status code = \(status)")
+      if let error = SecCopyErrorMessageString(status, nil) {
+        print("Error message: \(error)")
+      }
+    }
   }
   
   public func read(_ service: String, account: String, type tokenType: TokenType = .general) -> String? {
@@ -76,12 +83,19 @@ public final class TokenUtil {
   }
   
   public func delete(_ service: String, account: String, type tokenType: TokenType = .general) {
-    let keyChainQuery: NSDictionary = [
-      kSecClass: tokenType.kSecClass,
-      kSecAttrService: service,
-      kSecAttrAccount: account
+    let keyChainQuery: [String: Any] = [
+      kSecClass as String: tokenType.kSecClass,
+      kSecAttrService as String: service,
+      kSecAttrAccount as String: account
     ]
-    let status = SecItemDelete(keyChainQuery)
-    print("Failed to delete the token, status code = \(status)")
+    let status = SecItemDelete(keyChainQuery as CFDictionary)
+    
+    if status == errSecSuccess {
+      print("Successfully deleted the token.")
+    } else if status == errSecItemNotFound {
+      print("Item not found, nothing to delete.")
+    } else {
+      print("Failed to delete the token, status code = \(status)")
+    }
   }
 }
