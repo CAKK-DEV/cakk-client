@@ -46,7 +46,7 @@ struct SignUp_Gender: View {
           .blur(radius: isDisappearing ? 100 : 0)
         
         HStack(spacing: 24) {
-          genderSelectorItem(gender: .male, isSelected: selectedGender == .female)
+          genderSelectorItem(gender: .female, isSelected: selectedGender == .female)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
@@ -58,7 +58,7 @@ struct SignUp_Gender: View {
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
           
-          genderSelectorItem(gender: .female, isSelected: selectedGender == .female)
+          genderSelectorItem(gender: .male, isSelected: selectedGender == .male)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
