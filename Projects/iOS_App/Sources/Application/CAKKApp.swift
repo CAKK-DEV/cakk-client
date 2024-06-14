@@ -9,12 +9,16 @@
 import SwiftUI
 
 import FeatureUser
-
 import DomainUser
-import DomainOAuthToken
-
 import NetworkUser
+
+import FeatureCakeShop
+import DomainCakeShop
+import NetworkCakeShop
+
+import DomainOAuthToken
 import OAuthToken
+import UserSession
 
 import DIContainer
 
@@ -25,7 +29,6 @@ import GoogleSignIn
 import KakaoSDKCommon
 import KakaoSDKAuth
 
-import UserSession
 
 @main
 struct CAKKApp: App {
@@ -46,7 +49,7 @@ struct CAKKApp: App {
         .onOpenURL { url in
           // Kakao 인증 리디렉션 URL 처리
           if AuthApi.isKakaoTalkLoginUrl(url) {
-            AuthController.handleOpenUrl(url: url)
+            _ = AuthController.handleOpenUrl(url: url)
             return
           }
           
@@ -64,6 +67,8 @@ struct CAKKApp: App {
   private func setupDIContainer() {
     let diContainer = DIContainer.shared.container
     
+    // User Feature
+    
     diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
       MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
@@ -77,19 +82,13 @@ struct CAKKApp: App {
       return SocialLoginRepositoryImpl(provider: provider)
     }
     
-    diContainer.register(OAuthTokenRepository.self) { _ in
-      OAuthTokenRepositoryImpl()
-    }
-    
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
-      let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
       return SocialLoginSignInUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
     diContainer.register(SocialLoginSignUpUseCase.self) { resolver in
       let socialLoginRepository = resolver.resolve(SocialLoginRepository.self)!
-      let oauthTokenRepository = resolver.resolve(OAuthTokenRepository.self)!
       return SocialLoginSignUpUseCaseImpl(socialLoginRepository: socialLoginRepository)
     }
     
@@ -99,6 +98,78 @@ struct CAKKApp: App {
       return SocialLoginViewModel(signInUseCase: signInUseCase,
                                   signUpUseCase: signUpUseCase)
     }.inObjectScope(.transient)
+    
+    diContainer.register(UserProfileRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<UserAPI>.self)!
+      return UserProfileRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(UserProfileUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return UserProfileUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(UpdateUserProfileUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return UpdateUserProfileUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(WithdrawUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return WithdrawUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(ProfileViewModel.self) { resolver in
+      let userProfileUseCase = resolver.resolve(UserProfileUseCase.self)!
+      let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
+      let withdrawUseCase = resolver.resolve(WithdrawUseCase.self)!
+      return ProfileViewModel(userProfileUseCase: userProfileUseCase,
+                              updateUserProfileUseCase: updateUserProfileUseCase,
+                              withdrawUseCase: withdrawUseCase)
+    }.inObjectScope(.container)
+    
+    
+    // CakeShop Feature
+    
+    diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<CakeShopAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(CakeImagesByCategoryRepository.self) { resolver in
+      CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
+    }
+    
+    diContainer.register(CakeShopDetailRepository.self) { resolver in
+      CakeShopDetailRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
+    }
+    
+    diContainer.register(CakeShopQuickInfoRepository.self) { resolver in
+      CakeShopQuickInfoRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
+    }
+    
+    diContainer.register(CakeImagesByCategoryUseCase.self) { resolver in
+      CakeImagesByCategoryUseCaseImpl(repository: resolver.resolve(CakeImagesByCategoryRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopQuickInfoUseCase.self) { resolver in
+      CakeShopQuickInfoUseCaseImpl(repository: resolver.resolve(CakeShopQuickInfoRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopDetailUseCase.self) { resolver in
+      CakeShopDetailUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
+    
+    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
+      CakeImagesByShopIdUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
+    
+    diContainer.register(CakeShopAdditionalInfoUseCase.self) { resolver in
+      CakeShopAdditionalInfoUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
   }
   
   private func initKakaoSDK() {
