@@ -45,7 +45,6 @@ public enum RootDestination: Identifiable {
 }
 
 private enum Destination: Hashable {
-  case login
 }
 
 
@@ -72,15 +71,7 @@ struct AppCoordinator: View {
           router.replace(with: RootDestination.home)
         }
       case .home:
-        Text("Home")
-      }
-    }
-    .navigationDestination(for: Destination.self) { destination in
-      switch destination {
-      case Destination.login:
-        LoginStepCoordinator(onFinish: {
-          router.navigateBack()
-        })
+        AppTabView()
       }
     }
     .fullScreenCover(item: $router.presentedSheet, content: { destination in

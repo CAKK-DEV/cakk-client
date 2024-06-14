@@ -32,8 +32,10 @@ struct ExampleApp: App {
   
   var body: some Scene {
     WindowGroup {
-      CakeShopCoordinator()
-        .environmentObject(router)
+      NavigationStack(path: $router.navPath) {
+        CakeShopCoordinator()
+          .environmentObject(router)
+      }
     }
   }
   

@@ -51,20 +51,22 @@ struct ExampleApp: App {
   
   var body: some Scene {
     WindowGroup {
-      UserCoordinator()
-        .onOpenURL { url in
-          // Kakao 인증 리디렉션 URL 처리
-          if AuthApi.isKakaoTalkLoginUrl(url) {
-            AuthController.handleOpenUrl(url: url)
-            return
-          }
-          
-          // Google 인증 리디렉션 URL 처리
-          if GIDSignIn.sharedInstance.handle(url) {
-            return
-          }
+      NavigationStack(path: $router.navPath) {
+        UserCoordinator()
+          .environmentObject(router)
+      }
+      .onOpenURL { url in
+        // Kakao 인증 리디렉션 URL 처리
+        if AuthApi.isKakaoTalkLoginUrl(url) {
+          _ = AuthController.handleOpenUrl(url: url)
+          return
         }
-        .environmentObject(router)
+        
+        // Google 인증 리디렉션 URL 처리
+        if GIDSignIn.sharedInstance.handle(url) {
+          return
+        }
+      }
     }
   }
   

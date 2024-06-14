@@ -43,23 +43,22 @@ public struct UserCoordinator: View {
   // MARK: - Views
   
   public var body: some View {
-    NavigationStack(path: $router.navPath) {
-      ProfileView()
-        .fullScreenCover(item: $router.presentedSheet) { destination in
-          if let _ = destination.destination as? SheetDestination {
-            LoginStepCoordinator(onFinish: {
-              router.presentedSheet = nil
-            })
-          }
+    ProfileView()
+      .fullScreenCover(item: $router.presentedSheet) { destination in
+        if let _ = destination.destination as? SheetDestination {
+          LoginStepCoordinator(onFinish: {
+            router.presentedSheet = nil
+          })
         }
-        .navigationDestination(for: Destination.self) { destination in
-          switch destination {
-          case .editProfile:
-            EditProfileView()
-              .navigationBarBackButtonHidden()
-          }
+      }
+      .navigationDestination(for: Destination.self) { destination in
+        switch destination {
+        case .editProfile:
+          EditProfileView()
+            .navigationBarBackButtonHidden()
+            .environmentObject(router)
         }
-    }
+      }
   }
 }
 
@@ -92,8 +91,10 @@ private struct PreviewContent: View {
   }
   
   var body: some View {
-    UserCoordinator()
-      .environmentObject(router)
+    NavigationStack(path: $router.navPath) {
+      UserCoordinator()
+        .environmentObject(router)
+    }
   }
 }
 
