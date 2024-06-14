@@ -34,7 +34,7 @@ extension UserAPI: TargetType {
       return "/api/v1/me"
       
     case .withdraw:
-      return "/api/v1/me/withdrawal"
+      return "/api/v1/me"
     }
   }
   
