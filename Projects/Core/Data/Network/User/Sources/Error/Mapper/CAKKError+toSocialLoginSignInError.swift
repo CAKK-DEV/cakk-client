@@ -15,13 +15,13 @@ public extension CAKKError {
     case .customClientError(let clientErrorCode, _):
       if clientErrorCode == .notExistUser {
         return .newUser
+      } else {
+        return .failure
       }
     case .customServerError:
       return .serverError
     default:
       return .failure
     }
-    
-    return .failure
   }
 }

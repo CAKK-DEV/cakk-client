@@ -38,10 +38,11 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           guard let data = decodedResponse.data else {
             throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
-          
           return data.toDomain()
+          
         default:
-          throw CAKKError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
       .mapError { error in
@@ -63,10 +64,11 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           guard let data = decodedResponse.data else {
             throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
-          
           return data.toDomain()
+          
         default:
-          throw CAKKError.unexpected(NSError(domain: "SocialLoginAPI", code: response.statusCode))
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
       .mapError { error in
