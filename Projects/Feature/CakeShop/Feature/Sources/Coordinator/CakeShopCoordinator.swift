@@ -57,59 +57,57 @@ public struct CakeShopCoordinator: View {
   // MARK: - Views
   
   public var body: some View {
-    NavigationStack(path: $router.navPath) {
-      CakeShopHomeView()
-        .sheet(item: $router.presentedSheet) { sheet in
-          if let destination = sheet.destination as? SheetDestination {
-            switch destination {
-            case .quickInfo(let shopId, let cakeImageUrl):
-              let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
-                let useCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
-                return CakeShopQuickInfoViewModel(shopId: shopId,
-                                                  cakeImageUrl: cakeImageUrl,
-                                                  useCase: useCase)
-              }
-              CakeShopQuickInfoView()
-            }
-          }
-        }
-        .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
-          if let destination = sheet.destination as? FullScreenSheetDestination {
-            switch destination {
-            case .imageFullScreen(let imageUrl):
-              ImageZoomableView(imageUrl: imageUrl)
-            }
-          }
-        })
-        .navigationDestination(for: Destination.self) { destination in
+    CakeShopHomeView()
+      .sheet(item: $router.presentedSheet) { sheet in
+        if let destination = sheet.destination as? SheetDestination {
           switch destination {
-          case .categoryDetail(let initialCategory):
-            let _ = diContainer.register(CategoryDetailViewModel.self) { resolver in
-              let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
-              return CategoryDetailViewModel(initialCategory: initialCategory,
-                                             useCase: useCase)
-            }.inObjectScope(.transient)
-            CakeCategoryDetailView()
-              .navigationBarBackButtonHidden()
-              .environmentObject(router)
-            
-          case .shopDetail(shopId: let shopId):
-            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
-              
-              return CakeShopDetailViewModel(shopId: shopId,
-                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
-            }.inObjectScope(.transient)
-            CakeShopDetailView()
-              .navigationBarBackButtonHidden()
-              .environmentObject(router)
+          case .quickInfo(let shopId, let cakeImageUrl):
+            let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
+              let useCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
+              return CakeShopQuickInfoViewModel(shopId: shopId,
+                                                cakeImageUrl: cakeImageUrl,
+                                                useCase: useCase)
+            }
+            CakeShopQuickInfoView()
           }
         }
-    }
+      }
+      .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
+        if let destination = sheet.destination as? FullScreenSheetDestination {
+          switch destination {
+          case .imageFullScreen(let imageUrl):
+            ImageZoomableView(imageUrl: imageUrl)
+          }
+        }
+      })
+      .navigationDestination(for: Destination.self) { destination in
+        switch destination {
+        case .categoryDetail(let initialCategory):
+          let _ = diContainer.register(CategoryDetailViewModel.self) { resolver in
+            let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
+            return CategoryDetailViewModel(initialCategory: initialCategory,
+                                           useCase: useCase)
+          }.inObjectScope(.transient)
+          CakeCategoryDetailView()
+            .navigationBarBackButtonHidden()
+            .environmentObject(router)
+          
+        case .shopDetail(shopId: let shopId):
+          let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
+            let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
+            let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
+            let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+            
+            return CakeShopDetailViewModel(shopId: shopId,
+                                           cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                           cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                           cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+          }.inObjectScope(.transient)
+          CakeShopDetailView()
+            .navigationBarBackButtonHidden()
+            .environmentObject(router)
+        }
+      }
   }
 }
 
