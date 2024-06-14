@@ -40,8 +40,11 @@ extension UserAPI: TargetType {
   
   public var method: Moya.Method {
     switch self {
-    case .signUp, .signIn, .updateUserProfile:
+    case .signUp, .signIn:
       return .post
+      
+    case .updateUserProfile:
+      return .put
       
     case .fetchUserProfile:
       return .get
@@ -62,7 +65,7 @@ extension UserAPI: TargetType {
     case .fetchUserProfile:
       return .requestPlain
       
-    case .updateUserProfile(_, let newUserProfile):
+    case .updateUserProfile(let newUserProfile, _):
       return .requestJSONEncodable(newUserProfile)
       
     case .withdraw:

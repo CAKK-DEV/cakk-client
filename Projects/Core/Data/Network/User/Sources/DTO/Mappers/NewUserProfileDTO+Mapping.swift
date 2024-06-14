@@ -12,7 +12,7 @@ import DomainUser
 extension NewUserProfile {
   func toDTO() -> NewUserProfileDTO {
     return .init(profileImageUrl: self.profileImageUrl,
-                 nickName: self.nickName,
+                 nickname: self.nickname,
                  email: self.email,
                  gender: self.gender.toDTO(),
                  birthday: self.birthday?.toDTO())

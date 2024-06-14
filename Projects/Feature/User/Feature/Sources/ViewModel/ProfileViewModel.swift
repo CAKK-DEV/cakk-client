@@ -98,7 +98,7 @@ public final class ProfileViewModel: ObservableObject {
     userProfileUpdatingState = .loading
     
     let newUserProfile = NewUserProfile(profileImageUrl: editedUserProfile.profileImageUrl,
-                                        nickName: editedUserProfile.nickname,
+                                        nickname: editedUserProfile.nickname,
                                         email: editedUserProfile.email,
                                         gender: editedUserProfile.gender,
                                         birthday: editedUserProfile.birthday)

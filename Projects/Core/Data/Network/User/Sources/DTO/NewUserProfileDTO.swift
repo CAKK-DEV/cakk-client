@@ -10,20 +10,20 @@ import Foundation
 
 public struct NewUserProfileDTO: Codable {
   let profileImageUrl: String?
-  let nickName: String
+  let nickname: String
   let email: String
   let gender: GenderDTO
   let birthday: String?
   
   public init(
     profileImageUrl: String?,
-    nickName: String,
+    nickname: String,
     email: String,
     gender: GenderDTO,
     birthday: String?
   ) {
     self.profileImageUrl = profileImageUrl
-    self.nickName = nickName
+    self.nickname = nickname
     self.email = email
     self.gender = gender
     self.birthday = birthday
