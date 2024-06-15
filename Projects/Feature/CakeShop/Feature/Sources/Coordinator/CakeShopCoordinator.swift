@@ -27,10 +27,10 @@ enum SheetDestination: Identifiable {
   }
 }
 
-enum FullScreenSheetDestination: Identifiable {
+public enum FullScreenSheetDestination: Identifiable {
   case imageFullScreen(imageUrl: String)
   
-  var id: String {
+  public var id: String {
     switch self {
     case .imageFullScreen:
       return "ImageFullScreen"
@@ -38,7 +38,7 @@ enum FullScreenSheetDestination: Identifiable {
   }
 }
 
-enum Destination: Hashable {
+public enum Destination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
   case shopDetail(shopId: Int)
   
