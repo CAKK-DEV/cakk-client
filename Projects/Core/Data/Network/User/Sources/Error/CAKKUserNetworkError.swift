@@ -1,5 +1,5 @@
 //
-//  CAKKError.swift
+//  CAKKUserNetworkError.swift
 //  CAKK
 //
 //  Created by 이승기 on 5/15/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum CAKKError: Error {
+public enum CAKKUserNetworkError: Error {
   case customClientError(ClientErrorCode, String)
   case customServerError(ServerErrorCode, String)
   case unexpected(Error)
@@ -41,10 +41,10 @@ public enum CAKKError: Error {
     }
   }
 
-  public static func error(for error: Error) -> CAKKError {
+  public static func error(for error: Error) -> CAKKUserNetworkError {
     if let urlError = error as? URLError {
       return .unexpected(urlError)
-    } else if let networkError = error as? CAKKError {
+    } else if let networkError = error as? CAKKUserNetworkError {
       return networkError
     } else if let decodingError = error as? DecodingError {
       return .decodingError(decodingError)
@@ -53,7 +53,7 @@ public enum CAKKError: Error {
     }
   }
   
-  public static func customError(for code: String, message: String) -> CAKKError {
+  public static func customError(for code: String, message: String) -> CAKKUserNetworkError {
     if let clientErrorCode = ClientErrorCode(rawValue: code) {
       return .customClientError(clientErrorCode, message)
     } else if let serverErrorCode = ServerErrorCode(rawValue: code) {
