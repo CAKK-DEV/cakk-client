@@ -12,10 +12,6 @@ import Router
 
 import DIContainer
 
-enum Destination {
-  case editProfile
-}
-
 enum SheetDestination: Identifiable {
   case login
   
@@ -25,6 +21,10 @@ enum SheetDestination: Identifiable {
       return "login"
     }
   }
+}
+
+enum Destination: Hashable {
+  case editProfile(profile: UserProfile)
 }
 
 public struct UserCoordinator: View {
@@ -53,8 +53,15 @@ public struct UserCoordinator: View {
       }
       .navigationDestination(for: Destination.self) { destination in
         switch destination {
-        case .editProfile:
-          EditProfileView()
+        case .editProfile(let profile):
+          let _ = diContainer.register(EditProfileViewModel.self) { resolver in
+            let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
+            let withdrawUseCase = resolver.resolve(WithdrawUseCase.self)!
+            return EditProfileViewModel(userProfile: profile,
+                                        updateUserProfileUseCase: updateUserProfileUseCase,
+                                        withdrawUseCase: withdrawUseCase)
+          }
+          return EditProfileView()
             .navigationBarBackButtonHidden()
             .environmentObject(router)
         }

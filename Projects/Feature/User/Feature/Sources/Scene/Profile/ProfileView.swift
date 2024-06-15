@@ -91,7 +91,11 @@ public struct ProfileView: View {
               .modifier(BouncyPressEffect())
               
               Button {
-                router.navigate(to: Destination.editProfile)
+                if let userProfile = viewModel.userProfile {
+                  router.navigate(to: Destination.editProfile(profile: userProfile))
+                } else {
+                  DialogManager.shared.showDialog(.pleaseWait(completion: nil))
+                }
               } label: {
                 headerItemButton(title: "정보 수정", icon: DesignSystemAsset.fileEdit.swiftUIImage)
               }
@@ -134,9 +138,7 @@ public struct ProfileView: View {
         .padding(.top, 56)
       }
       .onAppear {
-        if viewModel.userProfile == nil {
-          viewModel.fetchUserProfile()
-        }
+        viewModel.fetchUserProfile()
       }
     } else {
       VStack(spacing: 0) {
@@ -200,11 +202,7 @@ import PreviewSupportUser
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
-    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
-    let withdrawUseCase = MockWithdrawUseCase()
-    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase,
-                            withdrawUseCase: withdrawUseCase)
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase)
   }
   return ProfileView()
 }
@@ -216,11 +214,7 @@ import PreviewSupportUser
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .user)
-    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
-    let withdrawUseCase = MockWithdrawUseCase()
-    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase,
-                            withdrawUseCase: withdrawUseCase)
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase)
   }
   return ProfileView()
 }
@@ -231,11 +225,7 @@ import PreviewSupportUser
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
     let userProfileUseCase = MockUserProfileUseCase(role: .businessOwner)
-    let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
-    let withdrawUseCase = MockWithdrawUseCase()
-    return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase,
-                            withdrawUseCase: withdrawUseCase)
+    return ProfileViewModel(userProfileUseCase: userProfileUseCase)
   }
   return ProfileView()
 }
