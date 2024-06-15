@@ -9,6 +9,7 @@ let project = Project.framework(
     Project.Router,
     Project.DomainUser,
     Project.UIKitUtil,
+    Project.UserSession,
     Project.PreviewSupportUser,
     Project.DIContainer,
     External.kakaoSDKCommon,
