@@ -7,6 +7,8 @@
 //
 
 import SwiftUI
+import SwiftUIUtil
+
 import Router
 
 import DomainCakeShop
@@ -77,6 +79,7 @@ public struct CakeShopCoordinator: View {
           switch destination {
           case .imageFullScreen(let imageUrl):
             ImageZoomableView(imageUrl: imageUrl)
+              .background(ClearBackgroundView())
           }
         }
       })
