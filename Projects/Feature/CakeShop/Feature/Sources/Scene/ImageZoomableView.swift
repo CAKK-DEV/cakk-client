@@ -18,6 +18,9 @@ public struct ImageZoomableView: View {
   
   @Environment(\.dismiss) private var dismiss
   
+  /// 이미지를 멀리 pan 하면 할 수록 배경 및 닫기 버튼의 opacity를 조절하기 위한 프로퍼티 입니다.
+  @State private var opacity: Double = 1
+  
   @State private var imageOffset: CGPoint = .zero
   @State private var imageScale: CGFloat = 0
   @State private var imageScalePosition: CGPoint = .zero
@@ -40,6 +43,7 @@ public struct ImageZoomableView: View {
   public var body: some View {
     ZStack {
       Color.black.ignoresSafeArea()
+        .opacity(opacity)
       
       VStack(spacing: 0) {
         HStack(spacing: 0) {
@@ -57,6 +61,7 @@ public struct ImageZoomableView: View {
                   .foregroundStyle(.white)
               }
           }
+          .opacity(opacity)
         }
         
         Spacer()
@@ -87,14 +92,22 @@ public struct ImageZoomableView: View {
                 dragDistance = imageDragStartLocation.distance(to: imageDragCurrentLocation)
                 dragOffset = gesture.translation
                 
-                if dragDistance > 180 {
-                  dismiss()
-                }
+                opacity = 1 - Double(dragDistance) / 1000
               }
-              .onEnded { _ in
+              .onEnded { gesture in
                 withAnimation(.smooth) {
                   dragOffset = .zero
                   dragDistance = 0
+                }
+                
+                /// 이미지를 드래그한 거리가 100이 넘는다면 현재 뷰를 나가고싶은 것으로 간주하여 dimiss 호출
+                let distance = imageDragStartLocation.distance(to: gesture.location)
+                if distance > 100 {
+                  withAnimation(.smooth(duration: 0.1)) {
+                    opacity = 0
+                  }
+                  
+                  dismiss()
                 }
               }
           )
