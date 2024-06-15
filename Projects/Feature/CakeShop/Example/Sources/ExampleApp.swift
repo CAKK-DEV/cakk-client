@@ -11,8 +11,6 @@ import Router
 
 import DIContainer
 
-import PreviewSupportCakeShop
-
 @main
 struct ExampleApp: App {
   
