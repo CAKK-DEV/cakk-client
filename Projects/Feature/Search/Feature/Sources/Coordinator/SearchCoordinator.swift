@@ -11,6 +11,21 @@ import SwiftUI
 import Router
 import DIContainer
 
+public enum PublicSheetDestination: Identifiable {
+  case quickInfo(shopId: Int, cakeImageUrl: String)
+
+  public var id: String {
+    switch self {
+    case .quickInfo:
+      return "ImageDetail"
+    }
+  }
+}
+
+public enum PublicDestination: Hashable {
+  case shopDetail(shopId: Int)
+}
+
 public struct SearchCoordinator: View {
   
   // MARK: - Properties
@@ -46,7 +61,9 @@ private struct PreviewContent: View {
     let diContainer = DIContainer.shared.container
     diContainer.register(SearchViewModel.self) { resolver in
       let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
-      return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase)
+      let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
+      return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
+                             searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
     }
   }
   
