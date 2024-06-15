@@ -103,36 +103,47 @@ struct SearchView: View {
     }
   }
   
+  @ViewBuilder
   private func trendingKeywordSection(keywords: [String]) -> some View {
     VStack(spacing: 0) {
       SectionHeaderCompact(title: "인기 검색어", icon: DesignSystemAsset.chartArrowGrow.swiftUIImage)
         .padding(.horizontal, 28)
       
-      ForEach(Array(keywords.enumerated()), id: \.offset) { index, keyword in
-        Button {
-          search(keyword: keyword)
-        } label: {
-          HStack(spacing: 8) {
-            Text((index + 1).description)
-              .font(.pretendard(size: 15, weight: .bold))
-              .foregroundStyle(index >= 0 && index < 3
-                               ? Color(hex: "FF5CBE")
-                               : DesignSystemAsset.black.swiftUIColor)
-              .frame(width: 20)
-            
-            Text(keyword)
-              .font(.pretendard())
-              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-              .frame(maxWidth: .infinity, alignment: .leading)
+      if viewModel.searchKeywordFetchingState == .loading {
+        VStack(spacing: 26) {
+          ForEach(0..<5, id: \.self) { _ in
+            RoundedRectangle(cornerRadius: 8)
+              .fill(DesignSystemAsset.gray10.swiftUIColor)
+              .frame(width: 160, height: 18)
+              .padding(.horizontal, 28)
           }
-          .contentShape(Rectangle())
-          .frame(minHeight: 48)
-          .padding(.horizontal, 24)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 13)
+      } else {
+        ForEach(Array(keywords.enumerated()), id: \.offset) { index, keyword in
+          Button {
+            search(keyword: keyword)
+          } label: {
+            HStack(spacing: 8) {
+              Text((index + 1).description)
+                .font(.pretendard(size: 15, weight: .bold))
+                .foregroundStyle(index >= 0 && index < 3
+                                 ? Color(hex: "FF5CBE")
+                                 : DesignSystemAsset.black.swiftUIColor)
+                .frame(width: 20)
+              
+              Text(keyword)
+                .font(.pretendard())
+                .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .contentShape(Rectangle())
+            .frame(minHeight: 48)
+            .padding(.horizontal, 24)
+          }
         }
       }
-    }
-    .onFirstAppear {
-      viewModel.fetchTrendingSearchKeywords()
     }
   }
   
@@ -140,6 +151,9 @@ struct SearchView: View {
     ScrollView {
       VStack(spacing: 24) {
         trendingKeywordSection(keywords: viewModel.trendingSearchKeywords)
+          .onFirstAppear {
+            viewModel.fetchTrendingSearchKeywords()
+          }
       }
       .padding(.top, 16)
     }
@@ -154,6 +168,8 @@ struct SearchView: View {
   }
   
   private func search() {
+    if viewModel.searchKeyword.isEmpty { return }
+    
     isFocused = false
     
     withAnimation(.smooth(duration: 0.28)) {
