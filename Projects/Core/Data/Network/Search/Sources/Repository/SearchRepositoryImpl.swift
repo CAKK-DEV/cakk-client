@@ -45,4 +45,20 @@ public final class SearchRepositoryImpl: SearchRepository {
       }
       .eraseToAnyPublisher()
   }
+  
+  public func fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
+    provider.requestPublisher(.fetchCakeImages(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeId: lastCakeId))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedData = try JSONDecoder().decode(CakeImagesResponseDTO.self, from: response.data)
+          return decodedData.toDomain()
+          
+        default:
+          let decodedData = try JSONDecoder().decode(TrendingSearchKeywordResponseDTO.self, from: response.data)
+          throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
+        }
+      }
+      .eraseToAnyPublisher()
+  }
 }

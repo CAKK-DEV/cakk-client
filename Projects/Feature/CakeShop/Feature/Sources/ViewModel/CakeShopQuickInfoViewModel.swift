@@ -11,7 +11,7 @@ import Combine
 
 import DomainCakeShop
 
-final class CakeShopQuickInfoViewModel: ObservableObject {
+public final class CakeShopQuickInfoViewModel: ObservableObject {
   
   // MARK: - Properties
   
@@ -33,7 +33,7 @@ final class CakeShopQuickInfoViewModel: ObservableObject {
   
   // MARK: - Initializers
   
-  init(
+  public init(
     shopId: Int,
     cakeImageUrl: String,
     useCase: CakeShopQuickInfoUseCase

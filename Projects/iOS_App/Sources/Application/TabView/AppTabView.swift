@@ -41,6 +41,7 @@ struct AppTabView: View {
       .toolbar(.hidden, for: .tabBar)
       
       CAKKTabBar(selectedTab: $selectedTab)
+        .ignoresSafeArea(.keyboard)
     }
   }
 }

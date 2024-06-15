@@ -11,4 +11,5 @@ import Combine
 
 public protocol SearchRepository {
   func fetchTrendingSearchKeywords(count: Int) -> AnyPublisher<[String], Error>
+  func fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error>
 }

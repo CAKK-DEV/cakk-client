@@ -194,9 +194,16 @@ struct CAKKApp: App {
       return TrendingSearchKeywordUseCaseImpl(repository: repository)
     }
     
+    diContainer.register(SearchCakeImagesUseCase.self) { resolver in
+      let repository = resolver.resolve(SearchRepositoryImpl.self)!
+      return SearchCakeImagesUseCaseImpl(repository: repository)
+    }
+    
     diContainer.register(SearchViewModel.self) { resolver in
       let trendingSearchKeywordUseCase = resolver.resolve(TrendingSearchKeywordUseCase.self)!
-      return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase)
+      let searchCakeImagesUseCase = resolver.resolve(SearchCakeImagesUseCase.self)!
+      return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
+                             searchCakeImagesUseCase: searchCakeImagesUseCase)
     }
   }
   

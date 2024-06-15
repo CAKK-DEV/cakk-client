@@ -20,6 +20,11 @@ struct SearchView: View {
   
   @StateObject var viewModel: SearchViewModel
   
+  @State private var selectedSegmentItem = SearchResultView.SearchResultSection.images
+  
+  @State private var isSearchResultViewShown = false
+  @FocusState private var isFocused
+  
   
   // MARK: - Initializers
   
@@ -36,41 +41,66 @@ struct SearchView: View {
     VStack(spacing: 0) {
       searchBar()
       
-      ScrollView {
-        VStack(spacing: 24) {
-          trendingKeywordSection(keywords: viewModel.trendingSearchKeywords)
-        }
-        .padding(.top, 16)
+      if isSearchResultViewShown {
+        SearchResultView(selectedSection: $selectedSegmentItem)
+          .environmentObject(viewModel)
+          .ignoresSafeArea()
+      } else {
+        searchIdleStateView()
       }
     }
   }
   
   private func searchBar() -> some View {
     VStack {
-      RoundedRectangle(cornerRadius: 16)
-        .fill(DesignSystemAsset.gray10.swiftUIColor)
-        .frame(height: 48)
-        .overlay {
-          HStack(spacing: 12) {
-            TextField("매장, 지역으로 검색해 보세요", text: .constant("검색어 어쩌구"))
-              .font(.pretendard(size: 17, weight: .medium))
-              .tint(DesignSystemAsset.brandcolor1.swiftUIColor)
-            
-            Button {
-              // search action
-            } label: {
-              DesignSystemAsset.magnifyingGlass.swiftUIImage
-                .resizable()
-                .size(18)
-                .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-            }
+      HStack(spacing: 4) {
+        if isSearchResultViewShown {
+          Button {
+            restoreSearch()
+          } label: {
+            Image(systemName: "arrow.left")
+              .font(.system(size: 20))
+              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              .size(40)
           }
-          .padding(.horizontal, 20)
+          .padding(.leading, -8)
         }
+        
+        
+        RoundedRectangle(cornerRadius: 16)
+          .fill(DesignSystemAsset.gray10.swiftUIColor)
+          .frame(height: 48)
+          .overlay {
+            HStack(spacing: 12) {
+              TextField("매장, 지역으로 검색해 보세요", text: $viewModel.searchKeyword)
+                .font(.pretendard(size: 17, weight: .medium))
+                .tint(DesignSystemAsset.brandcolor1.swiftUIColor)
+                .focused($isFocused)
+                .submitLabel(.search)
+                .onSubmit {
+                  search()
+                }
+              
+              Button {
+                search()
+              } label: {
+                DesignSystemAsset.magnifyingGlass.swiftUIImage
+                  .resizable()
+                  .size(18)
+                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              }
+              .modifier(BouncyPressEffect())
+            }
+            .padding(.horizontal, 20)
+          }
+      }
     }
     .padding(.vertical, 12)
     .padding(.horizontal, 28)
     .background(Color.white.ignoresSafeArea())
+    .onFirstAppear {
+      isFocused = true
+    }
   }
   
   private func trendingKeywordSection(keywords: [String]) -> some View {
@@ -80,7 +110,7 @@ struct SearchView: View {
       
       ForEach(Array(keywords.enumerated()), id: \.offset) { index, keyword in
         Button {
-          // search with keyword action
+          search(keyword: keyword)
         } label: {
           HStack(spacing: 8) {
             Text((index + 1).description)
@@ -101,9 +131,51 @@ struct SearchView: View {
         }
       }
     }
-    .onAppear {
+    .onFirstAppear {
       viewModel.fetchTrendingSearchKeywords()
     }
+  }
+  
+  private func searchIdleStateView() -> some View {
+    ScrollView {
+      VStack(spacing: 24) {
+        trendingKeywordSection(keywords: viewModel.trendingSearchKeywords)
+      }
+      .padding(.top, 16)
+    }
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func search(keyword: String) {
+    viewModel.searchKeyword = keyword
+    search()
+  }
+  
+  private func search() {
+    isFocused = false
+    
+    withAnimation(.smooth(duration: 0.28)) {
+      isSearchResultViewShown = true
+    }
+    
+    switch selectedSegmentItem {
+    case .images:
+      viewModel.fetchCakeImages()
+    case .order:
+      // TODO: Fetch cake shops
+      break
+    }
+  }
+  
+  private func restoreSearch() {
+    withAnimation(.smooth(duration: 0.28)) {
+      isSearchResultViewShown = false
+    }
+    
+    viewModel.searchKeyword.removeAll()
+    isFocused = false
   }
 }
 
@@ -116,7 +188,9 @@ import PreviewSupportSearch
   let diContainer = DIContainer.shared.container
   diContainer.register(SearchViewModel.self) { resolver in
     let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
-    return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase)
+    let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
+    return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
+                           searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
   }
   
   return SearchView()

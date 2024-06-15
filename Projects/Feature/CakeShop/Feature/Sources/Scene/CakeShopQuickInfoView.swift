@@ -15,7 +15,7 @@ import DomainCakeShop
 import Router
 import DIContainer
 
-struct CakeShopQuickInfoView: View {
+public struct CakeShopQuickInfoView: View {
   
   // MARK: - Properties
   
@@ -32,7 +32,7 @@ struct CakeShopQuickInfoView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopQuickInfoViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -41,7 +41,7 @@ struct CakeShopQuickInfoView: View {
 
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 28) {
       VStack(spacing: 20) {
         if let shopName = viewModel.shopInfo?.shopName {
