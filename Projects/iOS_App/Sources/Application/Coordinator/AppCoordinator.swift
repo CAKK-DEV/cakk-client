@@ -86,7 +86,7 @@ struct AppCoordinator: View {
     })
     .environmentObject(router)
     .onAppear {
-      router.replace(with: RootDestination.onboarding)
+//      router.replace(with: RootDestination.onboarding)
     }
     .onChange(of: router.root) { newRoot in
       if let newRoot = newRoot?.destination as? RootDestination {
