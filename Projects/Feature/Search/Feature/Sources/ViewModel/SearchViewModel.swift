@@ -32,7 +32,7 @@ public final class SearchViewModel: ObservableObject {
   
   public func fetchTrendingSearchKeywords() {
     trendingSearchKeywordUseCase
-      .execute()
+      .execute(count: 10)
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { completion in

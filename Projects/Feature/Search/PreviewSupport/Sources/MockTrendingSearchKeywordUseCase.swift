@@ -27,7 +27,7 @@ public struct MockTrendingSearchKeywordUseCase: TrendingSearchKeywordUseCase {
   
   // MARK: - Public Methods
   
-  public func execute() -> AnyPublisher<[String], any Error> {
+  public func execute(count: Int = 10) -> AnyPublisher<[String], any Error> {
     Just([
         "인기 검색어1",
         "인기 검색어2",
