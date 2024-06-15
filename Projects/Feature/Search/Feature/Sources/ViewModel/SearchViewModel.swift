@@ -17,6 +17,12 @@ public final class SearchViewModel: ObservableObject {
   
   @Published private(set) var trendingSearchKeywords: [String] = []
   private let trendingSearchKeywordUseCase: TrendingSearchKeywordUseCase
+  @Published private(set) var searchKeywordFetchingState: SearchKeywordFetchingState = .idle
+  enum SearchKeywordFetchingState {
+    case idle
+    case loading
+    case success
+  }
   
   @Published private(set) var cakeImages: [CakeImage] = []
   private let searchCakeImagesUseCase: SearchCakeImagesUseCase
@@ -48,11 +54,14 @@ public final class SearchViewModel: ObservableObject {
   // MARK: - Public Methods
   
   public func fetchTrendingSearchKeywords() {
+    searchKeywordFetchingState = .loading
+    
     trendingSearchKeywordUseCase
       .execute(count: 10)
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
-      .sink { completion in
+      .sink { [weak self] completion in
+        self?.searchKeywordFetchingState = .success
         print(completion)
       } receiveValue: { [weak self] keywords in
         self?.trendingSearchKeywords = keywords
@@ -64,7 +73,7 @@ public final class SearchViewModel: ObservableObject {
     imageFetchingState = .loading
     
     searchCakeImagesUseCase
-      .execute(keyword: searchKeyword,
+      .execute(keyword: searchKeyword.trimmingCharacters(in: .whitespaces),
                latitude: 37.4979,
                longitude: 127.0276,
                pageSize: 10,
