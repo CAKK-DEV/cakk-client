@@ -1,5 +1,5 @@
 //
-//  TrendingSearchKeywordUseCase.swift
+//  SearchRepository.swift
 //  DomainSearch
 //
 //  Created by 이승기 on 6/15/24.
@@ -9,6 +9,6 @@
 import Foundation
 import Combine
 
-public protocol TrendingSearchKeywordUseCase {
-  func execute(count: Int) -> AnyPublisher<[String], Error>
+public protocol SearchRepository {
+  func fetchTrendingSearchKeywords(count: Int) -> AnyPublisher<[String], Error>
 }
