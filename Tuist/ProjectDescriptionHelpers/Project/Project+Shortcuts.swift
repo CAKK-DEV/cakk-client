@@ -57,6 +57,11 @@ public extension Project {
     target: "DomainCakeShop",
     path: .relativeToRoot("Projects/Core/Domain/CakeShop")
   )
+
+  static let DomainSearch: TargetDependency = .project(
+    target: "DomainSearch",
+    path: .relativeToRoot("Projects/Core/Domain/Search")
+  )
   
   
   // MARK: - Core / Data / Network
@@ -69,6 +74,11 @@ public extension Project {
   static let NetworkUser: TargetDependency = .project(
     target: "NetworkUser",
     path: .relativeToRoot("Projects/Core/Data/Network/User")
+  )
+
+  static let NetworkSearch: TargetDependency = .project(
+    target: "NetworkSearch",
+    path: .relativeToRoot("Projects/Core/Data/Network/Search")
   )
   
   
@@ -104,6 +114,11 @@ public extension Project {
     target: "FeatureOnboarding",
     path: .relativeToRoot("Projects/Feature/Onboarding/Feature")
   )
+
+  static let FeatureSearch: TargetDependency = .project(
+    target: "FeatureSearch",
+    path: .relativeToRoot("Projects/Feature/Search/Feature")
+  )
   
   
   // MARK: - Feature / Example
@@ -123,6 +138,11 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/Onboarding/Example")
   )
 
+  static let ExampleSearch: TargetDependency = .project(
+    target: "ExampleSearch",
+    path: .relativeToRoot("Projects/Feature/Search/Example")
+  )
+
   
   // MARK: - Feature / Preview Supports
 
@@ -134,6 +154,11 @@ public extension Project {
   static let PreviewSupportCakeShop: TargetDependency = .project(
     target: "PreviewSupportCakeShop",
     path: .relativeToRoot("Projects/Feature/CakeShop/PreviewSupport")
+  )
+
+  static let PreviewSupportSearch: TargetDependency = .project(
+    target: "PreviewSupportSearch",
+    path: .relativeToRoot("Projects/Feature/Search/PreviewSupport")
   )
   
   
