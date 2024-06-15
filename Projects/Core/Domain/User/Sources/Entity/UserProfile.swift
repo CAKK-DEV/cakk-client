@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct UserProfile: Equatable {
+public struct UserProfile: Equatable, Hashable {
   public var profileImageUrl: String?
   public var nickname: String
   public var email: String
