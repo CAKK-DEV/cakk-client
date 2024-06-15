@@ -123,9 +123,7 @@ struct CAKKApp: App {
       let userProfileUseCase = resolver.resolve(UserProfileUseCase.self)!
       let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
       let withdrawUseCase = resolver.resolve(WithdrawUseCase.self)!
-      return ProfileViewModel(userProfileUseCase: userProfileUseCase,
-                              updateUserProfileUseCase: updateUserProfileUseCase,
-                              withdrawUseCase: withdrawUseCase)
+      return ProfileViewModel(userProfileUseCase: userProfileUseCase)
     }.inObjectScope(.container)
     
     
