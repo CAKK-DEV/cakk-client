@@ -99,7 +99,6 @@ struct SearchView: View {
           .frame(minHeight: 48)
           .padding(.horizontal, 24)
         }
-        .modifier(BouncyPressEffect())
       }
     }
     .onAppear {
