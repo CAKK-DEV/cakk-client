@@ -23,15 +23,16 @@ struct AppTabView: View {
   // MARK: - Views
   
   var body: some View {
-    VStack(spacing: 0) {
+    ZStack(alignment: .bottom) {
       TabView(selection: $selectedTab) {
         CakeShopTabCoordinator()
           .tag(CAKKTabBar.Tab.cakeShop)
         
-        Text("Search")
+        SearchTabCoordinator()
           .tag(CAKKTabBar.Tab.search)
         
         Text("Liked")
+          .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.liked)
         
         ProfileTabCoordinator()
