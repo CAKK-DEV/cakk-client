@@ -10,8 +10,8 @@ import Foundation
 import DomainUser
 
 extension NewUserProfile {
-  func toDTO() -> NewUserProfileDTO {
-    return .init(profileImageUrl: self.profileImageUrl,
+  func toDTO(profileImageUrl: String?) -> NewUserProfileDTO {
+    return .init(profileImageUrl: profileImageUrl,
                  nickname: self.nickname,
                  email: self.email,
                  gender: self.gender.toDTO(),

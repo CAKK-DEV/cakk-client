@@ -14,12 +14,20 @@ public enum UserAPI {
   case fetchUserProfile(accessToken: String)
   case updateUserProfile(newUserProfile: NewUserProfileDTO, accessToken: String)
   case withdraw(accessToken: String)
+  case requestPresignedUrl
+  case uploadProfileImage(presignedUrl: String, image: Data)
 }
 
 extension UserAPI: TargetType {
   public var baseURL: URL {
-    let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
-    return URL(string: baseURLString)!
+    switch self {
+    case .uploadProfileImage(let presignedUrl, _):
+      return URL(string: presignedUrl)!
+      
+    default:
+      let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
+      return URL(string: baseURLString)!
+    }
   }
   
   public var path: String {
@@ -35,6 +43,12 @@ extension UserAPI: TargetType {
       
     case .withdraw:
       return "/api/v1/me"
+      
+    case .requestPresignedUrl:
+      return "/api/v1/aws/img"
+      
+    case .uploadProfileImage:
+      return ""
     }
   }
   
@@ -51,6 +65,12 @@ extension UserAPI: TargetType {
       
     case .withdraw:
       return .delete
+      
+    case .requestPresignedUrl:
+      return .get
+      
+    case .uploadProfileImage:
+      return .put
     }
   }
   
@@ -70,12 +90,21 @@ extension UserAPI: TargetType {
       
     case .withdraw:
       return .requestPlain
+      
+    case .requestPresignedUrl:
+      return .requestPlain
+      
+    case .uploadProfileImage(_, let image):
+      let params: [String: Any] = [
+        "profile_image": image
+      ]
+      return .requestPlain
     }
   }
   
   public var headers: [String: String]? {
     switch self {
-    case .signUp, .signIn:
+    case .signUp, .signIn, .requestPresignedUrl, .uploadProfileImage:
       return ["Content-Type": "application/json"]
       
     case .fetchUserProfile(let accessToken),
@@ -101,6 +130,12 @@ extension UserAPI: TargetType {
       
     case .updateUserProfile, .withdraw:
       return try! Data(contentsOf: Bundle.module.url(forResource: "BasicSampleResponse", withExtension: "json")!)
+    
+    case .requestPresignedUrl:
+      return Data() /// presigned url mocking is not allowed
+    
+    case .uploadProfileImage:
+      return Data() /// presigned url mocking is not allowed
     }
   }
 }

@@ -36,20 +36,20 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
           guard let data = decodedResponse.data else {
-            throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+            throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
           return data.toDomain()
           
         default:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
       .mapError { error in
-        if let networkError = error as? CAKKError {
+        if let networkError = error as? CAKKUserNetworkError {
           return networkError.toSocialLoginSignInError()
         } else {
-          return CAKKError.error(for: error).toSocialLoginSignInError()
+          return CAKKUserNetworkError.error(for: error).toSocialLoginSignInError()
         }
       }
       .eraseToAnyPublisher()
@@ -62,20 +62,20 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
           guard let data = decodedResponse.data else {
-            throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+            throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
           return data.toDomain()
           
         default:
           let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw CAKKError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
       .mapError { error in
-        if let networkError = error as? CAKKError {
+        if let networkError = error as? CAKKUserNetworkError {
           return networkError.toSocialLoginSignUpError()
         } else {
-          return CAKKError.error(for: error).toSocialLoginSignUpError()
+          return CAKKUserNetworkError.error(for: error).toSocialLoginSignUpError()
         }
       }
       .eraseToAnyPublisher()

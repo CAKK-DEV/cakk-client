@@ -9,6 +9,8 @@
 import SwiftUI
 import DesignSystem
 
+import PhotosUI
+
 import SwiftUIUtil
 import UIKitUtil
 
@@ -16,25 +18,31 @@ import Router
 
 import DomainUser
 
-import UserSession
 import DIContainer
 
 struct EditProfileView: View {
   
   // MARK: - Properties
-
-  @StateObject private var viewModel: ProfileViewModel
+  
+  @StateObject private var viewModel: EditProfileViewModel
+  @StateObject private var profileViewModel: ProfileViewModel
   @EnvironmentObject private var router: Router
   
   @Environment(\.dismiss) private var dismiss
+  
+  @State private var isPhotoPickerShown = false
+  @State private var isProfileImageOptionActionSheetShown = false
   
   
   // MARK: - Initializers
   
   init() {
     let diContainer = DIContainer.shared.container
-    let viewModel = diContainer.resolve(ProfileViewModel.self)!
+    let viewModel = diContainer.resolve(EditProfileViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    let profileViewModel = diContainer.resolve(ProfileViewModel.self)!
+    _profileViewModel = .init(wrappedValue: profileViewModel)
   }
   
   
@@ -50,7 +58,6 @@ struct EditProfileView: View {
               message: "저장되지 않은 내용이 있어요.\n내용을 저장하지 않고 나갈까요??",
               primaryButtonTitle: "네",
               primaryButtonAction: .custom({
-                viewModel.restoreChanges()
                 router.navigateBack()
               }),
               secondaryButtonTitle: "머무르기", secondaryButtonAction: .cancel)
@@ -69,25 +76,33 @@ struct EditProfileView: View {
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
       })
       
-      if viewModel.userProfile == nil {
-        ScrollView { }
-          .overlay {
-            ProgressView()
-          }
-          .onAppear {
-            // 만약 사용자 정보가 없다면 다시 불러옴.
-            viewModel.fetchUserProfile()
-          }
-      } else {
-        ZStack(alignment: .bottom) {
-          ScrollView {
-            VStack(spacing: 20) {
-              ProfileImageView(imageUrlString: viewModel.editedUserProfile.profileImageUrl)
-                .overlay {
-                  HStack(spacing: 0) {
+      ZStack(alignment: .bottom) {
+        ScrollView {
+          VStack(spacing: 20) {
+            /// profileImage가 delete 이면 현재 프로필 사진을 삭제하겠다는 의미이므로 보여지는 뷰도 기본 이미지로 보여줘야합니다.
+            let imageUrl = viewModel.editedUserProfile.profileImage == .delete ? nil : viewModel.originalUserProfile.profileImageUrl
+            
+            ProfileImageView(imageUrlString: imageUrl)
+              .overlay {
+                /// 새로운 이미지를 라이브러리에서 선택했따면 새로운 이미지를 overlay로 보여줍니다.
+                /// ProfileImageView에 새로운 이미지를 직접 주입하지 않는 이유는 이 방식이 프로필 이미지를 다시 제거했을 때 등 다양한 상황에 대처하기 좋기 때문입니다.
+                if case .new(let newProfileImage) = viewModel.editedUserProfile.profileImage {
+                  Image(uiImage: newProfileImage)
+                    .resizable()
+                    .scaledToFill()
+                    .clipShape(Circle())
+                    .frame(width: 122, height: 122)
+                }
+              }
+              .overlay {
+                HStack(spacing: 0) {
+                  Spacer()
+                  VStack(spacing: 0) {
                     Spacer()
-                    VStack(spacing: 0) {
-                      Spacer()
+                    
+                    Button {
+                      isProfileImageOptionActionSheetShown = true
+                    } label: {
                       Circle()
                         .fill(DesignSystemAsset.gray70.swiftUIColor)
                         .size(36)
@@ -98,118 +113,160 @@ struct EditProfileView: View {
                             .foregroundStyle(Color.white)
                         }
                     }
-                  }
-                }
-                .padding(.top, 20)
-              
-              CKTextField(text: $viewModel.editedUserProfile.nickname, placeholder: "이름", headerTitle: "이름")
-              
-              CKTextField(text: $viewModel.editedUserProfile.email, headerTitle: "이메일", isDisabled: true)
-              
-              genderPicker()
-              birthdaySelector()
-              
-              HStack(spacing: 0) {
-                Button("로그아웃") {
-                  DialogManager.shared.showDialog(
-                    title: "로그아웃",
-                    message: "정말로 로그아웃 할까요?",
-                    primaryButtonTitle: "확인",
-                    primaryButtonAction: .custom({
-                      viewModel.signOut()
-                      router.navigateBack()
-                    }), secondaryButtonTitle: "취소",
-                    secondaryButtonAction: .cancel)
-                }
-                .font(.pretendard(size: 15, weight: .medium))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                
-                Button("회원탈퇴") {
-                  DialogManager.shared.showDialog(
-                    title: "회원탈퇴",
-                    message: "정말로 회원탈퇴 하시겠습니까?\n회원탈퇴를 하시면 모든 데이터가 삭제되며 복구할 수 없게돼요.",
-                    primaryButtonTitle: "확인",
-                    primaryButtonAction: .custom({
-                      viewModel.withdraw()
-                    }), secondaryButtonTitle: "취소",
-                    secondaryButtonAction: .cancel)
-                }
-                .font(.pretendard(size: 15, weight: .medium))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .onChange(of: viewModel.withdrawState) { state in
-                  switch state {
-                  case .loading:
-                    LoadingManager.shared.startLoading()
-                  case .failure(let error):
-                    LoadingManager.shared.stopLoading()
-                    
-                    if error == .serverError {
-                      DialogManager.shared.showDialog(.serverError(completion: nil))
-                    } else {
-                      DialogManager.shared.showDialog(
-                        title: "회원탈퇴 실패",
-                        message: "회원탈퇴에 실패하였어요..\n다시 시도해 주세요.",
-                        primaryButtonTitle: "확인",
-                        primaryButtonAction: .cancel)
+                    .confirmationDialog("프로필 사진", isPresented: $isProfileImageOptionActionSheetShown) {
+                      Button("라이브러리에서 선택") {
+                        /// 라이브러리 접근 권한을 먼저 요청한 후 상황에 맞는 View를 띄워줍니다.
+                        PHPhotoLibrary.requestAuthorization(for: .readWrite) { state in
+                          DispatchQueue.main.async {
+                            showPhotosUI(for: state)
+                          }
+                        }
+                      }
+                      
+                      if viewModel.editedUserProfile.profileImage != .none {
+                        Button("기존 사진으로 변경") {
+                          viewModel.editedUserProfile.profileImage = .none
+                        }
+                      }
+                      
+                      Button("삭제", role: .destructive) {
+                        viewModel.editedUserProfile.profileImage = .delete
+                      }
+                    }.sheet(isPresented: $isPhotoPickerShown) {
+                      PhotoPicker(selectedImage: .init(get: {
+                        if case .new(let image) = viewModel.editedUserProfile.profileImage {
+                          return image
+                        } else {
+                          return nil
+                        }
+                      }, set: { image in
+                        if let image {
+                          viewModel.editedUserProfile.profileImage = .new(image: image)
+                        }
+                      }))
                     }
-                  case .success:
-                    LoadingManager.shared.stopLoading()
-                    router.navigateBack()
-                  default:
-                    LoadingManager.shared.stopLoading()
                   }
                 }
               }
-              .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
-              .padding(.top, 128)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, 24)
-            .padding(.bottom, 100)
-          }
-          
-          VStack(spacing: 0) {
-            CKButtonLarge(title: "저장", 
-                          fixedSize: .infinity,
-                          action: {
-              viewModel.updateProfile()
-            }, isLoading: .constant(viewModel.userProfileUpdatingState == .loading))
-            .padding(.horizontal, 28)
-            .padding(.bottom, 16)
-            .opacity(viewModel.profileHasChanges() ? 1.0 : 0.3)
-            .disabled(!viewModel.profileHasChanges())
-            .animation(.snappy, value: viewModel.profileHasChanges())
-            .onChange(of: viewModel.userProfileUpdatingState) { state in
-              switch state {
-              case .success:
-                router.navigateBack()
-                LoadingManager.shared.stopLoading()
-              case .loading:
-                LoadingManager.shared.startLoading()
-              case .failure(let error):
-                LoadingManager.shared.stopLoading()
-                if error == .serverError {
-                  DialogManager.shared.showDialog(.serverError(completion: nil))
-                } else {
-                  DialogManager.shared.showDialog(
-                    title: "프로필 업데이트 실패",
-                    message: "프로필 업데이트에 하였어요.\n다시 시도해주세요.",
-                    primaryButtonTitle: "확인",
-                    primaryButtonAction: .cancel)
+              .padding(.top, 20)
+            
+            CKTextField(text: $viewModel.editedUserProfile.nickname, placeholder: "이름", headerTitle: "이름")
+            
+            CKTextField(text: $viewModel.editedUserProfile.email, headerTitle: "이메일", isDisabled: true)
+            
+            genderPicker()
+            birthdaySelector()
+            
+            HStack(spacing: 0) {
+              Button("로그아웃") {
+                DialogManager.shared.showDialog(
+                  title: "로그아웃",
+                  message: "정말로 로그아웃 할까요?",
+                  primaryButtonTitle: "확인",
+                  primaryButtonAction: .custom({
+                    viewModel.signOut()
+                    router.navigateBack()
+                  }), secondaryButtonTitle: "취소",
+                  secondaryButtonAction: .cancel)
+              }
+              .font(.pretendard(size: 15, weight: .medium))
+              .padding(.horizontal, 12)
+              .padding(.vertical, 8)
+              
+              Button("회원탈퇴") {
+                DialogManager.shared.showDialog(
+                  title: "회원탈퇴",
+                  message: "정말로 회원탈퇴 하시겠습니까?\n회원탈퇴를 하시면 모든 데이터가 삭제되며 복구할 수 없게돼요.",
+                  primaryButtonTitle: "확인",
+                  primaryButtonAction: .custom({
+                    viewModel.withdraw()
+                  }), secondaryButtonTitle: "취소",
+                  secondaryButtonAction: .cancel)
+              }
+              .font(.pretendard(size: 15, weight: .medium))
+              .padding(.horizontal, 12)
+              .padding(.vertical, 8)
+              .onChange(of: viewModel.withdrawState) { state in
+                switch state {
+                case .loading:
+                  LoadingManager.shared.startLoading()
+                case .failure(let error):
+                  LoadingManager.shared.stopLoading()
+                  
+                  if error == .serverError {
+                    DialogManager.shared.showDialog(.serverError(completion: nil))
+                  } else {
+                    DialogManager.shared.showDialog(
+                      title: "회원탈퇴 실패",
+                      message: "회원탈퇴에 실패하였어요..\n다시 시도해 주세요.",
+                      primaryButtonTitle: "확인",
+                      primaryButtonAction: .cancel)
+                  }
+                case .success:
+                  LoadingManager.shared.stopLoading()
+                  router.navigateBack()
+                default:
+                  LoadingManager.shared.stopLoading()
                 }
-              default:
-                LoadingManager.shared.stopLoading()
               }
             }
+            .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+            .padding(.top, 128)
           }
-          .background {
-            LinearGradient(colors: [.clear, .white, .white],
-                           startPoint: .top,
-                           endPoint: .bottom)
-            .ignoresSafeArea()
+          .frame(maxWidth: .infinity)
+          .padding(.horizontal, 24)
+          .padding(.bottom, 100)
+        }
+        
+        VStack(spacing: 0) {
+          CKButtonLarge(title: "저장",
+                        fixedSize: .infinity,
+                        action: {
+            if viewModel.isNicknameValid() {
+              viewModel.updateProfile()
+            } else {
+              DialogManager.shared.showDialog(
+                title: "올바르지 않은 이름",
+                message: "이름에는 소문자, 대문자, 한글, 숫자, 언더바만 사용할 수 있어요.",
+                primaryButtonTitle: "확인",
+                primaryButtonAction: .cancel)
+            }
+          }, isLoading: .constant(viewModel.userProfileUpdatingState == .loading))
+          .padding(.horizontal, 28)
+          .padding(.bottom, 16)
+          .opacity(viewModel.profileHasChanges() ? 1.0 : 0.3)
+          .disabled(!viewModel.profileHasChanges())
+          .animation(.snappy, value: viewModel.profileHasChanges())
+          .onChange(of: viewModel.userProfileUpdatingState) { state in
+            switch state {
+            case .success:
+              router.navigateBack()
+              /// 기존 프로필 업데이트
+              profileViewModel.fetchUserProfile()
+              LoadingManager.shared.stopLoading()
+            case .loading:
+              LoadingManager.shared.startLoading()
+            case .failure(let error):
+              LoadingManager.shared.stopLoading()
+              if error == .serverError {
+                DialogManager.shared.showDialog(.serverError(completion: nil))
+              } else {
+                DialogManager.shared.showDialog(
+                  title: "프로필 업데이트 실패",
+                  message: "프로필 업데이트에 하였어요.\n다시 시도해주세요.",
+                  primaryButtonTitle: "확인",
+                  primaryButtonAction: .cancel)
+              }
+            default:
+              LoadingManager.shared.stopLoading()
+            }
           }
+        }
+        .background {
+          LinearGradient(colors: [.clear, .white, .white],
+                         startPoint: .top,
+                         endPoint: .bottom)
+          .ignoresSafeArea()
         }
       }
     }
@@ -271,6 +328,36 @@ struct EditProfileView: View {
         }
     }
   }
+  
+  
+  // MARK: - Private Methods
+  
+  private func showPhotosUI(for status: PHAuthorizationStatus) {
+    switch status {
+    case .notDetermined:
+      break
+      
+    case .restricted, .denied:
+      DialogManager.shared.showDialog(
+        title: "접근 권한 없음",
+        message: "사진첩에 접근할 수 있는 권한이 없어요.\n설정으로 이동해서 사진접 접근 권한을 허용해주세요.",
+        primaryButtonTitle: "설정으로 이동",
+        primaryButtonAction: .custom({
+          guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
+          if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { _ in })
+          }
+        }),
+        secondaryButtonTitle: "취소",
+        secondaryButtonAction: .cancel)
+      
+    case .authorized, .limited:
+      isPhotoPickerShown = true
+      
+    @unknown default:
+      break
+    }
+  }
 }
 
 
@@ -282,13 +369,13 @@ import PreviewSupportUser
 
 #Preview {
   let diContainer = DIContainer.shared.container
-  diContainer.register(ProfileViewModel.self) { resolver in
+  diContainer.register(EditProfileViewModel.self) { resolver in
     let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     let withdrawUseCase = MockWithdrawUseCase()
-    return ProfileViewModel(userProfileUseCase: profileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase, 
-                            withdrawUseCase: withdrawUseCase)
+    return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
+                                updateUserProfileUseCase: updateUserProfileUseCase,
+                                withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()
 }
@@ -298,13 +385,13 @@ import PreviewSupportUser
 
 #Preview {
   let diContainer = DIContainer.shared.container
-  diContainer.register(ProfileViewModel.self) { resolver in
+  diContainer.register(EditProfileViewModel.self) { resolver in
     let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase(scenario: .failure)
     let withdrawUseCase = MockWithdrawUseCase()
-    return ProfileViewModel(userProfileUseCase: profileUseCase,
-                            updateUserProfileUseCase: updateUserProfileUseCase,
-                            withdrawUseCase: withdrawUseCase)
+    return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
+                                updateUserProfileUseCase: updateUserProfileUseCase,
+                                withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()
 }

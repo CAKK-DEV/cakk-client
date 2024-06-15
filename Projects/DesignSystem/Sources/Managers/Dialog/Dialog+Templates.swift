@@ -13,6 +13,7 @@ public extension DialogManager {
   enum Template {
     case serverError(completion: (() -> Void)?)
     case unknownError(completion: (() -> Void)?)
+    case pleaseWait(completion: (() -> Void)?)
   }
   
   func showDialog(_ template: Template) {
@@ -27,6 +28,13 @@ public extension DialogManager {
     case .unknownError(let completion):
       showDialog(title: "알 수 없는 오류",
                  message: "알 수 없는 오류가 발생했어요.\n나중에 다시 시도해 주세요.",
+                 primaryButtonTitle: "확인",
+                 primaryButtonAction: .custom({
+        completion?()
+      }))
+    case .pleaseWait(let completion):
+      showDialog(title: "불러오는 중",
+                 message: "잠시만 기다려주세요.",
                  primaryButtonTitle: "확인",
                  primaryButtonAction: .custom({
         completion?()
