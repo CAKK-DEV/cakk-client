@@ -143,10 +143,10 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           }
           return provider.requestPublisher(.uploadProfileImage(presignedUrl: presignedUrl, image: pngData))
             .map { _ in imageUrl }
-            .mapError { _ in UserProfileError.imageUploadFailure }  // MoyaError를 UserProfileError로 변환
+            .mapError { _ in UserProfileError.imageUploadFailure }
             .eraseToAnyPublisher()
         }
-        .mapError { _ in UserProfileError.imageUploadFailure }  // MoyaError를 UserProfileError로 변환
+        .mapError { _ in UserProfileError.imageUploadFailure }
         .eraseToAnyPublisher()
     }
   }
