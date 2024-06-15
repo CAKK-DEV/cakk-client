@@ -9,7 +9,7 @@
 import Foundation
 import DomainUser
 
-public extension CAKKError {
+public extension CAKKUserNetworkError {
   func toSocialLoginSignInError()  -> SocialLoginSignInError {
     switch self {
     case .customClientError(let clientErrorCode, _):

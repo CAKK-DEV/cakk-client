@@ -113,4 +113,41 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       }
       .eraseToAnyPublisher()
   }
+  
+  // MARK: - Private Methods
+  
+  private func uploadProfileImageIfNeeded(image: NewUserProfile.ProfileImage) -> AnyPublisher<String?, UserProfileError> {
+    switch image {
+    case .delete, .none:
+      return Just(nil)
+        .setFailureType(to: UserProfileError.self)
+        .eraseToAnyPublisher()
+      
+    case .new(let image):
+      return provider.requestPublisher(.requestPresignedUrl)
+        .tryMap { response -> (String, String) in
+          switch response.statusCode {
+          case 200..<300:
+            let decodedResponse = try JSONDecoder().decode(PresignedUrlResponseDTO.self, from: response.data)
+            let presignedUrl = decodedResponse.data.presignedUrl
+            let imageUrl = decodedResponse.data.imageUrl
+            return (presignedUrl, imageUrl)
+            
+          default:
+            throw UserProfileError.imageUploadFailure
+          }
+        }
+        .flatMap { [provider] (presignedUrl, imageUrl) -> AnyPublisher<String?, Error> in
+          guard let pngData = image.pngData() else {
+            return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
+          }
+          return provider.requestPublisher(.uploadProfileImage(presignedUrl: presignedUrl, image: pngData))
+            .map { _ in imageUrl }
+            .mapError { _ in UserProfileError.imageUploadFailure }  // MoyaError를 UserProfileError로 변환
+            .eraseToAnyPublisher()
+        }
+        .mapError { _ in UserProfileError.imageUploadFailure }  // MoyaError를 UserProfileError로 변환
+        .eraseToAnyPublisher()
+    }
+  }
 }
