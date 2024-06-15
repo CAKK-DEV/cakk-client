@@ -29,12 +29,17 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureUser,
+    Project.NetworkUser,
+
+    Project.FeatureSearch,
+    Project.NetworkSearch,
+
     Project.FeatureCakeShop,
+    Project.NetworkCakeShop,
+
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserSession,
-    Project.NetworkUser,
-    Project.NetworkCakeShop,
     Project.DIContainer
   ],
   entitlements: "App.entitlements"

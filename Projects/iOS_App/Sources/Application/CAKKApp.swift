@@ -20,6 +20,10 @@ import DomainOAuthToken
 import OAuthToken
 import UserSession
 
+import FeatureSearch
+import DomainSearch
+import NetworkSearch
+
 import DIContainer
 
 import Moya
@@ -167,6 +171,32 @@ struct CAKKApp: App {
     
     diContainer.register(CakeShopAdditionalInfoUseCase.self) { resolver in
       CakeShopAdditionalInfoUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+    }
+    
+    
+    // Search Feature
+    
+    diContainer.register(MoyaProvider<SearchAPI>.self) { _ in
+      #if STUB
+      return MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 1)}, plugins: [MoyaLoggingPlugin()])
+      #else
+      return MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(SearchRepositoryImpl.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<SearchAPI>.self)!
+      return SearchRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(TrendingSearchKeywordUseCase.self) { resolver in
+      let repository = resolver.resolve(SearchRepositoryImpl.self)!
+      return TrendingSearchKeywordUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(SearchViewModel.self) { resolver in
+      let trendingSearchKeywordUseCase = resolver.resolve(TrendingSearchKeywordUseCase.self)!
+      return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase)
     }
   }
   
