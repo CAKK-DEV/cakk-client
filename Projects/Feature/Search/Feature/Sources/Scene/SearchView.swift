@@ -51,6 +51,9 @@ struct SearchView: View {
         SearchResultView(selectedSection: $selectedSegmentItem)
           .environmentObject(viewModel)
           .ignoresSafeArea()
+          .onChange(of: selectedSegmentItem) { _ in
+            search()
+          }
       } else {
         searchIdleStateView()
       }
@@ -258,10 +261,13 @@ struct SearchView: View {
     
     switch selectedSegmentItem {
     case .images:
-      viewModel.fetchCakeImages()
-    case .order:
-      // TODO: Fetch cake shops
-      break
+      if viewModel.lastSearchCakeImageKeyword != viewModel.searchKeyword {
+        viewModel.fetchCakeImages()
+      }
+    case .cakeShop:
+      if viewModel.lastSearchCakeShopKeyword != viewModel.searchKeyword {
+        viewModel.fetchCakeShops()
+      }
     }
   }
   
@@ -285,8 +291,10 @@ import PreviewSupportSearch
   diContainer.register(SearchViewModel.self) { resolver in
     let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
     let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
+    let mockSearchCakeShopUseCase = MockSearchCakeShopUseCase()
     return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
-                           searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
+                           searchCakeImagesUseCase: mockSearchCakeImagesUseCase,
+                           searchCakeShopUseCase: mockSearchCakeShopUseCase)
   }
   
   diContainer.register(SearchHistoryViewModel.self) { resolver in

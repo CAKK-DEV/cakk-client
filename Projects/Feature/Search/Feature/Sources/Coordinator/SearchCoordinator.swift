@@ -62,8 +62,10 @@ private struct PreviewContent: View {
     diContainer.register(SearchViewModel.self) { resolver in
       let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
       let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
+      let mockSearchCakeShopUseCase = MockSearchCakeShopUseCase()
       return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
-                             searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
+                             searchCakeImagesUseCase: mockSearchCakeImagesUseCase,
+                             searchCakeShopUseCase: mockSearchCakeShopUseCase)
     }
   }
   
