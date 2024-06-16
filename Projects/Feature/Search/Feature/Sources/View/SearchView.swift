@@ -19,6 +19,7 @@ struct SearchView: View {
   // MARK: - Properties
   
   @StateObject var viewModel: SearchViewModel
+  @StateObject var searchHistoryViewModel: SearchHistoryViewModel
   
   @State private var selectedSegmentItem = SearchResultView.SearchResultSection.images
   
@@ -32,6 +33,9 @@ struct SearchView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(SearchViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    let searchHistoryViewModel = diContainer.resolve(SearchHistoryViewModel.self)!
+    _searchHistoryViewModel = .init(wrappedValue: searchHistoryViewModel)
   }
   
   
@@ -147,9 +151,77 @@ struct SearchView: View {
     }
   }
   
+  private func searchHistorySection() -> some View {
+    VStack(spacing: 0) {
+      SectionHeaderCompact(title: "검색 기록", icon: DesignSystemAsset.timePast.swiftUIImage)
+        .padding(.horizontal, 28)
+      
+      if searchHistoryViewModel.searchHistoryFetchingState == .loading {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: 12) {
+            ForEach(1...3, id: \.self) { _ in
+              RoundedRectangle(cornerRadius: 18)
+                .fill(DesignSystemAsset.gray10.swiftUIColor)
+                .frame(width: 120, height: 44)
+            }
+          }
+          .padding(.vertical, 12)
+          .padding(.horizontal, 28)
+        }
+      } else if searchHistoryViewModel.searchHistories.isEmpty {
+        Text("검색 기록이 없습니다.")
+          .font(.pretendard(size: 15))
+          .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+          .frame(height: 68)
+      } else {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack {
+            ForEach(searchHistoryViewModel.searchHistories, id: \.id) { searchHistory in
+              Button {
+                search(keyword: searchHistory.keyword)
+              } label: {
+                HStack {
+                  Text(searchHistory.keyword)
+                    .font(.pretendard(size: 15, weight: .medium))
+                    .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                    .padding(.leading, 16)
+                  
+                  Button {
+                    withAnimation(.spring(duration: 0.2)) {
+                      searchHistoryViewModel.removeSearchHistory(searchHistory)
+                    }
+                  } label: {
+                    Image(systemName: "xmark.circle.fill")
+                      .font(.system(size: 16))
+                      .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+                  }
+                  .padding(.trailing, 12)
+                }
+                .frame(height: 44)
+                .background(.white)
+                .overlay {
+                  RoundedRectangle(cornerRadius: 18)
+                    .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+              }
+            }
+          }
+          .padding(.vertical, 12)
+          .padding(.horizontal, 28)
+        }
+      }
+    }
+    .onAppear {
+      searchHistoryViewModel.fetchSearchHistory()
+    }
+  }
+  
   private func searchIdleStateView() -> some View {
     ScrollView {
       VStack(spacing: 24) {
+        searchHistorySection()
+        
         trendingKeywordSection(keywords: viewModel.trendingSearchKeywords)
           .onFirstAppear {
             viewModel.fetchTrendingSearchKeywords()
@@ -175,6 +247,8 @@ struct SearchView: View {
     withAnimation(.smooth(duration: 0.28)) {
       isSearchResultViewShown = true
     }
+
+    searchHistoryViewModel.addSearchHistory(searchKeyword: viewModel.searchKeyword)
     
     switch selectedSegmentItem {
     case .images:
@@ -207,6 +281,11 @@ import PreviewSupportSearch
     let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
     return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
                            searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
+  }
+  
+  diContainer.register(SearchHistoryViewModel.self) { resolver in
+    let searchHistoryUseCase = MockSearchHistoryUseCase()
+    return SearchHistoryViewModel(searchHistoryUseCase: searchHistoryUseCase)
   }
   
   return SearchView()
