@@ -9,6 +9,7 @@ let project = Project.framework(
     Project.Router,
     Project.DomainSearch,
     Project.PreviewSupportSearch,
-    Project.DIContainer
+    Project.DIContainer,
+    Project.LocationManager
   ]
 )

@@ -11,6 +11,8 @@ import Combine
 
 import DomainSearch
 
+import LocationManager
+
 public final class SearchViewModel: ObservableObject {
   
   // MARK: - Properties
@@ -74,8 +76,8 @@ public final class SearchViewModel: ObservableObject {
     
     searchCakeImagesUseCase
       .execute(keyword: searchKeyword.trimmingCharacters(in: .whitespaces),
-               latitude: 37.4979,
-               longitude: 127.0276,
+               latitude: LocationManager.shared.latitude,
+               longitude: LocationManager.shared.longitude,
                pageSize: 10,
                lastCakeId: cakeImages.last?.id)
       .subscribe(on: DispatchQueue.global())

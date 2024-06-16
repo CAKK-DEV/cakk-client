@@ -10,6 +10,8 @@ import SwiftUI
 import SwiftUIUtil
 import DesignSystem
 
+import LocationManager
+
 import DomainSearch
 
 import DIContainer
@@ -52,6 +54,10 @@ struct SearchView: View {
       } else {
         searchIdleStateView()
       }
+    }
+    .onAppear {
+      LocationManager.shared.requestLocationPermission()
+      LocationManager.shared.startUpdatingLocation()
     }
   }
   
