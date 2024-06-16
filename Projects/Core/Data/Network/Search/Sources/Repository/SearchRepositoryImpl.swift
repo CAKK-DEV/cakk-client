@@ -55,7 +55,23 @@ public final class SearchRepositoryImpl: SearchRepository {
           return decodedData.toDomain()
           
         default:
-          let decodedData = try JSONDecoder().decode(TrendingSearchKeywordResponseDTO.self, from: response.data)
+          let decodedData = try JSONDecoder().decode(CakeImagesResponseDTO.self, from: response.data)
+          throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  public func fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[DomainSearch.CakeShop], any Error> {
+    provider.requestPublisher(.fetchCakeShops(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeShopId: lastCakeShopId))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedData = try JSONDecoder().decode(CakeShopsResponseDTO.self, from: response.data)
+          return decodedData.toDomain()
+          
+        default:
+          let decodedData = try JSONDecoder().decode(CakeShopsResponseDTO.self, from: response.data)
           throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
         }
       }

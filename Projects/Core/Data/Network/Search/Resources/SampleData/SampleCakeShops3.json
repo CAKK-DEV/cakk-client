@@ -1,0 +1,244 @@
+{
+  "returnCode": "1000",
+  "returnMessage": "요청에 성공하셨습니다.",
+  "data": {
+    "cakeShops": [
+      {
+        "cakeShopId": 13,
+        "thumbnailUrl": "https://plus.unsplash.com/premium_photo-1671212748162-d7bdb9d4f5ec?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "초코파이 케이크",
+        "cakeShopBio": "진한 초코파이 맛 케이크를 자랑합니다.",
+        "cakeImageUrls": [
+          "https://plus.unsplash.com/premium_photo-1671212748162-d7bdb9d4f5ec?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1562440499-64c9a111f713?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "TUE",
+            "operationStartTime": "08:00:00",
+            "operationEndTime": "17:00:00"
+          },
+          {
+            "operationDay": "WED",
+            "operationStartTime": "08:00:00",
+            "operationEndTime": "17:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "08:00:00",
+            "operationEndTime": "17:00:00"
+          },
+          {
+            "operationDay": "FRI",
+            "operationStartTime": "08:00:00",
+            "operationEndTime": "17:00:00"
+          },
+          {
+            "operationDay": "SAT",
+            "operationStartTime": "08:00:00",
+            "operationEndTime": "17:00:00"
+          }
+        ]
+      },
+      {
+        "cakeShopId": 14,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "크림베리 케이크샵",
+        "cakeShopBio": "신선한 크림과 베리로 만든 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1562440499-64c9a111f713?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "WED",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "FRI",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "SAT",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "SUN",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          }
+        ]
+      },
+      {
+        "cakeShopId": 15,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1562440499-64c9a111f713?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "밀키웨이 베이커리",
+        "cakeShopBio": "달콤한 밀키웨이 테마의 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1562440499-64c9a111f713?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "MON",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "20:00:00"
+          },
+          {
+            "operationDay": "TUE",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "20:00:00"
+          },
+          {
+            "operationDay": "WED",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "20:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "20:00:00"
+          },
+          {
+            "operationDay": "FRI",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "20:00:00"
+          }
+        ]
+      },
+      {
+        "cakeShopId": 16,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "블루베리 베이커리",
+        "cakeShopBio": "신선한 블루베리로 만든 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+          "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "SUN",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "MON",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "TUE",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "WED",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          }
+        ]
+      },
+      {
+        "cakeShopId": 17,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "파티 케이크샵",
+        "cakeShopBio": "파티를 위한 다양한 케이크를 제공합니다.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "TUE",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "19:00:00"
+          },
+          {
+            "operationDay": "WED",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "19:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "19:00:00"
+          },
+          {
+            "operationDay": "FRI",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "19:00:00"
+          },
+          {
+            "operationDay": "SAT",
+            "operationStartTime": "10:00:00",
+            "operationEndTime": "19:00:00"
+          }
+        ]
+      },
+      {
+        "cakeShopId": 18,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "캐러멜 케이크샵",
+        "cakeShopBio": "고소한 캐러멜 향이 가득한 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1535141192574-5d4897c12636?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNha2V8ZW58MHx8MHx8fDA%3D",
+          "https://plus.unsplash.com/premium_photo-1671212748162-d7bdb9d4f5ec?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D"
+        ],
+        "operationDays": [
+          {
+            "operationDay": "WED",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "THU",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "FRI",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "SAT",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          },
+          {
+            "operationDay": "SUN",
+            "operationStartTime": "09:00:00",
+            "operationEndTime": "18:00:00"
+          }
+        ]
+      }
+    ],
+    "lastCakeShopId": 10,
+    "size": 10
+  }
+}

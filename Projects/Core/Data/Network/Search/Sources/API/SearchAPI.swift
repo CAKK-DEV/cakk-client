@@ -12,6 +12,7 @@ import Moya
 public enum SearchAPI {
   case fetchTrendingSearchKeyword(count: Int)
   case fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?)
+  case fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?)
 }
 
 extension SearchAPI: TargetType {
@@ -27,6 +28,9 @@ extension SearchAPI: TargetType {
       
     case .fetchCakeImages:
       return "/api/v1/cakes/search/cakes"
+      
+    case .fetchCakeShops:
+      return "/api/v1/shops/search/shops"
     }
   }
   
@@ -36,6 +40,9 @@ extension SearchAPI: TargetType {
       return .get
     
     case .fetchCakeImages:
+      return .get
+      
+    case .fetchCakeShops:
       return .get
     }
   }
@@ -56,6 +63,16 @@ extension SearchAPI: TargetType {
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeId { params["cakeId"] = lastCakeId }
+      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      
+    case .fetchCakeShops(let keyword, let latitude, let longitude, let pageSize, let lastCakeShopId):
+      var params: [String: Any] = [
+        "latitude": latitude,
+        "longitude": longitude,
+        "pageSize": pageSize
+      ]
+      if let keyword { params["keyword"] = keyword }
+      if let lastCakeShopId { params["cakeShopId"] = lastCakeShopId }
       return .requestParameters(parameters: params, encoding: JSONEncoding())
     }
   }
@@ -81,6 +98,20 @@ extension SearchAPI: TargetType {
         }
       } else {
         return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages1", withExtension: "json")!)
+      }
+      
+    case .fetchCakeShops(_, _, _, _, let lastCakeShopId):
+      if let lastCakeShopId {
+        switch lastCakeShopId {
+        case 6:
+          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops2", withExtension: "json")!)
+        case 12:
+          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops3", withExtension: "json")!)
+        default:
+          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops4", withExtension: "json")!)
+        }
+      } else {
+        return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops1", withExtension: "json")!)
       }
     }
   }
