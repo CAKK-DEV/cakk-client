@@ -17,16 +17,24 @@ public struct NavigationBar<LeadingContent, CenterContent, TrailingContent>: Vie
   private let trailingContent: () -> TrailingContent?
   private let isDividerShown: Bool
   
+  private let size: Size
+  public enum Size {
+    case regular
+    case large
+  }
+  
   
   // MARK: - Initializers
   
   public init(
     isDividerShown: Bool = true,
+    size: Size = .regular,
     @ViewBuilder leadingContent: @escaping () -> LeadingContent? = { EmptyView() },
     @ViewBuilder centerContent: @escaping () -> CenterContent? = { EmptyView() },
     @ViewBuilder trailingContent: @escaping () -> TrailingContent? = { EmptyView() }
   ) {
     self.isDividerShown = isDividerShown
+    self.size = size
     self.leadingContent = leadingContent
     self.centerContent = centerContent
     self.trailingContent = trailingContent
@@ -57,7 +65,8 @@ public struct NavigationBar<LeadingContent, CenterContent, TrailingContent>: Vie
           }
       }
       .padding(.horizontal, 16)
-      .frame(maxWidth: .infinity, minHeight: 52)
+      .frame(maxWidth: .infinity)
+      .frame(height: size == .regular ? 52 : 64)
       .background(Color.white)
       
       Rectangle()
