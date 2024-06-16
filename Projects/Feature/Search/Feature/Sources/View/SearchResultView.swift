@@ -127,10 +127,12 @@ private struct PreviewContent: View {
   
   @StateObject var viewModel: SearchViewModel
   @State var selectedSegmentItem = SearchResultView.SearchResultSection.images
+  private let scenario: MockSearchCakeImagesUseCase.Scenario
   
-  init() {
+  init(scenario: MockSearchCakeImagesUseCase.Scenario) {
+    self.scenario = scenario
     let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
-    let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase()
+    let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase(scenario: scenario)
     let viewModel =  SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
                                      searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
     _viewModel = .init(wrappedValue: viewModel)
@@ -146,5 +148,9 @@ private struct PreviewContent: View {
 }
 
 #Preview {
-  PreviewContent()
+  PreviewContent(scenario: .success)
+}
+
+#Preview {
+  PreviewContent(scenario: .failure)
 }
