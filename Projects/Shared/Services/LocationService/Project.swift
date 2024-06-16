@@ -1,4 +1,4 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.framework(name: "LocationManager")
+let project = Project.framework(name: "LocationService")
