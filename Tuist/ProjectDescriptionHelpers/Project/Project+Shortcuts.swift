@@ -96,6 +96,11 @@ public extension Project {
     target: "UserSession",
     path: .relativeToRoot("Projects/Core/Data/UserDefaults/UserSession")
   )
+
+  static let UserDefaultsSearchHistory: TargetDependency = .project(
+    target: "UserDefaultsSearchHistory",
+    path: .relativeToRoot("Projects/Core/Data/UserDefaults/Search/SearchHistory")
+  )
   
   
   // MARK: - Feature

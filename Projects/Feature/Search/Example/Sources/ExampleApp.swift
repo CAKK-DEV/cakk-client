@@ -11,6 +11,7 @@ import SwiftUI
 import DomainSearch
 import NetworkSearch
 import FeatureSearch
+import UserDefaultsSearchHistory
 
 import Moya
 import MoyaUtil
@@ -79,6 +80,15 @@ struct ExampleApp: App {
       let searchCakeImagesUseCase = resolver.resolve(SearchCakeImagesUseCase.self)!
       return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
                              searchCakeImagesUseCase: searchCakeImagesUseCase)
+    }
+    
+    diContainer.register(SearchHistoryUseCase.self) { _ in
+      return UserDefaultsSearchHistoryUseCase()
+    }
+    
+    diContainer.register(SearchHistoryViewModel.self) { resolver in
+      let searchHistoryUseCase = resolver.resolve(SearchHistoryUseCase.self)!
+      return SearchHistoryViewModel(searchHistoryUseCase: searchHistoryUseCase)
     }
   }
 }

@@ -33,6 +33,7 @@ let project = Project.app(
 
     Project.FeatureSearch,
     Project.NetworkSearch,
+    Project.UserDefaultsSearchHistory,
 
     Project.FeatureCakeShop,
     Project.NetworkCakeShop,

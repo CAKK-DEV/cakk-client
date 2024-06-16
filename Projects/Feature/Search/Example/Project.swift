@@ -9,6 +9,7 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureSearch,
-    Project.NetworkSearch
+    Project.NetworkSearch,
+    Project.UserDefaultsSearchHistory
   ]
 )
