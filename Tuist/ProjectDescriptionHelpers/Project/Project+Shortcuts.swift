@@ -23,6 +23,11 @@ public extension Project {
     target: "UIKitUtil",
     path: .relativeToRoot("Projects/Shared/Util/UIKitUtil")
   )
+
+  static let LocationManager: TargetDependency = .project(
+    target: "LocationManager",
+    path: .relativeToRoot("Projects/Shared/Managers/LocationManager")
+  )
   
   
   // MARK: - DesignSystem
