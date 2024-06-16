@@ -56,10 +56,28 @@ struct SearchTabCoordinator: View {
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           
-          case .categoryDetail(initialCategory: let initialCategory):
+          case .categoryDetail:
             EmptyView()
           }
         }
+        .navigationDestination(for: PublicDestination.self, destination: { destination in
+          switch destination {
+          case .shopDetail(let shopId):
+            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
+              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
+              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
+              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+              
+              return CakeShopDetailViewModel(shopId: shopId,
+                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+            }.inObjectScope(.transient)
+            CakeShopDetailView()
+              .navigationBarBackButtonHidden()
+              .environmentObject(router)
+          }
+        })
         .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
           if let destination = sheet.destination as? FeatureCakeShop.FullScreenSheetDestination {
             switch destination {
