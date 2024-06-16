@@ -24,7 +24,7 @@ struct SearchResultView: View {
   @Binding var selectedSection: SearchResultSection
   enum SearchResultSection: String, CaseIterable {
     case images = "사진"
-    case order = "케이크 샵"
+    case cakeShop = "케이크 샵"
     
     var item: CKSegmentItem {
       CKSegmentItem(title: rawValue)
@@ -47,8 +47,8 @@ struct SearchResultView: View {
         cakeImagesView()
           .tag(SearchResultSection.images)
         
-        Text("cake shop search result")
-          .tag(SearchResultSection.order)
+        cakeShopsView()
+          .tag(SearchResultSection.cakeShop)
       }
       .tabViewStyle(.page(indexDisplayMode: .never))
     }
@@ -57,7 +57,7 @@ struct SearchResultView: View {
   @ViewBuilder
   private func cakeImagesView() -> some View {
     if viewModel.imageFetchingState == .failure {
-      FailureStateView(title: "이미지 로딩에 실패하였어요",
+      FailureStateView(title: "이미지 검색에 실패하였어요",
                        buttonTitle: "다시 시도",
                        buttonAction: {
         viewModel.fetchCakeImages()
@@ -116,6 +116,42 @@ struct SearchResultView: View {
       }
     }
   }
+  
+  @ViewBuilder
+  private func cakeShopsView() -> some View {
+    if viewModel.cakeShopFetchingState == .failure {
+      FailureStateView(title: "케이크샵 검색에 실패하였어요",
+                       buttonTitle: "다시 시도",
+                       buttonAction: {
+        viewModel.fetchCakeImages()
+      })
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+    } else {
+      ScrollView {
+        LazyVStack(spacing: 16) {
+          ForEach(viewModel.cakeShops, id: \.shopId) { cakeShop in
+            CakeShopView(cakeShop: cakeShop)
+              .onFirstAppear {
+                if viewModel.cakeShops.last?.shopId == cakeShop.shopId {
+                  print("load more")
+                  viewModel.fetchMoreCakeShops()
+                }
+              }
+              .onTapGesture {
+                router.navigate(to: PublicDestination.shopDetail(shopId: cakeShop.shopId))
+              }
+          }
+          
+          if viewModel.cakeShopFetchingState == .loading {
+            ProgressView()
+              .frame(height: 100)
+          }
+        }
+        .padding(.horizontal, 28)
+        .padding(.vertical, 16)
+      }
+    }
+  }
 }
 
 
@@ -126,15 +162,17 @@ import PreviewSupportSearch
 private struct PreviewContent: View {
   
   @StateObject var viewModel: SearchViewModel
-  @State var selectedSegmentItem = SearchResultView.SearchResultSection.images
+  @State var selectedSegmentItem = SearchResultView.SearchResultSection.cakeShop
   private let scenario: MockSearchCakeImagesUseCase.Scenario
   
   init(scenario: MockSearchCakeImagesUseCase.Scenario) {
     self.scenario = scenario
     let trendingSearchKeywordUseCase = MockTrendingSearchKeywordUseCase()
     let mockSearchCakeImagesUseCase = MockSearchCakeImagesUseCase(scenario: scenario)
+    let mockSearchCakeShopUseCase = MockSearchCakeShopUseCase()
     let viewModel =  SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
-                                     searchCakeImagesUseCase: mockSearchCakeImagesUseCase)
+                                     searchCakeImagesUseCase: mockSearchCakeImagesUseCase,
+                                     searchCakeShopUseCase: mockSearchCakeShopUseCase)
     _viewModel = .init(wrappedValue: viewModel)
   }
   
@@ -143,6 +181,7 @@ private struct PreviewContent: View {
       .environmentObject(viewModel)
       .onAppear {
         viewModel.fetchCakeImages()
+        viewModel.fetchCakeShops()
       }
   }
 }

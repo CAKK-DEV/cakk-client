@@ -28,8 +28,21 @@ public final class SearchViewModel: ObservableObject {
   
   @Published private(set) var cakeImages: [CakeImage] = []
   private let searchCakeImagesUseCase: SearchCakeImagesUseCase
+  private(set) var lastSearchCakeImageKeyword = ""
   @Published private(set) var imageFetchingState: ImageFetchingState = .idle
   enum ImageFetchingState {
+    case idle
+    case loading
+    case success
+    case failure
+    case loadMoreFailure
+  }
+  
+  @Published private(set) var cakeShops: [CakeShop] = []
+  private let searchCakeShopUseCase: SearchCakeShopUseCase
+  private(set) var lastSearchCakeShopKeyword = ""
+  @Published private(set) var cakeShopFetchingState: CakeShopFetchingState = .idle
+  enum CakeShopFetchingState {
     case idle
     case loading
     case success
@@ -46,10 +59,12 @@ public final class SearchViewModel: ObservableObject {
   
   public init(
     trendingSearchKeywordUseCase: TrendingSearchKeywordUseCase,
-    searchCakeImagesUseCase: SearchCakeImagesUseCase
+    searchCakeImagesUseCase: SearchCakeImagesUseCase,
+    searchCakeShopUseCase: SearchCakeShopUseCase
   ) {
     self.trendingSearchKeywordUseCase = trendingSearchKeywordUseCase
     self.searchCakeImagesUseCase = searchCakeImagesUseCase
+    self.searchCakeShopUseCase = searchCakeShopUseCase
   }
   
   
@@ -87,6 +102,7 @@ public final class SearchViewModel: ObservableObject {
           self?.imageFetchingState = .failure
         } else {
           self?.imageFetchingState = .success
+          self?.lastSearchCakeImageKeyword = self?.searchKeyword ?? ""
         }
       } receiveValue: { [weak self] cakeImages in
         self?.cakeImages = cakeImages
@@ -110,13 +126,62 @@ public final class SearchViewModel: ObservableObject {
             self?.imageFetchingState = .loadMoreFailure
             print(error)
           } else {
-            self?.imageFetchingState = .idle
+            self?.imageFetchingState = .success
           }
         } receiveValue: { [weak self] value in
           self?.cakeImages.append(contentsOf: value)
         }
         .store(in: &cancellables)
     }
+  }
+  
+  public func fetchCakeShops() {
+    cakeShopFetchingState = .loading
+    
+    searchCakeShopUseCase
+      .execute(keyword: searchKeyword,
+               latitude: LocationService.shared.latitude,
+               longitude: LocationService.shared.longitude,
+               pageSize: 10,
+               lastCakeShopId: nil)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.cakeShopFetchingState = .failure
+          print(error)
+        } else {
+          self?.cakeShopFetchingState = .success
+          self?.lastSearchCakeShopKeyword = self?.searchKeyword ?? ""
+        }
+      } receiveValue: { [weak self] cakeShops in
+        self?.cakeShops = cakeShops
+      }
+      .store(in: &cancellables)
+  }
+  
+  public func fetchMoreCakeShops() {
+    cakeShopFetchingState = .loading
+    
+    searchCakeShopUseCase
+      .execute(keyword: searchKeyword,
+               latitude: LocationService.shared.latitude,
+               longitude: LocationService.shared.longitude,
+               pageSize: 10,
+               lastCakeShopId: cakeShops.last?.shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.cakeShopFetchingState = .failure
+          print(error)
+        } else {
+          self?.cakeShopFetchingState = .success
+        }
+      } receiveValue: { [weak self] cakeShops in
+        self?.cakeShops.append(contentsOf: cakeShops)
+      }
+      .store(in: &cancellables)
   }
   
   // MARK: - Private Methods
