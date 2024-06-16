@@ -24,9 +24,9 @@ public extension Project {
     path: .relativeToRoot("Projects/Shared/Util/UIKitUtil")
   )
 
-  static let LocationManager: TargetDependency = .project(
-    target: "LocationManager",
-    path: .relativeToRoot("Projects/Shared/Managers/LocationManager")
+  static let LocationService: TargetDependency = .project(
+    target: "LocationService",
+    path: .relativeToRoot("Projects/Shared/Services/LocationService")
   )
   
   

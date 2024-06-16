@@ -2,11 +2,11 @@ import Foundation
 import CoreLocation
 import Combine
 
-public class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+public class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
   
   // MARK: - Properties
   
-  public static let shared = LocationManager()
+  public static let shared = LocationService()
   
   /// 기본값은 서울 강남구입니다.
   static let defaultCoordinates: (latitude: Double, longitude: Double) = (37.4979, 127.0276)

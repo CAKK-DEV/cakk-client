@@ -10,7 +10,7 @@ import SwiftUI
 import SwiftUIUtil
 import DesignSystem
 
-import LocationManager
+import LocationService
 
 import DomainSearch
 
@@ -56,8 +56,8 @@ struct SearchView: View {
       }
     }
     .onAppear {
-      LocationManager.shared.requestLocationPermission()
-      LocationManager.shared.startUpdatingLocation()
+      LocationService.shared.requestLocationPermission()
+      LocationService.shared.startUpdatingLocation()
     }
   }
   
