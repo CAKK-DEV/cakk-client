@@ -12,13 +12,14 @@ import DesignSystem
 struct CakeShopHomeView: View {
   var body: some View {
     VStack(spacing: 0) {
-      NavigationBar(leadingContent: {
-        DesignSystemAsset.logo.swiftUIImage
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .frame(height: 30)
-      })
-      .frame(height: 64)
+      NavigationBar(
+        size: .large,
+        leadingContent: {
+          DesignSystemAsset.logo.swiftUIImage
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(height: 30)
+        })
       
       ScrollView {
         VStack(spacing: 44) {
