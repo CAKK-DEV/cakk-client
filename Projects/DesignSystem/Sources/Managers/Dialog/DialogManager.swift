@@ -72,7 +72,9 @@ public final class DialogManager {
       secondaryButtonAction: secondaryButtonActionClosure)
     dialogView.alpha = 0
     dialogView.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-    self.dialogView = dialogView
+    
+    let dimmingView = UIView()
+    dimmingView.backgroundColor = .black.withAlphaComponent(0.4)
     
     window.addSubview(dimmingView)
     window.addSubview(dialogView)
@@ -86,7 +88,14 @@ public final class DialogManager {
       $0.width.equalTo(320)
     }
     
-    UIView.animate(withDuration: 0.4,
+    let animationDuration: CGFloat = 0.4
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration) { [weak self] in
+      self?.dialogView = dialogView
+      self?.dimmingView = dimmingView
+    }
+    
+    UIView.animate(withDuration: animationDuration,
                    delay: 0,
                    usingSpringWithDamping: 0.8,
                    initialSpringVelocity: 0.8) {
@@ -305,6 +314,19 @@ private extension DialogManager {
         primaryButtonTitle: "Title",
         primaryButtonAction: .custom({
           print("activated")
+        }),
+        secondaryButtonTitle: "title",
+        secondaryButtonAction: .cancel
+      )
+    }
+    
+    Button("Show dialog continuously") {
+      DialogManager.shared.showDialog(
+        title: "Title",
+        message: "새로운 다이얼로그를 보여줍니다.",
+        primaryButtonTitle: "Title",
+        primaryButtonAction: .custom({
+          DialogManager.shared.showDialog(.unknownError(completion: nil))
         }),
         secondaryButtonTitle: "title",
         secondaryButtonAction: .cancel
