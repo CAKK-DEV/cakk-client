@@ -112,16 +112,9 @@ public struct SearchCakeShopOnMapView: View {
         LocationService.shared.requestLocationPermission()
       } else if LocationService.shared.authorizationStatus != .authorizedAlways
                   && LocationService.shared.authorizationStatus != .authorizedWhenInUse {
-        DialogManager.shared.showDialog(
-          title: "위치권한 필요",
-          message: "지도 기반으로 케이크샵을 검색하려면 위치권한이 필요해요!",
-          primaryButtonTitle: "설정으로 이동", primaryButtonAction: .custom({
-            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-            if UIApplication.shared.canOpenURL(settingsUrl) {
-              UIApplication.shared.open(settingsUrl, completionHandler: { _ in })
-            }
-          }), secondaryButtonTitle: "취소",
-          secondaryButtonAction: .cancel)
+        DialogManager.shared.showDialog(.locationPermissionDenied(completion: {
+          router.navigateBack()
+        }))
       }
     }
     .onChange(of: viewModel.locatedCakeShopsFetchingState) { state in
