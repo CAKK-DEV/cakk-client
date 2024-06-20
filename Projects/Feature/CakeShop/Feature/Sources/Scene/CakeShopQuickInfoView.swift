@@ -88,16 +88,24 @@ public struct CakeShopQuickInfoView: View {
       
       HStack(spacing: 8) {
         Button {
-          // heart action
+          viewModel.toggleLike()
         } label: {
           RoundedRectangle(cornerRadius: 20)
             .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
             .frame(width: 76, height: 64)
             .overlay {
-              Image(systemName: "heart")
+              Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                 .font(.system(size: 24))
-                .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
             }
+        }
+        .modifier(BouncyPressEffect())
+        .onChange(of: viewModel.likeUpdatingState) { state in
+          if case .sessionExpired = state {
+            DialogManager.shared.showDialog(.loginRequired(completion: {
+              // TODO: 로그인 뷰로 이동
+            }))
+          }
         }
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
@@ -190,15 +198,23 @@ public struct CakeShopQuickInfoView: View {
 
 
 // MARK: - Preview
+
 import PreviewSupportCakeShop
+import PreviewSupportUser
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopQuickInfoViewModel.self) { _ in
-    let useCase = MockCakeShopQuickInfoUseCase(delay: 2)
-    return CakeShopQuickInfoViewModel(shopId: 0,
-                                      cakeImageUrl: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                                      useCase: useCase)
+    let cakeQuickInfoUseCase = MockCakeShopQuickInfoUseCase(delay: 2)
+    let likeCakeImageUseCase = MockLikeCakeImageUseCase()
+    
+    return CakeShopQuickInfoViewModel(
+      imageId: 0,
+      cakeImageUrl: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?q=80&w=2487&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      shopId: 0,
+      cakeQuickInfoUseCase: cakeQuickInfoUseCase,
+      likeCakeImageUseCase: likeCakeImageUseCase
+    )
   }
   return CakeShopQuickInfoView()
 }
