@@ -41,7 +41,7 @@ struct TrendingCakeImageSection: View {
         .padding(.horizontal, 16)
       
       VStack(spacing: 100) {
-        FlexibleGridView(columns: columns, data: viewModel.cakeImages) { cakeImage in
+        FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
           AsyncImage(
             url: URL(string: cakeImage.imageUrl),
             transaction: Transaction(animation: .easeInOut)

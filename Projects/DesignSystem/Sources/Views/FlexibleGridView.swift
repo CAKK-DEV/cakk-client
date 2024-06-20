@@ -14,7 +14,7 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
   
   let verticalSpacing: CGFloat
   let horizontalSpacing: CGFloat
-  let columns: Int
+  @State private var columns: Int = 2
   let data: Data
   let content: (Data.Element) -> Content
   
@@ -25,24 +25,23 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
   // MARK: - Initializers
   
   public init(
-    columns: Int = 2,
     verticalSpacing: CGFloat = 8,
     horizontalSpacing: CGFloat = 8,
     data: Data,
     @ViewBuilder content: @escaping (Data.Element) -> Content)
   {
-    self.columns = columns
     self.verticalSpacing = verticalSpacing
     self.horizontalSpacing = horizontalSpacing
     self.data = data
     self.content = content
   }
   
+  
   // MARK: - Views
   
   public var body: some View {
     HStack(alignment: .top, spacing: horizontalSpacing) {
-      ForEach(splitData.indices, id: \.self) { index in
+      ForEach(0..<columns, id: \.self) { index in
         LazyVStack(spacing: verticalSpacing) {
           ForEach(splitData[index]) { item in
             content(item)
@@ -53,6 +52,15 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
               .animation(.spring(), value: item.id)
           }
         }
+      }
+    }
+    .background {
+      GeometryReader { proxy in
+        Color.clear
+          .onAppear {
+            print(calculateColumn(for: proxy.size.width))
+            self.columns = calculateColumn(for: proxy.size.width)
+          }
       }
     }
     .onPreferenceChange(ElementPreferenceKey.self) { preferences in
@@ -85,7 +93,6 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
     return (alignmentGuides, gridHeight)
   }
   
-  
   // MARK: - Private Methods
   
   private var splitData: [[Data.Element]] {
@@ -94,6 +101,19 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
       columnsData[index % columns].append(item)
     }
     return columnsData
+  }
+  
+  private func calculateColumn(for width: CGFloat) -> Int {
+    switch width {
+    case 0..<400:
+      return 2
+    case 400..<1000:
+      return 3
+    case 1000..<1400:
+      return 4
+    default:
+      return 5
+    }
   }
 }
 
@@ -135,11 +155,11 @@ private struct Preview_ContentView: View {
     let height: CGFloat
   }
   
-  let items = (1...10).map { Item(id: $0, height: CGFloat.random(in: 150...300)) }
+  let items = (1...30).map { Item(id: $0, height: CGFloat.random(in: 150...300)) }
   
   var body: some View {
     ScrollView {
-      FlexibleGridView(columns: 2, data: items) { item in
+      FlexibleGridView(data: items) { item in
         RoundedRectangle(cornerRadius: 14)
           .foregroundStyle(Color.gray.opacity(0.2))
           .frame(height: item.height)
