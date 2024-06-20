@@ -220,6 +220,67 @@ struct CAKKApp: App {
       let searchHistoryUseCase = resolver.resolve(SearchHistoryUseCase.self)!
       return SearchHistoryViewModel(searchHistoryUseCase: searchHistoryUseCase)
     }
+    
+    diContainer.register(SearchRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<SearchAPI>.self)!
+      return SearchRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(TrendingCakeShopsUseCase.self) { resolver in
+      return MockTrendingCakeShopsUseCase() // TODO: 네트워킹 구현체로 변경
+    }
+    
+    diContainer.register(TrendingCakeShopViewModel.self) { resolver in
+      TrendingCakeShopViewModel(useCase: resolver.resolve(TrendingCakeShopsUseCase.self)!)
+    }
+    
+    diContainer.register(SearchCakeShopOnMapViewModel.self) { resolver in
+      let repository = resolver.resolve(SearchRepository.self)!
+      let searchLocatedCakeShopUseCase = SearchLocatedCakeShopUseCaseImpl(repository: repository)
+      return SearchCakeShopOnMapViewModel(useCase: searchLocatedCakeShopUseCase)
+    }
+    
+    diContainer.register(SearchLocatedCakeShopUseCase.self) { resolver in
+      let repository = resolver.resolve(SearchRepository.self)!
+      return SearchLocatedCakeShopUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(CakeShopNearByMeViewModel.self) { resolver in
+      CakeShopNearByMeViewModel(useCase: resolver.resolve(SearchLocatedCakeShopUseCase.self)!)
+    }
+    
+    diContainer.register(TrendingCakeImagesUseCase.self) { resolver in
+      MockTrendingCakeImagesUseCase() // TODO: 네트워킹 구현체로 변경
+    }
+    
+    diContainer.register(TrendingCakeImagesViewModel.self) { resolver in
+      TrendingCakeImagesViewModel(useCase: resolver.resolve(TrendingCakeImagesUseCase.self)!)
+    }
+    
+    // MARK: - Like
+    
+    diContainer.register(MoyaProvider<LikeAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<LikeAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<LikeAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(LikeRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<LikeAPI>.self)!
+      return LikeRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(LikeCakeShopUseCase.self) { resolver in
+      let repository = resolver.resolve(LikeRepository.self)!
+      return LikeCakeShopUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(LikeCakeImageUseCase.self) { resolver in
+      let repository = resolver.resolve(LikeRepository.self)!
+      return LikeCakeImageUseCaseImpl(repository: repository)
+    }
   }
   
   private func initKakaoSDK() {
@@ -230,3 +291,5 @@ struct CAKKApp: App {
     }
   }
 }
+
+import PreviewSupportCakeShop // TODO: Networking 구현 완료되면 삭제할 것
