@@ -12,7 +12,7 @@ import DomainCakeShop
 extension CakeShopNetworkError {
   func toDomainError() -> CakeShopDetailError {
     switch self {
-    case .customClientError(let clientErrorCode, let string):
+    case .customClientError(let clientErrorCode, _):
       if clientErrorCode == .notExistCakeShop {
         return .noExists
       } else {

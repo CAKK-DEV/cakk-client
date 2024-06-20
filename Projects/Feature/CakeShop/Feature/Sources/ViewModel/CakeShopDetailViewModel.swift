@@ -10,8 +10,7 @@ import Foundation
 import Combine
 
 import DomainCakeShop
-
-import PreviewSupportCakeShop
+import DomainUser
 
 public final class CakeShopDetailViewModel: ObservableObject {
   
@@ -50,6 +49,16 @@ public final class CakeShopDetailViewModel: ObservableObject {
     case success
   }
   
+  private let likeCakeShopUseCase: LikeCakeShopUseCase
+  @Published private(set) var isLiked = false
+  @Published private(set) var likeUpdatingState: LikeUpdatingState = .idle
+  enum LikeUpdatingState {
+    case idle
+    case loading
+    case failure
+    case sessionExpired
+  }
+  
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -59,12 +68,16 @@ public final class CakeShopDetailViewModel: ObservableObject {
     shopId: Int,
     cakeShopDetailUseCase: CakeShopDetailUseCase,
     cakeImagesByShopIdUseCase: CakeImagesByShopIdUseCase,
-    cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase
+    cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase,
+    likeCakeShopUseCase: LikeCakeShopUseCase
   ) {
     self.shopId = shopId
     self.cakeShopDetailUseCase = cakeShopDetailUseCase
     self.cakeImagesByShopIdUseCase = cakeImagesByShopIdUseCase
     self.cakeShopAdditionalInfoUseCase = cakeShopAdditionalInfoUseCase
+    self.likeCakeShopUseCase = likeCakeShopUseCase
+    
+    fetchInitialLikeState()
   }
   
   
@@ -136,6 +149,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.additionalInfoFetchingState = .failure
+          print(error)
         } else {
           self?.additionalInfoFetchingState = .success
         }
@@ -145,6 +159,77 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .store(in: &cancellables)
   }
   
+  public func toggleLike() {
+    if isLiked {
+      unlike()
+    } else {
+      like()
+    }
+  }
+  
   
   // MARK: - Private Methods
+  
+  private func like() {
+    if likeUpdatingState == .loading { return }
+    likeUpdatingState = .loading
+    
+    likeCakeShopUseCase.likeCakeShop(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          if error == .sessionExpired {
+            self?.likeUpdatingState = .sessionExpired
+          } else {
+            self?.likeUpdatingState = .failure
+          }
+        } else {
+          self?.likeUpdatingState = .idle
+          self?.isLiked = true
+        }
+      } receiveValue: { _ in }
+      .store(in: &cancellables)
+  }
+  
+  private func unlike() {
+    if likeUpdatingState == .loading { return }
+    likeUpdatingState = .loading
+    
+    likeCakeShopUseCase.unlikeCakeShop(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          if error == .sessionExpired {
+            self?.likeUpdatingState = .sessionExpired
+          } else {
+            self?.likeUpdatingState = .failure
+          }
+        } else {
+          self?.likeUpdatingState = .idle
+          self?.isLiked = false
+        }
+      } receiveValue: { _ in }
+      .store(in: &cancellables)
+  }
+  
+  private func fetchInitialLikeState() {
+    likeUpdatingState = .loading
+    
+    likeCakeShopUseCase.fetchCakeShopLikedState(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.likeUpdatingState = .failure
+          print(error)
+        } else {
+          self?.likeUpdatingState = .idle
+        }
+      } receiveValue: { [weak self] isLiked in
+        self?.isLiked = isLiked
+      }
+      .store(in: &cancellables)
+  }
 }

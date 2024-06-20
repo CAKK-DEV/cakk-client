@@ -224,19 +224,26 @@ public struct CakeShopDetailView: View {
   private func bottomGeneralButtons(shopDetail: CakeShopDetail) -> some View {
     HStack {
       Button {
-        // heart action
+        viewModel.toggleLike()
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
           .background(Color.white.clipShape(RoundedRectangle(cornerRadius: 20)))
           .frame(width: 76, height: 64)
           .overlay {
-            Image(systemName: "heart")
+            Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
               .font(.system(size: 24))
-              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
           }
       }
       .modifier(BouncyPressEffect())
+      .onChange(of: viewModel.likeUpdatingState) { state in
+        if case .sessionExpired = state {
+          DialogManager.shared.showDialog(.loginRequired(completion: {
+            // TODO: 로그인 뷰로 이동
+          }))
+        }
+      }
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {
@@ -255,6 +262,7 @@ public struct CakeShopDetailView: View {
 // Success Scenario
 
 import PreviewSupportCakeShop
+import PreviewSupportUser
 
 #Preview {
   let diContainer = DIContainer.shared.container
@@ -262,11 +270,13 @@ import PreviewSupportCakeShop
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
     let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
     let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
+    let likeCakeShopUseCase = MockLikeCakeShopUseCase()
     
     let viewModel = CakeShopDetailViewModel(shopId: 0,
                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                            likeCakeShopUseCase: likeCakeShopUseCase)
     viewModel.fetchCakeShopDetail()
     return viewModel
   }
@@ -282,11 +292,13 @@ import PreviewSupportCakeShop
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .noExists)
     let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
     let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
+    let likeCakeShopUseCase = MockLikeCakeShopUseCase()
     
     let viewModel = CakeShopDetailViewModel(shopId: 0,
                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                            likeCakeShopUseCase: likeCakeShopUseCase)
     viewModel.fetchCakeShopDetail()
     return viewModel
   }

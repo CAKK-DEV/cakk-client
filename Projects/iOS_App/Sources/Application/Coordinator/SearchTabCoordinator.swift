@@ -46,11 +46,13 @@ struct SearchTabCoordinator: View {
               let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
               
               return CakeShopDetailViewModel(shopId: shopId,
                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                             likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
             CakeShopDetailView()
               .navigationBarBackButtonHidden()
@@ -67,11 +69,13 @@ struct SearchTabCoordinator: View {
               let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
               
               return CakeShopDetailViewModel(shopId: shopId,
                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                             likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
             CakeShopDetailView()
               .navigationBarBackButtonHidden()

@@ -9,6 +9,8 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureCakeShop,
-    Project.NetworkCakeShop
+    Project.NetworkCakeShop,
+    Project.DomainUser,
+    Project.NetworkUser
   ]
 )
