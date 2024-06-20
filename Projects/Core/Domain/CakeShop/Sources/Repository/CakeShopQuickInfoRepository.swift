@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol CakeShopQuickInfoRepository {
-  func fetch(shopId: Int) -> AnyPublisher<CakeShopQuickInfo, Error>
+  func fetch(shopId: Int, cakeImageId: Int?) -> AnyPublisher<CakeShopQuickInfo, Error>
 }

@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol CakeShopQuickInfoUseCase {
-  func execute(shopId: Int) -> AnyPublisher<CakeShopQuickInfo, Error>
+  func execute(shopId: Int, cakeImageId: Int?) -> AnyPublisher<CakeShopQuickInfo, Error>
 }

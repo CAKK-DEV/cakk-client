@@ -30,8 +30,8 @@ final public class CakeShopQuickInfoRepositoryImpl: CakeShopQuickInfoRepository 
   
   // MARK: - Public Methods
   
-  public func fetch(shopId: Int) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
-    provider.requestPublisher(.fetchCakeShopQuickInfo(shopId: shopId))
+  public func fetch(shopId: Int, cakeImageId: Int?) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
+    provider.requestPublisher(.fetchCakeShopQuickInfo(shopId: shopId, cakeImageId: cakeImageId))
       .map { $0.data }
       .decode(type: CakeShopQuickInfoDTO.self, decoder: JSONDecoder())
       .tryMap { decodedResponse in

@@ -12,7 +12,10 @@ import Moya
 public enum CakeShopAPI {
   case fetchCakeImagesByCategory(_ category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
   case fetchCakeImagesByShopId(_ shopId: Int, count: Int, lastCakeId: Int?)
-  case fetchCakeShopQuickInfo(shopId: Int)
+  
+  /// cakeImageId파라미터가 있다면 케이크 이미지 조회수를 올립니다
+  case fetchCakeShopQuickInfo(shopId: Int, cakeImageId: Int?)
+  
   case fetchCakeShopDetail(shopId: Int)
   case fetchAdditionalInfo(shopId: Int)
 }
@@ -31,7 +34,7 @@ extension CakeShopAPI: TargetType {
     case .fetchCakeImagesByShopId:
       return "/api/v1/cakes/search/shops"
       
-    case .fetchCakeShopQuickInfo(let shopId):
+    case .fetchCakeShopQuickInfo(let shopId, _):
       return "/api/v1/shops/\(shopId)/simple"
       
     case .fetchCakeShopDetail(let shopId):
@@ -83,8 +86,12 @@ extension CakeShopAPI: TargetType {
       }
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
-    case .fetchCakeShopQuickInfo:
-      return .requestPlain
+    case .fetchCakeShopQuickInfo(_, let cakeImageId):
+      var params = [String: Any]()
+      if let cakeImageId {
+        params["cakeId"] = cakeImageId
+      }
+      return .requestParameters(parameters: params, encoding: JSONEncoding())
       
     case .fetchCakeShopDetail:
       return .requestPlain

@@ -18,7 +18,7 @@ public struct MockCakeShopQuickInfoUseCase: CakeShopQuickInfoUseCase {
     self.delay = delay
   }
   
-  public func execute(shopId: Int) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
+  public func execute(shopId: Int, cakeImageId: Int?) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
     Just(CakeShopQuickInfo.mock)
       .delay(for: .seconds(delay), scheduler: RunLoop.main)
       .setFailureType(to: Error.self)
