@@ -69,7 +69,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
   func requestCakeShopQuickInfo() {
     dataFetchingState = .loading
     
-    cakeQuickInfoUseCase.execute(shopId: shopId)
+    cakeQuickInfoUseCase.execute(shopId: shopId, cakeImageId: imageId)
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in

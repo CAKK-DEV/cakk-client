@@ -26,8 +26,8 @@ public struct CakeShopQuickInfoUseCaseImpl: CakeShopQuickInfoUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(shopId: Int) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
-    repository.fetch(shopId: shopId)
+  public func execute(shopId: Int, cakeImageId: Int?) -> AnyPublisher<DomainCakeShop.CakeShopQuickInfo, any Error> {
+    repository.fetch(shopId: shopId, cakeImageId: cakeImageId)
       .eraseToAnyPublisher()
   }
 }
