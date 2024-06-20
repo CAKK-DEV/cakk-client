@@ -11,6 +11,8 @@ import SwiftUI
 import FeatureCakeShop
 import Router
 
+import FeatureSearch
+
 struct CakeShopTabCoordinator: View {
   
   @StateObject private var router = Router()
@@ -18,6 +20,14 @@ struct CakeShopTabCoordinator: View {
   var body: some View {
     NavigationStack(path: $router.navPath) {
       CakeShopCoordinator()
+        .navigationDestination(for: PublicDestination.self) { destination in
+          switch destination {
+          case .map:
+            SearchCakeShopOnMapView()
+              .toolbar(.hidden, for: .navigationBar)
+              .environmentObject(router)
+          }
+        }
     }
     .environmentObject(router)
   }

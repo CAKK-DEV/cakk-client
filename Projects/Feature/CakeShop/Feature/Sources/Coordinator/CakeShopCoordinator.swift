@@ -38,6 +38,10 @@ public enum FullScreenSheetDestination: Identifiable {
   }
 }
 
+public enum PublicDestination: Hashable {
+  case map
+}
+
 public enum Destination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
   case shopDetail(shopId: Int)

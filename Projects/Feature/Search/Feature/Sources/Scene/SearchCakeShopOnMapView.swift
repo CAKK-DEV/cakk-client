@@ -19,7 +19,7 @@ import Router
 
 import LocationService
 
-struct SearchCakeShopOnMapView: View {
+public struct SearchCakeShopOnMapView: View {
   
   // MARK: - Properties
   
@@ -32,7 +32,7 @@ struct SearchCakeShopOnMapView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(SearchCakeShopOnMapViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -40,7 +40,7 @@ struct SearchCakeShopOnMapView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locatedCakeShops) { shop in
       let coordinate = CLLocationCoordinate2D(latitude: shop.latitude, longitude: shop.longitude)
       return MapAnnotation(coordinate: coordinate) {
