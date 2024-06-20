@@ -9,6 +9,11 @@ let project = Project.framework(
     Project.Router,
     Project.DomainCakeShop,
     Project.PreviewSupportCakeShop,
+    Project.DomainSearch,
+    Project.PreviewSupportSearch,
+    Project.DomainUser,
+    Project.PreviewSupportUser,
+    Project.LocationService,
     Project.DIContainer
   ]
 )

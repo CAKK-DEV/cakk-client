@@ -85,7 +85,11 @@ struct CakeCategoryDetailView: View {
                   }
                 }
                 .onTapGesture {
-                  router.presentSheet(destination: SheetDestination.quickInfo(shopId: cakeImage.shopId, cakeImageUrl: cakeImage.imageUrl))
+                  router.presentSheet(destination: SheetDestination.quickInfo(
+                    imageId: cakeImage.id,
+                    cakeImageUrl: cakeImage.imageUrl,
+                    shopId: cakeImage.shopId
+                  ))
                 }
               }
               
