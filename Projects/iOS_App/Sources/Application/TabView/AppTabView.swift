@@ -19,6 +19,7 @@ struct AppTabView: View {
   // MARK: - Properties
   
   @State private var selectedTab: CAKKTabBar.Tab = .cakeShop
+  @StateObject private var keyboardObserver = KeyboardObserver()
   
   // MARK: - Views
   
@@ -38,11 +39,15 @@ struct AppTabView: View {
         ProfileTabCoordinator()
           .tag(CAKKTabBar.Tab.profile)
       }
+      .ignoresSafeArea(.keyboard, edges: .bottom)
       .toolbar(.hidden, for: .tabBar)
       
       CAKKTabBar(selectedTab: $selectedTab)
         .ignoresSafeArea(.keyboard)
+        .offset(y: keyboardObserver.isKeyboardVisible ? 200 : 0)
+        .animation(.snappy, value: keyboardObserver.isKeyboardVisible)
     }
+    .environmentObject(keyboardObserver)
   }
 }
 
