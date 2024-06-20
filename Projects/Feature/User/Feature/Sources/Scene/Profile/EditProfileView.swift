@@ -235,7 +235,7 @@ struct EditProfileView: View {
             } else {
               DialogManager.shared.showDialog(
                 title: "올바르지 않은 이름",
-                message: "이름에는 소문자, 대문자, 한글, 숫자, 언더바만 사용할 수 있어요.",
+                message: "이름은 20자 이하, 소문자, 대문자, 한글, 숫자, 언더바만 사용할 수 있어요.",
                 primaryButtonTitle: "확인",
                 primaryButtonAction: .cancel)
             }

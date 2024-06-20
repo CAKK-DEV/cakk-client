@@ -119,9 +119,10 @@ public final class EditProfileViewModel: ObservableObject {
   }
   
   func isNicknameValid() -> Bool {
-    /// 정규식 패턴: 소문자, 대문자, 한글, 숫자, 언더바만 허용
+    /// 정규식 패턴: 소문자, 대문자, 한글, 숫자, 언더바만 그리고 20자 이하로만 닉네임 허용
     let regex = "^[a-zA-Z0-9가-힣_]+$"
     let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
-    return predicate.evaluate(with: editedUserProfile.nickname)
+    let isLengthValid = editedUserProfile.nickname.count <= 20
+    return isLengthValid && predicate.evaluate(with: editedUserProfile.nickname)
   }
 }
