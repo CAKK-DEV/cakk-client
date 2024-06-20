@@ -9,6 +9,8 @@
 import SwiftUI
 import DesignSystem
 
+import DIContainer
+
 struct CakeShopHomeView: View {
   var body: some View {
     VStack(spacing: 0) {
@@ -24,6 +26,12 @@ struct CakeShopHomeView: View {
       ScrollView {
         VStack(spacing: 44) {
           CakeCategorySection()
+          
+          TrendingCakeShopSection()
+          
+          CakeShopsNearByMeSection()
+          
+          TrendingCakeImageSection()
         }
         .padding(.vertical, 16)
       }
@@ -31,6 +39,28 @@ struct CakeShopHomeView: View {
   }
 }
 
+
+// MARK: - Preview
+
+import PreviewSupportCakeShop
+import PreviewSupportSearch
+
 #Preview {
-  CakeShopHomeView()
+  let diConatiner = DIContainer.shared.container
+  diConatiner.register(TrendingCakeShopViewModel.self) { _ in
+    let mockUseCase = MockTrendingCakeShopsUseCase()
+    return .init(useCase: mockUseCase)
+  }
+  
+  diConatiner.register(CakeShopNearByMeViewModel.self) { _ in
+    let mockUseCase = MockSearchLocatedCakeShopUseCase()
+    return .init(useCase: mockUseCase)
+  }
+  
+  diConatiner.register(TrendingCakeImagesViewModel.self) { _ in
+    let mockUseCase = MockTrendingCakeImagesUseCase()
+    return .init(useCase: mockUseCase)
+  }
+  
+  return CakeShopHomeView()
 }

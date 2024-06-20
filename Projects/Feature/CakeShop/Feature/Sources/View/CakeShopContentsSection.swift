@@ -204,6 +204,7 @@ struct CakeShopContentsSection: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShop
+import PreviewSupportUser
 
 #Preview {
   struct PreviewContent: View {
@@ -215,10 +216,12 @@ import PreviewSupportCakeShop
       let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
       let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
       let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
+      let likeCakeShopUseCase = MockLikeCakeShopUseCase()
       let viewModel = CakeShopDetailViewModel(shopId: 0,
                                               cakeShopDetailUseCase: cakeShopDetailUseCase,
                                               cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                              likeCakeShopUseCase: likeCakeShopUseCase)
       _viewModel = .init(wrappedValue: viewModel)
     }
     
@@ -247,10 +250,13 @@ import PreviewSupportCakeShop
       let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .failure)
       let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
       let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
+      let likeCakeShopUseCase = MockLikeCakeShopUseCase()
+      
       let viewModel = CakeShopDetailViewModel(shopId: 0,
                                               cakeShopDetailUseCase: cakeShopDetailUseCase,
                                               cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                              likeCakeShopUseCase: likeCakeShopUseCase)
       _viewModel = .init(wrappedValue: viewModel)
     }
     

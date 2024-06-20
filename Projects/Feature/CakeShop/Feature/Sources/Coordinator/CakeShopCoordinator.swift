@@ -12,12 +12,12 @@ import SwiftUIUtil
 import Router
 
 import DomainCakeShop
+import DomainUser
 
 import DIContainer
 
-
 enum SheetDestination: Identifiable {
-  case quickInfo(shopId: Int, cakeImageUrl: String)
+  case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
   var id: String {
     switch self {
@@ -63,12 +63,15 @@ public struct CakeShopCoordinator: View {
       .sheet(item: $router.presentedSheet) { sheet in
         if let destination = sheet.destination as? SheetDestination {
           switch destination {
-          case .quickInfo(let shopId, let cakeImageUrl):
+          case .quickInfo(let imageId, let cakeImageUrl, let shopId):
             let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
-              let useCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
-              return CakeShopQuickInfoViewModel(shopId: shopId,
-                                                cakeImageUrl: cakeImageUrl,
-                                                useCase: useCase)
+              let cakeQuickInfoUseCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
+              let likeCakeImageUseCase = resolver.resolve(LikeCakeImageUseCase.self)!
+              return CakeShopQuickInfoViewModel(imageId: imageId,
+                                                cakeImageUrl: cakeImageUrl, 
+                                                shopId: shopId,
+                                                cakeQuickInfoUseCase: cakeQuickInfoUseCase,
+                                                likeCakeImageUseCase: likeCakeImageUseCase)
             }
             CakeShopQuickInfoView()
           }
@@ -100,11 +103,13 @@ public struct CakeShopCoordinator: View {
             let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
             let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
             let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+            let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
             
             return CakeShopDetailViewModel(shopId: shopId,
                                            cakeShopDetailUseCase: cakeShopDetailUseCase,
                                            cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                           cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
+                                           cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                           likeCakeShopUseCase: likeCakeShopUseCase)
           }.inObjectScope(.transient)
           CakeShopDetailView()
             .navigationBarBackButtonHidden()
