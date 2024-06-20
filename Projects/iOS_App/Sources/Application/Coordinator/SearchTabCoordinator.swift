@@ -17,6 +17,8 @@ import FeatureSearch
 import FeatureCakeShop
 import DomainCakeShop
 
+import DomainUser
+
 struct SearchTabCoordinator: View {
   
   @StateObject private var router = Router()
@@ -28,12 +30,15 @@ struct SearchTabCoordinator: View {
         .sheet(item: $router.presentedSheet) { sheet in
           if let destination = sheet.destination as? PublicSheetDestination {
             switch destination {
-            case .quickInfo(let shopId, let cakeImageUrl):
+            case .quickInfo(let imageId, let cakeImageUrl, let shopId):
               let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
-                let useCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
-                return CakeShopQuickInfoViewModel(shopId: shopId,
+                let cakeQuickInfoUseCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
+                let likeCakeImageUseCase = resolver.resolve(LikeCakeImageUseCase.self)!
+                return CakeShopQuickInfoViewModel(imageId: imageId,
                                                   cakeImageUrl: cakeImageUrl,
-                                                  useCase: useCase)
+                                                  shopId: shopId,
+                                                  cakeQuickInfoUseCase: cakeQuickInfoUseCase,
+                                                  likeCakeImageUseCase: likeCakeImageUseCase)
               }
               CakeShopQuickInfoView()
             }
