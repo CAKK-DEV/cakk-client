@@ -52,7 +52,6 @@ struct CakeShopsNearByMeSection: View {
         }
       }
       .frame(height: 224)
-//      .disabled(true)
       .blur(radius: (LocationService.shared.authorizationStatus != .authorizedWhenInUse
                      && LocationService.shared.authorizationStatus != .authorizedAlways) ? 20 : 0)
       .overlay {
@@ -66,7 +65,11 @@ struct CakeShopsNearByMeSection: View {
               .multilineTextAlignment(.center)
             
             CKButtonCompact(title: "위치 권한 요청") {
-              LocationService.shared.requestLocationPermission()
+              if LocationService.shared.authorizationStatus == .notDetermined {
+                LocationService.shared.requestLocationPermission()
+              } else {
+                DialogManager.shared.showDialog(.locationPermissionDenied(completion: nil))
+              }
             }
           }
         }
