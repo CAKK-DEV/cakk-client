@@ -11,9 +11,10 @@ import Foundation
 public extension DialogManager {
   
   enum Template {
-    case serverError(completion: (() -> Void)?)
-    case unknownError(completion: (() -> Void)?)
-    case pleaseWait(completion: (() -> Void)?)
+    case serverError(completion: (() -> Void)? = nil)
+    case unknownError(completion: (() -> Void)? = nil)
+    case pleaseWait(completion: (() -> Void)? = nil)
+    case loginRequired(completion: (() -> Void)? = nil)
   }
   
   func showDialog(_ template: Template) {
@@ -39,6 +40,16 @@ public extension DialogManager {
                  primaryButtonAction: .custom({
         completion?()
       }))
+      
+    case .loginRequired(let completion):
+      showDialog(title: "로그인 필요",
+                 message: "로그인이 필요한 기능이에요.\n로그인하여 더 많은 기능을 누려보세요!",
+                 primaryButtonTitle: "로그인",
+                 primaryButtonAction: .custom({
+        completion?()
+      }),
+                 secondaryButtonTitle: "취소",
+                 secondaryButtonAction: .cancel)
     }
   }
 }

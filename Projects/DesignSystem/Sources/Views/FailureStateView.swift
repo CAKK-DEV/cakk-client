@@ -46,6 +46,7 @@ public struct FailureStateView: View {
         Text(title)
           .font(.pretendard(size: 15, weight: .bold))
           .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+          .multilineTextAlignment(.center)
       }
       
       VStack(spacing: 12) {

@@ -102,7 +102,11 @@ struct SearchResultView: View {
                 }
               }
               .onTapGesture {
-                  router.presentSheet(destination: PublicSheetDestination.quickInfo(shopId: cakeImage.shopId, cakeImageUrl: cakeImage.imageUrl))
+                router.presentSheet(destination: PublicSheetDestination.quickInfo(
+                  imageId: cakeImage.id,
+                  cakeImageUrl: cakeImage.imageUrl, 
+                  shopId: cakeImage.shopId)
+                )
               }
             }
             
@@ -130,16 +134,22 @@ struct SearchResultView: View {
       ScrollView {
         LazyVStack(spacing: 16) {
           ForEach(viewModel.cakeShops, id: \.shopId) { cakeShop in
-            CakeShopView(cakeShop: cakeShop)
-              .onFirstAppear {
-                if viewModel.cakeShops.last?.shopId == cakeShop.shopId {
-                  print("load more")
-                  viewModel.fetchMoreCakeShops()
-                }
+            CakeShopThumbnailView(
+              shopName: cakeShop.name,
+              shopBio: cakeShop.bio,
+              workingDays: cakeShop.workingDaysWithTime.map { $0.workingDay.mapping() },
+              profileImageUrl: cakeShop.profileImageUrl,
+              cakeImageUrls: cakeShop.cakeImageUrls
+            )
+            .onFirstAppear {
+              if viewModel.cakeShops.last?.shopId == cakeShop.shopId {
+                print("load more")
+                viewModel.fetchMoreCakeShops()
               }
-              .onTapGesture {
-                router.navigate(to: PublicDestination.shopDetail(shopId: cakeShop.shopId))
-              }
+            }
+            .onTapGesture {
+              router.navigate(to: PublicDestination.shopDetail(shopId: cakeShop.shopId))
+            }
           }
           
           if viewModel.cakeShopFetchingState == .loading {
@@ -150,6 +160,27 @@ struct SearchResultView: View {
         .padding(.horizontal, 28)
         .padding(.vertical, 16)
       }
+    }
+  }
+}
+
+private extension WorkingDay {
+  func mapping() -> CakeShopThumbnailView.WorkingDay {
+    switch self {
+    case .sun:
+      return .sun
+    case .mon:
+      return .mon
+    case .tue:
+      return .tue
+    case .wed:
+      return .wed
+    case .thu:
+      return .thu
+    case .fri:
+      return .fri
+    case .sat:
+      return .sat
     }
   }
 }

@@ -1,8 +1,8 @@
 //
-//  WorkingDay+DisplayName.swift
+//  WorkingDay+displayName.swift
 //  FeatureSearch
 //
-//  Created by 이승기 on 6/17/24.
+//  Created by 이승기 on 6/19/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
@@ -12,20 +12,20 @@ import DomainSearch
 extension WorkingDay {
   var displayName: String {
     switch self {
-    case .mon:
-      "월"
-    case .tue:
-      "화"
-    case .wed:
-      "수"
-    case .thu:
-      "목"
-    case .fri:
-      "금"
-    case .sat:
-      "토"
     case .sun:
-      "일"
+      return "일"
+    case .mon:
+      return "월"
+    case .tue:
+      return "화"
+    case .wed:
+      return "수"
+    case .thu:
+      return "목"
+    case .fri:
+      return "금"
+    case .sat:
+      return "토"
     }
   }
 }

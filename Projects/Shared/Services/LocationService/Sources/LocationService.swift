@@ -9,7 +9,7 @@ public class LocationService: NSObject, ObservableObject, CLLocationManagerDeleg
   public static let shared = LocationService()
   
   /// 기본값은 서울 강남구입니다.
-  static let defaultCoordinates: (latitude: Double, longitude: Double) = (37.4979, 127.0276)
+  public static let defaultCoordinates: (latitude: Double, longitude: Double) = (37.4979, 127.0276)
   
   private let locationManager = CLLocationManager()
   

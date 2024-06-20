@@ -9,6 +9,8 @@ import SwiftUI
 
 import FeatureOnboarding
 import FeatureUser
+import FeatureCakeShop
+
 import Router
 import DesignSystem
 

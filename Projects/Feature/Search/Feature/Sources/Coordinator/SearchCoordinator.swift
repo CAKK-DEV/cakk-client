@@ -12,7 +12,7 @@ import Router
 import DIContainer
 
 public enum PublicSheetDestination: Identifiable {
-  case quickInfo(shopId: Int, cakeImageUrl: String)
+  case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
   public var id: String {
     switch self {
@@ -24,6 +24,10 @@ public enum PublicSheetDestination: Identifiable {
 
 public enum PublicDestination: Hashable {
   case shopDetail(shopId: Int)
+}
+
+public enum Destination: Hashable {
+  case map
 }
 
 public struct SearchCoordinator: View {
@@ -43,6 +47,14 @@ public struct SearchCoordinator: View {
   
   public var body: some View {
     SearchView()
+      .navigationDestination(for: Destination.self, destination: { destination in
+        switch destination {
+        case .map:
+          SearchCakeShopOnMapView()
+            .toolbar(.hidden, for: .navigationBar)
+            .environmentObject(router)
+        }
+      })
       .environmentObject(router)
   }
 }
@@ -66,6 +78,16 @@ private struct PreviewContent: View {
       return SearchViewModel(trendingSearchKeywordUseCase: trendingSearchKeywordUseCase,
                              searchCakeImagesUseCase: mockSearchCakeImagesUseCase,
                              searchCakeShopUseCase: mockSearchCakeShopUseCase)
+    }
+    
+    diContainer.register(SearchHistoryViewModel.self) { _ in
+      let mockSearchHistoryUseCase = MockSearchHistoryUseCase()
+      return SearchHistoryViewModel(searchHistoryUseCase: mockSearchHistoryUseCase)
+    }
+    
+    diContainer.register(SearchCakeShopOnMapViewModel.self) { _ in
+      let searchLocatedCakeShopUseCase = MockSearchLocatedCakeShopUseCase()
+      return SearchCakeShopOnMapViewModel(useCase: searchLocatedCakeShopUseCase)
     }
   }
   

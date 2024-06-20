@@ -15,6 +15,7 @@ import LocationService
 import DomainSearch
 
 import DIContainer
+import Router
 
 struct SearchView: View {
   
@@ -27,6 +28,8 @@ struct SearchView: View {
   
   @State private var isSearchResultViewShown = false
   @FocusState private var isFocused
+  
+  @EnvironmentObject private var router: Router
   
   
   // MARK: - Initializers
@@ -235,8 +238,28 @@ struct SearchView: View {
           .onFirstAppear {
             viewModel.fetchTrendingSearchKeywords()
           }
+          .padding(.bottom, 100)
       }
       .padding(.top, 16)
+    }
+    .overlay {
+      VStack {
+        Spacer()
+        
+        Button {
+          router.navigate(to: Destination.map)
+        } label: {
+          Text("지도 보기")
+            .font(.pretendard(size: 15, weight: .semiBold))
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
+            .foregroundStyle(.white)
+            .background(Capsule().fill(DesignSystemAsset.black.swiftUIColor))
+        }
+        .shadow(radius: 10, y: 4)
+        .padding(.bottom, 20)
+        .modifier(BouncyPressEffect())
+      }
     }
   }
   

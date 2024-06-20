@@ -12,7 +12,9 @@ import Moya
 public enum SearchAPI {
   case fetchTrendingSearchKeyword(count: Int)
   case fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?)
+  case fetchTrendingCakeImages(lastCakeId: Int?, pageSize: Int)
   case fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?)
+  case fetchLocatedCakeShops(latitude: Double, longitude: Double)
 }
 
 extension SearchAPI: TargetType {
@@ -29,8 +31,14 @@ extension SearchAPI: TargetType {
     case .fetchCakeImages:
       return "/api/v1/cakes/search/cakes"
       
+    case .fetchTrendingCakeImages:
+      return "/api/v1/cakes/search/views"
+      
     case .fetchCakeShops:
       return "/api/v1/shops/search/shops"
+      
+    case .fetchLocatedCakeShops:
+      return "/api/v1/shops/location-based"
     }
   }
   
@@ -42,7 +50,13 @@ extension SearchAPI: TargetType {
     case .fetchCakeImages:
       return .get
       
+    case .fetchTrendingCakeImages:
+      return .get
+      
     case .fetchCakeShops:
+      return .get
+      
+    case .fetchLocatedCakeShops:
       return .get
     }
   }
@@ -65,6 +79,15 @@ extension SearchAPI: TargetType {
       if let lastCakeId { params["cakeId"] = lastCakeId }
       return .requestParameters(parameters: params, encoding: JSONEncoding())
       
+    case .fetchTrendingCakeImages(let lastCakeId, let pageSize):
+      var params: [String: Any] = [
+        "pageSize": pageSize
+      ]
+      if let lastCakeId {
+        params["offset"] = lastCakeId
+      }
+      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      
     case .fetchCakeShops(let keyword, let latitude, let longitude, let pageSize, let lastCakeShopId):
       var params: [String: Any] = [
         "latitude": latitude,
@@ -73,6 +96,13 @@ extension SearchAPI: TargetType {
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeShopId { params["cakeShopId"] = lastCakeShopId }
+      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      
+    case .fetchLocatedCakeShops(let latitude, let longitude):
+      let params: [String: Any] = [
+        "latitude": latitude,
+        "longitude": longitude
+      ]
       return .requestParameters(parameters: params, encoding: JSONEncoding())
     }
   }
@@ -86,7 +116,8 @@ extension SearchAPI: TargetType {
     case .fetchTrendingSearchKeyword:
       return try! Data(contentsOf: Bundle.module.url(forResource: "TrendingSearchKeywordSampleResponse", withExtension: "json")!)
       
-    case .fetchCakeImages(_, _, _, _, let lastCakeId):
+    case .fetchCakeImages(_, _, _, _, let lastCakeId),
+        .fetchTrendingCakeImages(let lastCakeId, _):
       if let lastCakeId {
         switch lastCakeId {
         case 10:
@@ -113,6 +144,9 @@ extension SearchAPI: TargetType {
       } else {
         return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops1", withExtension: "json")!)
       }
+    
+    default:
+      return Data()
     }
   }
 }
