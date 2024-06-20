@@ -69,12 +69,12 @@ struct TrendingCakeShopView: View {
           
           VStack {
             imageView(imageUrlString: trendingCakeShop.cakeImageUrls[safe: 1])
-              .size(74)
+              .size(72)
               .roundedCorner(8, corners: .allCorners)
               .roundedCorner(12, corners: [.topRight])
             
             imageView(imageUrlString: trendingCakeShop.cakeImageUrls[safe: 2])
-              .size(74)
+              .size(72)
               .roundedCorner(8, corners: .allCorners)
           }
         }
