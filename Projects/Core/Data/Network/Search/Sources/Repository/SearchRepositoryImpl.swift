@@ -62,6 +62,22 @@ public final class SearchRepositoryImpl: SearchRepository {
       .eraseToAnyPublisher()
   }
   
+  public func fetchTrendingCakeImages(lastCakeImageId: Int?, pageSize: Int) -> AnyPublisher<[CakeImage], any Error> {
+    provider.requestPublisher(.fetchTrendingCakeImages(lastCakeId: lastCakeImageId, pageSize: pageSize))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedData = try JSONDecoder().decode(TrendingCakeImagesResponseDTO.self, from: response.data)
+          return decodedData.toDomain()
+          
+        default:
+          let decodedData = try JSONDecoder().decode(TrendingCakeImagesResponseDTO.self, from: response.data)
+          throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
   public func fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[DomainSearch.CakeShop], any Error> {
     provider.requestPublisher(.fetchCakeShops(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeShopId: lastCakeShopId))
       .tryMap { response in
@@ -72,6 +88,22 @@ public final class SearchRepositoryImpl: SearchRepository {
           
         default:
           let decodedData = try JSONDecoder().decode(CakeShopsResponseDTO.self, from: response.data)
+          throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  public func fetchLocatedCakeShops(latitude: Double, longitude: Double) -> AnyPublisher<[LocatedCakeShop], any Error> {
+    provider.requestPublisher(.fetchLocatedCakeShops(latitude: latitude, longitude: longitude))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedData = try JSONDecoder().decode(LocatedCakeShopResponseDTO.self, from: response.data)
+          return decodedData.toDomain()
+          
+        default:
+          let decodedData = try JSONDecoder().decode(LocatedCakeShopResponseDTO.self, from: response.data)
           throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
         }
       }
