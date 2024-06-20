@@ -50,7 +50,7 @@ public final class EditProfileViewModel: ObservableObject {
   ) {
     self.originalUserProfile = userProfile
     self.editedUserProfile = .init(
-      profileImage: .none,
+      profileImage: userProfile.profileImageUrl == nil ? .none : .original(imageUrl: userProfile.profileImageUrl!),
       nickname: userProfile.nickname,
       email: userProfile.email,
       gender: userProfile.gender,
@@ -63,7 +63,8 @@ public final class EditProfileViewModel: ObservableObject {
   // MARK: - Public Methods
   
   public func profileHasChanges() -> Bool {
-    if editedUserProfile.profileImage != .none {
+    if editedUserProfile.profileImage != .none
+        && editedUserProfile.profileImage != .original(imageUrl: originalUserProfile.profileImageUrl ?? "") {
       /// 프로필 이미지를 삭제하려거나 새로운 이미지를 등록하려는 경우
       return true
     } else if originalUserProfile.nickname != editedUserProfile.nickname ||
@@ -84,6 +85,8 @@ public final class EditProfileViewModel: ObservableObject {
                                         gender: editedUserProfile.gender,
                                         birthday: editedUserProfile.birthday)
     updateUserProfileUseCase.execute(newUserProfile: newUserProfile)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.userProfileUpdatingState = .failure(error: error)
@@ -102,6 +105,8 @@ public final class EditProfileViewModel: ObservableObject {
     withdrawState = .loading
     
     withdrawUseCase.execute()
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.withdrawState = .failure(error: error)
@@ -114,9 +119,10 @@ public final class EditProfileViewModel: ObservableObject {
   }
   
   func isNicknameValid() -> Bool {
-    /// 정규식 패턴: 소문자, 대문자, 한글, 숫자, 언더바만 허용
+    /// 정규식 패턴: 소문자, 대문자, 한글, 숫자, 언더바만 그리고 20자 이하로만 닉네임 허용
     let regex = "^[a-zA-Z0-9가-힣_]+$"
     let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
-    return predicate.evaluate(with: editedUserProfile.nickname)
+    let isLengthValid = editedUserProfile.nickname.count <= 20
+    return isLengthValid && predicate.evaluate(with: editedUserProfile.nickname)
   }
 }

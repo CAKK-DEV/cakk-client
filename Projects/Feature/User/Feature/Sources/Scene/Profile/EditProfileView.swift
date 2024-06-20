@@ -84,7 +84,7 @@ struct EditProfileView: View {
             
             ProfileImageView(imageUrlString: imageUrl)
               .overlay {
-                /// 새로운 이미지를 라이브러리에서 선택했따면 새로운 이미지를 overlay로 보여줍니다.
+                /// 새로운 이미지를 라이브러리에서 선택했다면 새로운 이미지를 overlay로 보여줍니다.
                 /// ProfileImageView에 새로운 이미지를 직접 주입하지 않는 이유는 이 방식이 프로필 이미지를 다시 제거했을 때 등 다양한 상황에 대처하기 좋기 때문입니다.
                 if case .new(let newProfileImage) = viewModel.editedUserProfile.profileImage {
                   Image(uiImage: newProfileImage)
@@ -113,6 +113,7 @@ struct EditProfileView: View {
                             .foregroundStyle(Color.white)
                         }
                     }
+                    .modifier(BouncyPressEffect())
                     .confirmationDialog("프로필 사진", isPresented: $isProfileImageOptionActionSheetShown) {
                       Button("라이브러리에서 선택") {
                         /// 라이브러리 접근 권한을 먼저 요청한 후 상황에 맞는 View를 띄워줍니다.
@@ -123,14 +124,21 @@ struct EditProfileView: View {
                         }
                       }
                       
-                      if viewModel.editedUserProfile.profileImage != .none {
+                      /// 프로필 사진을 새로운 사진으로 할당했을 때에만 "기존 사진으로 변경" 버튼 표시
+                      if case .new(_) = viewModel.editedUserProfile.profileImage {
                         Button("기존 사진으로 변경") {
-                          viewModel.editedUserProfile.profileImage = .none
+                          if let originalProfileImageUrl = viewModel.originalUserProfile.profileImageUrl {
+                            viewModel.editedUserProfile.profileImage = .original(imageUrl: originalProfileImageUrl)
+                          }
                         }
                       }
                       
-                      Button("삭제", role: .destructive) {
-                        viewModel.editedUserProfile.profileImage = .delete
+                      /// 새로운 프로필 사진을 등록했거나 기존 프로필 사진이 있을 때에만 "삭제" 버튼 표시
+                      if viewModel.editedUserProfile.profileImage != .none
+                          && viewModel.editedUserProfile.profileImage != .delete {
+                        Button("삭제", role: .destructive) {
+                          viewModel.editedUserProfile.profileImage = .delete
+                        }
                       }
                     }.sheet(isPresented: $isPhotoPickerShown) {
                       PhotoPicker(selectedImage: .init(get: {
@@ -227,7 +235,7 @@ struct EditProfileView: View {
             } else {
               DialogManager.shared.showDialog(
                 title: "올바르지 않은 이름",
-                message: "이름에는 소문자, 대문자, 한글, 숫자, 언더바만 사용할 수 있어요.",
+                message: "이름은 20자 이하, 소문자, 대문자, 한글, 숫자, 언더바만 사용할 수 있어요.",
                 primaryButtonTitle: "확인",
                 primaryButtonAction: .cancel)
             }

@@ -48,7 +48,7 @@ extension UserAPI: TargetType {
       return "/api/v1/aws/img"
       
     case .uploadProfileImage:
-      return ""
+      return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
     }
   }
   
@@ -95,17 +95,17 @@ extension UserAPI: TargetType {
       return .requestPlain
       
     case .uploadProfileImage(_, let image):
-      let params: [String: Any] = [
-        "profile_image": image
-      ]
-      return .requestPlain
+      return .requestData(image)
     }
   }
   
   public var headers: [String: String]? {
     switch self {
-    case .signUp, .signIn, .requestPresignedUrl, .uploadProfileImage:
+    case .signUp, .signIn, .requestPresignedUrl:
       return ["Content-Type": "application/json"]
+      
+    case .uploadProfileImage:
+      return ["Content-Type": "image/webp"]
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
@@ -131,11 +131,8 @@ extension UserAPI: TargetType {
     case .updateUserProfile, .withdraw:
       return try! Data(contentsOf: Bundle.module.url(forResource: "BasicSampleResponse", withExtension: "json")!)
     
-    case .requestPresignedUrl:
-      return Data() /// presigned url mocking is not allowed
-    
-    case .uploadProfileImage:
-      return Data() /// presigned url mocking is not allowed
+    default:
+      return Data()
     }
   }
 }

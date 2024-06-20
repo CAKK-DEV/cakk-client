@@ -11,12 +11,6 @@ import UIKit
 
 public struct NewUserProfile {
   public var profileImage: ProfileImage
-  public enum ProfileImage: Equatable {
-    case delete /// 기존 프로필 이미지를 삭제하고싶은 경우
-    case new(image: UIImage) /// 새로운 프로필 이미지
-    case none /// 프로필 이미지를 변경하지 않음
-  }
-  
   public var nickname: String
   public var email: String
   public var gender: Gender
@@ -34,5 +28,19 @@ public struct NewUserProfile {
     self.email = email
     self.gender = gender
     self.birthday = birthday
+  }
+  
+  public enum ProfileImage: Equatable {
+    /// 기존 프로필 이미지를 삭제하고싶은 경우
+    case delete
+    
+    /// 새로운 프로필 이미지
+    case new(image: UIImage)
+    
+    /// 기존에 이미지가 있는 경우
+    case original(imageUrl: String)
+    
+    /// 기존에 이미지가 없는 경우
+    case none
   }
 }
