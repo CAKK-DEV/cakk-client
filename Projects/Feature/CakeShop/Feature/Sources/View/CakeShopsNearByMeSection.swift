@@ -12,6 +12,7 @@ import DesignSystem
 import DomainCakeShop
 import DomainSearch
 
+import Router
 import DIContainer
 
 import MapKit
@@ -22,6 +23,7 @@ struct CakeShopsNearByMeSection: View {
   // MARK: - Properties
   
   @StateObject private var viewModel: CakeShopNearByMeViewModel
+  @EnvironmentObject private var router: Router
   
   
   // MARK: - Initializers
@@ -50,7 +52,7 @@ struct CakeShopsNearByMeSection: View {
         }
       }
       .frame(height: 224)
-      .disabled(true)
+//      .disabled(true)
       .blur(radius: (LocationService.shared.authorizationStatus != .authorizedWhenInUse
                      && LocationService.shared.authorizationStatus != .authorizedAlways) ? 20 : 0)
       .overlay {
@@ -76,6 +78,9 @@ struct CakeShopsNearByMeSection: View {
       }
       .padding(.horizontal, 16)
       .animation(.smooth)
+      .onTapGesture {
+        router.navigate(to: PublicDestination.map)
+      }
     }
     .onAppear {
       viewModel.fetchLocatedCakeShops()
