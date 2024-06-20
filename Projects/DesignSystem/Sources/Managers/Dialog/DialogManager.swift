@@ -42,9 +42,7 @@ public final class DialogManager {
   
   // MARK: - Initializers
   
-  private init() { 
-    setupDimmingViewGesture()
-  }
+  private init() { }
   
   
   // MARK: - Public Methods
@@ -75,6 +73,7 @@ public final class DialogManager {
     
     let dimmingView = UIView()
     dimmingView.backgroundColor = .black.withAlphaComponent(0.4)
+    setupDimmingViewGesture(dimmingView)
     
     window.addSubview(dimmingView)
     window.addSubview(dialogView)
@@ -138,24 +137,24 @@ public final class DialogManager {
     }
   }
   
-  private func setupDimmingViewGesture() {
-     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDimmingViewTap))
-     dimmingView.addGestureRecognizer(tapGesture)
-   }
-   
-   @objc private func handleDimmingViewTap() {
-     guard let dialogView = dialogView else { return }
-     
-     UINotificationFeedbackGenerator().notificationOccurred(.warning)
-     
-     UIView.animate(withDuration: 0.1, animations: {
-       dialogView.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
-     }) { _ in
-       UIView.animate(withDuration: 0.5) {
-         dialogView.transform = .identity
-       }
-     }
-   }
+  private func setupDimmingViewGesture(_ targetView: UIView) {
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDimmingViewTap))
+    targetView.addGestureRecognizer(tapGesture)
+  }
+  
+  @objc private func handleDimmingViewTap() {
+    guard let dialogView = dialogView else { return }
+    
+    UINotificationFeedbackGenerator().notificationOccurred(.warning)
+    
+    UIView.animate(withDuration: 0.1, animations: {
+      dialogView.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
+    }) { _ in
+      UIView.animate(withDuration: 0.5) {
+        dialogView.transform = .identity
+      }
+    }
+  }
 }
 
 
