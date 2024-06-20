@@ -97,5 +97,11 @@ struct ExampleApp: App {
       let searchHistoryUseCase = resolver.resolve(SearchHistoryUseCase.self)!
       return SearchHistoryViewModel(searchHistoryUseCase: searchHistoryUseCase)
     }
+    
+    diContainer.register(SearchCakeShopOnMapViewModel.self) { resolver in
+      let repository = resolver.resolve(SearchRepository.self)!
+      let searchLocatedCakeShopUseCase = SearchLocatedCakeShopUseCaseImpl(repository: repository)
+      return SearchCakeShopOnMapViewModel(useCase: searchLocatedCakeShopUseCase)
+    }
   }
 }
