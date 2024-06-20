@@ -14,6 +14,8 @@ import DomainUser
 import Moya
 import CombineMoya
 
+import SDWebImageWebPCoder
+
 public final class UserProfileRepositoryImpl: UserProfileRepository {
   
   
@@ -123,6 +125,11 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
         .setFailureType(to: UserProfileError.self)
         .eraseToAnyPublisher()
       
+    case .original(let originalImageUrl):
+      return Just(originalImageUrl)
+        .setFailureType(to: UserProfileError.self)
+        .eraseToAnyPublisher()
+      
     case .new(let image):
       return provider.requestPublisher(.requestPresignedUrl)
         .tryMap { response -> (String, String) in
@@ -138,13 +145,16 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           }
         }
         .flatMap { [provider] (presignedUrl, imageUrl) -> AnyPublisher<String?, Error> in
-          guard let pngData = image.pngData() else {
+          /// 이미지를 webP 형식으로 변환 후 PresignedURL에 업로드 합니다.
+          SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
+          guard let data = image.sd_imageData(as: .webP, compressionQuality: 1) else {
             return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
           }
-          return provider.requestPublisher(.uploadProfileImage(presignedUrl: presignedUrl, image: pngData))
-            .map { _ in imageUrl }
-            .mapError { _ in UserProfileError.imageUploadFailure }
-            .eraseToAnyPublisher()
+          
+          return provider.requestPublisher(.uploadProfileImage(presignedUrl: presignedUrl, image: data))
+          .map { _ in imageUrl }
+          .mapError { _ in UserProfileError.imageUploadFailure }
+          .eraseToAnyPublisher()
         }
         .mapError { _ in UserProfileError.imageUploadFailure }
         .eraseToAnyPublisher()
