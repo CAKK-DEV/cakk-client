@@ -28,15 +28,18 @@ public final class Router: ObservableObject {
   public init() {}
   
   public func presentSheet(destination: any Identifiable) {
+    presentedFullScreenSheet = nil
     presentedSheet = AnyIdentifiable(destination: destination)
   }
   
   public func presentFullScreenSheet(destination: any Identifiable) {
+    presentedSheet = nil
     presentedFullScreenSheet = AnyIdentifiable(destination: destination)
   }
   
   public func navigate(to destination: any Hashable) {
     presentedSheet = nil
+    presentedFullScreenSheet = nil
     navPath.append(destination)
   }
   
