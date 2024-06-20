@@ -144,9 +144,9 @@ extension SearchAPI: TargetType {
       } else {
         return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShops1", withExtension: "json")!)
       }
-    
-    default:
-      return Data()
+   
+    case .fetchLocatedCakeShops:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "LocatedCakeShopSampleResponse", withExtension: "json")!)
     }
   }
 }
