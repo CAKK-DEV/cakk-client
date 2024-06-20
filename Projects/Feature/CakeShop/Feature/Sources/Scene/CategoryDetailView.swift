@@ -47,60 +47,45 @@ struct CakeCategoryDetailView: View {
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
-        GeometryReader { proxy in
-          ScrollView {
-            let columns: Int = {
-              switch proxy.size.width {
-              case 0..<400:
-                return 2
-              case 400..<1000:
-                return 3
-              case 1000..<1400:
-                return 4
-              default:
-                return 5
-              }
-            }()
-            VStack(spacing: 100) {
-              FlexibleGridView(columns: columns, data: viewModel.cakeImages) { cakeImage in
-                AsyncImage(
-                  url: URL(string: cakeImage.imageUrl),
-                  transaction: Transaction(animation: .easeInOut)
-                ) { phase in
-                  switch phase {
-                  case .success(let image):
-                    image
-                      .resizable()
-                      .aspectRatio(contentMode: .fit)
-                      .clipShape(RoundedRectangle(cornerRadius: 14))
-                      .onAppear {
-                        if cakeImage.id == viewModel.cakeImages.last?.id {
-                          viewModel.fetchMoreCakeImages()
-                        }
+        ScrollView {
+          VStack(spacing: 100) {
+            FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
+              AsyncImage(
+                url: URL(string: cakeImage.imageUrl),
+                transaction: Transaction(animation: .easeInOut)
+              ) { phase in
+                switch phase {
+                case .success(let image):
+                  image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .onAppear {
+                      if cakeImage.id == viewModel.cakeImages.last?.id {
+                        viewModel.fetchMoreCakeImages()
                       }
-                  default:
-                    RoundedRectangle(cornerRadius: 14)
-                      .fill(DesignSystemAsset.gray20.swiftUIColor)
-                      .aspectRatio(3/4, contentMode: .fit)
-                  }
-                }
-                .onTapGesture {
-                  router.presentSheet(destination: SheetDestination.quickInfo(
-                    imageId: cakeImage.id,
-                    cakeImageUrl: cakeImage.imageUrl,
-                    shopId: cakeImage.shopId
-                  ))
+                    }
+                default:
+                  RoundedRectangle(cornerRadius: 14)
+                    .fill(DesignSystemAsset.gray20.swiftUIColor)
+                    .aspectRatio(3/4, contentMode: .fit)
                 }
               }
-              
-              if viewModel.imageFetchingState == .loading {
-                ProgressView()
+              .onTapGesture {
+                router.presentSheet(destination: SheetDestination.quickInfo(
+                  imageId: cakeImage.id,
+                  cakeImageUrl: cakeImage.imageUrl,
+                  shopId: cakeImage.shopId
+                ))
               }
             }
-            .padding(.vertical, 16)
-            .padding(.horizontal, 12)
             
+            if viewModel.imageFetchingState == .loading {
+              ProgressView()
+            }
           }
+          .padding(.vertical, 16)
+          .padding(.horizontal, 12)
         }
       }
     }

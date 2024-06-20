@@ -86,7 +86,7 @@ struct CakeShopContentsSection: View {
       .frame(height: 400)
     } else {
       VStack(spacing: 100) {
-        FlexibleGridView(columns: 2, data: viewModel.cakeImages) { cakeImage in
+        FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
           AsyncImage(
             url: URL(string: cakeImage.imageUrl),
             transaction: Transaction(animation: .easeInOut)
