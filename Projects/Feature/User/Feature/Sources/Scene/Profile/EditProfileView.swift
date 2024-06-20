@@ -227,6 +227,9 @@ struct EditProfileView: View {
         }
         
         VStack(spacing: 0) {
+          LinearGradient(colors: [.clear, .white], startPoint: .top, endPoint: .bottom)
+            .frame(height: 24)
+          
           CKButtonLarge(title: "저장",
                         fixedSize: .infinity,
                         action: {
@@ -243,6 +246,7 @@ struct EditProfileView: View {
           .padding(.horizontal, 28)
           .padding(.bottom, 16)
           .opacity(viewModel.profileHasChanges() ? 1.0 : 0.3)
+          .background(Color.white)
           .disabled(!viewModel.profileHasChanges())
           .animation(.snappy, value: viewModel.profileHasChanges())
           .onChange(of: viewModel.userProfileUpdatingState) { state in
@@ -269,12 +273,6 @@ struct EditProfileView: View {
               LoadingManager.shared.stopLoading()
             }
           }
-        }
-        .background {
-          LinearGradient(colors: [.clear, .white, .white],
-                         startPoint: .top,
-                         endPoint: .bottom)
-          .ignoresSafeArea()
         }
       }
     }
