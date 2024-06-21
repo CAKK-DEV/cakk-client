@@ -34,6 +34,7 @@ public final class CategoryDetailViewModel: ObservableObject {
   enum ImageFetchingState {
     case loading
     case idle
+    case success
     case failure
     case failureLoadMore
   }
@@ -71,7 +72,7 @@ public final class CategoryDetailViewModel: ObservableObject {
           self?.imageFetchingState = .failure
           print(error)
         } else {
-          self?.imageFetchingState = .idle
+          self?.imageFetchingState = .success
         }
       } receiveValue: { [weak self] value in
         self?.cakeImages = value
@@ -94,7 +95,7 @@ public final class CategoryDetailViewModel: ObservableObject {
             self?.imageFetchingState = .failureLoadMore
             print(error)
           } else {
-            self?.imageFetchingState = .idle
+            self?.imageFetchingState = .success
           }
         } receiveValue: { [weak self] value in
           self?.cakeImages.append(contentsOf: value)
