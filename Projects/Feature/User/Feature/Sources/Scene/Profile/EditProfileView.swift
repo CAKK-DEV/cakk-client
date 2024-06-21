@@ -376,7 +376,6 @@ import PreviewSupportUser
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
-    let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
     let withdrawUseCase = MockWithdrawUseCase()
     return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
@@ -392,7 +391,6 @@ import PreviewSupportUser
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
-    let profileUseCase = MockUserProfileUseCase(role: .user)
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase(scenario: .failure)
     let withdrawUseCase = MockWithdrawUseCase()
     return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
