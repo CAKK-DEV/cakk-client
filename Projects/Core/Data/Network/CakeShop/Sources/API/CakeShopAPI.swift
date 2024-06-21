@@ -123,13 +123,13 @@ extension CakeShopAPI: TargetType {
       }
       
     case .fetchCakeShopQuickInfo:
-      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopQuickInfo", withExtension: "json")!)
+      return try! Data(contentsOf: Bundle.module.url(forResource: "CakeShopQuickInfoSampleResponse", withExtension: "json")!)
       
     case .fetchCakeShopDetail:
-      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeShopDetail", withExtension: "json")!)
+      return try! Data(contentsOf: Bundle.module.url(forResource: "CakeShopDetailSampleResponse", withExtension: "json")!)
       
     case .fetchAdditionalInfo:
-      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleAdditionalShopInfo", withExtension: "json")!)
+      return try! Data(contentsOf: Bundle.module.url(forResource: "AdditionalShopInfoSampleResponse", withExtension: "json")!)
     }
   }
 }
