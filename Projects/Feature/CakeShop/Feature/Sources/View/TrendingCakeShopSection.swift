@@ -40,24 +40,7 @@ struct TrendingCakeShopSection: View {
         .padding(.horizontal, 16)
       
       Group {
-        if viewModel.trendingCakeShopFetchingState == .success {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 16) {
-              ForEach(viewModel.trendingCakeShops, id: \.shopId) { trendingCakeShop in
-                TrendingCakeShopView(trendingCakeShop: trendingCakeShop)
-                  .onTapGesture {
-                    router.navigate(to: Destination.shopDetail(shopId: trendingCakeShop.shopId))
-                  }
-              }
-            }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-          }
-        } else if viewModel.trendingCakeShopFetchingState == .failure {
-          FailureStateView(title: "불러오기에 실패하였어요.", buttonTitle: "다시 시도") {
-            viewModel.fetchTrendingCakeShop()
-          }
-        } else {
+        if viewModel.trendingCakeShopFetchingState == .loading {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 16) {
               ForEach(1...3, id: \.self) { _ in
@@ -68,6 +51,27 @@ struct TrendingCakeShopSection: View {
             .padding(.vertical, 12)
           }
           .disabled(true)
+        } else {
+          if viewModel.trendingCakeShopFetchingState == .success && viewModel.trendingCakeShops.isEmpty {
+            FailureStateView(title: "인기 케이크 샵 정보가 없어요")
+          } else if viewModel.trendingCakeShopFetchingState == .failure {
+            FailureStateView(title: "불러오기에 실패하였어요.", buttonTitle: "다시 시도") {
+              viewModel.fetchTrendingCakeShop()
+            }
+          } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+              HStack(spacing: 16) {
+                ForEach(viewModel.trendingCakeShops, id: \.shopId) { trendingCakeShop in
+                  TrendingCakeShopView(trendingCakeShop: trendingCakeShop)
+                    .onTapGesture {
+                      router.navigate(to: Destination.shopDetail(shopId: trendingCakeShop.shopId))
+                    }
+                }
+              }
+              .padding(.horizontal, 16)
+              .padding(.vertical, 12)
+            }
+          }
         }
       }
       .frame(height: 328)
