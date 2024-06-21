@@ -50,6 +50,12 @@ public struct ProfileView: View {
             Color(hex: "FE85A5"),
             Color(hex: "FED6C3")
           ])
+        .overlay {
+          MotionedIconsView()
+            .frame(maxHeight: .infinity, alignment: .top)
+            .padding(.top, -40)
+            .ignoresSafeArea()
+        }
         
         VStack(spacing: 0) {
           ProfileImageView(imageUrlString: viewModel.userProfile?.profileImageUrl)
