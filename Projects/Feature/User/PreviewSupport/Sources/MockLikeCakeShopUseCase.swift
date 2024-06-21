@@ -15,6 +15,7 @@ public struct MockLikeCakeShopUseCase: LikeCakeShopUseCase {
   
   // MARK: - Properties
   
+  private let delay: TimeInterval
   private let scenario: Scenario
   public enum Scenario {
     case success
@@ -24,7 +25,11 @@ public struct MockLikeCakeShopUseCase: LikeCakeShopUseCase {
   
   // MARK: - Initializers
   
-  public init(scenario: Scenario = .success) {
+  public init(
+    delay: TimeInterval = 1,
+    scenario: Scenario = .success
+  ) {
+    self.delay = delay
     self.scenario = scenario
   }
   
@@ -51,9 +56,37 @@ public struct MockLikeCakeShopUseCase: LikeCakeShopUseCase {
   }
   
   public func fetchLikedCakeShops(lastShopId: Int?, pageSize: Int) -> AnyPublisher<[DomainUser.LikedCakeShop], DomainUser.LikeError> {
-    Just([])
-      .setFailureType(to: LikeError.self)
-      .eraseToAnyPublisher()
+    switch scenario {
+    case .success:
+      if let lastShopId {
+        switch lastShopId {
+        case 6:
+          return Just(LikedCakeShop.mockLikedCakeShops2)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        case 12:
+          return Just(LikedCakeShop.mockLikedCakeShops3)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        default:
+          return Just(LikedCakeShop.mockLikedCakeShops4)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        }
+      } else {
+        return Just(LikedCakeShop.mockLikedCakeShops1)
+          .delay(for: .seconds(delay), scheduler: RunLoop.main)
+          .setFailureType(to: LikeError.self)
+          .eraseToAnyPublisher()
+      }
+      
+    case .sessionExpired:
+      return Fail(error: LikeError.sessionExpired)
+        .eraseToAnyPublisher()
+    }
   }
   
   public func fetchCakeShopLikedState(shopId: Int) -> AnyPublisher<Bool, DomainUser.LikeError> {
