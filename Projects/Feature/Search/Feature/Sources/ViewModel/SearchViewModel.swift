@@ -163,25 +163,27 @@ public final class SearchViewModel: ObservableObject {
   public func fetchMoreCakeShops() {
     cakeShopFetchingState = .loading
     
-    searchCakeShopUseCase
-      .execute(keyword: searchKeyword,
-               latitude: LocationService.shared.latitude,
-               longitude: LocationService.shared.longitude,
-               pageSize: 10,
-               lastCakeShopId: cakeShops.last?.shopId)
-      .subscribe(on: DispatchQueue.global())
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] completion in
-        if case .failure(let error) = completion {
-          self?.cakeShopFetchingState = .failure
-          print(error)
-        } else {
-          self?.cakeShopFetchingState = .success
+    if let lastCakeShopId = cakeShops.last?.shopId {
+      searchCakeShopUseCase
+        .execute(keyword: searchKeyword,
+                 latitude: LocationService.shared.latitude,
+                 longitude: LocationService.shared.longitude,
+                 pageSize: 10,
+                 lastCakeShopId: lastCakeShopId)
+        .subscribe(on: DispatchQueue.global())
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] completion in
+          if case .failure(let error) = completion {
+            self?.cakeShopFetchingState = .failure
+            print(error)
+          } else {
+            self?.cakeShopFetchingState = .success
+          }
+        } receiveValue: { [weak self] cakeShops in
+          self?.cakeShops.append(contentsOf: cakeShops)
         }
-      } receiveValue: { [weak self] cakeShops in
-        self?.cakeShops.append(contentsOf: cakeShops)
-      }
-      .store(in: &cancellables)
+        .store(in: &cancellables)
+    }
   }
   
   // MARK: - Private Methods
