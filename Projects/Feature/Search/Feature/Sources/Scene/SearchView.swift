@@ -199,9 +199,7 @@ struct SearchView: View {
                     .padding(.leading, 16)
                   
                   Button {
-                    withAnimation(.spring(duration: 0.2)) {
-                      searchHistoryViewModel.removeSearchHistory(searchHistory)
-                    }
+                    searchHistoryViewModel.removeSearchHistory(searchHistory)
                   } label: {
                     Image(systemName: "xmark.circle.fill")
                       .font(.system(size: 16))
@@ -222,6 +220,7 @@ struct SearchView: View {
           .padding(.vertical, 12)
           .padding(.horizontal, 28)
         }
+        .animation(.smooth(duration: 0.25), value: searchHistoryViewModel.searchHistories)
       }
     }
     .onAppear {
