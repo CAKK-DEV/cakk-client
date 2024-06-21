@@ -119,18 +119,24 @@ public struct CakeShopThumbnailView: View {
       }
       
       HStack(spacing: 6) {
-        ForEach(cakeImageUrls, id: \.self) { cakeImageUrl in
-          AsyncImage(url: URL(string: cakeImageUrl)) { image in
-            image
-              .resizable()
-              .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 8))
-          } placeholder: {
+        ForEach(0..<4, id: \.self) { index in
+          if let cakeImageUrl = cakeImageUrls[safe: index] {
+            AsyncImage(url: URL(string: cakeImageUrl)) { image in
+              image
+                .resizable()
+                .aspectRatio(1/1, contentMode: .fit)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+            } placeholder: {
+              RoundedRectangle(cornerRadius: 8)
+                .fill(DesignSystemAsset.gray10.swiftUIColor)
+                .aspectRatio(1/1, contentMode: .fit)
+            }
+            .frame(maxWidth: .infinity)
+          } else {
             RoundedRectangle(cornerRadius: 8)
               .fill(DesignSystemAsset.gray10.swiftUIColor)
               .aspectRatio(1/1, contentMode: .fit)
           }
-          .frame(maxWidth: .infinity)
         }
       }
     }
@@ -144,6 +150,19 @@ public struct CakeShopThumbnailView: View {
     }
   }
 }
+
+
+// MARK: - Array Extension for Safe Indexing
+// TODO: 공통 Util 모듈로 빼기
+
+private extension Array {
+  subscript(safe index: Index) -> Element? {
+    return indices.contains(index) ? self[index] : nil
+  }
+}
+
+
+// MARK: - Preview
 
 #Preview {
   CakeShopThumbnailView(
