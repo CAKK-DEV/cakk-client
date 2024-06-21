@@ -121,7 +121,7 @@ public final class LikedItemsViewModel: ObservableObject {
     
     if let lastCakeShopHeartId = cakeShops.last?.shopHeartId {
       likeCakeShopUseCase
-        .fetchLikedCakeShops(lastShopId: nil, pageSize: 10)
+        .fetchLikedCakeShops(lastShopId: lastCakeShopHeartId, pageSize: 10)
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
