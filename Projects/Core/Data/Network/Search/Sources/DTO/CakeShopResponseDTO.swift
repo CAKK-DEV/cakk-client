@@ -15,7 +15,7 @@ struct CakeShopsResponseDTO: Decodable {
   
   struct Data: Decodable {
     let cakeShops: [CakeShopDTO]
-    let lastCakeShopId: Int
+    let lastCakeShopId: Int?
     let size: Int
   }
 }
