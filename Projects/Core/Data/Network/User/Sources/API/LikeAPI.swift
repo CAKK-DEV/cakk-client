@@ -80,7 +80,7 @@ extension LikeAPI: TargetType {
       if let lastHeartId {
         params["cakeShopHeartId"] = lastHeartId
       }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .likeCakeShop, .unlikeCakeShop:
       return .requestPlain
@@ -95,7 +95,7 @@ extension LikeAPI: TargetType {
       if let lastHeartId {
         params["cakeHeartId"] = lastHeartId
       }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .likeCakeImage, .unlikeCakeImage:
       return .requestPlain
