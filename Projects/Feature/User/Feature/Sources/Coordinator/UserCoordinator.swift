@@ -12,6 +12,21 @@ import Router
 
 import DIContainer
 
+public enum PublicSheetDestination: Identifiable {
+  case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
+
+  public var id: String {
+    switch self {
+    case .quickInfo:
+      return "ImageDetail"
+    }
+  }
+}
+
+public enum PublicDestination: Hashable {
+  case shopDetail(shopId: Int)
+}
+
 enum SheetDestination: Identifiable {
   case login
   
@@ -81,6 +96,11 @@ private struct PreviewContent: View {
   private let diContainer = DIContainer.shared.container
   
   init() {
+    diContainer.register(ProfileViewModel.self) { _ in
+      let userProfileUseCase = MockUserProfileUseCase(role: .user)
+      return ProfileViewModel(userProfileUseCase: userProfileUseCase)
+    }
+    
     diContainer.register(SocialLoginSignInUseCase.self) { resolver in
       MockSocialLoginSignInUseCase()
     }
