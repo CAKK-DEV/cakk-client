@@ -67,7 +67,7 @@ extension SearchAPI: TargetType {
       let params: [String: Any] = [
         "count": count
       ]
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchCakeImages(let keyword, let latitude, let longitude, let pageSize, let lastCakeId):
       var params: [String: Any] = [
@@ -77,7 +77,7 @@ extension SearchAPI: TargetType {
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeId { params["cakeId"] = lastCakeId }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchTrendingCakeImages(let lastCakeId, let pageSize):
       var params: [String: Any] = [
@@ -86,7 +86,7 @@ extension SearchAPI: TargetType {
       if let lastCakeId {
         params["offset"] = lastCakeId
       }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchCakeShops(let keyword, let latitude, let longitude, let pageSize, let lastCakeShopId):
       var params: [String: Any] = [
@@ -96,14 +96,14 @@ extension SearchAPI: TargetType {
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeShopId { params["cakeShopId"] = lastCakeShopId }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchLocatedCakeShops(let latitude, let longitude):
       let params: [String: Any] = [
         "latitude": latitude,
         "longitude": longitude
       ]
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
     }
   }
   

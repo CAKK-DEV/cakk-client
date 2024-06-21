@@ -49,34 +49,39 @@ struct CakeCategoryDetailView: View {
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else {
-        ScrollView {
-          VStack(spacing: 100) {
-            FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-              KFImage(URL(string: cakeImage.imageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .background(DesignSystemAsset.gray20.swiftUIColor)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .onAppear {
-                  if cakeImage.id == viewModel.cakeImages.last?.id {
-                    viewModel.fetchMoreCakeImages()
+        if viewModel.imageFetchingState == .success && viewModel.cakeImages.isEmpty {
+          FailureStateView(title: "검색 결과가 없어요")
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        } else {
+          ScrollView {
+            VStack(spacing: 100) {
+              FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
+                KFImage(URL(string: cakeImage.imageUrl))
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .background(DesignSystemAsset.gray20.swiftUIColor)
+                  .clipShape(RoundedRectangle(cornerRadius: 14))
+                  .onAppear {
+                    if cakeImage.id == viewModel.cakeImages.last?.id {
+                      viewModel.fetchMoreCakeImages()
+                    }
                   }
-                }
-                .onTapGesture {
-                  router.presentSheet(destination: SheetDestination.quickInfo(
-                    imageId: cakeImage.id,
-                    cakeImageUrl: cakeImage.imageUrl,
-                    shopId: cakeImage.shopId
-                  ))
-                }
+                  .onTapGesture {
+                    router.presentSheet(destination: SheetDestination.quickInfo(
+                      imageId: cakeImage.id,
+                      cakeImageUrl: cakeImage.imageUrl,
+                      shopId: cakeImage.shopId
+                    ))
+                  }
+              }
+              
+              if viewModel.imageFetchingState == .loading {
+                ProgressView()
+              }
             }
-            
-            if viewModel.imageFetchingState == .loading {
-              ProgressView()
-            }
+            .padding(.vertical, 16)
+            .padding(.horizontal, 12)
           }
-          .padding(.vertical, 16)
-          .padding(.horizontal, 12)
         }
       }
     }

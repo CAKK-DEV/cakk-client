@@ -15,7 +15,7 @@ struct LikedCakeImagesResponseDTO: Decodable {
   
   struct Data: Decodable {
     let cakeImages: [LikedCakeImageDTO]
-    let lastCakeHeartId: Int
+    let lastCakeHeartId: Int?
     let size: Int
   }
 }
