@@ -91,6 +91,8 @@ extension SocialLoginViewModel {
     }
     
     signUpUseCase.execute(credential: credentialData, userData: userData)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           switch error {
@@ -136,6 +138,8 @@ extension SocialLoginViewModel {
       }
       
       self.signInUseCase.execute(credential: CredentialData(loginProvider: .google, idToken: idToken))
+        .subscribe(on: DispatchQueue.global())
+        .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
             switch error {
@@ -189,6 +193,8 @@ extension SocialLoginViewModel {
         }
         
         self.signInUseCase.execute(credential: CredentialData(loginProvider: .kakao, idToken: idToken))
+          .subscribe(on: DispatchQueue.global())
+          .receive(on: DispatchQueue.main)
           .sink { [weak self] completion in
             if case .failure(let error) = completion {
               switch error {
@@ -258,6 +264,8 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
     }
 
     signInUseCase.execute(credential: CredentialData(loginProvider: .apple, idToken: idToken))
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] result in
         if case .failure(let error) = result {
           switch error {

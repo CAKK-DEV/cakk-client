@@ -40,6 +40,8 @@ public final class SearchHistoryViewModel: ObservableObject {
     searchHistoryFetchingState = .loading
     
     searchHistoryUseCase.fetchSearchHistories()
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         self?.searchHistoryFetchingState = .completed
       } receiveValue: { [weak self] searchHistories in
@@ -51,6 +53,8 @@ public final class SearchHistoryViewModel: ObservableObject {
   
   public func addSearchHistory(searchKeyword: String) {
     searchHistoryUseCase.addSearchHistory(keyword: searchKeyword)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
         guard let self else { return }
         
@@ -66,6 +70,8 @@ public final class SearchHistoryViewModel: ObservableObject {
   
   public func removeSearchHistory(_ item: SearchHistory) {
     searchHistoryUseCase.removeSearchHistory(history: item)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         /// 로컬로 검색 기록을 즉시 삭제 합니다.
         if let index = self?.searchHistories.firstIndex(of: item) {
