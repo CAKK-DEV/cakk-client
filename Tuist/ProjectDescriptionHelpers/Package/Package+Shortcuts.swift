@@ -36,4 +36,8 @@ public enum External {
   public static var kakaoSDKUser: TargetDependency {
     return .external(name: "KakaoSDKUser")
   }
+
+  public static var kingfisher: TargetDependency {
+    return .external(name: "Kingfisher")
+  }
 }

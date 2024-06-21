@@ -12,7 +12,8 @@ let packageSettings = PackageSettings(
     "Haptico": .framework,
     "Moya": .framework,
     "CombineMoya": .framework,
-    "Swinject": .framework
+    "Swinject": .framework,
+    "Kingfisher": .framework
   ],
   baseSettings: .settings(
     configurations: [
@@ -32,6 +33,7 @@ let package = Package(
     .package(url: "https://github.com/iSapozhnik/Haptico", from: "1.0.1"),
     .package(url: "https://github.com/Moya/Moya", from: "15.0.3"),
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.22.2"),
-    .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8")
+    .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8"),
+    .package(url: "https://github.com/onevcat/Kingfisher", from: "7.12.0")
   ]
 )
