@@ -10,6 +10,8 @@ import SwiftUI
 import SwiftUIUtil
 import DesignSystem
 
+import Kingfisher
+
 import DomainCakeShop
 
 struct TrendingCakeShopView: View {
@@ -31,17 +33,10 @@ struct TrendingCakeShopView: View {
   var body: some View {
     VStack(spacing: 12) {
       HStack(spacing: 12) {
-        AsyncImage(url: URL(string: trendingCakeShop.profileImageUrl)) { image in
-          image
-            .resizable()
-            .scaledToFill()
-            .size(52)
-            .clipShape(Circle())
-        } placeholder: {
-          Circle()
-            .fill(DesignSystemAsset.gray10.swiftUIColor)
-            .size(52)
-        }
+        KFImage(URL(string: trendingCakeShop.profileImageUrl))
+          .size(52)
+          .background(DesignSystemAsset.gray10.swiftUIColor)
+          .clipShape(Circle())
         
         VStack(spacing: 4) {
           Text(trendingCakeShop.name)
@@ -107,14 +102,10 @@ struct TrendingCakeShopView: View {
   }
   
   private func imageView(imageUrlString: String?) -> some View {
-    AsyncImage(url: URL(string: imageUrlString ?? "")) { image in
-      image
-        .resizable()
-        .aspectRatio(1/1, contentMode: .fill)
-    } placeholder: {
-      RoundedRectangle(cornerRadius: 12)
-        .fill(DesignSystemAsset.gray10.swiftUIColor)
-    }
+    KFImage(URL(string: imageUrlString ?? ""))
+      .resizable()
+      .aspectRatio(1/1, contentMode: .fill)
+      .background(DesignSystemAsset.gray10.swiftUIColor)
   }
 }
 

@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftUIUtil
 import DesignSystem
+import Kingfisher
 
 public struct ImageZoomableView: View {
   
@@ -68,53 +69,50 @@ public struct ImageZoomableView: View {
       }
       .padding(20)
       
-      AsyncImage(url: URL(string: imageUrl)) { image in
-        image
-          .resizable()
-          .scaledToFit()
-          .clipShape(RoundedRectangle(cornerRadius: 22))
-          .offset(x: imageOffset.x, y: imageOffset.y)
-          .offset(dragOffset)
-          .overlay {
-            GeometryReader { proxy in
-              let size = proxy.size
-              ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
-            }
+      KFImage(URL(string: imageUrl))
+        .placeholder { ProgressView() }
+        .resizable()
+        .scaledToFit()
+        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .offset(x: imageOffset.x, y: imageOffset.y)
+        .offset(dragOffset)
+        .overlay {
+          GeometryReader { proxy in
+            let size = proxy.size
+            ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
           }
-          .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
-          .scaleEffect(1 - dragDistance / 1000)
-          .gesture(
-            DragGesture()
-              .onChanged { gesture in
-                imageDragStartLocation = gesture.startLocation
-                imageDragCurrentLocation = gesture.location
-                
-                dragDistance = imageDragStartLocation.distance(to: imageDragCurrentLocation)
-                dragOffset = gesture.translation
-                
-                opacity = 1 - Double(dragDistance) / 1000
+        }
+        .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
+        .scaleEffect(1 - dragDistance / 1000)
+        .gesture(
+          DragGesture()
+            .onChanged { gesture in
+              imageDragStartLocation = gesture.startLocation
+              imageDragCurrentLocation = gesture.location
+              
+              dragDistance = imageDragStartLocation.distance(to: imageDragCurrentLocation)
+              dragOffset = gesture.translation
+              
+              opacity = 1 - Double(dragDistance) / 1000
+            }
+            .onEnded { gesture in
+              withAnimation(.smooth) {
+                dragOffset = .zero
+                dragDistance = 0
               }
-              .onEnded { gesture in
-                withAnimation(.smooth) {
-                  dragOffset = .zero
-                  dragDistance = 0
+              
+              /// 이미지를 드래그한 거리가 100이 넘는다면 현재 뷰를 나가고싶은 것으로 간주하여 dimiss 호출
+              let distance = imageDragStartLocation.distance(to: gesture.location)
+              if distance > 100 {
+                withAnimation(.smooth(duration: 0.1)) {
+                  opacity = 0
                 }
                 
-                /// 이미지를 드래그한 거리가 100이 넘는다면 현재 뷰를 나가고싶은 것으로 간주하여 dimiss 호출
-                let distance = imageDragStartLocation.distance(to: gesture.location)
-                if distance > 100 {
-                  withAnimation(.smooth(duration: 0.1)) {
-                    opacity = 0
-                  }
-                  
-                  dismiss()
-                }
+                dismiss()
               }
-          )
-      } placeholder: {
-        ProgressView()
-      }
-      .padding(24)
+            }
+        )
+        .padding(24)
     }
   }
 }

@@ -9,6 +9,7 @@
 import SwiftUI
 import DesignSystem
 import SwiftUIUtil
+import Kingfisher
 
 struct ProfileImageView: View {
   
@@ -32,15 +33,12 @@ struct ProfileImageView: View {
       .frame(width: 128, height: 128)
       .overlay {
         if let imageUrlString {
-          AsyncImage(url: URL(string: imageUrlString)) { image in
-            image
-              .resizable()
-              .scaledToFill()
-              .clipShape(Circle())
-          } placeholder: {
-            defaultImage()
-          }
-          .padding(3)
+          KFImage(URL(string: imageUrlString))
+            .placeholder { defaultImage() }
+            .resizable()
+            .scaledToFill()
+            .clipShape(Circle())
+            .padding(3)
         } else {
           defaultImage()
             .padding(3)

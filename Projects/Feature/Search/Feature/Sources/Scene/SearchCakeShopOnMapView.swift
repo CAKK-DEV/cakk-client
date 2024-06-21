@@ -10,6 +10,8 @@ import SwiftUI
 import SwiftUIUtil
 import DesignSystem
 
+import Kingfisher
+
 import DomainSearch
 
 import MapKit
@@ -130,21 +132,16 @@ public struct SearchCakeShopOnMapView: View {
     VStack(spacing: 0) {
       HStack(alignment: .top, spacing: 12) {
         if let profileImageUrl = cakeShop?.profileImageUrl {
-          AsyncImage(url: URL(string: profileImageUrl)) { image in
-            image
-              .resizable()
-              .size(80)
-              .aspectRatio(contentMode: .fill)
-              .clipShape(Circle())
-              .overlay {
-                Circle()
-                  .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 0.5)
-              }
-          } placeholder: {
-            Circle()
-              .fill(DesignSystemAsset.gray10.swiftUIColor)
-              .size(80)
-          }
+          KFImage(URL(string: profileImageUrl))
+            .resizable()
+            .size(80)
+            .aspectRatio(contentMode: .fill)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(Circle())
+            .overlay {
+              Circle()
+                .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 0.5)
+            }
         } else {
           Circle()
             .fill(DesignSystemAsset.gray10.swiftUIColor)
@@ -171,17 +168,12 @@ public struct SearchCakeShopOnMapView: View {
       HStack(spacing: 6) {
         ForEach(0..<4, id: \.self) { index in
           if let imageUrlString = cakeShop?.cakeImageUrls[safe: index] {
-            AsyncImage(url: URL(string: imageUrlString)) { image in
-              image
-                .resizable()
-                .aspectRatio(1/1, contentMode: .fit)
-                .frame(maxWidth: .infinity)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            } placeholder: {
-              DesignSystemAsset.gray10.swiftUIColor
-                .aspectRatio(1/1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
+            KFImage(URL(string: imageUrlString))
+              .resizable()
+              .aspectRatio(1/1, contentMode: .fit)
+              .frame(maxWidth: .infinity)
+              .background(DesignSystemAsset.gray10.swiftUIColor)
+              .clipShape(RoundedRectangle(cornerRadius: 12))
           } else {
             DesignSystemAsset.gray10.swiftUIColor
               .aspectRatio(1/1, contentMode: .fit)

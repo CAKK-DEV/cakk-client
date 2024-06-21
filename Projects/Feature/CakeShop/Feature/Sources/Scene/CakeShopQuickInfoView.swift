@@ -10,6 +10,8 @@ import SwiftUI
 import DesignSystem
 import SwiftUIUtil
 
+import Kingfisher
+
 import DomainCakeShop
 
 import Router

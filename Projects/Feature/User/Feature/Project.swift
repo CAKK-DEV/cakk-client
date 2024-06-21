@@ -15,6 +15,7 @@ let project = Project.framework(
     External.kakaoSDKCommon,
     External.kakaoSDKAuth,
     External.kakaoSDKUser,
+    External.kingfisher,
     .package(product: "GoogleSignIn")
   ],
   packages: [
