@@ -80,6 +80,8 @@
         ],
         "operationDays": ["MON", "WED", "FRI"]
       }
-    ]
+    ],
+    "lastCakeShopHeartId": 15,
+    "size": 7
   }
 }

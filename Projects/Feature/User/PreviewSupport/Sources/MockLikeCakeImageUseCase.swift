@@ -15,6 +15,7 @@ public struct MockLikeCakeImageUseCase: LikeCakeImageUseCase {
   
   // MARK: - Properties
   
+  private let delay: TimeInterval
   private let scenario: Scenario
   public enum Scenario {
     case success
@@ -24,7 +25,11 @@ public struct MockLikeCakeImageUseCase: LikeCakeImageUseCase {
   
   // MARK: - Initializers
   
-  public init(scenario: Scenario = .success) {
+  public init(
+    delay: TimeInterval = 1,
+    scenario: Scenario = .success
+  ) {
+    self.delay = delay
     self.scenario = scenario
   }
   
@@ -51,9 +56,38 @@ public struct MockLikeCakeImageUseCase: LikeCakeImageUseCase {
   }
   
   public func fetchLikedCakeImages(lastImageId: Int?, pageSize: Int) -> AnyPublisher<[DomainUser.LikedCakeImage], DomainUser.LikeError> {
-    Just([])
-      .setFailureType(to: LikeError.self)
-      .eraseToAnyPublisher()
+    
+    switch scenario {
+    case .success:
+      if let lastImageId {
+        switch lastImageId {
+        case 10:
+          return Just(LikedCakeImage.mockLikedCakeImages2)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        case 20:
+          return Just(LikedCakeImage.mockLikedCakeImages3)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        default:
+          return Just(LikedCakeImage.mockLikedCakeImages4)
+            .delay(for: .seconds(delay), scheduler: RunLoop.main)
+            .setFailureType(to: LikeError.self)
+            .eraseToAnyPublisher()
+        }
+      } else {
+        return Just(LikedCakeImage.mockLikedCakeImages1)
+          .delay(for: .seconds(delay), scheduler: RunLoop.main)
+          .setFailureType(to: LikeError.self)
+          .eraseToAnyPublisher()
+      }
+    
+    case .sessionExpired:
+      return Fail(error: LikeError.failure)
+        .eraseToAnyPublisher()
+    }
   }
   
   public func fetchCakeImageLikedState(imageId: Int) -> AnyPublisher<Bool, DomainUser.LikeError> {

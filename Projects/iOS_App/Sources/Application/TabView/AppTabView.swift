@@ -32,7 +32,7 @@ struct AppTabView: View {
         SearchTabCoordinator()
           .tag(CAKKTabBar.Tab.search)
         
-        Text("Liked")
+        LikeTabCoordinator()
           .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.liked)
         

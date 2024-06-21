@@ -281,6 +281,14 @@ struct CAKKApp: App {
       let repository = resolver.resolve(LikeRepository.self)!
       return LikeCakeImageUseCaseImpl(repository: repository)
     }
+    
+    diContainer.register(LikedItemsViewModel.self) { resolver in
+      let repository = resolver.resolve(LikeRepository.self)!
+      let likeCakeImageUseCase = LikeCakeImageUseCaseImpl(repository: repository)
+      let likeCakeShopUseCase = LikeCakeShopUseCaseImpl(repository: repository)
+      return LikedItemsViewModel(likeCakeImageUseCase: likeCakeImageUseCase,
+                                 likeCakeShopUseCase: likeCakeShopUseCase)
+    }
   }
   
   private func initKakaoSDK() {
