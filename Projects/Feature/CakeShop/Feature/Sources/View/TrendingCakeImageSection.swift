@@ -8,8 +8,9 @@
 
 import SwiftUI
 import SwiftUIUtil
-
 import DesignSystem
+
+import Kingfisher
 
 import DIContainer
 import Router
@@ -42,34 +43,23 @@ struct TrendingCakeImageSection: View {
       
       VStack(spacing: 100) {
         FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-          AsyncImage(
-            url: URL(string: cakeImage.imageUrl),
-            transaction: Transaction(animation: .easeInOut)
-          ) { phase in
-            switch phase {
-            case .success(let image):
-              image
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .onAppear {
-                  if cakeImage.id == viewModel.cakeImages.last?.id {
-                    viewModel.fetchMoreCakeImages()
-                  }
-                }
-            default:
-              RoundedRectangle(cornerRadius: 14)
-                .fill(DesignSystemAsset.gray20.swiftUIColor)
-                .aspectRatio(3/4, contentMode: .fit)
+          KFImage(URL(string: cakeImage.imageUrl))
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .onAppear {
+              if cakeImage.id == viewModel.cakeImages.last?.id {
+                viewModel.fetchMoreCakeImages()
+              }
             }
-          }
-          .onTapGesture {
-            router.presentSheet(destination: SheetDestination.quickInfo(
-              imageId: cakeImage.id,
-              cakeImageUrl: cakeImage.imageUrl,
-              shopId: cakeImage.shopId)
-            )
-          }
+            .onTapGesture {
+              router.presentSheet(destination: SheetDestination.quickInfo(
+                imageId: cakeImage.id,
+                cakeImageUrl: cakeImage.imageUrl,
+                shopId: cakeImage.shopId)
+              )
+            }
         }
         
         if viewModel.imageFetchingState == .loading {

@@ -11,6 +11,7 @@ let project = Project.app(
   dependencies: [
     Project.FeatureSearch,
     Project.NetworkSearch,
-    Project.UserDefaultsSearchHistory
+    Project.UserDefaultsSearchHistory,
+    External.kingfisher
   ]
 )

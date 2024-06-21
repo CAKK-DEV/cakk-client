@@ -9,6 +9,8 @@
 import SwiftUI
 import SwiftUIUtil
 
+import Kingfisher
+
 public struct CakeShopThumbnailView: View {
   
   // MARK: - Properties
@@ -72,22 +74,16 @@ public struct CakeShopThumbnailView: View {
   public var body: some View {
     VStack(spacing: 16) {
       HStack(spacing: 12) {
-        AsyncImage(url: URL(string: profileImageUrl)) { image in
-          image
+        KFImage(URL(string: profileImageUrl))
             .resizable()
             .aspectRatio(contentMode: .fill)
             .size(64)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(Circle())
             .overlay {
               Circle()
                 .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
             }
-        } placeholder: {
-          Circle()
-            .fill(DesignSystemAsset.gray10.swiftUIColor)
-            .size(64)
-        }
-
         VStack(spacing: 6) {
           VStack(spacing: 2) {
             Text(shopName)
@@ -121,17 +117,12 @@ public struct CakeShopThumbnailView: View {
       HStack(spacing: 6) {
         ForEach(0..<4, id: \.self) { index in
           if let cakeImageUrl = cakeImageUrls[safe: index] {
-            AsyncImage(url: URL(string: cakeImageUrl)) { image in
-              image
-                .resizable()
-                .aspectRatio(1/1, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-            } placeholder: {
-              RoundedRectangle(cornerRadius: 8)
-                .fill(DesignSystemAsset.gray10.swiftUIColor)
-                .aspectRatio(1/1, contentMode: .fit)
-            }
-            .frame(maxWidth: .infinity)
+            KFImage(URL(string: cakeImageUrl))
+              .resizable()
+              .aspectRatio(1/1, contentMode: .fit)
+              .background(DesignSystemAsset.gray10.swiftUIColor)
+              .clipShape(RoundedRectangle(cornerRadius: 8))
+              .frame(maxWidth: .infinity)
           } else {
             RoundedRectangle(cornerRadius: 8)
               .fill(DesignSystemAsset.gray10.swiftUIColor)

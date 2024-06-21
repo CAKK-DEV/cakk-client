@@ -10,6 +10,8 @@ import SwiftUI
 import SwiftUIUtil
 import DesignSystem
 
+import Kingfisher
+
 import DIContainer
 import Router
 
@@ -131,22 +133,17 @@ public struct CakeShopDetailView: View {
     VStack(spacing: 28) {
       VStack(alignment: .leading, spacing: 24) {
         HStack(alignment: .top, spacing: 20) {
-          AsyncImage(url: URL(string: cakeShopDetail.thumbnailImageUrl ?? "")) { image in
-            image
-              .resizable()
-              .scaledToFill()
-              .frame(width: 92, height: 92)
-              .overlay {
-                Circle()
-                  .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 0.5)
-              }
-              .clipShape(Circle())
-          } placeholder: {
-            Circle()
-              .fill(DesignSystemAsset.gray10.swiftUIColor)
-              .frame(width: 92, height: 92)
-          }
-          
+          KFImage(URL(string: cakeShopDetail.thumbnailImageUrl ?? ""))
+            .resizable()
+            .scaledToFill()
+            .frame(width: 92, height: 92)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .overlay {
+              Circle()
+                .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 0.5)
+            }
+            .clipShape(Circle())
+
           VStack(spacing: 12) {
             VStack(spacing: 4) {
               Text(cakeShopDetail.shopName)

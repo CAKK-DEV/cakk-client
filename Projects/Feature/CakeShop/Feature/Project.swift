@@ -14,6 +14,7 @@ let project = Project.framework(
     Project.DomainUser,
     Project.PreviewSupportUser,
     Project.LocationService,
-    Project.DIContainer
+    Project.DIContainer,
+    External.kingfisher,
   ]
 )
