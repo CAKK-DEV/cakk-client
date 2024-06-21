@@ -91,7 +91,7 @@ extension CakeShopAPI: TargetType {
       if let cakeImageId {
         params["cakeId"] = cakeImageId
       }
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchCakeShopDetail:
       return .requestPlain
