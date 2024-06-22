@@ -84,7 +84,7 @@ struct SearchResultView: View {
                   }
                 }
                 .onTapGesture {
-                  router.presentSheet(destination: PublicSheetDestination.quickInfo(
+                  router.presentSheet(destination: PublicSearchSheetDestination.quickInfo(
                     imageId: cakeImage.id,
                     cakeImageUrl: cakeImage.imageUrl,
                     shopId: cakeImage.shopId)
@@ -134,7 +134,7 @@ struct SearchResultView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: PublicDestination.shopDetail(shopId: cakeShop.shopId))
+                router.navigate(to: PublicSearchDestination.shopDetail(shopId: cakeShop.shopId))
               }
             }
             

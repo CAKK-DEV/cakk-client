@@ -12,17 +12,6 @@ import Router
 
 import DIContainer
 
-public enum LoginPublicDestination: Identifiable {
-  case home
-  
-  public var id: String {
-    switch self {
-    case .home:
-      return "home"
-    }
-  }
-}
-
 public struct LoginStepCoordinator: View {
   
   // MARK: - Properties

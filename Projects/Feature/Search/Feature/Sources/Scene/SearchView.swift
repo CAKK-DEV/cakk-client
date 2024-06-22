@@ -246,7 +246,7 @@ struct SearchView: View {
         Spacer()
         
         Button {
-          router.navigate(to: Destination.map)
+          router.navigate(to: SearchDestination.map)
         } label: {
           Text("지도 보기")
             .font(.pretendard(size: 15, weight: .semiBold))

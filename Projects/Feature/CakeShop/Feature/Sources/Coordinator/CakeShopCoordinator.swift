@@ -9,14 +9,16 @@
 import SwiftUI
 import SwiftUIUtil
 
-import Router
-
 import DomainCakeShop
 import DomainUser
 
 import DIContainer
+import Router
 
-enum SheetDestination: Identifiable {
+
+// MARK: - Destinations
+
+enum CakeShopSheetDestination: Identifiable {
   case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
   var id: String {
@@ -27,7 +29,7 @@ enum SheetDestination: Identifiable {
   }
 }
 
-public enum FullScreenSheetDestination: Identifiable {
+public enum CakeShopFullScreenSheetDestination: Identifiable {
   case imageFullScreen(imageUrl: String)
   
   public var id: String {
@@ -38,15 +40,13 @@ public enum FullScreenSheetDestination: Identifiable {
   }
 }
 
-public enum PublicDestination: Hashable {
-  case map
-}
-
-public enum Destination: Hashable {
+public enum CakeShopDestination: Hashable {
   case categoryDetail(initialCategory: CakeCategory)
   case shopDetail(shopId: Int)
-  
 }
+
+
+// MARK: - Coordinator
 
 public struct CakeShopCoordinator: View {
   
@@ -65,7 +65,7 @@ public struct CakeShopCoordinator: View {
   public var body: some View {
     CakeShopHomeView()
       .sheet(item: $router.presentedSheet) { sheet in
-        if let destination = sheet.destination as? SheetDestination {
+        if let destination = sheet.destination as? CakeShopSheetDestination {
           switch destination {
           case .quickInfo(let imageId, let cakeImageUrl, let shopId):
             let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
@@ -81,16 +81,7 @@ public struct CakeShopCoordinator: View {
           }
         }
       }
-      .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
-        if let destination = sheet.destination as? FullScreenSheetDestination {
-          switch destination {
-          case .imageFullScreen(let imageUrl):
-            ImageZoomableView(imageUrl: imageUrl)
-              .background(ClearBackgroundView())
-          }
-        }
-      })
-      .navigationDestination(for: Destination.self) { destination in
+      .navigationDestination(for: CakeShopDestination.self) { destination in
         switch destination {
         case .categoryDetail(let initialCategory):
           let _ = diContainer.register(CategoryDetailViewModel.self) { resolver in
@@ -115,7 +106,7 @@ public struct CakeShopCoordinator: View {
                                            cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
                                            likeCakeShopUseCase: likeCakeShopUseCase)
           }.inObjectScope(.transient)
-          CakeShopDetailView()
+          CakeShopDetailCoordinator()
             .navigationBarBackButtonHidden()
             .environmentObject(router)
         }

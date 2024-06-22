@@ -186,7 +186,7 @@ public struct SearchCakeShopOnMapView: View {
       
       CKButtonRegular(title: "케이크 샵 방문", fixedSize: .infinity, action: {
         if let shopId = cakeShop?.id {
-          router.navigate(to: PublicDestination.shopDetail(shopId: shopId))
+          router.navigate(to: PublicSearchDestination.shopDetail(shopId: shopId))
         }
       })
       .padding(.top, 24)

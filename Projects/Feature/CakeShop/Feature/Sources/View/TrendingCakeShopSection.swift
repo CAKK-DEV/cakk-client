@@ -64,7 +64,7 @@ struct TrendingCakeShopSection: View {
                 ForEach(viewModel.trendingCakeShops, id: \.shopId) { trendingCakeShop in
                   TrendingCakeShopView(trendingCakeShop: trendingCakeShop)
                     .onTapGesture {
-                      router.navigate(to: Destination.shopDetail(shopId: trendingCakeShop.shopId))
+                      router.navigate(to: CakeShopDestination.shopDetail(shopId: trendingCakeShop.shopId))
                     }
                 }
               }

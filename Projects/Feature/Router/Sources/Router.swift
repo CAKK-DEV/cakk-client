@@ -7,34 +7,38 @@
 
 import SwiftUI
 
-public class AnyIdentifiable: Identifiable, Equatable {
-  public let destination: any Identifiable
-  
-  public init(destination: any Identifiable) {
-    self.destination = destination
-  }
-  
-  public static func == (lhs: AnyIdentifiable, rhs: AnyIdentifiable) -> Bool {
-    lhs.id == rhs.id
-  }
-}
-
 public final class Router: ObservableObject {
+  
+  // MARK: - Properties
+  
   @Published public var navPath = NavigationPath()
   @Published public var presentedSheet: AnyIdentifiable?
   @Published public var presentedFullScreenSheet: AnyIdentifiable?
   @Published public var root: AnyIdentifiable?
   
-  public init() {}
-  
-  public func presentSheet(destination: any Identifiable) {
-    presentedFullScreenSheet = nil
-    presentedSheet = AnyIdentifiable(destination: destination)
+  public enum SheetStyle {
+    case `default`
+    case fullScreen
   }
   
-  public func presentFullScreenSheet(destination: any Identifiable) {
-    presentedSheet = nil
-    presentedFullScreenSheet = AnyIdentifiable(destination: destination)
+  
+  // MARK: - Initializers
+  
+  public init() { }
+  
+  
+  // MARK: - Public Methods
+  
+  public func presentSheet(
+    destination: any Identifiable,
+    sheetStyle: SheetStyle = .default
+  ) {
+    switch sheetStyle {
+    case .default:
+      presentSheet(destination: destination)
+    case .fullScreen:
+      presentFullScreenSheet(destination: destination)
+    }
   }
   
   public func navigate(to destination: any Hashable) {
@@ -53,5 +57,30 @@ public final class Router: ObservableObject {
   
   public func replace(with destination: any Identifiable) {
     self.root = AnyIdentifiable(destination: destination)
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func presentSheet(destination: any Identifiable) {
+    presentedFullScreenSheet = nil
+    presentedSheet = AnyIdentifiable(destination: destination)
+  }
+  
+  private func presentFullScreenSheet(destination: any Identifiable) {
+    presentedSheet = nil
+    presentedFullScreenSheet = AnyIdentifiable(destination: destination)
+  }
+}
+
+public class AnyIdentifiable: Identifiable, Equatable {
+  public let destination: any Identifiable
+  
+  public init(destination: any Identifiable) {
+    self.destination = destination
+  }
+  
+  public static func == (lhs: AnyIdentifiable, rhs: AnyIdentifiable) -> Bool {
+    lhs.id == rhs.id
   }
 }

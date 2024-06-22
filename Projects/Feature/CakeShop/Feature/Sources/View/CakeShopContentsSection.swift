@@ -100,7 +100,8 @@ struct CakeShopContentsSection: View {
               }
             }
             .onTapGesture {
-              router.presentFullScreenSheet(destination: FullScreenSheetDestination.imageFullScreen(imageUrl: cakeImage.imageUrl))
+              router.presentSheet(destination: CakeShopDetailFullScreenSheetDestination.imageFullScreen(imageUrl: cakeImage.imageUrl),
+                                  sheetStyle: .fullScreen)
             }
         }
         

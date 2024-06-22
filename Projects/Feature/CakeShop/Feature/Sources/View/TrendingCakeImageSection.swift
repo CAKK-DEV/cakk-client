@@ -54,7 +54,7 @@ struct TrendingCakeImageSection: View {
               }
             }
             .onTapGesture {
-              router.presentSheet(destination: SheetDestination.quickInfo(
+              router.presentSheet(destination: CakeShopSheetDestination.quickInfo(
                 imageId: cakeImage.id,
                 cakeImageUrl: cakeImage.imageUrl,
                 shopId: cakeImage.shopId)

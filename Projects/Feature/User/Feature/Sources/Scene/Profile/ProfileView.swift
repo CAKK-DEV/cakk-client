@@ -157,7 +157,7 @@ public struct ProfileView: View {
         FailureStateView(title: "로그인이 필요한 기능이에요",
                          buttonTitle: "로그인 하고 다양한 기능 누리기",
                          buttonAction: {
-          router.presentSheet(destination: SheetDestination.login)
+          router.presentSheet(destination: UserSheetDestination.login)
         })
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       }
