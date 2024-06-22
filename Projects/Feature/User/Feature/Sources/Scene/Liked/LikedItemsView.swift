@@ -92,7 +92,7 @@ struct LikedItemsView: View {
     FailureStateView(title: "로그인이 필요한 기능이에요!",
                      buttonTitle: "로그인하고 다양한 기능 누리기", 
                      buttonAction: {
-      router.presentSheet(destination: SheetDestination.login)
+      router.presentSheet(destination: UserSheetDestination.login, sheetStyle: .fullScreen)
     })
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
@@ -129,7 +129,7 @@ struct LikedItemsView: View {
                   }
                 }
                 .onTapGesture {
-                  router.presentSheet(destination: PublicSheetDestination.quickInfo(
+                  router.presentSheet(destination: PublicUserSheetDestination.quickInfo(
                     imageId: cakeImage.id,
                     cakeImageUrl: cakeImage.imageUrl,
                     shopId: cakeImage.shopId)
@@ -179,13 +179,11 @@ struct LikedItemsView: View {
               )
               .onFirstAppear {
                 if viewModel.cakeShops.last?.shopHeartId == cakeShop.shopHeartId {
-                  print("load more")
                   viewModel.fetchMoreCakeShops()
                 }
               }
               .onTapGesture {
-                // TODO: Navigate to shop Detail
-                router.navigate(to: PublicDestination.shopDetail(shopId: cakeShop.id))
+                router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
               }
             }
             

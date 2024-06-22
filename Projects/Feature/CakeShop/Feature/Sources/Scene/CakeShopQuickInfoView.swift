@@ -111,7 +111,7 @@ public struct CakeShopQuickInfoView: View {
         }
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
-          router.navigate(to: Destination.shopDetail(shopId: viewModel.shopId))
+          router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
         })
       }
       .padding(.bottom, 24)

@@ -28,7 +28,7 @@ struct LikeTabCoordinator: View {
     NavigationStack(path: $router.navPath) {
       LikeCoordinator()
         .sheet(item: $router.presentedSheet) { sheet in
-          if let destination = sheet.destination as? FeatureUser.PublicSheetDestination {
+          if let destination = sheet.destination as? PublicUserSheetDestination {
             switch destination {
             case .quickInfo(let imageId, let cakeImageUrl, let shopId):
               let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
@@ -44,9 +44,8 @@ struct LikeTabCoordinator: View {
             }
           }
         }
-        .navigationDestination(for: FeatureCakeShop.Destination.self) { destination in
-          switch destination {
-          case .shopDetail(let shopId):
+        .navigationDestination(for: PublicUserDestination.self) { destination in
+          if case .shopDetail(let shopId) = destination {
             let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
               let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
@@ -59,17 +58,14 @@ struct LikeTabCoordinator: View {
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
                                              likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
-            CakeShopDetailView()
+            
+            CakeShopDetailCoordinator()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
-          
-          case .categoryDetail:
-            EmptyView()
           }
         }
-        .navigationDestination(for: PublicDestination.self, destination: { destination in
-          switch destination {
-          case .shopDetail(let shopId):
+        .navigationDestination(for: CakeShopDestination.self) { destination in
+          if case .shopDetail(let shopId) = destination {
             let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
               let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
@@ -82,20 +78,12 @@ struct LikeTabCoordinator: View {
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
                                              likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
-            CakeShopDetailView()
+            
+            CakeShopDetailCoordinator()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           }
-        })
-        .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
-          if let destination = sheet.destination as? FeatureCakeShop.FullScreenSheetDestination {
-            switch destination {
-            case .imageFullScreen(let imageUrl):
-              ImageZoomableView(imageUrl: imageUrl)
-                .background(ClearBackgroundView())
-            }
-          }
-        })
+        }
     }
     .environmentObject(router)
   }

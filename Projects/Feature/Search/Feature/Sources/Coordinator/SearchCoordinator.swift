@@ -11,24 +11,15 @@ import SwiftUI
 import Router
 import DIContainer
 
-public enum PublicSheetDestination: Identifiable {
-  case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
-  public var id: String {
-    switch self {
-    case .quickInfo:
-      return "ImageDetail"
-    }
-  }
-}
+// MARK: - Destinations
 
-public enum PublicDestination: Hashable {
-  case shopDetail(shopId: Int)
-}
-
-public enum Destination: Hashable {
+public enum SearchDestination: Hashable {
   case map
 }
+
+
+// MARK: - Coordinator
 
 public struct SearchCoordinator: View {
   
@@ -47,7 +38,7 @@ public struct SearchCoordinator: View {
   
   public var body: some View {
     SearchView()
-      .navigationDestination(for: Destination.self, destination: { destination in
+      .navigationDestination(for: SearchDestination.self, destination: { destination in
         switch destination {
         case .map:
           SearchCakeShopOnMapView()

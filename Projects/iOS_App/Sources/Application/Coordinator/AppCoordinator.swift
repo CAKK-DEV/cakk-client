@@ -102,10 +102,13 @@ struct AppCoordinator: View {
         }
       }
       
-      if let newRoot = newRoot?.destination as? LoginPublicDestination {
+      if let newRoot = newRoot?.destination as? PublicUserDestination {
         switch newRoot {
         case .home:
           self.root = RootDestination.home
+          
+        default:
+          break
         }
       }
     }

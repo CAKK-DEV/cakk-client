@@ -9,25 +9,12 @@
 import SwiftUI
 
 import Router
-
 import DIContainer
 
-public enum PublicSheetDestination: Identifiable {
-  case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
-  public var id: String {
-    switch self {
-    case .quickInfo:
-      return "ImageDetail"
-    }
-  }
-}
+// MARK: - Destinations
 
-public enum PublicDestination: Hashable {
-  case shopDetail(shopId: Int)
-}
-
-enum SheetDestination: Identifiable {
+enum UserSheetDestination: Identifiable {
   case login
   
   var id: String {
@@ -41,6 +28,9 @@ enum SheetDestination: Identifiable {
 enum Destination: Hashable {
   case editProfile(profile: UserProfile)
 }
+
+
+// MARK: - Coordinator
 
 public struct UserCoordinator: View {
   
@@ -60,7 +50,7 @@ public struct UserCoordinator: View {
   public var body: some View {
     ProfileView()
       .fullScreenCover(item: $router.presentedSheet) { destination in
-        if let _ = destination.destination as? SheetDestination {
+        if let _ = destination.destination as? UserSheetDestination {
           LoginStepCoordinator(onFinish: {
             router.presentedSheet = nil
           })

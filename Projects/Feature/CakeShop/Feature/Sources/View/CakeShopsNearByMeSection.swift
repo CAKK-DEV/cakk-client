@@ -82,7 +82,7 @@ struct CakeShopsNearByMeSection: View {
       .padding(.horizontal, 16)
       .animation(.smooth)
       .onTapGesture {
-        router.navigate(to: PublicDestination.map)
+        router.navigate(to: PublicCakeShopDestination.map)
       }
     }
     .onAppear {

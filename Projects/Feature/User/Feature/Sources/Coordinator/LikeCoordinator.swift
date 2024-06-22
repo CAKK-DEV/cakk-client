@@ -28,8 +28,8 @@ public struct LikeCoordinator: View {
   
   public var body: some View {
     LikedItemsView()
-      .fullScreenCover(item: $router.presentedSheet) { destination in
-        if let _ = destination.destination as? SheetDestination {
+      .fullScreenCover(item: $router.presentedFullScreenSheet) { destination in
+        if let _ = destination.destination as? UserSheetDestination {
           LoginStepCoordinator(onFinish: {
             router.presentedSheet = nil
           })

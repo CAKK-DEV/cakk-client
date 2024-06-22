@@ -28,7 +28,7 @@ struct SearchTabCoordinator: View {
     NavigationStack(path: $router.navPath) {
       SearchCoordinator()
         .sheet(item: $router.presentedSheet) { sheet in
-          if let destination = sheet.destination as? PublicSheetDestination {
+          if let destination = sheet.destination as? PublicSearchSheetDestination {
             switch destination {
             case .quickInfo(let imageId, let cakeImageUrl, let shopId):
               let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
@@ -44,7 +44,7 @@ struct SearchTabCoordinator: View {
             }
           }
         }
-        .navigationDestination(for: FeatureCakeShop.Destination.self) { destination in
+        .navigationDestination(for: PublicSearchDestination.self) { destination in
           switch destination {
           case .shopDetail(let shopId):
             let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
@@ -59,43 +59,11 @@ struct SearchTabCoordinator: View {
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
                                              likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
-            CakeShopDetailView()
+            CakeShopDetailCoordinator()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
-          
-          case .categoryDetail:
-            EmptyView()
           }
         }
-        .navigationDestination(for: PublicDestination.self, destination: { destination in
-          switch destination {
-          case .shopDetail(let shopId):
-            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
-              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
-              
-              return CakeShopDetailViewModel(shopId: shopId,
-                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase)
-            }.inObjectScope(.transient)
-            CakeShopDetailView()
-              .navigationBarBackButtonHidden()
-              .environmentObject(router)
-          }
-        })
-        .fullScreenCover(item: $router.presentedFullScreenSheet, content: { sheet in
-          if let destination = sheet.destination as? FeatureCakeShop.FullScreenSheetDestination {
-            switch destination {
-            case .imageFullScreen(let imageUrl):
-              ImageZoomableView(imageUrl: imageUrl)
-                .background(ClearBackgroundView())
-            }
-          }
-        })
     }
     .environmentObject(router)
   }

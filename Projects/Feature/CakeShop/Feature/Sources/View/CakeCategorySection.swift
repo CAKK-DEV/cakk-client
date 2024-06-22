@@ -35,7 +35,7 @@ struct CakeCategorySection: View {
   
   private func categoryItem(category: CakeCategory) -> some View {
     Button {
-      router.navigate(to: Destination.categoryDetail(initialCategory: category))
+      router.navigate(to: CakeShopDestination.categoryDetail(initialCategory: category))
     } label: {
       VStack(spacing: 8) {
         RoundedRectangle(cornerRadius: 20)
