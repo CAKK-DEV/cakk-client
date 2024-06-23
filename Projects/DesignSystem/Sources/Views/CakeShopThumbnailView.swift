@@ -131,6 +131,7 @@ public struct CakeShopThumbnailView: View {
         }
       }
     }
+    .contentShape(RoundedRectangle(cornerRadius: 20))
     .padding(.top, 18)
     .padding(.bottom, 16)
     .padding(.horizontal, 16)
