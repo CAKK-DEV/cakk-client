@@ -14,13 +14,13 @@ public struct MotionedIconsView: View {
   
   @StateObject private var motionData = MotionObserver()
   @State private var rowParticleRepeating = 5
-  @State private var columnRepeating: Int
+  @State private var rowRepeating: Int
   
 
   // MARK: - Initializers
   
-  public init(columnRepeating: Int = 3) {
-    self.columnRepeating = columnRepeating
+  public init(rowRepeating: Int = 3) {
+    self.rowRepeating = rowRepeating
   }
   
   
@@ -28,7 +28,7 @@ public struct MotionedIconsView: View {
   
   public var body: some View {
     LazyVStack(spacing: -16) {
-      ForEach(0...2, id: \.self) { index in
+      ForEach(0..<rowRepeating, id: \.self) { index in
         iconsRowSet()
           .offset(x: index % 2 == 0 ? -32 : 0)
       }

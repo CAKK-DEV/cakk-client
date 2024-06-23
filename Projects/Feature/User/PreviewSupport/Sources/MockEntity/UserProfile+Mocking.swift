@@ -19,15 +19,25 @@ public extension UserProfile {
         email: "longlonglonglonglonglonglong@gmaill.com",
         gender: .unknown,
         birthday: .now,
-        role: .businessOwner)
-    case .user, .admin:
+        role: role)
+      
+    case .admin:
+      return .init(
+        profileImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUc4RioVg6PhLayVsjCDWh-XnjUqGoay_rCLopQTDJEGcFqHfP-fuutIssuFwyweq6tDc&usqp=CAU",
+        nickname: "어드민 계정",
+        email: "longlonglonglonglonglonglong@gmaill.com",
+        gender: .unknown,
+        birthday: .now,
+        role: role)
+      
+    case .user:
       return .init(
         profileImageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUc4RioVg6PhLayVsjCDWh-XnjUqGoay_rCLopQTDJEGcFqHfP-fuutIssuFwyweq6tDc&usqp=CAU",
         nickname: "사용자명 사용자명 사용자명 사용자명 사용자명 사용자명 사용자명",
         email: "longlonglonglonglonglonglong@gmaill.com",
         gender: .unknown,
         birthday: .now,
-        role: .businessOwner)
+        role: role)
     }
   }
 }

@@ -22,4 +22,10 @@ public enum PublicUserSheetDestination: Identifiable {
 public enum PublicUserDestination: Hashable {
   case shopDetail(shopId: Int)
   case home
+  
+  case editShopProfile
+  case editWorkingDay
+  case editLocation
+  case editExternalLink
+  case editCakeImage
 }
