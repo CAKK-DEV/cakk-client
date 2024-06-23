@@ -27,6 +27,12 @@ public final class ProfileViewModel: ObservableObject {
     case failure(error: UserProfileError)
   }
   
+  @Published private(set) var currentRoleState: ProfileRoleState = .user
+  public enum ProfileRoleState {
+    case business
+    case user
+  }
+  
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -56,5 +62,9 @@ public final class ProfileViewModel: ObservableObject {
         self?.userProfile = userProfile
       }
       .store(in: &cancellables)
+  }
+  
+  public func change(role: ProfileRoleState) {
+    self.currentRoleState = role
   }
 }
