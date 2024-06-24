@@ -15,6 +15,9 @@ import FeatureSearch
 import FeatureCakeShop
 import DomainCakeShop
 
+import FeatureBusiness
+import DomainBusiness
+
 import DomainUser
 
 import DIContainer
@@ -32,6 +35,18 @@ struct CakeShopTabCoordinator: View {
           switch destination {
           case .map:
             SearchCakeShopOnMapView()
+              .toolbar(.hidden, for: .navigationBar)
+              .environmentObject(router)
+            
+          case .businessCertification(targetShopId: let targetShopId):
+            let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
+              let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+              return BusinessCertificationViewModel(
+                targetShopId: targetShopId,
+                uploadCertificationUseCase: uploadCertificationUseCase)
+            }
+            
+            BusinessCertificationView()
               .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
           }

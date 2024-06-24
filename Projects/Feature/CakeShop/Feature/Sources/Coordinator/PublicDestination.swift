@@ -10,4 +10,5 @@ import Foundation
 
 public enum PublicCakeShopDestination: Hashable {
   case map
+  case businessCertification(targetShopId: Int)
 }
