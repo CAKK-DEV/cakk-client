@@ -145,11 +145,15 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           }
         }
         .flatMap { [provider] (presignedUrl, imageUrl) -> AnyPublisher<String?, Error> in
-          /// 이미지를 webP 형식으로 변환 후 PresignedURL에 업로드 합니다.
-          SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
-          guard let data = image.sd_imageData(as: .webP, compressionQuality: 1) else {
+          // TODO: - 이미지 Webp로 변환
+          guard let data = image.jpegData(compressionQuality: 1) else {
             return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
           }
+          /// 이미지를 webP 형식으로 변환 후 PresignedURL에 업로드 합니다.
+//          SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
+//          guard let data = image.sd_imageData(as: .webP, compressionQuality: 1) else {
+//            return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
+//          }
           
           return provider.requestPublisher(.uploadProfileImage(presignedUrl: presignedUrl, image: data))
           .map { _ in imageUrl }
