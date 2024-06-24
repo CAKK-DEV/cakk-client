@@ -1,17 +1,17 @@
 //
-//  MockUploadCertificationUseCase.swift
-//  PreviewSupportBusiness
+//  MockCakeShopOwnerVerificationUseCase.swift
+//  PreviewSupportUser
 //
-//  Created by 이승기 on 6/23/24.
+//  Created by 이승기 on 6/25/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import UIKit
 import Combine
 
-import DomainBusiness
+import DomainUser
 
-public struct MockUploadCertificationUseCase: UploadCertificationUseCase {
+public struct MockCakeShopOwnerVerificationUseCase: CakeShopOwnerVerificationUseCase {
   
   // MARK: - Properties
   
@@ -37,21 +37,22 @@ public struct MockUploadCertificationUseCase: UploadCertificationUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, UploadCertificationError> {
+  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, UserProfileError> {
     switch scenario {
     case .success:
       Just(Void())
         .delay(for: .seconds(delay), scheduler: RunLoop.main)
-        .setFailureType(to: UploadCertificationError.self)
+        .setFailureType(to: UserProfileError.self)
         .eraseToAnyPublisher()
       
     case .failure:
-      Fail(error: UploadCertificationError.failure)
+      Fail(error: UserProfileError.failure)
         .eraseToAnyPublisher()
       
     case .serverError:
-      Fail(error: UploadCertificationError.serverError)
+      Fail(error: UserProfileError.serverError)
         .eraseToAnyPublisher()
     }
   }
 }
+

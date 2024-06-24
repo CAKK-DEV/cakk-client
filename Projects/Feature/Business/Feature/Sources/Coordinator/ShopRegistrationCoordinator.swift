@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-import DomainBusiness
+import DomainUser
 
 import DIContainer
 import Router
@@ -43,10 +43,10 @@ public struct ShopRegistrationCoordinator: View {
         switch destination {
         case .businessCertification(let targetShopId):
           let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-            let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+            let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
             return BusinessCertificationViewModel(
               targetShopId: targetShopId,
-              uploadCertificationUseCase: uploadCertificationUseCase)
+              cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
           }
           
           BusinessCertificationView()
@@ -60,7 +60,7 @@ public struct ShopRegistrationCoordinator: View {
 
 // MARK: - Preview
 
-import PreviewSupportBusiness
+import PreviewSupportUser
 import PreviewSupportSearch
 
 private struct PreviewContent: View {
@@ -75,8 +75,8 @@ private struct PreviewContent: View {
       return SearchMyShopViewModel(searchCakeShopUseCase: searchCakeShopUseCase)
     }
     
-    diContainer.register(UploadCertificationUseCase.self) { _ in
-      return MockUploadCertificationUseCase()
+    diContainer.register(CakeShopOwnerVerificationUseCase.self) { _ in
+      return MockCakeShopOwnerVerificationUseCase()
     }
   }
   

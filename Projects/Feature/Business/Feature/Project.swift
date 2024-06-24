@@ -6,12 +6,12 @@ let project = Project.framework(
   dependencies: [
     Project.SwiftUIUtil,
     Project.DesignSystem,
-
-    Project.DomainBusiness,
-    Project.PreviewSupportBusiness,
     
     Project.DomainSearch,
     Project.PreviewSupportSearch,
+
+    Project.DomainUser,
+    Project.PreviewSupportUser,
 
     Project.Router,
     Project.DIContainer,

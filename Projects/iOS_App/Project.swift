@@ -39,6 +39,8 @@ let project = Project.app(
     Project.FeatureCakeShop,
     Project.NetworkCakeShop,
 
+    Project.FeatureBusiness,
+
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserSession,
