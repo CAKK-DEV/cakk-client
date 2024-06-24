@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol SearchCakeShopUseCase {
-  func execute(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[CakeShop], Error>
+  func execute(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[CakeShop], Error>
 }
