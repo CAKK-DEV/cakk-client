@@ -17,6 +17,9 @@ import FeatureSearch
 import FeatureCakeShop
 import DomainCakeShop
 
+import FeatureBusiness
+import DomainBusiness
+
 import DomainUser
 
 struct SearchTabCoordinator: View {
@@ -60,10 +63,57 @@ struct SearchTabCoordinator: View {
                                              likeCakeShopUseCase: likeCakeShopUseCase)
             }.inObjectScope(.transient)
             CakeShopDetailCoordinator()
+              .navigationDestination(for: PublicCakeShopDestination.self) { destination in
+                if case .businessCertification(targetShopId: let targetShopId) = destination {
+                  let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
+                    let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+                    return BusinessCertificationViewModel(
+                      targetShopId: targetShopId,
+                      uploadCertificationUseCase: uploadCertificationUseCase)
+                  }
+                  
+                  BusinessCertificationView()
+                    .toolbar(.hidden, for: .navigationBar)
+                    .environmentObject(router)
+                }
+              }
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           }
         }
+        .navigationDestination(for: CakeShopDestination.self, destination: { destination in
+          if case .shopDetail(let shopId) = destination {
+            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
+              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
+              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
+              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
+              
+              return CakeShopDetailViewModel(shopId: shopId,
+                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
+                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                             likeCakeShopUseCase: likeCakeShopUseCase)
+            }.inObjectScope(.transient)
+            CakeShopDetailCoordinator()
+              .navigationDestination(for: PublicCakeShopDestination.self) { destination in
+                if case .businessCertification(targetShopId: let targetShopId) = destination {
+                  let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
+                    let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+                    return BusinessCertificationViewModel(
+                      targetShopId: targetShopId,
+                      uploadCertificationUseCase: uploadCertificationUseCase)
+                  }
+                  
+                  BusinessCertificationView()
+                    .toolbar(.hidden, for: .navigationBar)
+                    .environmentObject(router)
+                }
+              }
+              .navigationBarBackButtonHidden()
+              .environmentObject(router)
+          }
+        })
     }
     .environmentObject(router)
   }

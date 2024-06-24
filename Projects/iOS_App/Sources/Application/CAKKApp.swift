@@ -25,6 +25,10 @@ import DomainSearch
 import NetworkSearch
 import UserDefaultsSearchHistory
 
+import FeatureBusiness
+import DomainBusiness
+import NetworkBusiness
+
 import DIContainer
 
 import Moya
@@ -288,6 +292,29 @@ struct CAKKApp: App {
       let likeCakeShopUseCase = LikeCakeShopUseCaseImpl(repository: repository)
       return LikedItemsViewModel(likeCakeImageUseCase: likeCakeImageUseCase,
                                  likeCakeShopUseCase: likeCakeShopUseCase)
+    }
+    
+    diContainer.register(MoyaProvider<BusinessAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<BusinessAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<BusinessAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(BusinessRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<BusinessAPI>.self)!
+      return BusinessRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(UploadCertificationUseCase.self) { resolver in
+      let repository = resolver.resolve(BusinessRepository.self)!
+      return UploadCertificationUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(SearchMyShopViewModel.self) { resolver in
+      let searchCakeShopUseCase = resolver.resolve(SearchCakeShopUseCase.self)!
+      return SearchMyShopViewModel(searchCakeShopUseCase: searchCakeShopUseCase)
     }
   }
   

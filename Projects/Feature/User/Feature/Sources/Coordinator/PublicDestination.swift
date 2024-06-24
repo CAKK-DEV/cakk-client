@@ -23,6 +23,7 @@ public enum PublicUserDestination: Hashable {
   case shopDetail(shopId: Int)
   case home
   
+  case shopRegistration
   case editShopProfile
   case editWorkingDay
   case editLocation
