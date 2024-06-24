@@ -34,6 +34,8 @@ struct TrendingCakeShopView: View {
     VStack(spacing: 12) {
       HStack(spacing: 12) {
         KFImage(URL(string: trendingCakeShop.profileImageUrl))
+          .resizable()
+          .aspectRatio(contentMode: .fill)
           .size(52)
           .background(DesignSystemAsset.gray10.swiftUIColor)
           .clipShape(Circle())
@@ -104,8 +106,12 @@ struct TrendingCakeShopView: View {
   private func imageView(imageUrlString: String?) -> some View {
     KFImage(URL(string: imageUrlString ?? ""))
       .resizable()
-      .aspectRatio(1/1, contentMode: .fill)
+      .aspectRatio(contentMode: .fill)
       .background(DesignSystemAsset.gray10.swiftUIColor)
+      .aspectRatio(1/1, contentMode: .fit)
+      .clipShape(
+        Rectangle()
+      )
   }
 }
 

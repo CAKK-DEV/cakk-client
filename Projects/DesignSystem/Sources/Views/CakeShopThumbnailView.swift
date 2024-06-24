@@ -116,18 +116,19 @@ public struct CakeShopThumbnailView: View {
       
       HStack(spacing: 6) {
         ForEach(0..<4, id: \.self) { index in
-          if let cakeImageUrl = cakeImageUrls[safe: index] {
-            KFImage(URL(string: cakeImageUrl))
-              .resizable()
-              .aspectRatio(1/1, contentMode: .fit)
-              .background(DesignSystemAsset.gray10.swiftUIColor)
-              .clipShape(RoundedRectangle(cornerRadius: 8))
-              .frame(maxWidth: .infinity)
-          } else {
-            RoundedRectangle(cornerRadius: 8)
-              .fill(DesignSystemAsset.gray10.swiftUIColor)
-              .aspectRatio(1/1, contentMode: .fit)
-          }
+          RoundedRectangle(cornerRadius: 12)
+            .fill(DesignSystemAsset.gray10.swiftUIColor)
+            .aspectRatio(1/1, contentMode: .fit)
+            .overlay {
+              if let cakeImageUrl = cakeImageUrls[safe: index] {
+                KFImage(URL(string: cakeImageUrl))
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+                  .background(DesignSystemAsset.gray10.swiftUIColor)
+                  
+              }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 12))
         }
       }
     }
