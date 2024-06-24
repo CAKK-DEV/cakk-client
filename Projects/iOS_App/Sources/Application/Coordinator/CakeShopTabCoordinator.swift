@@ -16,7 +16,6 @@ import FeatureCakeShop
 import DomainCakeShop
 
 import FeatureBusiness
-import DomainBusiness
 
 import DomainUser
 
@@ -40,10 +39,10 @@ struct CakeShopTabCoordinator: View {
             
           case .businessCertification(targetShopId: let targetShopId):
             let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-              let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+              let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
               return BusinessCertificationViewModel(
                 targetShopId: targetShopId,
-                uploadCertificationUseCase: uploadCertificationUseCase)
+                cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
             }
             
             BusinessCertificationView()

@@ -8,12 +8,14 @@
 
 import SwiftUI
 
-import DomainBusiness
 import FeatureBusiness
 import NetworkBusiness
 
 import DomainSearch
 import NetworkSearch
+
+import DomainUser
+import NetworkUser
 
 import Moya
 import MoyaUtil
@@ -53,22 +55,22 @@ struct ExampleApp: App {
   private func setupDIContainer() {
     let diContainer = DIContainer.shared.container
     
-    diContainer.register(MoyaProvider<BusinessAPI>.self) { _ in
+    diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<BusinessAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
       #else
-      MoyaProvider<BusinessAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
       #endif
     }
     
-    diContainer.register(BusinessRepository.self) { resolver in
-      let provider = resolver.resolve(MoyaProvider<BusinessAPI>.self)!
-      return BusinessRepositoryImpl(provider: provider)
+    diContainer.register(UserProfileRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<UserAPI>.self)!
+      return UserProfileRepositoryImpl(provider: provider)
     }
     
-    diContainer.register(UploadCertificationUseCase.self) { resolver in
-      let repository = resolver.resolve(BusinessRepository.self)!
-      return UploadCertificationUseCaseImpl(repository: repository)
+    diContainer.register(CakeShopOwnerVerificationUseCase.self) { resolver in
+      let repository = resolver.resolve(UserProfileRepository.self)!
+      return CakeShopOwnerVerificationUseCaseImpl(repository: repository)
     }
     
     diContainer.register(MoyaProvider<SearchAPI>.self) { _ in

@@ -15,13 +15,14 @@ public enum UserAPI {
   case updateUserProfile(newUserProfile: NewUserProfileDTO, accessToken: String)
   case withdraw(accessToken: String)
   case requestPresignedUrl
-  case uploadProfileImage(presignedUrl: String, image: Data)
+  case uploadPresignedImage(presignedUrl: String, image: Data)
+  case requestCakeShopOwnerVerification(shopId: Int, businessRegistrationImageUrl: String, idCardImageUrl: String, contact: String, message: String, accessToken: String)
 }
 
 extension UserAPI: TargetType {
   public var baseURL: URL {
     switch self {
-    case .uploadProfileImage(let presignedUrl, _):
+    case .uploadPresignedImage(let presignedUrl, _):
       return URL(string: presignedUrl)!
       
     default:
@@ -47,8 +48,11 @@ extension UserAPI: TargetType {
     case .requestPresignedUrl:
       return "/api/v1/aws/img"
       
-    case .uploadProfileImage:
+    case .uploadPresignedImage:
       return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
+      
+    case .requestCakeShopOwnerVerification:
+      return "/api/v1/shops/certification"
     }
   }
   
@@ -69,8 +73,11 @@ extension UserAPI: TargetType {
     case .requestPresignedUrl:
       return .get
       
-    case .uploadProfileImage:
+    case .uploadPresignedImage:
       return .put
+      
+    case .requestCakeShopOwnerVerification:
+      return .get
     }
   }
   
@@ -94,8 +101,18 @@ extension UserAPI: TargetType {
     case .requestPresignedUrl:
       return .requestPlain
       
-    case .uploadProfileImage(_, let image):
+    case .uploadPresignedImage(_, let image):
       return .requestData(image)
+      
+    case .requestCakeShopOwnerVerification(let shopId, let businessRegistrationImageUrl, let idCardImageUrl, let contact, let message, _):
+      let params: [String: Any] = [
+        "shopId": shopId,
+        "businessRegistrationImageUrl": businessRegistrationImageUrl,
+        "idCardImageUrl": idCardImageUrl,
+        "emergencyContact": contact,
+        "message": message
+      ]
+      return .requestParameters(parameters: params, encoding: JSONEncoding())
     }
   }
   
@@ -104,12 +121,13 @@ extension UserAPI: TargetType {
     case .signUp, .signIn, .requestPresignedUrl:
       return ["Content-Type": "application/json"]
       
-    case .uploadProfileImage:
+    case .uploadPresignedImage:
       return ["Content-Type": "image/jpeg"]
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
-        .withdraw(let accessToken):
+        .withdraw(let accessToken),
+        .requestCakeShopOwnerVerification(_, _, _, _, _, let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"

@@ -12,7 +12,6 @@ import Router
 import FeatureUser
 
 import FeatureBusiness
-import DomainBusiness
 
 struct ProfileTabCoordinator: View {
   

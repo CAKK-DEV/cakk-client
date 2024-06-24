@@ -68,11 +68,6 @@ public extension Project {
     path: .relativeToRoot("Projects/Core/Domain/Search")
   )
 
-  static let DomainBusiness: TargetDependency = .project(
-    target: "DomainBusiness",
-    path: .relativeToRoot("Projects/Core/Domain/Business")
-  )
-  
   
   // MARK: - Core / Data / Network
   
@@ -89,11 +84,6 @@ public extension Project {
   static let NetworkSearch: TargetDependency = .project(
     target: "NetworkSearch",
     path: .relativeToRoot("Projects/Core/Data/Network/Search")
-  )
-
-    static let NetworkBusiness: TargetDependency = .project(
-    target: "NetworkBusiness",
-    path: .relativeToRoot("Projects/Core/Data/Network/Business")
   )
   
   

@@ -1,0 +1,45 @@
+//
+//  CakeShopOwnerVerificationUseCaseImpl.swift
+//  NetworkUser
+//
+//  Created by 이승기 on 6/25/24.
+//  Copyright © 2024 cakk. All rights reserved.
+//
+
+import UIKit
+import Combine
+
+import DomainUser
+
+import UserSession
+
+public final class CakeShopOwnerVerificationUseCaseImpl: CakeShopOwnerVerificationUseCase {
+  
+  // MARK: - Properties
+  
+  private let repository: UserProfileRepository
+  
+  
+  // MARK: - Initializers
+  
+  public init(repository: UserProfileRepository) {
+    self.repository = repository
+  }
+  
+  
+  // MARK: - Public Methods
+  
+  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, UserProfileError> {
+    if let accessToken = UserSession.shared.accessToken {
+      repository.requestCakeShopOwnerVerification(shopId: shopId,
+                                          businessRegistrationImage: businessRegistrationImage,
+                                          idCardImage: idCardImage,
+                                          contact: contact,
+                                          message: message,
+                                          accessToken: accessToken)
+    } else {
+      Fail(error: DomainUser.UserProfileError.notSignedIn)
+        .eraseToAnyPublisher()
+    }
+  }
+}

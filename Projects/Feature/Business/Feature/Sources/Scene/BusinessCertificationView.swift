@@ -80,12 +80,12 @@ public struct BusinessCertificationView: View {
                              message: "인증이 완료되면 알림을 보내드릴게요!",
                              fixedSize: .infinity, action: {
           viewModel.uploadCertifications()
-        }, isLoading: .constant(viewModel.certificationUploadState == .loading))
+        }, isLoading: .constant(viewModel.verificationState == .loading))
         .padding(.horizontal, 28)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
-    .onReceive(viewModel.$certificationUploadState, perform: { state in
+    .onReceive(viewModel.$verificationState, perform: { state in
       switch state {
       case .contactRequired:
         DialogManager.shared.showDialog(
@@ -299,15 +299,15 @@ public struct BusinessCertificationView: View {
 
 // MARK: - Preview
 
-import PreviewSupportBusiness
+import PreviewSupportUser
 
 // Success scenario
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
-    let uploadCertificationUseCase = MockUploadCertificationUseCase()
-    return BusinessCertificationViewModel(targetShopId: 0, uploadCertificationUseCase: uploadCertificationUseCase)
+    let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase()
+    return BusinessCertificationViewModel(targetShopId: 0, cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
   }
   
   return BusinessCertificationView()
@@ -319,8 +319,8 @@ import PreviewSupportBusiness
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
-    let uploadCertificationUseCase = MockUploadCertificationUseCase(scenario: .failure)
-    return BusinessCertificationViewModel(targetShopId: 0, uploadCertificationUseCase: uploadCertificationUseCase)
+    let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase(scenario: .failure)
+    return BusinessCertificationViewModel(targetShopId: 0, cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
   }
   
   return BusinessCertificationView()
@@ -332,8 +332,8 @@ import PreviewSupportBusiness
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
-    let uploadCertificationUseCase = MockUploadCertificationUseCase(scenario: .serverError)
-    return BusinessCertificationViewModel(targetShopId: 0, uploadCertificationUseCase: uploadCertificationUseCase)
+    let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase(scenario: .serverError)
+    return BusinessCertificationViewModel(targetShopId: 0, cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
   }
   
   return BusinessCertificationView()

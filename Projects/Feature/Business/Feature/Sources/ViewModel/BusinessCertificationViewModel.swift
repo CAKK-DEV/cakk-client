@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-import DomainBusiness
+import DomainUser
 
 public final class BusinessCertificationViewModel: ObservableObject {
   
@@ -17,8 +17,8 @@ public final class BusinessCertificationViewModel: ObservableObject {
   // MARK: - Properties
   
   private let shopId: Int
-  private let uploadCertificationUseCase: UploadCertificationUseCase
-  @Published private(set) var certificationUploadState: CertificationUploadState = .idle
+  private let cakeShopOwnerVerificationUseCase: CakeShopOwnerVerificationUseCase
+  @Published private(set) var verificationState: CertificationUploadState = .idle
   enum CertificationUploadState {
     case idle
     case imageRequired
@@ -41,10 +41,10 @@ public final class BusinessCertificationViewModel: ObservableObject {
   
   public init(
     targetShopId: Int,
-    uploadCertificationUseCase: UploadCertificationUseCase
+    cakeShopOwnerVerificationUseCase: CakeShopOwnerVerificationUseCase
   ) {
     self.shopId = targetShopId
-    self.uploadCertificationUseCase = uploadCertificationUseCase
+    self.cakeShopOwnerVerificationUseCase = cakeShopOwnerVerificationUseCase
   }
   
   
@@ -52,18 +52,18 @@ public final class BusinessCertificationViewModel: ObservableObject {
   
   public func uploadCertifications() {
     guard let selectedBusinessCertImage, let selectedIdCardImage else {
-      certificationUploadState = .imageRequired
+      verificationState = .imageRequired
       return
     }
     
     if contact.isEmpty {
-      certificationUploadState = .contactRequired
+      verificationState = .contactRequired
       return
     }
     
-    certificationUploadState = .loading
+    verificationState = .loading
     
-    uploadCertificationUseCase.execute(shopId: shopId, 
+    cakeShopOwnerVerificationUseCase.execute(shopId: shopId,
                                        businessRegistrationImage: selectedBusinessCertImage,
                                        idCardImage: selectedIdCardImage,
                                        contact: contact,
@@ -73,13 +73,13 @@ public final class BusinessCertificationViewModel: ObservableObject {
     .sink { [weak self] completion in
       if case .failure(let error) = completion {
         if error == .serverError {
-          self?.certificationUploadState = .serverError
+          self?.verificationState = .serverError
         } else {
-          self?.certificationUploadState = .failure
+          self?.verificationState = .failure
         }
         print(error.localizedDescription)
       } else {
-        self?.certificationUploadState = .success
+        self?.verificationState = .success
       }
     } receiveValue: { _ in }
     .store(in: &cancellables)

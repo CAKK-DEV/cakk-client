@@ -11,11 +11,12 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureBusiness,
-    Project.DomainBusiness,
-    Project.NetworkBusiness,
 
     Project.DomainSearch,
     Project.NetworkSearch,
+
+    Project.DomainUser,
+    Project.NetworkUser,
 
     Project.Router,
     Project.DIContainer

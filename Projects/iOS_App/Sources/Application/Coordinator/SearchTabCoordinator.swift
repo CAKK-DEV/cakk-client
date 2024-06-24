@@ -18,7 +18,6 @@ import FeatureCakeShop
 import DomainCakeShop
 
 import FeatureBusiness
-import DomainBusiness
 
 import DomainUser
 
@@ -66,10 +65,10 @@ struct SearchTabCoordinator: View {
               .navigationDestination(for: PublicCakeShopDestination.self) { destination in
                 if case .businessCertification(targetShopId: let targetShopId) = destination {
                   let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-                    let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+                    let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
                     return BusinessCertificationViewModel(
                       targetShopId: targetShopId,
-                      uploadCertificationUseCase: uploadCertificationUseCase)
+                      cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
                   }
                   
                   BusinessCertificationView()
@@ -99,10 +98,10 @@ struct SearchTabCoordinator: View {
               .navigationDestination(for: PublicCakeShopDestination.self) { destination in
                 if case .businessCertification(targetShopId: let targetShopId) = destination {
                   let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-                    let uploadCertificationUseCase = resolver.resolve(UploadCertificationUseCase.self)!
+                    let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
                     return BusinessCertificationViewModel(
                       targetShopId: targetShopId,
-                      uploadCertificationUseCase: uploadCertificationUseCase)
+                      cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
                   }
                   
                   BusinessCertificationView()
