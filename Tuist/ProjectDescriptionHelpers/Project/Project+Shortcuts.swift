@@ -67,6 +67,11 @@ public extension Project {
     target: "DomainSearch",
     path: .relativeToRoot("Projects/Core/Domain/Search")
   )
+
+  static let DomainBusiness: TargetDependency = .project(
+    target: "DomainBusiness",
+    path: .relativeToRoot("Projects/Core/Domain/Business")
+  )
   
   
   // MARK: - Core / Data / Network
@@ -84,6 +89,11 @@ public extension Project {
   static let NetworkSearch: TargetDependency = .project(
     target: "NetworkSearch",
     path: .relativeToRoot("Projects/Core/Data/Network/Search")
+  )
+
+    static let NetworkBusiness: TargetDependency = .project(
+    target: "NetworkBusiness",
+    path: .relativeToRoot("Projects/Core/Data/Network/Business")
   )
   
   
@@ -129,7 +139,12 @@ public extension Project {
     target: "FeatureSearch",
     path: .relativeToRoot("Projects/Feature/Search/Feature")
   )
-  
+
+  static let FeatureBusiness: TargetDependency = .project(
+    target: "FeatureBusiness",
+    path: .relativeToRoot("Projects/Feature/Business/Feature")
+  )
+
   
   // MARK: - Feature / Example
   
@@ -153,6 +168,11 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/Search/Example")
   )
 
+  static let ExampleBusiness: TargetDependency = .project(
+    target: "ExampleBusiness",
+    path: .relativeToRoot("Projects/Feature/Business/Example")
+  )
+
   
   // MARK: - Feature / Preview Supports
 
@@ -169,6 +189,11 @@ public extension Project {
   static let PreviewSupportSearch: TargetDependency = .project(
     target: "PreviewSupportSearch",
     path: .relativeToRoot("Projects/Feature/Search/PreviewSupport")
+  )
+
+  static let PreviewSupportBusiness: TargetDependency = .project(
+    target: "PreviewSupportBusiness",
+    path: .relativeToRoot("Projects/Feature/Business/PreviewSupport")
   )
   
   

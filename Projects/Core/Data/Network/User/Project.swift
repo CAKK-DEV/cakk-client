@@ -7,10 +7,7 @@ let project = Project.framework(
     Project.DomainUser,
     Project.MoyaUtil,
     Project.UserSession,
-    .package(product: "SDWebImageWebPCoder")
+    External.sdWebImageWebPCoder
   ],
-  supportsResources: true,
-  packages: [
-    .remote(url: "https://github.com/SDWebImage/SDWebImageWebPCoder.git", requirement: .upToNextMajor(from: "0.14.6"))
-  ]
+  supportsResources: true
 )
