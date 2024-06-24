@@ -105,7 +105,7 @@ extension UserAPI: TargetType {
       return ["Content-Type": "application/json"]
       
     case .uploadProfileImage:
-      return ["Content-Type": "image/webp"]
+      return ["Content-Type": "image/jpeg"]
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
