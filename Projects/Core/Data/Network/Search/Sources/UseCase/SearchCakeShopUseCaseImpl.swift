@@ -27,7 +27,7 @@ public final class SearchCakeShopUseCaseImpl: SearchCakeShopUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[CakeShop], any Error> {
+  public func execute(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[CakeShop], any Error> {
     repository.fetchCakeShops(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeShopId: lastCakeShopId)
   }
 }

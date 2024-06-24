@@ -11,9 +11,9 @@ import Moya
 
 public enum SearchAPI {
   case fetchTrendingSearchKeyword(count: Int)
-  case fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?)
+  case fetchCakeImages(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?)
   case fetchTrendingCakeImages(lastCakeId: Int?, pageSize: Int)
-  case fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?)
+  case fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?)
   case fetchLocatedCakeShops(latitude: Double, longitude: Double)
 }
 
@@ -71,12 +71,14 @@ extension SearchAPI: TargetType {
       
     case .fetchCakeImages(let keyword, let latitude, let longitude, let pageSize, let lastCakeId):
       var params: [String: Any] = [
-        "latitude": latitude,
-        "longitude": longitude,
         "pageSize": pageSize
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeId { params["cakeId"] = lastCakeId }
+      if let latitude, let longitude {
+        params["latitude"] = latitude
+        params["longitude"] = longitude
+      }
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchTrendingCakeImages(let lastCakeId, let pageSize):
@@ -90,12 +92,14 @@ extension SearchAPI: TargetType {
       
     case .fetchCakeShops(let keyword, let latitude, let longitude, let pageSize, let lastCakeShopId):
       var params: [String: Any] = [
-        "latitude": latitude,
-        "longitude": longitude,
         "pageSize": pageSize
       ]
       if let keyword { params["keyword"] = keyword }
       if let lastCakeShopId { params["cakeShopId"] = lastCakeShopId }
+      if let latitude, let longitude {
+        params["latitude"] = latitude
+        params["longitude"] = longitude
+      }
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
     case .fetchLocatedCakeShops(let latitude, let longitude):

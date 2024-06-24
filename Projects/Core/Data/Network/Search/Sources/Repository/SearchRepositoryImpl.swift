@@ -46,7 +46,7 @@ public final class SearchRepositoryImpl: SearchRepository {
       .eraseToAnyPublisher()
   }
   
-  public func fetchCakeImages(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
+  public func fetchCakeImages(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
     provider.requestPublisher(.fetchCakeImages(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeId: lastCakeId))
       .tryMap { response in
         switch response.statusCode {
@@ -78,7 +78,7 @@ public final class SearchRepositoryImpl: SearchRepository {
       .eraseToAnyPublisher()
   }
   
-  public func fetchCakeShops(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[DomainSearch.CakeShop], any Error> {
+  public func fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[DomainSearch.CakeShop], any Error> {
     provider.requestPublisher(.fetchCakeShops(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeShopId: lastCakeShopId))
       .tryMap { response in
         switch response.statusCode {
