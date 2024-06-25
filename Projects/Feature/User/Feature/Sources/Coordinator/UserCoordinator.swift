@@ -27,6 +27,7 @@ enum UserSheetDestination: Identifiable {
 
 enum Destination: Hashable {
   case editProfile(profile: UserProfile)
+  case shopRegistration
 }
 
 
@@ -66,7 +67,12 @@ public struct UserCoordinator: View {
                                         updateUserProfileUseCase: updateUserProfileUseCase,
                                         withdrawUseCase: withdrawUseCase)
           }
-          return EditProfileView()
+          EditProfileView()
+            .navigationBarBackButtonHidden()
+            .environmentObject(router)
+          
+        case .shopRegistration:
+          ShopRegistrationCoordinator()
             .navigationBarBackButtonHidden()
             .environmentObject(router)
         }

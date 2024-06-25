@@ -7,10 +7,15 @@ let project = Project.framework(
     Project.SwiftUIUtil,
     Project.DesignSystem,
     Project.Router,
+    
     Project.DomainUser,
+    Project.DomainBusinessOwner,
+    
+    Project.PreviewSupportUser,
+    Project.PreviewSupportSearch,
+
     Project.UIKitUtil,
     Project.UserSession,
-    Project.PreviewSupportUser,
     Project.DIContainer,
     External.kakaoSDKCommon,
     External.kakaoSDKAuth,

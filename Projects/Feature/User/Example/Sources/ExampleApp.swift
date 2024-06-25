@@ -15,6 +15,12 @@ import FeatureUser
 import DomainUser
 import DomainOAuthToken
 
+import DomainBusinessOwner
+import NetworkBusinessOwner
+
+import DomainSearch
+import NetworkSearch
+
 import NetworkUser
 
 import Moya
@@ -126,6 +132,47 @@ struct ExampleApp: App {
       let userProfileUseCase = resolver.resolve(UserProfileUseCase.self)!
       return ProfileViewModel(userProfileUseCase: userProfileUseCase)
     }.inObjectScope(.container)
+    
+    diContainer.register(MoyaProvider<BusinessOwnerAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<BusinessOwnerAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(BusinessOwnerRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<BusinessOwnerAPI>.self)!
+      return BusinessOwnerRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(CakeShopOwnerVerificationUseCase.self) { resolver in
+      let repository = resolver.resolve(BusinessOwnerRepository.self)!
+      return CakeShopOwnerVerificationUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(MoyaProvider<SearchAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(SearchRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<SearchAPI>.self)!
+      return SearchRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(SearchCakeShopUseCase.self) { resolver in
+      let repository = resolver.resolve(SearchRepository.self)!
+      return SearchCakeShopUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(SearchMyShopViewModel.self) { resolver in
+      let searchCakeShopUseCase = resolver.resolve(SearchCakeShopUseCase.self)!
+      return SearchMyShopViewModel(searchCakeShopUseCase: searchCakeShopUseCase)
+    }
   }
   
   private func initKakaoSDK() {

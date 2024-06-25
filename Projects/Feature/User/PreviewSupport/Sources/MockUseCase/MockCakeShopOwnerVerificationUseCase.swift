@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-import DomainUser
+import DomainBusinessOwner
 
 public struct MockCakeShopOwnerVerificationUseCase: CakeShopOwnerVerificationUseCase {
   
@@ -37,20 +37,20 @@ public struct MockCakeShopOwnerVerificationUseCase: CakeShopOwnerVerificationUse
   
   // MARK: - Public Methods
   
-  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, UserProfileError> {
+  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, BusinessOwnerError> {
     switch scenario {
     case .success:
       Just(Void())
         .delay(for: .seconds(delay), scheduler: RunLoop.main)
-        .setFailureType(to: UserProfileError.self)
+        .setFailureType(to: BusinessOwnerError.self)
         .eraseToAnyPublisher()
       
     case .failure:
-      Fail(error: UserProfileError.failure)
+      Fail(error: BusinessOwnerError.failure)
         .eraseToAnyPublisher()
       
     case .serverError:
-      Fail(error: UserProfileError.serverError)
+      Fail(error: BusinessOwnerError.serverError)
         .eraseToAnyPublisher()
     }
   }

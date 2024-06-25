@@ -2,7 +2,7 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "FeatureBusiness",
+  name: "FeatureCakeShopAdmin",
   dependencies: [
     Project.SwiftUIUtil,
     Project.DesignSystem,
@@ -10,8 +10,8 @@ let project = Project.framework(
     Project.DomainSearch,
     Project.PreviewSupportSearch,
 
-    Project.DomainUser,
-    Project.PreviewSupportUser,
+    Project.DomainCakeShop,
+    Project.PreviewSupportCakeShop,
 
     Project.Router,
     Project.DIContainer,

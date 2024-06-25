@@ -2,10 +2,9 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "PreviewSupportUser",
+  name: "DomainBusinessOwner",
   dependencies: [
-    Project.DomainUser,
-    Project.DomainBusinessOwner,
-    Project.DIContainer
+    External.moya,
+    External.combineMoya
   ]
 )

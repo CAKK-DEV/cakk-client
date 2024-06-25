@@ -1,6 +1,6 @@
 //
 //  ShopRegistrationCoordinator.swift
-//  FeatureBusiness
+//  FeatureCakeShopAdmin
 //
 //  Created by 이승기 on 6/23/24.
 //  Copyright © 2024 cakk. All rights reserved.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-import DomainUser
+import DomainBusinessOwner
 
 import DIContainer
 import Router

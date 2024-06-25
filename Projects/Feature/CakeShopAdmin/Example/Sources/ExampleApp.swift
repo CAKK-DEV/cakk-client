@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-import FeatureBusiness
-import NetworkBusiness
+import FeatureCakeShopAdmin
 
 import DomainSearch
 import NetworkSearch

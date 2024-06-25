@@ -10,7 +10,7 @@ let project = Project.app(
     "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": "YES"
   ],
   dependencies: [
-    Project.FeatureBusiness,
+    Project.FeatureCakeShopAdmin,
 
     Project.DomainSearch,
     Project.NetworkSearch,
