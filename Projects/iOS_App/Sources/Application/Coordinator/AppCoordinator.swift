@@ -57,8 +57,9 @@ struct AppCoordinator: View {
   // MARK: - Properties
   
   @StateObject private var router = Router()
-  
   @State private var root: RootDestination = .home
+  
+  @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
   
   
   // MARK: - Views
@@ -88,7 +89,9 @@ struct AppCoordinator: View {
     })
     .environmentObject(router)
     .onAppear {
-//      router.replace(with: RootDestination.onboarding)
+      if hasSeenOnboarding == false {
+        router.replace(with: RootDestination.onboarding)
+      }
     }
     .onChange(of: router.root) { newRoot in
       if let newRoot = newRoot?.destination as? RootDestination {
@@ -99,6 +102,10 @@ struct AppCoordinator: View {
         switch newRoot {
         case .login:
           self.root = RootDestination.login
+          
+          /// 처음 Login화면에 진입했다는 것은 온보딩을 모두 봤다는 뜻으로 해석할 수 있습니다.
+          /// 따라서 root가 Login으로 변경되는 시점에 hasSeenOnboarding 값을 true로 업데이트 합니다.
+          hasSeenOnboarding = true
         }
       }
       

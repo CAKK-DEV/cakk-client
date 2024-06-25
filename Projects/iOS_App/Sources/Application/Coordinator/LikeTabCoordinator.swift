@@ -16,7 +16,7 @@ import DomainUser
 import FeatureCakeShop
 import DomainCakeShop
 
-import FeatureBusiness
+import DomainBusinessOwner
 
 import FeatureSearch
 
