@@ -68,6 +68,11 @@ public extension Project {
     path: .relativeToRoot("Projects/Core/Domain/Search")
   )
 
+  static let DomainBusinessOwner: TargetDependency = .project(
+    target: "DomainBusinessOwner",
+    path: .relativeToRoot("Projects/Core/Domain/BusinessOwner")
+  )
+
   
   // MARK: - Core / Data / Network
   
@@ -84,6 +89,11 @@ public extension Project {
   static let NetworkSearch: TargetDependency = .project(
     target: "NetworkSearch",
     path: .relativeToRoot("Projects/Core/Data/Network/Search")
+  )
+
+  static let NetworkBusinessOwner: TargetDependency = .project(
+    target: "NetworkBusinessOwner",
+    path: .relativeToRoot("Projects/Core/Data/Network/BusinessOwner")
   )
   
   
@@ -130,9 +140,9 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/Search/Feature")
   )
 
-  static let FeatureBusiness: TargetDependency = .project(
-    target: "FeatureBusiness",
-    path: .relativeToRoot("Projects/Feature/Business/Feature")
+  static let FeatureCakeShopAdmin: TargetDependency = .project(
+    target: "FeatureCakeShopAdmin",
+    path: .relativeToRoot("Projects/Feature/CakeShopAdmin/Feature")
   )
 
   
