@@ -25,7 +25,8 @@ import DomainSearch
 import NetworkSearch
 import UserDefaultsSearchHistory
 
-import FeatureBusiness
+import DomainBusinessOwner
+import NetworkBusinessOwner
 
 import DIContainer
 
@@ -292,8 +293,21 @@ struct CAKKApp: App {
                                  likeCakeShopUseCase: likeCakeShopUseCase)
     }
     
+    diContainer.register(MoyaProvider<BusinessOwnerAPI>.self) { _ in
+      #if STUB
+      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      #else
+      MoyaProvider<BusinessOwnerAPI>(plugins: [MoyaLoggingPlugin()])
+      #endif
+    }
+    
+    diContainer.register(BusinessOwnerRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<BusinessOwnerAPI>.self)!
+      return BusinessOwnerRepositoryImpl(provider: provider)
+    }
+    
     diContainer.register(CakeShopOwnerVerificationUseCase.self) { resolver in
-      let repository = resolver.resolve(UserProfileRepository.self)!
+      let repository = resolver.resolve(BusinessOwnerRepository.self)!
       return CakeShopOwnerVerificationUseCaseImpl(repository: repository)
     }
     

@@ -11,7 +11,7 @@ import Router
 
 import FeatureUser
 
-import FeatureBusiness
+import DomainBusinessOwner
 
 struct ProfileTabCoordinator: View {
   
@@ -32,10 +32,6 @@ struct ProfileTabCoordinator: View {
             EmptyView()
           case .editWorkingDay:
             EmptyView()
-          case .shopRegistration:
-            ShopRegistrationCoordinator()
-              .toolbar(.hidden, for: .navigationBar)
-              .environmentObject(router)
           default:
             EmptyView()
           }
