@@ -104,7 +104,7 @@ public struct ProfileView: View {
               if viewModel.currentRoleState == .user {
                 HStack(spacing: 24) {
                   Button {
-                    router.navigate(to: PublicUserDestination.shopRegistration)
+                    router.navigate(to: Destination.shopRegistration)
                   } label: {
                     headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
                   }

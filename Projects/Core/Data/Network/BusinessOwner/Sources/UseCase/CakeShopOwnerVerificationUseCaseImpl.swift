@@ -1,6 +1,6 @@
 //
 //  CakeShopOwnerVerificationUseCaseImpl.swift
-//  NetworkUser
+//  NetworkBusinessOwner
 //
 //  Created by 이승기 on 6/25/24.
 //  Copyright © 2024 cakk. All rights reserved.
@@ -9,7 +9,7 @@
 import UIKit
 import Combine
 
-import DomainUser
+import DomainBusinessOwner
 
 import UserSession
 
@@ -17,19 +17,19 @@ public final class CakeShopOwnerVerificationUseCaseImpl: CakeShopOwnerVerificati
   
   // MARK: - Properties
   
-  private let repository: UserProfileRepository
+  private let repository: BusinessOwnerRepository
   
   
   // MARK: - Initializers
   
-  public init(repository: UserProfileRepository) {
+  public init(repository: BusinessOwnerRepository) {
     self.repository = repository
   }
   
   
   // MARK: - Public Methods
   
-  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, UserProfileError> {
+  public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, BusinessOwnerError> {
     if let accessToken = UserSession.shared.accessToken {
       repository.requestCakeShopOwnerVerification(shopId: shopId,
                                           businessRegistrationImage: businessRegistrationImage,
@@ -38,7 +38,7 @@ public final class CakeShopOwnerVerificationUseCaseImpl: CakeShopOwnerVerificati
                                           message: message,
                                           accessToken: accessToken)
     } else {
-      Fail(error: DomainUser.UserProfileError.notSignedIn)
+      Fail(error: BusinessOwnerError.sessionExpired)
         .eraseToAnyPublisher()
     }
   }

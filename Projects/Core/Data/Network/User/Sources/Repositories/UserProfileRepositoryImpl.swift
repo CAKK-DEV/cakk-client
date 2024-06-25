@@ -116,41 +116,6 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       .eraseToAnyPublisher()
   }
   
-  public func requestCakeShopOwnerVerification(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String, accessToken: String) -> AnyPublisher<Void, UserProfileError> {
-    let businessRegistrationImagePublisher = uploadImage(image: businessRegistrationImage)
-    let idCardImagePublisher = uploadImage(image: idCardImage)
-    
-    return businessRegistrationImagePublisher
-      .combineLatest(idCardImagePublisher) /// 사업자 등록증, 신분증 이미지 업로드가 완료 되면 사장님 인증 요청을 보냅니다.
-      .flatMap { [provider] businessRegistrationImageUrl, idCardImageUrl in
-        provider.requestPublisher(.requestCakeShopOwnerVerification(
-          shopId: shopId,
-          businessRegistrationImageUrl: businessRegistrationImageUrl,
-          idCardImageUrl: idCardImageUrl,
-          contact: contact,
-          message: message,
-          accessToken: accessToken)
-        )
-        .tryMap { response in
-          switch response.statusCode {
-          case 200..<300:
-            return Void()
-            
-          default:
-            let decodedResponse = try JSONDecoder().decode(OwnerVerificationResponseDTO.self, from: response.data)
-            throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
-          }
-        }
-        .mapError { error in
-          if let networkError = error as? CAKKUserNetworkError {
-            return networkError.toUserProfileError()
-          } else {
-            return CAKKUserNetworkError.error(for: error).toUserProfileError()
-          }
-        }
-      }
-      .eraseToAnyPublisher()
-  }
   
   // MARK: - Private Methods
   

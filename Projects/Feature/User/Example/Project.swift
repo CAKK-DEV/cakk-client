@@ -27,8 +27,15 @@ let project = Project.app(
   ],
   dependencies: [
     Project.FeatureUser,
-    Project.KeyChainOAuthToken,
     Project.NetworkUser,
+
+    Project.DomainBusinessOwner,
+    Project.NetworkBusinessOwner,
+
+    Project.DomainSearch,
+    Project.NetworkSearch,
+
+    Project.KeyChainOAuthToken,
     Project.UserSession,
     Project.DIContainer
   ],

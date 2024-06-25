@@ -16,7 +16,6 @@ public enum UserAPI {
   case withdraw(accessToken: String)
   case requestPresignedUrl
   case uploadPresignedImage(presignedUrl: String, image: Data)
-  case requestCakeShopOwnerVerification(shopId: Int, businessRegistrationImageUrl: String, idCardImageUrl: String, contact: String, message: String, accessToken: String)
 }
 
 extension UserAPI: TargetType {
@@ -50,9 +49,6 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage:
       return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
-      
-    case .requestCakeShopOwnerVerification:
-      return "/api/v1/shops/certification"
     }
   }
   
@@ -75,9 +71,6 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage:
       return .put
-      
-    case .requestCakeShopOwnerVerification:
-      return .get
     }
   }
   
@@ -103,16 +96,6 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage(_, let image):
       return .requestData(image)
-      
-    case .requestCakeShopOwnerVerification(let shopId, let businessRegistrationImageUrl, let idCardImageUrl, let contact, let message, _):
-      let params: [String: Any] = [
-        "shopId": shopId,
-        "businessRegistrationImageUrl": businessRegistrationImageUrl,
-        "idCardImageUrl": idCardImageUrl,
-        "emergencyContact": contact,
-        "message": message
-      ]
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
     }
   }
   
@@ -126,8 +109,7 @@ extension UserAPI: TargetType {
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
-        .withdraw(let accessToken),
-        .requestCakeShopOwnerVerification(_, _, _, _, _, let accessToken):
+        .withdraw(let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"

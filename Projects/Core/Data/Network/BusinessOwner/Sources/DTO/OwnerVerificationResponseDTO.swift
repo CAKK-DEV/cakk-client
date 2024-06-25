@@ -1,8 +1,8 @@
 //
 //  OwnerVerificationResponseDTO.swift
-//  NetworkUser
+//  NetworkBusinessOwner
 //
-//  Created by 이승기 on 6/24/24.
+//  Created by 이승기 on 6/25/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
