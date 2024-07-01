@@ -44,6 +44,7 @@ struct CategorySelectionNavigationView: View {
                   selection = category
                   value.scrollTo(category, anchor: .center)
                 }
+                UISelectionFeedbackGenerator().selectionChanged()
               } label: {
                 let isSelected = selection == category
                 ZStack {
