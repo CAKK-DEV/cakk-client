@@ -99,6 +99,9 @@ struct SearchResultView: View {
           .padding(.vertical, 16)
           .padding(.horizontal, 12)
         }
+        .refreshable {
+          viewModel.fetchCakeImages()
+        }
       }
     }
   }
@@ -145,6 +148,9 @@ struct SearchResultView: View {
           }
           .padding(.horizontal, 28)
           .padding(.vertical, 16)
+        }
+        .refreshable {
+          viewModel.fetchCakeShops()
         }
       }
     }
