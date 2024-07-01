@@ -144,8 +144,10 @@ struct SearchMyShopView: View {
               }
             }
             
-            ProgressView()
-              .frame(height: 100)
+            if viewModel.cakeShopFetchingState == .loadMore {
+              ProgressView()
+                .frame(height: 100)
+            }
           }
           .padding(.vertical, 16)
           .padding(.horizontal, 28)
