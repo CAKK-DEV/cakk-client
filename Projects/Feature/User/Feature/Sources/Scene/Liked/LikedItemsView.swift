@@ -114,6 +114,9 @@ struct LikedItemsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else if viewModel.cakeImages.isEmpty {
         FailureStateView(title: "아직 저장된 케이크 사진이 없어요")
+          .onAppear {
+            viewModel.fetchMoreCakeImages()
+          }
       } else {
         ScrollView {
           VStack(spacing: 100) {
@@ -130,7 +133,7 @@ struct LikedItemsView: View {
                 }
                 .onTapGesture {
                   router.presentSheet(destination: PublicUserSheetDestination.quickInfo(
-                    imageId: cakeImage.id,
+                    imageId: cakeImage.imageId,
                     cakeImageUrl: cakeImage.imageUrl,
                     shopId: cakeImage.shopId)
                   )
@@ -169,6 +172,9 @@ struct LikedItemsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
       } else if viewModel.cakeShops.isEmpty {
         FailureStateView(title: "아직 저장된 케이크샵이 없어요")
+          .onAppear {
+            viewModel.fetchCakeShops()
+          }
       } else {
         ScrollView {
           LazyVStack(spacing: 16) {

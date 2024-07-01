@@ -33,7 +33,7 @@ extension LikeAPI: TargetType {
       return "/api/v1/me/heart-shops"
       
     case .likeCakeShop(let shopId, _), .unlikeCakeShop(let shopId, _):
-      return "/api/v1/shops/\(shopId)/like"
+      return "/api/v1/shops/\(shopId)/heart"
       
     case .fetchLikedCakeShopState(let shopId, _):
       return "/api/v1/shops/\(shopId)/heart"

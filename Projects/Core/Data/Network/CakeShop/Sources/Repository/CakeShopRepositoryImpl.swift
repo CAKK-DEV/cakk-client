@@ -259,7 +259,6 @@ public final class CakeShopRepositoryImpl: CakeShopRepository {
         switch response.statusCode {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(CakeImageDetailResponseDTO.self, from: response.data)
-          throw CakeShopNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           guard let data = decodedResponse.data else {
             throw CakeShopNetworkError.dataIsNil
           }
