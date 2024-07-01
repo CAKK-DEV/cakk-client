@@ -42,8 +42,14 @@ struct TrendingCakeShopView: View {
             .clipShape(Circle())
         } else {
           Circle()
-            .fill(DesignSystemAsset.gray10.swiftUIColor)
+            .fill(Color(hex: "FFA9DC"))
             .size(52)
+            .overlay {
+              DesignSystemAsset.cakeFaceTongue.swiftUIImage
+                .resizable()
+                .scaledToFit()
+                .frame(width: 42)
+            }
         }
         
         VStack(spacing: 4) {
@@ -111,9 +117,17 @@ struct TrendingCakeShopView: View {
   
   private func imageView(imageUrlString: String?) -> some View {
     KFImage(URL(string: imageUrlString ?? ""))
+      .placeholder {
+        DesignSystemAsset.gray10.swiftUIColor
+          .overlay {
+            DesignSystemAsset.cakePin.swiftUIImage
+              .resizable()
+              .scaledToFit()
+              .frame(width: 36)
+          }
+      }
       .resizable()
       .aspectRatio(contentMode: .fill)
-      .background(DesignSystemAsset.gray10.swiftUIColor)
       .aspectRatio(1/1, contentMode: .fit)
       .clipShape(
         Rectangle()
