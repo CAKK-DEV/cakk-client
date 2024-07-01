@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct WorkingDayWithTime {
+public struct WorkingDayWithTime: Equatable, Hashable {
   public var workingDay: WorkingDay
   public var startTime: String
   public var endTime: String
