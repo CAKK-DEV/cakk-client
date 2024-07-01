@@ -237,7 +237,8 @@ extension CakeShopAPI: TargetType {
         .updateOperationDays(_, _, let accessToken),
         .uploadCakeImage(_, _, let accessToken),
         .editCakeImage(_, _, let accessToken),
-        .deleteCakeImage(_, let accessToken):
+        .deleteCakeImage(_, let accessToken),
+        .updateShopAddress(_, _, _, _, let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"

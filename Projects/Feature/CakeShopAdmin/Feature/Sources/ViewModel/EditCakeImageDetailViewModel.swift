@@ -71,6 +71,7 @@ public final class EditCakeImageDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.cakeImageDetailFetchingState = .failure
+          print(error.localizedDescription)
         } else {
           self?.cakeImageDetailFetchingState = .success
         }
