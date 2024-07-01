@@ -27,7 +27,7 @@ public final class SearchCakeImagesUseCaseImpl: SearchCakeImagesUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
+  public func execute(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
     repository.fetchCakeImages(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeId: lastCakeId)
   }
 }

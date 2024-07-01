@@ -39,8 +39,8 @@ public struct MockSearchCakeImagesUseCase: SearchCakeImagesUseCase {
   // MARK: - Public Methods
   
   public func execute(keyword: String?,
-                      latitude: Double = 0,
-                      longitude: Double = 0,
+                      latitude: Double? = nil,
+                      longitude: Double? = nil,
                       pageSize: Int = 0,
                       lastCakeId: Int? = nil) -> AnyPublisher<[CakeImage], any Error> {
     switch scenario {

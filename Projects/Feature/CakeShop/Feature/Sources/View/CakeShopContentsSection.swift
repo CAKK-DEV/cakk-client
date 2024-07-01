@@ -60,8 +60,7 @@ struct CakeShopContentsSection: View {
           FailureStateView(title: "아직 등록된 메뉴가 없어요!",
                            buttonTitle: "사장님 인증하고 메뉴 등록하기!",
                            buttonAction: {
-            if let shopIdString = viewModel.cakeShopDetail?.shopId,
-               let shopId = Int(shopIdString) {
+            if let shopId = viewModel.cakeShopDetail?.shopId {
               router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: shopId))
             }
           }, buttonDescription: "사장님 인증이 완료되면 현재 보고있는 케이크샵의\n모든 수정 권한은  사장님께 넘어가요!")

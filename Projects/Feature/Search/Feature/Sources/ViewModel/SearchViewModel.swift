@@ -91,8 +91,8 @@ public final class SearchViewModel: ObservableObject {
     
     searchCakeImagesUseCase
       .execute(keyword: searchKeyword.trimmingCharacters(in: .whitespaces),
-               latitude: LocationService.shared.latitude,
-               longitude: LocationService.shared.longitude,
+               latitude: nil,
+               longitude: nil,
                pageSize: 10,
                lastCakeId: cakeImages.last?.id)
       .subscribe(on: DispatchQueue.global())
@@ -115,8 +115,8 @@ public final class SearchViewModel: ObservableObject {
     
     if let lastCakeId = cakeImages.last?.id {
       searchCakeImagesUseCase.execute(keyword: searchKeyword,
-                                      latitude: 37.4979,
-                                      longitude: 127.0276,
+                                      latitude: nil, 
+                                      longitude: nil,
                                       pageSize: 10,
                                       lastCakeId: lastCakeId)
         .subscribe(on: DispatchQueue.global())
@@ -140,8 +140,8 @@ public final class SearchViewModel: ObservableObject {
     
     searchCakeShopUseCase
       .execute(keyword: searchKeyword,
-               latitude: LocationService.shared.latitude,
-               longitude: LocationService.shared.longitude,
+               latitude: nil,
+               longitude: nil,
                pageSize: 10,
                lastCakeShopId: nil)
       .subscribe(on: DispatchQueue.global())
@@ -166,8 +166,8 @@ public final class SearchViewModel: ObservableObject {
     if let lastCakeShopId = cakeShops.last?.shopId {
       searchCakeShopUseCase
         .execute(keyword: searchKeyword,
-                 latitude: LocationService.shared.latitude,
-                 longitude: LocationService.shared.longitude,
+                 latitude: nil,
+                 longitude: nil,
                  pageSize: 10,
                  lastCakeShopId: lastCakeShopId)
         .subscribe(on: DispatchQueue.global())
