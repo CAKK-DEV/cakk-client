@@ -8,11 +8,11 @@
 
 import Foundation
 
-struct ExternalLinkDTO: Decodable {
+struct ExternalLinkDTO: Codable {
   let linkKind: LinkKind
   let linkPath: String
   
-  enum LinkKind: String, Decodable {
+  enum LinkKind: String, Codable {
     case web = "WEB"
     case insta = "INSTAGRAM"
     case kakao = "KAKAOTALK"

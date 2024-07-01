@@ -16,7 +16,7 @@ struct CakeShopDetailResponseDTO: Decodable {
   let data: Data?
   
   struct Data: Decodable {
-    let cakeShopId: String
+    let cakeShopId: Int
     let cakeShopName: String
     let thumbnailUrl: String?
     var cakeShopBio: String

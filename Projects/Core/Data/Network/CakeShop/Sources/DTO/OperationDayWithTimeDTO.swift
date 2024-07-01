@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct OperationDayWithTimeDTO: Decodable {
+public struct OperationDayWithTimeDTO: Codable {
   let operationDay: OperationDayDTO
   let operationStartTime: String
   let operationEndTime: String

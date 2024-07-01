@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum OperationDayDTO: String, Decodable {
+enum OperationDayDTO: String, Codable {
   case sun = "SUN"
   case mon = "MON"
   case tue = "TUE"
