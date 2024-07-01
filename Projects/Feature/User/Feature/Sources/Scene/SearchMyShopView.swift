@@ -157,9 +157,9 @@ struct SearchMyShopView: View {
   private func idleStateView() -> some View {
     VStack {
       Text("내 케이크 샵을 검색하여\n사장님 인증 후 손 쉽게\n가게를 꾸며보세요!")
-        .font(.pretendard(size: 17, weight: .medium))
+        .font(.pretendard(size: 17))
         .multilineTextAlignment(.center)
-        .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+        .foregroundStyle(DesignSystemAsset.gray30.swiftUIColor)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
