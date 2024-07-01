@@ -12,18 +12,18 @@ import DesignSystem
 
 import Kingfisher
 
-import DomainCakeShop
+import DomainSearch
 
 struct TrendingCakeShopView: View {
   
   // MARK: - Properties
   
-  private let trendingCakeShop: TrendingCakeShop
+  private let trendingCakeShop: CakeShop
   
   
   // MARK: - Initializers
   
-  init(trendingCakeShop: TrendingCakeShop) {
+  init(trendingCakeShop: CakeShop) {
     self.trendingCakeShop = trendingCakeShop
   }
   
@@ -33,12 +33,18 @@ struct TrendingCakeShopView: View {
   var body: some View {
     VStack(spacing: 12) {
       HStack(spacing: 12) {
-        KFImage(URL(string: trendingCakeShop.profileImageUrl))
-          .resizable()
-          .aspectRatio(contentMode: .fill)
-          .size(52)
-          .background(DesignSystemAsset.gray10.swiftUIColor)
-          .clipShape(Circle())
+        if let profileImageUrl = trendingCakeShop.profileImageUrl {
+          KFImage(URL(string: profileImageUrl))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .size(52)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(Circle())
+        } else {
+          Circle()
+            .fill(DesignSystemAsset.gray10.swiftUIColor)
+            .size(52)
+        }
         
         VStack(spacing: 4) {
           Text(trendingCakeShop.name)
@@ -48,7 +54,7 @@ struct TrendingCakeShopView: View {
             .multilineTextAlignment(.leading)
             .frame(maxWidth: .infinity, alignment: .leading)
           
-          Text(trendingCakeShop.bio)
+          Text(trendingCakeShop.bio ?? "")
             .font(.pretendard(size: 12, weight: .regular))
             .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
             .multilineTextAlignment(.leading)
@@ -143,5 +149,5 @@ import PreviewSupportCakeShop
       "https://i.etsystatic.com/33775099/r/il/1ddf70/5859199862/il_570xN.5859199862_ncc7.jpg",
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbhNX2JN8eCqDEDkuN33jTXL7Uq-gEq0jMgA&usqp=CAU",
       "https://imgflip.com/s/meme/Smiling-Cat.jpg"
-    ]))
+    ], workingDaysWithTime: []))
 }

@@ -1,15 +1,15 @@
 //
-//  MockTrendingCakeShopsUseCase.swift
-//  PreviewSupportCakeShop
+//  MockTrendingCakeShopUseCase.swift
+//  PreviewSupportSearch
 //
-//  Created by 이승기 on 6/17/24.
+//  Created by 이승기 on 7/1/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-import DomainCakeShop
+import DomainSearch
 
 public struct MockTrendingCakeShopsUseCase: TrendingCakeShopsUseCase {
   
@@ -37,10 +37,10 @@ public struct MockTrendingCakeShopsUseCase: TrendingCakeShopsUseCase {
   
   // MARK: - Public Methods
   
-  public func execute() -> AnyPublisher<[TrendingCakeShop], any Error> {
+  public func execute() -> AnyPublisher<[CakeShop], any Error> {
     switch scenario {
     case .success:
-      Just(TrendingCakeShop.mockCakeShops)
+      Just(CakeShop.mockCakeShops1)
         .delay(for: .seconds(delay), scheduler: RunLoop.main)
         .setFailureType(to: Error.self)
         .eraseToAnyPublisher()

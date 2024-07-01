@@ -9,7 +9,7 @@
 import SwiftUI
 import DesignSystem
 
-import DomainCakeShop
+import DomainSearch
 import Router
 
 import DIContainer
@@ -88,7 +88,7 @@ struct TrendingCakeShopSection: View {
 
 // MARK: - Preview
 
-import PreviewSupportCakeShop
+import PreviewSupportSearch
 
 #Preview {
   let diConatiner = DIContainer.shared.container

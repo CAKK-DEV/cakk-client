@@ -230,7 +230,8 @@ struct CAKKApp: App {
     }
     
     diContainer.register(TrendingCakeShopsUseCase.self) { resolver in
-      return MockTrendingCakeShopsUseCase() // TODO: 네트워킹 구현체로 변경
+      let repository = resolver.resolve(SearchRepository.self)!
+      return TrendingCakeShopUseCaseImpl(repository: repository)
     }
     
     diContainer.register(TrendingCakeShopViewModel.self) { resolver in
@@ -327,3 +328,4 @@ struct CAKKApp: App {
 }
 
 import PreviewSupportCakeShop // TODO: Networking 구현 완료되면 삭제할 것
+import PreviewSupportSearch
