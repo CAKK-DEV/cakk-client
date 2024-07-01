@@ -63,7 +63,7 @@ public struct AdminLoginView: View {
         .padding()
         
         Text("어드민 계정으로 로그인 해주세요")
-          .font(.pretendard(size: 17, weight: .semiBold))
+          .font(.pretendard(size: 15, weight: .semiBold))
           .foregroundStyle(Color.black.opacity(0.5))
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
@@ -91,9 +91,6 @@ public struct AdminLoginView: View {
         
       case .failure:
         DialogManager.shared.showDialog(.unknownError())
-        
-      case .loggedIn:
-        router.replace(with: PublicUserAdminDestination.home)
         
       default:
         break
