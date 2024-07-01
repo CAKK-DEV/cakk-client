@@ -133,16 +133,28 @@ public struct CakeShopDetailView: View {
     VStack(spacing: 28) {
       VStack(alignment: .leading, spacing: 24) {
         HStack(alignment: .top, spacing: 20) {
-          KFImage(URL(string: cakeShopDetail.thumbnailImageUrl ?? ""))
-            .resizable()
-            .scaledToFill()
-            .frame(width: 92, height: 92)
-            .background(DesignSystemAsset.gray10.swiftUIColor)
-            .overlay {
-              Circle()
-                .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 0.5)
-            }
-            .clipShape(Circle())
+          if let thumbnailImageUrl = cakeShopDetail.thumbnailImageUrl {
+            KFImage(URL(string: thumbnailImageUrl))
+              .resizable()
+              .scaledToFill()
+              .size(92)
+              .background(DesignSystemAsset.gray10.swiftUIColor)
+              .overlay {
+                Circle()
+                  .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 0.5)
+              }
+              .clipShape(Circle())
+          } else {
+            Circle()
+              .fill(Color(hex: "FFA9DC"))
+              .size(92)
+              .overlay {
+                DesignSystemAsset.cakeFaceTongue.swiftUIImage
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 72)
+              }
+          }
 
           VStack(spacing: 12) {
             VStack(spacing: 4) {
