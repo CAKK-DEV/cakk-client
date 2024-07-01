@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol SearchCakeImagesUseCase {
-  func execute(keyword: String?, latitude: Double, longitude: Double, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error>
+  func execute(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error>
 }

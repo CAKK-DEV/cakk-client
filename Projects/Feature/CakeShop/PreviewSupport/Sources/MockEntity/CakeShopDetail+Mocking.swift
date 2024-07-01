@@ -11,7 +11,7 @@ import DomainCakeShop
 extension CakeShopDetail {
   static var mock: Self {
     return .init(
-      shopId: "0",
+      shopId: 0,
       shopName: "맛있다 케이크샵",
       thumbnailImageUrl: "https://mblogthumb-phinf.pstatic.net/MjAyMzAyMjdfNTYg/MDAxNjc3NDI4ODkxNzg4.XxxPeBm9ltiL0iF2h0ikAzdG81pEMB4Tp-ORexO6NFog.e4zEIRUMalaHP29ukMhnfC-VtkPRZZLr-jTqXYp3ArUg.JPEG.thsldpswpf0112/%EB%B4%87%EC%B9%982.jpg?type=w800",
       shopBio: """

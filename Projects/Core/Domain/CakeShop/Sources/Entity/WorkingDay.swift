@@ -8,12 +8,12 @@
 
 import Foundation
 
-public enum WorkingDay: CaseIterable {
-  case sun
-  case mon
-  case tue
-  case wed
-  case thu
-  case fri
-  case sat
+public enum WorkingDay: String, CaseIterable, Hashable {
+  case sun = "SUN"
+  case mon = "MON"
+  case tue = "TUE"
+  case wed = "WED"
+  case thu = "THU"
+  case fri = "FRI"
+  case sat = "SAT"
 }

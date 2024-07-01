@@ -16,9 +16,9 @@ public struct CakeShopThumbnailView: View {
   // MARK: - Properties
   
   private let shopName: String
-  private let shopBio: String
+  private let shopBio: String?
   private let workingDays: [WorkingDay]
-  private let profileImageUrl: String
+  private let profileImageUrl: String?
   private let cakeImageUrls: [String]
   
   public enum WorkingDay: CaseIterable {
@@ -56,9 +56,9 @@ public struct CakeShopThumbnailView: View {
   
   public init(
     shopName: String,
-    shopBio: String,
+    shopBio: String?,
     workingDays: [WorkingDay],
-    profileImageUrl: String,
+    profileImageUrl: String?,
     cakeImageUrls: [String]
   ) {
     self.shopName = shopName
@@ -74,16 +74,23 @@ public struct CakeShopThumbnailView: View {
   public var body: some View {
     VStack(spacing: 16) {
       HStack(spacing: 12) {
-        KFImage(URL(string: profileImageUrl))
-            .resizable()
-            .aspectRatio(contentMode: .fill)
+        if let profileImageUrl {
+          KFImage(URL(string: profileImageUrl))
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+              .size(64)
+              .background(DesignSystemAsset.gray10.swiftUIColor)
+              .clipShape(Circle())
+              .overlay {
+                Circle()
+                  .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+              }
+        } else {
+          DesignSystemAsset.gray10.swiftUIColor
             .size(64)
-            .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(Circle())
-            .overlay {
-              Circle()
-                .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
-            }
+        }
+       
         VStack(spacing: 6) {
           VStack(spacing: 2) {
             Text(shopName)
@@ -93,12 +100,14 @@ public struct CakeShopThumbnailView: View {
               .multilineTextAlignment(.leading)
               .lineLimit(1)
             
-            Text(shopBio)
-              .font(.pretendard(size: 12, weight: .regular))
-              .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
-              .frame(maxWidth: .infinity, alignment: .leading)
-              .multilineTextAlignment(.leading)
-              .lineLimit(2)
+            if let shopBio {
+              Text(shopBio)
+                .font(.pretendard(size: 12, weight: .regular))
+                .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .multilineTextAlignment(.leading)
+                .lineLimit(2)
+            }
           }
           
           HStack(spacing: 2) {
@@ -132,10 +141,10 @@ public struct CakeShopThumbnailView: View {
         }
       }
     }
-    .contentShape(RoundedRectangle(cornerRadius: 20))
     .padding(.top, 18)
     .padding(.bottom, 16)
     .padding(.horizontal, 16)
+    .background(.white)
     .clipShape(RoundedRectangle(cornerRadius: 20))
     .overlay {
       RoundedRectangle(cornerRadius: 20)

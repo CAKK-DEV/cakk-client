@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct ExternalShopLink {
+public struct ExternalShopLink: Hashable {
   public var linkType: LinkType
   public var linkPath: String
   
@@ -20,7 +20,7 @@ public struct ExternalShopLink {
     self.linkPath = linkPath
   }
 
-  public enum LinkType: CaseIterable {
+  public enum LinkType: CaseIterable, Hashable {
     case web
     case instagram
     case kakaotalk

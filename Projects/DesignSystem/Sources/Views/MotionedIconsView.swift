@@ -13,14 +13,20 @@ public struct MotionedIconsView: View {
   // MARK: - Properties
   
   @StateObject private var motionData = MotionObserver()
+  private let isMotionActivated: Bool
+  
   @State private var rowParticleRepeating = 5
   @State private var rowRepeating: Int
   
 
   // MARK: - Initializers
   
-  public init(rowRepeating: Int = 3) {
+  public init(
+    rowRepeating: Int = 3,
+    isMotionActivated: Bool = true
+  ) {
     self.rowRepeating = rowRepeating
+    self.isMotionActivated = isMotionActivated
   }
   
   
@@ -42,7 +48,9 @@ public struct MotionedIconsView: View {
       }
     }
     .onAppear {
-      motionData.fetchMotionData(duration: 15)
+      if isMotionActivated {
+        motionData.fetchMotionData(duration: 15)
+      }
     }
   }
   

@@ -8,8 +8,8 @@
 
 import Foundation
 
-public struct CakeShopDetail {
-  public var shopId: String
+public struct CakeShopDetail: Hashable {
+  public var shopId: Int
   public var shopName: String
   public var thumbnailImageUrl: String?
   public var shopBio: String
@@ -18,7 +18,7 @@ public struct CakeShopDetail {
   public var externalShopLinks: [ExternalShopLink]
   
   public init(
-    shopId: String,
+    shopId: Int,
     shopName: String,
     thumbnailImageUrl: String? = nil,
     shopBio: String,

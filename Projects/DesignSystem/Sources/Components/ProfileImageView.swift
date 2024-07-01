@@ -1,17 +1,16 @@
 //
 //  ProfileImageView.swift
-//  FeatureUser
+//  DesignSystem
 //
-//  Created by 이승기 on 6/4/24.
+//  Created by 이승기 on 6/27/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import SwiftUI
-import DesignSystem
 import SwiftUIUtil
 import Kingfisher
 
-struct ProfileImageView: View {
+public struct ProfileImageView: View {
   
   // MARK: - Properties
   
@@ -20,14 +19,14 @@ struct ProfileImageView: View {
   
   // MARK: - Initializers
   
-  init(imageUrlString: String? = nil) {
+  public init(imageUrlString: String? = nil) {
     self.imageUrlString = imageUrlString
   }
   
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     Circle()
       .fill(Color.white)
       .frame(width: 128, height: 128)

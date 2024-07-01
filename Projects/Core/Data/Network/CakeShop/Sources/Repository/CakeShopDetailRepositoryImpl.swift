@@ -47,9 +47,9 @@ final public class CakeShopDetailRepositoryImpl: CakeShopDetailRepository {
       }
       .mapError { error in
         if let networkError = error as? CakeShopNetworkError {
-          return networkError.toDomainError()
+          return networkError.toCakeShopDetailError()
         } else {
-          return CakeShopNetworkError.error(for: error).toDomainError()
+          return CakeShopNetworkError.error(for: error).toCakeShopDetailError()
         }
       }
       .eraseToAnyPublisher()
@@ -72,9 +72,9 @@ final public class CakeShopDetailRepositoryImpl: CakeShopDetailRepository {
       }
       .mapError { error in
         if let networkError = error as? CakeShopNetworkError {
-          return networkError.toDomainError()
+          return networkError.toCakeShopDetailError()
         } else {
-          return CakeShopNetworkError.error(for: error).toDomainError()
+          return CakeShopNetworkError.error(for: error).toCakeShopDetailError()
         }
       }
       .eraseToAnyPublisher()

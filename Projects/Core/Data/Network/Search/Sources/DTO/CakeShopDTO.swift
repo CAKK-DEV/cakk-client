@@ -10,9 +10,9 @@ import Foundation
 
 struct CakeShopDTO: Decodable {
   let cakeShopId: Int
-  let thumbnailUrl: String
+  let thumbnailUrl: String?
   let cakeShopName: String
-  let cakeShopBio: String
+  let cakeShopBio: String?
   let cakeImageUrls: [String]
   let operationDays: [OperationDayWithTimeDTO]
 }

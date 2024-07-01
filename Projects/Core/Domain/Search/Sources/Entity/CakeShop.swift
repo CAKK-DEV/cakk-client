@@ -10,17 +10,17 @@ import Foundation
 
 public struct CakeShop {
   public let shopId: Int
-  public let profileImageUrl: String
+  public let profileImageUrl: String?
   public let name: String
-  public let bio: String
+  public let bio: String?
   public let cakeImageUrls: [String]
   public let workingDaysWithTime: [WorkingDayWithTime]
   
   public init(
     shopId: Int,
-    profileImageUrl: String,
+    profileImageUrl: String?,
     name: String,
-    bio: String,
+    bio: String?,
     cakeImageUrls: [String],
     workingDaysWithTime: [WorkingDayWithTime]
   ) {

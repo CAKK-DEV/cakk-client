@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct CakeShopLocation {
+public struct CakeShopLocation: Equatable, Hashable {
   public var address: String
   public var latitude: Double
   public var longitude: Double
