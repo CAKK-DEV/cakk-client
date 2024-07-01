@@ -81,7 +81,7 @@ public struct ShopLocationMapView: View {
     DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
       withAnimation {
         region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                                    span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+                                    span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
       }
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
