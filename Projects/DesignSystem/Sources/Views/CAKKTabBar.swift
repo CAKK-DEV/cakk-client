@@ -43,13 +43,17 @@ public struct CAKKTabBar: View {
         
         Button() {
           selectedTab = .cakeShop
+          UISelectionFeedbackGenerator().selectionChanged()
         } label: {
-          DesignSystemAsset.cakeSlice.swiftUIImage
-            .resizable()
-            .size(24)
-            .foregroundStyle(selectedTab == .cakeShop
-                             ? DesignSystemAsset.black.swiftUIColor
-                             : DesignSystemAsset.gray40.swiftUIColor)
+          ZStack {
+            DesignSystemAsset.cakeSlice.swiftUIImage
+              .resizable()
+              .size(24)
+              .foregroundStyle(selectedTab == .cakeShop
+                               ? DesignSystemAsset.black.swiftUIColor
+                               : DesignSystemAsset.gray40.swiftUIColor)
+          }
+          .frame(width: 56)
         }
         .modifier(BouncyPressEffect())
         
@@ -57,13 +61,17 @@ public struct CAKKTabBar: View {
         
         Button {
           selectedTab = .search
+          UISelectionFeedbackGenerator().selectionChanged()
         } label: {
-          DesignSystemAsset.magnifyingGlass.swiftUIImage
-            .resizable()
-            .size(24)
-            .foregroundStyle(selectedTab == .search
-                             ? DesignSystemAsset.black.swiftUIColor
-                             : DesignSystemAsset.gray40.swiftUIColor)
+          ZStack {
+            DesignSystemAsset.magnifyingGlass.swiftUIImage
+              .resizable()
+              .size(24)
+              .foregroundStyle(selectedTab == .search
+                               ? DesignSystemAsset.black.swiftUIColor
+                               : DesignSystemAsset.gray40.swiftUIColor)
+          }
+          .frame(width: 56)
         }
         .modifier(BouncyPressEffect())
         
@@ -71,12 +79,16 @@ public struct CAKKTabBar: View {
         
         Button {
           selectedTab = .liked
+          UISelectionFeedbackGenerator().selectionChanged()
         } label: {
-          Image(systemName: "heart.fill")
-            .font(.system(size: 24))
-            .foregroundStyle(selectedTab == .liked
-                             ? DesignSystemAsset.black.swiftUIColor
-                             : DesignSystemAsset.gray40.swiftUIColor)
+          ZStack {
+            Image(systemName: "heart.fill")
+              .font(.system(size: 24))
+              .foregroundStyle(selectedTab == .liked
+                               ? DesignSystemAsset.black.swiftUIColor
+                               : DesignSystemAsset.gray40.swiftUIColor)
+          }
+          .frame(width: 56)
         }
         .modifier(BouncyPressEffect())
         
@@ -84,13 +96,17 @@ public struct CAKKTabBar: View {
         
         Button {
           selectedTab = .profile
+          UISelectionFeedbackGenerator().selectionChanged()
         } label: {
-          DesignSystemAsset.person.swiftUIImage
-            .resizable()
-            .size(24)
-            .foregroundStyle(selectedTab == .profile
-                             ? DesignSystemAsset.black.swiftUIColor
-                             : DesignSystemAsset.gray40.swiftUIColor)
+          ZStack {
+            DesignSystemAsset.person.swiftUIImage
+              .resizable()
+              .size(24)
+              .foregroundStyle(selectedTab == .profile
+                               ? DesignSystemAsset.black.swiftUIColor
+                               : DesignSystemAsset.gray40.swiftUIColor)
+          }
+          .frame(width: 56)
         }
         .modifier(BouncyPressEffect())
         
