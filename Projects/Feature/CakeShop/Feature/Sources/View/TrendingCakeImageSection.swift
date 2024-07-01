@@ -66,8 +66,7 @@ struct TrendingCakeImageSection: View {
           ProgressView()
         }
       }
-      .padding(.vertical, 16)
-      .padding(.horizontal, 12)
+      .padding(12)
     }
     .onFirstAppear {
       viewModel.fetchCakeImages()
@@ -78,7 +77,7 @@ struct TrendingCakeImageSection: View {
 
 // MARK: - Preview
 
-import PreviewSupportCakeShop
+import PreviewSupportSearch
 
 #Preview {
   let diContainer = DIContainer.shared.container
