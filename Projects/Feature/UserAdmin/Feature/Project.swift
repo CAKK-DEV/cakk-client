@@ -7,6 +7,7 @@ let project = Project.framework(
     Project.SwiftUIUtil,
     Project.DesignSystem,
     Project.Router,
+    Project.LocationService,
     
     Project.DomainUser,
     Project.DomainBusinessOwner,

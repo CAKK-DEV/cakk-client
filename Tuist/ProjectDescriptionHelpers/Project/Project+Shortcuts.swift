@@ -145,6 +145,11 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/CakeShopAdmin/Feature")
   )
 
+  static let FeatureUserAdmin: TargetDependency = .project(
+    target: "FeatureUserAdmin",
+    path: .relativeToRoot("Projects/Feature/UserAdmin/Feature")
+  )
+
   
   // MARK: - Feature / Example
   
@@ -191,9 +196,14 @@ public extension Project {
     path: .relativeToRoot("Projects/Feature/Search/PreviewSupport")
   )
 
-  static let PreviewSupportBusiness: TargetDependency = .project(
-    target: "PreviewSupportBusiness",
-    path: .relativeToRoot("Projects/Feature/Business/PreviewSupport")
+  static let PreviewSupportUserAdmin: TargetDependency = .project(
+    target: "PreviewSupportUserAdmin",
+    path: .relativeToRoot("Projects/Feature/UserAdmin/PreviewSupport")
+  )
+
+  static let PreviewSupportCakeShopAdmin: TargetDependency = .project(
+    target: "PreviewSupportCakeShopAdmin",
+    path: .relativeToRoot("Projects/Feature/CakeShopAdmin/PreviewSupport")
   )
   
   
