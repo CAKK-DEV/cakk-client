@@ -86,9 +86,15 @@ public struct CakeShopThumbnailView: View {
                   .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
               }
         } else {
-          DesignSystemAsset.gray10.swiftUIColor
+          Circle()
+            .fill(Color(hex: "FFA9DC"))
             .size(64)
-            .clipShape(Circle())
+            .overlay {
+              DesignSystemAsset.cakeFaceTongue.swiftUIImage
+                .resizable()
+                .scaledToFit()
+                .frame(width: 50)
+            }
         }
        
         VStack(spacing: 6) {
@@ -134,7 +140,14 @@ public struct CakeShopThumbnailView: View {
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .background(DesignSystemAsset.gray10.swiftUIColor)
-                  
+              } else {
+                DesignSystemAsset.gray10.swiftUIColor
+                  .overlay {
+                    DesignSystemAsset.cakePin.swiftUIImage
+                      .resizable()
+                      .scaledToFit()
+                      .frame(width: 44)
+                  }
               }
             }
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -166,7 +179,7 @@ private extension Array {
 
 // MARK: - Preview
 
-#Preview {
+#Preview("Image") {
   CakeShopThumbnailView(
     shopName: "미쁘다 케이크",
     shopBio: "미쁘다케이크🍰_레터링케이크 주문제작케이크 남양주레터링케이크 커스텀케이크 케이크",
@@ -180,3 +193,14 @@ private extension Array {
     ]
   )
 }
+
+#Preview("No Image") {
+  CakeShopThumbnailView(
+    shopName: "미쁘다 케이크",
+    shopBio: "미쁘다케이크🍰_레터링케이크 주문제작케이크 남양주레터링케이크 커스텀케이크 케이크",
+    workingDays: [.sun, .mon, .tue, .wed, .thu],
+    profileImageUrl: nil,
+    cakeImageUrls: []
+  )
+}
+
