@@ -1,15 +1,15 @@
 //
-//  MockTrendingCakeImagesUseCase.swift
-//  PreviewSupportCakeShop
+//  MockTrendingImagesUseCase.swift
+//  PreviewSupportSearch
 //
-//  Created by 이승기 on 6/17/24.
+//  Created by 이승기 on 7/1/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-import DomainCakeShop
+import DomainSearch
 
 public struct MockTrendingCakeImagesUseCase: TrendingCakeImagesUseCase {
   
@@ -71,3 +71,4 @@ public struct MockTrendingCakeImagesUseCase: TrendingCakeImagesUseCase {
     }
   }
 }
+

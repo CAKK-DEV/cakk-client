@@ -1,8 +1,8 @@
 //
-//  TrendingCakeImageUseCase.swift
-//  DomainCakeShop
+//  TrendingCakeImagesUseCase.swift
+//  DomainSearch
 //
-//  Created by 이승기 on 6/20/24.
+//  Created by 이승기 on 7/1/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 

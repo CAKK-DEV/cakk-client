@@ -9,7 +9,7 @@
 import SwiftUI
 import Combine
 
-import DomainCakeShop
+import DomainSearch
 
 public final class TrendingCakeImagesViewModel: ObservableObject {
  

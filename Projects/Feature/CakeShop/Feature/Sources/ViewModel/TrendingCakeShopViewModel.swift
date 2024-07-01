@@ -9,14 +9,14 @@
 import SwiftUI
 import Combine
 
-import DomainCakeShop
+import DomainSearch
 
 public final class TrendingCakeShopViewModel: ObservableObject {
   
   // MARK: - Properties
   
   private let useCase: TrendingCakeShopsUseCase
-  @Published private(set) var trendingCakeShops: [TrendingCakeShop] = []
+  @Published private(set) var trendingCakeShops: [CakeShop] = []
   @Published private(set) var trendingCakeShopFetchingState: TrendingCakeShopFetchingState = .idle
   enum TrendingCakeShopFetchingState {
     case idle
