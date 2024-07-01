@@ -55,8 +55,9 @@ public struct ProfileView: View {
     if userSession.isSignedIn {
       ZStack {
         animatedGradientBackground
+        .ignoresSafeArea()
         .overlay {
-          MotionedIconsView()
+          MotionedIconsView(isMotionActivated: false)
             .frame(maxHeight: .infinity, alignment: .top)
             .padding(.top, -40)
             .offset(y: backgroundIconOffset)
