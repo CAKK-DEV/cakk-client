@@ -256,7 +256,7 @@ struct SearchView: View {
             .background(Capsule().fill(DesignSystemAsset.black.swiftUIColor))
         }
         .shadow(radius: 10, y: 4)
-        .padding(.bottom, 20)
+        .padding(.bottom, 24)
         .modifier(BouncyPressEffect())
       }
     }
