@@ -12,6 +12,7 @@ let project = Project.framework(
 
     Project.DomainCakeShop,
     Project.PreviewSupportCakeShop,
+    Project.PreviewSupportCakeShopAdmin,
 
     Project.Router,
     Project.DIContainer,
