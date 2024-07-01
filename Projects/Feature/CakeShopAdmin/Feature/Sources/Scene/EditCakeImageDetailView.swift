@@ -38,15 +38,19 @@ struct EditCakeImageDetailView: View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {
-          DialogManager.shared.showDialog(
-            title: "저장",
-            message: "변경 내용이 저장되지 않았어요.\n그래도 나갈까요?",
-            primaryButtonTitle: "확인",
-            primaryButtonAction: .custom({
-              router.navigateBack()
-            }),
-            secondaryButtonTitle: "취소",
-            secondaryButtonAction: .cancel)
+          if viewModel.hasChanges() {
+            DialogManager.shared.showDialog(
+              title: "저장",
+              message: "변경 내용이 저장되지 않았어요.\n그래도 나갈까요?",
+              primaryButtonTitle: "확인",
+              primaryButtonAction: .custom({
+                router.navigateBack()
+              }),
+              secondaryButtonTitle: "취소",
+              secondaryButtonAction: .cancel)
+          } else {
+            router.navigateBack()
+          }
         } label: {
           Image(systemName: "arrow.left")
             .font(.system(size: 20))
@@ -56,6 +60,23 @@ struct EditCakeImageDetailView: View {
         Text("사진 수정")
           .font(.pretendard(size: 17, weight: .bold))
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+      }, trailingContent: {
+        Button {
+          DialogManager.shared.showDialog(
+            title: "삭제",
+            message: "정말로 이미지를 삭제할까요?\n삭제 후에는 복구가 불가능해요.",
+            primaryButtonTitle: "확인",
+            primaryButtonAction: .custom({
+              viewModel.deleteCakeImage()
+            }),
+            secondaryButtonTitle: "취소",
+            secondaryButtonAction: .cancel)
+        } label: {
+          Image(systemName: "trash")
+            .font(.system(size: 20))
+            .padding(8)
+            .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+        }
       })
       
       if let cakeImageDetail = viewModel.cakeImageDetail {
@@ -66,92 +87,91 @@ struct EditCakeImageDetailView: View {
               .aspectRatio(contentMode: .fit)
               .frame(width: 220)
               .clipShape(RoundedRectangle(cornerRadius: 16))
-            }
+          }
+          .padding(.top, 28)
+          
+          VStack(spacing: 8) {
+            SectionHeaderCompact(title: "케이크 카테고리 선택")
+              .padding(.horizontal, 24)
             
-            VStack(spacing: 8) {
-              SectionHeaderCompact(title: "케이크 카테고리 선택")
-                .padding(.horizontal, 24)
-              
-              ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                  ForEach(CakeCategory.allCases, id: \.self) { category in
-                    let isSelected = cakeImageDetail.categories.contains(category)
-                    Button {
-                      viewModel.toggleCategory(category)
-                    } label: {
-                      Text(category.displayName)
-                        .font(.pretendard(weight: .medium))
-                        .foregroundStyle(isSelected ? Color.white : DesignSystemAsset.gray70.swiftUIColor)
-                        .padding(.horizontal, 16)
-                        .frame(height: 44)
-                        .background {
-                          RoundedRectangle(cornerRadius: 16)
-                            .fill(isSelected ? DesignSystemAsset.gray70.swiftUIColor : DesignSystemAsset.gray10.swiftUIColor)
-                        }
-                        .overlay {
-                          if !isSelected {
-                            RoundedRectangle(cornerRadius: 16)
-                              .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
-                          }
-                        }
-                    }
-                  }
-                }
-                .padding(.horizontal, 24)
-              }
-            }
-            .padding(.top, 28)
-            
-            VStack(spacing: 8) {
-              SectionHeaderCompact(title: "태그 입력")
-                .padding(.horizontal, 24)
-              
-              CKTextField(text: $viewModel.tagString, placeholder: "태그를 입력해 주세요")
-                .onSubmit {
-                  withAnimation(.snappy) {
-                    viewModel.addNewTag(tagString: viewModel.tagString)
-                  }
-                }
-                .padding(.horizontal, 24)
-              
-              ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                  if let cakeImageDetail = viewModel.cakeImageDetail {
-                    ForEach(cakeImageDetail.tags, id: \.self) { tag in
-                      HStack(spacing: 8) {
-                        Text(tag)
-                          .font(.pretendard(weight: .medium))
-                          .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
-                          .padding(.leading, 16)
-                        
-                        Button {
-                          withAnimation(.snappy) {
-                            viewModel.deleteTag(tagString: tag)
-                          }
-                        } label: {
-                          Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 16))
-                            .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
-                        }
-                        .padding(.trailing, 12)
-                      }
+            ScrollView(.horizontal, showsIndicators: false) {
+              HStack(spacing: 12) {
+                ForEach(CakeCategory.allCases, id: \.self) { category in
+                  let isSelected = cakeImageDetail.categories.contains(category)
+                  Button {
+                    viewModel.toggleCategory(category)
+                  } label: {
+                    Text(category.displayName)
+                      .font(.pretendard(weight: .medium))
+                      .foregroundStyle(isSelected ? Color.white : DesignSystemAsset.gray70.swiftUIColor)
+                      .padding(.horizontal, 16)
                       .frame(height: 44)
-                      .contentShape(Rectangle())
                       .background {
                         RoundedRectangle(cornerRadius: 16)
-                          .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+                          .fill(isSelected ? DesignSystemAsset.gray70.swiftUIColor : DesignSystemAsset.gray10.swiftUIColor)
                       }
+                      .overlay {
+                        if !isSelected {
+                          RoundedRectangle(cornerRadius: 16)
+                            .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+                        }
+                      }
+                  }
+                }
+              }
+              .padding(.horizontal, 24)
+            }
+          }
+          
+          VStack(spacing: 8) {
+            SectionHeaderCompact(title: "태그 입력")
+              .padding(.horizontal, 24)
+            
+            CKTextField(text: $viewModel.tagString, placeholder: "태그를 입력해 주세요")
+              .onSubmit {
+                withAnimation(.snappy) {
+                  viewModel.addNewTag(tagString: viewModel.tagString)
+                }
+              }
+              .padding(.horizontal, 24)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+              HStack(spacing: 12) {
+                if let cakeImageDetail = viewModel.cakeImageDetail {
+                  ForEach(cakeImageDetail.tags, id: \.self) { tag in
+                    HStack(spacing: 8) {
+                      Text(tag)
+                        .font(.pretendard(weight: .medium))
+                        .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
+                        .padding(.leading, 16)
+                      
+                      Button {
+                        withAnimation(.snappy) {
+                          viewModel.deleteTag(tagString: tag)
+                        }
+                      } label: {
+                        Image(systemName: "xmark.circle.fill")
+                          .font(.system(size: 16))
+                          .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+                      }
+                      .padding(.trailing, 12)
+                    }
+                    .frame(height: 44)
+                    .contentShape(Rectangle())
+                    .background {
+                      RoundedRectangle(cornerRadius: 16)
+                        .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
                     }
                   }
                 }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 24)
               }
+              .padding(.vertical, 12)
+              .padding(.horizontal, 24)
             }
-            .padding(.top, 20)
           }
-          .padding(.vertical, 28)
-          .padding(.bottom, 100)
+          .padding(.top, 20)
+        }
+        .padding(.bottom, 100)
       } else {
         if viewModel.cakeImageDetailFetchingState == .loading {
           VStack {
@@ -243,9 +263,9 @@ import PreviewSupportCakeShopAdmin
     let editCakeImageUseCase = MockEditCakeImageUseCase()
     let deleteCakeImageUseCase = MockDeleteCakeImageUseCase()
     return EditCakeImageDetailViewModel(cakeImageId: 0,
-                                  cakeImageDetailUseCase: cakeImageDetailUseCase,
-                                  editCakeImageUseCase: editCakeImageUseCase,
-                                  deleteCakeImageUseCase: deleteCakeImageUseCase)
+                                        cakeImageDetailUseCase: cakeImageDetailUseCase,
+                                        editCakeImageUseCase: editCakeImageUseCase,
+                                        deleteCakeImageUseCase: deleteCakeImageUseCase)
   }
   return EditCakeImageDetailView()
 }
