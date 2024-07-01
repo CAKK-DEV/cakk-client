@@ -145,6 +145,9 @@ struct LikedItemsView: View {
           .padding(.top, 16)
           .padding(.bottom, 100)
         }
+        .refreshable {
+          viewModel.fetchCakeImages()
+        }
       }
     }
   }
@@ -195,6 +198,9 @@ struct LikedItemsView: View {
           .padding(.horizontal, 28)
           .padding(.top, 16)
           .padding(.bottom, 100)
+        }
+        .refreshable {
+          viewModel.fetchCakeShops()
         }
       }
     }
