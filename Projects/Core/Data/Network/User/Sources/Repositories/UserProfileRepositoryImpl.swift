@@ -116,6 +116,29 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       .eraseToAnyPublisher()
   }
   
+  public func fetchMyCakeShopId(accessToken: String) -> AnyPublisher<Int?, UserProfileError> {
+    provider.requestPublisher(.fetchMyShopId(accessToken: accessToken))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedResponse = try JSONDecoder().decode(MyShopResponseDTO.self, from: response.data)
+          return decodedResponse.data?.cakeShopId
+          
+        default:
+          let decodedResponse = try JSONDecoder().decode(MyShopResponseDTO.self, from: response.data)
+          throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+        }
+      }
+      .mapError { error in
+        if let cakkError = error as? CAKKUserNetworkError {
+          return cakkError.toUserProfileError()
+        } else {
+          return CAKKUserNetworkError.error(for: error).toUserProfileError()
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
   
   // MARK: - Private Methods
   
