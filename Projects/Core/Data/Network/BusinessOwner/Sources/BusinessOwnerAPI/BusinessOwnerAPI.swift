@@ -49,7 +49,7 @@ extension BusinessOwnerAPI: TargetType {
       return .put
       
     case .requestCakeShopOwnerVerification:
-      return .get
+      return .post
     }
   }
   
@@ -63,7 +63,7 @@ extension BusinessOwnerAPI: TargetType {
       
     case .requestCakeShopOwnerVerification(let shopId, let businessRegistrationImageUrl, let idCardImageUrl, let contact, let message, _):
       let params: [String: Any] = [
-        "shopId": shopId,
+        "cakeShopId": shopId,
         "businessRegistrationImageUrl": businessRegistrationImageUrl,
         "idCardImageUrl": idCardImageUrl,
         "emergencyContact": contact,
