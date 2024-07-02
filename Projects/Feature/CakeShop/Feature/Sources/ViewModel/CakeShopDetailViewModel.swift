@@ -59,6 +59,12 @@ public final class CakeShopDetailViewModel: ObservableObject {
     case sessionExpired
   }
   
+  private let cakeShopOwnedStateUseCase: CakeShopOwnedStateUseCase
+  @Published private(set) var isOwned = false
+  
+  private let myShopIdUseCase: MyShopIdUseCase
+  @Published private(set) var isMyShop = false
+  
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -69,15 +75,21 @@ public final class CakeShopDetailViewModel: ObservableObject {
     cakeShopDetailUseCase: CakeShopDetailUseCase,
     cakeImagesByShopIdUseCase: CakeImagesByShopIdUseCase,
     cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase,
-    likeCakeShopUseCase: LikeCakeShopUseCase
+    likeCakeShopUseCase: LikeCakeShopUseCase,
+    cakeShopOwnedStateUseCase: CakeShopOwnedStateUseCase,
+    myShopIdUseCase: MyShopIdUseCase
   ) {
     self.shopId = shopId
     self.cakeShopDetailUseCase = cakeShopDetailUseCase
     self.cakeImagesByShopIdUseCase = cakeImagesByShopIdUseCase
     self.cakeShopAdditionalInfoUseCase = cakeShopAdditionalInfoUseCase
     self.likeCakeShopUseCase = likeCakeShopUseCase
+    self.cakeShopOwnedStateUseCase = cakeShopOwnedStateUseCase
+    self.myShopIdUseCase = myShopIdUseCase
     
     fetchInitialLikeState()
+    fetchCakeShopOwnedState()
+    fetchIsMyCakeShop()
   }
   
   
@@ -229,6 +241,30 @@ public final class CakeShopDetailViewModel: ObservableObject {
         }
       } receiveValue: { [weak self] isLiked in
         self?.isLiked = isLiked
+      }
+      .store(in: &cancellables)
+  }
+  
+  private func fetchCakeShopOwnedState() {
+    cakeShopOwnedStateUseCase.execute(shopId: shopId)
+      .sink { completion in
+        if case .failure(let error) = completion {
+          print(error.localizedDescription)
+        }
+      } receiveValue: { [weak self] isOwned in
+        self?.isOwned = isOwned
+      }
+      .store(in: &cancellables)
+  }
+  
+  private func fetchIsMyCakeShop() {
+    myShopIdUseCase.execute()
+      .sink { completion in
+        if case .failure(let error) = completion {
+          print(error.localizedDescription)
+        }
+      } receiveValue: { [weak self] shopId in
+        self?.isMyShop = shopId == self?.shopId
       }
       .store(in: &cancellables)
   }

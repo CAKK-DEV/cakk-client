@@ -93,6 +93,7 @@ public struct CakeShopDetailView: View {
             bottomPromptButton(shopDetail: shopDetail)
               .offset(y: selectedDetailSection == .order ? 0 : 200)
               .animation(.smooth, value: selectedDetailSection)
+              .opacity(viewModel.isOwned ? 0 : 1)
           }
           .background {
             bottomGeneralButtons(shopDetail: shopDetail)
@@ -177,14 +178,31 @@ public struct CakeShopDetailView: View {
         
         ExternalShopLinksView(externalShopLinks: cakeShopDetail.externalShopLinks,
                               emptyLinkButtonAction: {
-          DialogManager.shared.showDialog(
-            title: "외부링크 등록",
-            message: "외부링크는 케이크샵 사장님만 등록 가능해요.\n혹시 \"\(cakeShopDetail.shopName)\"(이)가 내 케이크샵이라면 사장님 인증을 완료하고 외부 링크를 등록해보세요!",
-            primaryButtonTitle: "사장님 인증",
-            primaryButtonAction: .custom({
-              // navigate to 사장님 인증
-            }), secondaryButtonTitle: "취소",
-            secondaryButtonAction: .cancel)
+          if viewModel.isOwned {
+            if viewModel.isMyShop {
+              /// 사장의 경우 외부 링크 즉시 수정 가능하도록 이동
+              if let cakeShopDetail = viewModel.cakeShopDetail {
+                router.navigate(to: PublicCakeShopDestination.editExternalLink(shopId: cakeShopDetail.shopId,
+                                                                               externalLinks: cakeShopDetail.externalShopLinks))
+              }
+            } else {
+              DialogManager.shared.showDialog(
+                title: "외부링크 등록",
+                message: "외부링크는 케이크샵 사장님만 등록 가능해요.",
+                primaryButtonTitle: "확인",
+                primaryButtonAction: .cancel)
+
+            }
+          } else {
+            DialogManager.shared.showDialog(
+              title: "외부링크 등록",
+              message: "외부링크는 케이크샵 사장님만 등록 가능해요.\n혹시 \"\(cakeShopDetail.shopName)\"(이)가 내 케이크샵이라면 사장님 인증을 완료하고 외부 링크를 등록해보세요!",
+              primaryButtonTitle: "사장님 인증",
+              primaryButtonAction: .custom({
+                router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: cakeShopDetail.shopId))
+              }), secondaryButtonTitle: "취소",
+              secondaryButtonAction: .cancel)
+          }
         })
       }
       
@@ -202,7 +220,7 @@ public struct CakeShopDetailView: View {
   
   private func bottomPromptButton(shopDetail: CakeShopDetail) -> some View {
     HStack {
-      Text("\(shopDetail.shopName)(이)가 어서 입점하길 원한다면?\n따봉을 눌러 사장님을 재촉해 보세요!")
+      Text("\(shopDetail.shopName) 샵이 어서 입점하길 원한다면?\n따봉을 눌러 사장님을 재촉해 보세요!")
         .font(.pretendard(size: 15, weight: .medium))
         .foregroundStyle(.white)
         .multilineTextAlignment(.leading)
@@ -280,13 +298,16 @@ import PreviewSupportUser
     let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
     let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
     let likeCakeShopUseCase = MockLikeCakeShopUseCase()
+    let cakeShopOwnedStateUseCase = MockCakeShopOwnedStateUseCase()
+    let myShopIdUseCase = MockMyShopIdUseCase()
     
     let viewModel = CakeShopDetailViewModel(shopId: 0,
                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                            likeCakeShopUseCase: likeCakeShopUseCase)
-    viewModel.fetchCakeShopDetail()
+                                            likeCakeShopUseCase: likeCakeShopUseCase,
+                                            cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                            myShopIdUseCase: myShopIdUseCase)
     return viewModel
   }
   
@@ -302,13 +323,16 @@ import PreviewSupportUser
     let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
     let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
     let likeCakeShopUseCase = MockLikeCakeShopUseCase()
+    let cakeShopOwnedStateUseCase = MockCakeShopOwnedStateUseCase()
+    let myShopIdUseCase = MockMyShopIdUseCase()
     
     let viewModel = CakeShopDetailViewModel(shopId: 0,
                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                            likeCakeShopUseCase: likeCakeShopUseCase)
-    viewModel.fetchCakeShopDetail()
+                                            likeCakeShopUseCase: likeCakeShopUseCase,
+                                            cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                            myShopIdUseCase: myShopIdUseCase)
     return viewModel
   }
   

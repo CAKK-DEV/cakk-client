@@ -7,8 +7,12 @@
 //
 
 import Foundation
+import DomainCakeShop
 
 public enum PublicCakeShopDestination: Hashable {
   case map
   case businessCertification(targetShopId: Int)
+  
+  // TODO: shopId로 externalLink만 조회 가능하도록 변경되면 externalLinks 파라미터 제거
+  case editExternalLink(shopId: Int, externalLinks: [ExternalShopLink])
 }
