@@ -190,8 +190,8 @@ public struct ProfileView: View {
             .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
         })
         
-        FailureStateView(title: "로그인이 필요한 기능이에요",
-                         buttonTitle: "로그인 하고 다양한 기능 누리기",
+        FailureStateView(title: "로그인이 필요한 기능이에요!",
+                         buttonTitle: "로그인하고 다양한 기능 누리기",
                          buttonAction: {
           router.presentSheet(destination: UserSheetDestination.login)
         })
