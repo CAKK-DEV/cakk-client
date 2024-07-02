@@ -14,7 +14,7 @@ public struct MyShopResponseDTO: Decodable {
   let data: Data?
   
   struct Data: Decodable {
-    let isExists: Bool
+    let isExist: Bool
     let cakeShopId: Int?
   }
 }
