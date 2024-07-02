@@ -16,3 +16,14 @@ public enum PublicCakeShopDestination: Hashable {
   // TODO: shopId로 externalLink만 조회 가능하도록 변경되면 externalLinks 파라미터 제거
   case editExternalLink(shopId: Int, externalLinks: [ExternalShopLink])
 }
+
+public enum PublicCakeShopSheetDestination: Identifiable {
+  case login
+  
+  public var id: String {
+    switch self {
+    case .login:
+      return "login"
+    }
+  }
+}
