@@ -57,6 +57,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     
     useCase.execute(longitude: region.center.longitude,
                     latitude: region.center.latitude)
+    .delay(for: .seconds(0.5), scheduler: DispatchQueue.main)
     .subscribe(on: DispatchQueue.global())
     .receive(on: DispatchQueue.main)
     .sink { [weak self] completion in
