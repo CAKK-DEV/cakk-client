@@ -85,6 +85,23 @@ struct CakeShopTabCoordinator: View {
               .environmentObject(router)
           }
         }
+        .fullScreenCover(item: $router.presentedFullScreenSheet) { destination in
+          if let destination = destination.destination as? PublicCakeShopSheetDestination {
+            switch destination {
+            case .login:
+              let _ = diContainer.register(SocialLoginViewModel.self) { resolver in
+                let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
+                let singUPUseCase = resolver.resolve(SocialLoginSignUpUseCase.self)!
+                return SocialLoginViewModel(signInUseCase: signInUseCase,
+                                            signUpUseCase: singUPUseCase)
+              }
+              LoginStepCoordinator(onFinish: {
+                router.presentedFullScreenSheet = nil
+              })
+              .environmentObject(router)
+            }
+          }
+        }
     }
     .environmentObject(router)
   }

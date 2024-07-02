@@ -102,13 +102,14 @@ public struct CakeShopQuickInfoView: View {
             }
         }
         .modifier(BouncyPressEffect())
-        .onChange(of: viewModel.likeUpdatingState) { state in
+        .onReceive(viewModel.$likeUpdatingState, perform: { state in
           if case .sessionExpired = state {
             DialogManager.shared.showDialog(.loginRequired(completion: {
-              // TODO: 로그인 뷰로 이동
+              router.presentSheet(destination: PublicCakeShopSheetDestination.login,
+                                  sheetStyle: .fullScreen)
             }))
           }
-        }
+        })
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))

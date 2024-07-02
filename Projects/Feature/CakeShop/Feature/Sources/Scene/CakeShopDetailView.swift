@@ -264,13 +264,15 @@ public struct CakeShopDetailView: View {
           }
       }
       .modifier(BouncyPressEffect())
-      .onChange(of: viewModel.likeUpdatingState) { state in
+      .onReceive(viewModel.$likeUpdatingState, perform: { state in
         if case .sessionExpired = state {
-          DialogManager.shared.showDialog(.loginRequired(completion: {
-            // TODO: 로그인 뷰로 이동
-          }))
+          DialogManager.shared.showDialog(
+            title: "로그인 필요",
+            message: "로그인이 필요한 기능이에요.\n로그인하여 더 많은 기능을 누려보세요!",
+            primaryButtonTitle: "확인",
+            primaryButtonAction: .cancel)
         }
-      }
+      })
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {
