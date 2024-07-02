@@ -14,7 +14,7 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-struct EditExternalLinkView: View {
+public struct EditExternalLinkView: View {
   
   // MARK: - Properties
   
@@ -24,7 +24,7 @@ struct EditExternalLinkView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditExternalLinkViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -33,7 +33,7 @@ struct EditExternalLinkView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {

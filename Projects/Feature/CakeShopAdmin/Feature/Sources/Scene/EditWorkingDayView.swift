@@ -15,7 +15,7 @@ import DomainCakeShop
 import Router
 import DIContainer
 
-struct EditWorkingDayView: View {
+public struct EditWorkingDayView: View {
   
   // MARK: - Properties
   
@@ -29,7 +29,7 @@ struct EditWorkingDayView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditWorkingDayViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -38,7 +38,7 @@ struct EditWorkingDayView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar {
         Button {

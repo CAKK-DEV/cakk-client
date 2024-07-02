@@ -16,7 +16,7 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-struct EditCakeShopAddressView: View {
+public struct EditCakeShopAddressView: View {
   
   // MARK: - Properties
   
@@ -28,7 +28,7 @@ struct EditCakeShopAddressView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeShopAddressViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -37,7 +37,7 @@ struct EditCakeShopAddressView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {

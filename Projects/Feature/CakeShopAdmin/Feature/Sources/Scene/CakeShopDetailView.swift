@@ -222,7 +222,7 @@ struct CakeShopDetailView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: CakeShopDetailDestination.editCakeImageDetail(imageId: cakeImage.id))
+                router.navigate(to: EditCakeShopDestination.editCakeImageDetail(imageId: cakeImage.id))
               }
           }
           
