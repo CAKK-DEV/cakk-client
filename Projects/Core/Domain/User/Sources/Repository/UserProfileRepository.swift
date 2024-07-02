@@ -13,4 +13,5 @@ public protocol UserProfileRepository {
   func fetchUserProfile(accessToken: String) -> AnyPublisher<UserProfile, UserProfileError>
   func updateUserProfile(newUserProfile: NewUserProfile, accessToken: String) -> AnyPublisher<Void, UserProfileError>
   func withdraw(accessToken: String) -> AnyPublisher<Void, UserProfileError>
+  func fetchMyCakeShopId(accessToken: String) -> AnyPublisher<Int?, UserProfileError>
 }
