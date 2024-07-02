@@ -106,6 +106,7 @@ struct TrendingCakeShopView: View {
       }
       .frame(maxWidth: .infinity)
     }
+    .contentShape(Rectangle())
     .padding(16)
     .clipShape(RoundedRectangle(cornerRadius: 20))
     .overlay {
