@@ -78,6 +78,7 @@ public struct CakeShopCoordinator: View {
                                                 likeCakeImageUseCase: likeCakeImageUseCase)
             }
             CakeShopQuickInfoView()
+              .environmentObject(router)
           }
         }
       }
