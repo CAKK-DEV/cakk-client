@@ -31,7 +31,7 @@ struct SignUp_Processing: View {
             .controlSize(.regular)
             .tint(Color.white)
           
-          Text("게정 생성중...")
+          Text("계정 생성중...")
             .font(.pretendard(size: 27, weight: .bold))
             .foregroundStyle(Color.white)
             .whiteTextShadow()
