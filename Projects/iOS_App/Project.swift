@@ -42,6 +42,8 @@ let project = Project.app(
     Project.DomainBusinessOwner,
     Project.NetworkBusinessOwner,
 
+    Project.FeatureCakeShopAdmin,
+
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserSession,

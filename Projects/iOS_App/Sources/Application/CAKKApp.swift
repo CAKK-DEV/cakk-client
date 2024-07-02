@@ -132,6 +132,11 @@ struct CAKKApp: App {
       return ProfileViewModel(userProfileUseCase: userProfileUseCase)
     }.inObjectScope(.container)
     
+    diContainer.register(MyShopIdUseCase.self) { resolver in
+      let userProfileRepository = resolver.resolve(UserProfileRepository.self)!
+      return MyShopIdUseCaseImpl(repository: userProfileRepository)
+    }
+    
     
     // CakeShop Feature
     
@@ -316,6 +321,68 @@ struct CAKKApp: App {
     diContainer.register(SearchMyShopViewModel.self) { resolver in
       let searchCakeShopUseCase = resolver.resolve(SearchCakeShopUseCase.self)!
       return SearchMyShopViewModel(searchCakeShopUseCase: searchCakeShopUseCase)
+    }
+    
+    
+    // MARK: - BusinessOwner Feature
+    
+    diContainer.register(CakeShopRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<CakeShopAPI>.self)!
+      return CakeShopRepositoryImpl(provider: provider)
+    }
+    
+    diContainer.register(EditShopBasicInfoUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return EditShopBasicInfoUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(EditExternalLinkUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return EditCakeShopExternalLInkUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(EditWorkingDayUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return EditWorkingDayUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(EditShopAddressUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return EditShopAddressUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopDetailRepository.self)!
+      return CakeImagesByShopIdUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(UploadCakeImageUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return UploadCakeImageUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(EditCakeImageUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return EditCakeImageUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(CakeImageDetailUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return CakeImageDetailUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(DeleteCakeImageUseCase.self) { resolver in
+      let repository = resolver.resolve(CakeShopRepository.self)!
+      return DeleteCakeImageUseCaseImpl(repository: repository)
+    }
+    
+    diContainer.register(BusinessOwnerProfileViewModel.self) { resolver in
+      let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
+      let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
+      let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
+      return BusinessOwnerProfileViewModel(myShopIdUseCase: myShopIdUseCase,
+                                           cakeShopDetailUseCase: cakeShopDetailUseCase,
+                                           cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase)
     }
   }
   

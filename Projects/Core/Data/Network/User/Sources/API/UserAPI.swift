@@ -16,6 +16,7 @@ public enum UserAPI {
   case withdraw(accessToken: String)
   case requestPresignedUrl
   case uploadPresignedImage(presignedUrl: String, image: Data)
+  case fetchMyShopId(accessToken: String)
 }
 
 extension UserAPI: TargetType {
@@ -49,6 +50,9 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage:
       return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
+      
+    case .fetchMyShopId:
+      return "/api/v1/shops/mine"
     }
   }
   
@@ -71,6 +75,9 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage:
       return .put
+      
+    case .fetchMyShopId:
+      return .get
     }
   }
   
@@ -96,6 +103,9 @@ extension UserAPI: TargetType {
       
     case .uploadPresignedImage(_, let image):
       return .requestData(image)
+      
+    case .fetchMyShopId:
+      return .requestPlain
     }
   }
   
@@ -109,7 +119,8 @@ extension UserAPI: TargetType {
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
-        .withdraw(let accessToken):
+        .withdraw(let accessToken),
+        .fetchMyShopId(let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"
