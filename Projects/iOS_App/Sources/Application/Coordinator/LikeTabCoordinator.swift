@@ -55,12 +55,16 @@ struct LikeTabCoordinator: View {
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
               let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
+              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
+              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
               
               return CakeShopDetailViewModel(shopId: shopId,
                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase)
+                                             likeCakeShopUseCase: likeCakeShopUseCase,
+                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                             myShopIdUseCase: myShopIdUseCase)
             }.inObjectScope(.transient)
             
             CakeShopDetailCoordinator()
@@ -75,12 +79,16 @@ struct LikeTabCoordinator: View {
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
               let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
+              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
+              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
               
               return CakeShopDetailViewModel(shopId: shopId,
                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase)
+                                             likeCakeShopUseCase: likeCakeShopUseCase,
+                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                             myShopIdUseCase: myShopIdUseCase)
             }.inObjectScope(.transient)
             
             CakeShopDetailCoordinator()

@@ -9,7 +9,7 @@
 import SwiftUI
 
 import FeatureCakeShop
-
+import FeatureCakeShopAdmin
 import FeatureSearch
 
 import FeatureCakeShop
@@ -49,6 +49,16 @@ struct CakeShopTabCoordinator: View {
             BusinessCertificationView()
               .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
+            
+          case .editExternalLink(let shopId, let externalLinks):
+            let _ = diContainer.register(EditExternalLinkViewModel.self) { resolver in
+              let editExternalLinkUseCase = resolver.resolve(EditExternalLinkUseCase.self)!
+              return EditExternalLinkViewModel(shopId: shopId, 
+                                               editExternalLinkUseCase: editExternalLinkUseCase,
+                                               externalShopLinks: externalLinks)
+            }
+            EditExternalLinkView()
+              .environmentObject(router)
           }
         }
         .navigationDestination(for: PublicSearchDestination.self) { destination in
@@ -59,12 +69,16 @@ struct CakeShopTabCoordinator: View {
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
               let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
+              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
+              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
               
               return CakeShopDetailViewModel(shopId: shopId,
                                              cakeShopDetailUseCase: cakeShopDetailUseCase,
                                              cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                              cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase)
+                                             likeCakeShopUseCase: likeCakeShopUseCase,
+                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                             myShopIdUseCase: myShopIdUseCase)
             }.inObjectScope(.transient)
             CakeShopDetailCoordinator()
               .navigationBarBackButtonHidden()

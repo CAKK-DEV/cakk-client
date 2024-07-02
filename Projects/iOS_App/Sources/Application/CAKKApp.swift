@@ -180,6 +180,11 @@ struct CAKKApp: App {
       CakeShopAdditionalInfoUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
     }
     
+    diContainer.register(CakeShopOwnedStateUseCase.self) { resolver in
+      let provider = resolver.resolve(CakeShopDetailRepository.self)!
+      return CakeShopOwnedStateUseCaseImpl(repository: provider)
+    }
+    
     
     // Search Feature
     

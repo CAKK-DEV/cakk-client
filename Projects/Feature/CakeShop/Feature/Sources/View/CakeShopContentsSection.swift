@@ -57,14 +57,24 @@ struct CakeShopContentsSection: View {
           imageSection()
         
         case .order:
-          FailureStateView(title: "아직 등록된 메뉴가 없어요!",
-                           buttonTitle: "사장님 인증하고 메뉴 등록하기!",
-                           buttonAction: {
-            if let shopId = viewModel.cakeShopDetail?.shopId {
-              router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: shopId))
+          if viewModel.isOwned {
+            if viewModel.isMyShop {
+              FailureStateView(title: "기능 준비중이에요")
+                .frame(height: 400)
+            } else {
+              FailureStateView(title: "메뉴 준비중이에요")
+                .frame(height: 400)
             }
-          }, buttonDescription: "사장님 인증이 완료되면 현재 보고있는 케이크샵의\n모든 수정 권한은  사장님께 넘어가요!")
-          .frame(height: 400)
+          } else {
+            FailureStateView(title: "아직 등록된 메뉴가 없어요!",
+                             buttonTitle: "사장님 인증하고 메뉴 등록하기!",
+                             buttonAction: {
+              if let shopId = viewModel.cakeShopDetail?.shopId {
+                router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: shopId))
+              }
+            }, buttonDescription: "사장님 인증이 완료되면 현재 보고있는 케이크샵의\n모든 수정 권한은  사장님께 넘어가요!")
+            .frame(height: 400)
+          }
           
         case .detail:
           detailSection()
@@ -211,11 +221,16 @@ import PreviewSupportUser
       let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase()
       let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
       let likeCakeShopUseCase = MockLikeCakeShopUseCase()
+      let cakeShopOwnedStateUseCase = MockCakeShopOwnedStateUseCase()
+      let myShopIdUseCase = MockMyShopIdUseCase()
+      
       let viewModel = CakeShopDetailViewModel(shopId: 0,
                                               cakeShopDetailUseCase: cakeShopDetailUseCase,
                                               cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                               cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                              likeCakeShopUseCase: likeCakeShopUseCase)
+                                              likeCakeShopUseCase: likeCakeShopUseCase,
+                                              cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                              myShopIdUseCase: myShopIdUseCase)
       _viewModel = .init(wrappedValue: viewModel)
     }
     
@@ -245,12 +260,16 @@ import PreviewSupportUser
       let cakeImagesByShopIdUseCase = MockCakeImagesByShopIdUseCase(scenario: .failure)
       let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase(scenario: .failure)
       let likeCakeShopUseCase = MockLikeCakeShopUseCase()
+      let cakeShopOwnedStateUseCase = MockCakeShopOwnedStateUseCase(scenario: .notOwned)
+      let myShopIdUseCase = MockMyShopIdUseCase()
       
       let viewModel = CakeShopDetailViewModel(shopId: 0,
                                               cakeShopDetailUseCase: cakeShopDetailUseCase,
                                               cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
                                               cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                              likeCakeShopUseCase: likeCakeShopUseCase)
+                                              likeCakeShopUseCase: likeCakeShopUseCase,
+                                              cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
+                                              myShopIdUseCase: myShopIdUseCase)
       _viewModel = .init(wrappedValue: viewModel)
     }
     
