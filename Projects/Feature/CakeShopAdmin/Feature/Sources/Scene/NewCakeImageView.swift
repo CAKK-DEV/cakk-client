@@ -214,9 +214,6 @@ struct NewCakeImageView: View {
     .sheet(isPresented: $isPhotoPickerShown) {
       PhotoPicker(selectedImage: $viewModel.cakeImage)
     }
-    .onFirstAppear {
-      isPhotoPickerShown = true
-    }
     .onReceive(viewModel.$imageUploadingState, perform: { uploadState in
       switch uploadState {
       case .failure:
