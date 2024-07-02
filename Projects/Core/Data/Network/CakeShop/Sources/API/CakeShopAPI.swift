@@ -32,6 +32,7 @@ public enum CakeShopAPI {
   
   case requestPresignedUrl
   case uploadPresignedImage(presignedUrl: String, image: Data)
+  case isOwned(shopId: Int, accessToken: String)
 }
 
 extension CakeShopAPI: TargetType {
@@ -93,6 +94,9 @@ extension CakeShopAPI: TargetType {
       
     case .uploadPresignedImage:
       return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
+      
+    case .isOwned(let shopId, _):
+      return "/api/v1/shops/\(shopId)/owner"
     }
   }
   
@@ -145,6 +149,9 @@ extension CakeShopAPI: TargetType {
       
     case .uploadPresignedImage:
       return .put
+      
+    case .isOwned:
+      return .get
     }
   }
   
@@ -228,6 +235,9 @@ extension CakeShopAPI: TargetType {
       
     case .uploadPresignedImage(_, let image):
       return .requestData(image)
+      
+    case .isOwned:
+      return .requestPlain
     }
   }
   
@@ -238,7 +248,8 @@ extension CakeShopAPI: TargetType {
         .uploadCakeImage(_, _, let accessToken),
         .editCakeImage(_, _, let accessToken),
         .deleteCakeImage(_, let accessToken),
-        .updateShopAddress(_, _, _, _, let accessToken):
+        .updateShopAddress(_, _, _, _, let accessToken),
+        .isOwned(_, let accessToken):
       return [
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"
