@@ -25,7 +25,9 @@ public struct ProfileView: View {
   @State private var isLoggedIn = false
   @EnvironmentObject private var router: Router
   
-  @StateObject private var viewModel: ProfileViewModel
+  @StateObject private var profileViewModel: ProfileViewModel
+  @StateObject private var businessOwnerProfileViewModel: BusinessOwnerProfileViewModel
+  
   @StateObject private var userSession = UserSession.shared
   
   @State private var backgroundIconOffset: CGFloat = 0
@@ -44,8 +46,11 @@ public struct ProfileView: View {
   
   public init() {
     let diContainer = DIContainer.shared.container
-    let viewModel = diContainer.resolve(ProfileViewModel.self)!
-    _viewModel = .init(wrappedValue: viewModel)
+    let profileViewModel = diContainer.resolve(ProfileViewModel.self)!
+    let businessOwnerProfileViewModel = diContainer.resolve(BusinessOwnerProfileViewModel.self)!
+    
+    _profileViewModel = .init(wrappedValue: profileViewModel)
+    _businessOwnerProfileViewModel = .init(wrappedValue: businessOwnerProfileViewModel)
   }
   
   
@@ -70,23 +75,30 @@ public struct ProfileView: View {
           backgroundIconScale = (1 + (offset / 100) * 0.1)
         } content: {
           VStack(spacing: 0) {
-            ProfileImageView(imageUrlString: viewModel.userProfile?.profileImageUrl)
-              .zIndex(1)
+            if profileViewModel.currentRoleState == .user {
+              ProfileImageView(imageUrlString: profileViewModel.userProfile?.profileImageUrl)
+                .zIndex(1)
+            } else {
+              ProfileImageView(imageUrlString: businessOwnerProfileViewModel.cakeShopDetail?.thumbnailImageUrl)
+                .zIndex(1)
+            }
             
             VStack(spacing: 0) {
-              if let userProfile = viewModel.userProfile {
+              if let userProfile = profileViewModel.userProfile {
                 VStack(spacing: 8) {
                   if userProfile.role != .user {
-                    userRoleChipView(role: viewModel.userProfile?.role ?? .user)
+                    userRoleChipView(role: profileViewModel.userProfile?.role ?? .user)
                   }
                   
-                  Text(userProfile.nickname)
-                    .font(.pretendard(size: 32, weight: .bold))
-                    .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 28)
-                    .lineLimit(1)
-                    .multilineTextAlignment(.center)
+                  Text(profileViewModel.currentRoleState == .user
+                       ? userProfile.nickname
+                       : businessOwnerProfileViewModel.cakeShopDetail?.shopName ?? "")
+                  .font(.pretendard(size: 32, weight: .bold))
+                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                  .frame(maxWidth: .infinity)
+                  .padding(.horizontal, 28)
+                  .lineLimit(1)
+                  .multilineTextAlignment(.center)
                   
                   if userProfile.role != .user {
                     changeUserRoleButton()
@@ -102,7 +114,7 @@ public struct ProfileView: View {
                   .padding(.top, 84)
               }
               
-              if viewModel.currentRoleState == .user {
+              if profileViewModel.currentRoleState == .user {
                 HStack(spacing: 24) {
                   Button {
                     router.navigate(to: Destination.shopRegistration)
@@ -110,11 +122,11 @@ public struct ProfileView: View {
                     headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
                   }
                   .modifier(BouncyPressEffect())
-                  .opacity(viewModel.userProfile?.role != .user ? 0.5 : 1.0)
-                  .disabled(viewModel.userProfile?.role != .user)
+                  .opacity(profileViewModel.userProfile?.role != .user ? 0.5 : 1.0)
+                  .disabled(profileViewModel.userProfile?.role != .user)
                   
                   Button {
-                    if let userProfile = viewModel.userProfile {
+                    if let userProfile = profileViewModel.userProfile {
                       router.navigate(to: Destination.editProfile(profile: userProfile))
                     } else {
                       DialogManager.shared.showDialog(.pleaseWait(completion: nil))
@@ -125,12 +137,13 @@ public struct ProfileView: View {
                   .modifier(BouncyPressEffect())
                 }
                 .padding(.top, 24)
-                .disabled(viewModel.userProfileFetchingState == .loading)
+                .disabled(profileViewModel.userProfileFetchingState == .loading)
               }
               
               VStack(spacing: 24) {
-                if viewModel.currentRoleState != .user {
+                if profileViewModel.currentRoleState != .user {
                   EditBusinessAccountSection()
+                    .environmentObject(businessOwnerProfileViewModel)
                 }
                 
                 VStack(spacing: 0) {
@@ -162,10 +175,12 @@ public struct ProfileView: View {
             .padding(.top, -64)
           }
           .padding(.top, 56)
+          .padding(.bottom, 100)
         }
       }
       .onAppear {
-        viewModel.fetchUserProfile()
+        profileViewModel.fetchUserProfile()
+        businessOwnerProfileViewModel.fetchMyCakeShopId()
       }
     } else {
       VStack(spacing: 0) {
@@ -218,11 +233,11 @@ public struct ProfileView: View {
   
   private func changeUserRoleButton() -> some View {
     Button {
-      switch viewModel.currentRoleState {
+      switch profileViewModel.currentRoleState {
       case .business:
-        viewModel.change(role: .user)
+        profileViewModel.change(role: .user)
       case .user:
-        viewModel.change(role: .business)
+        profileViewModel.change(role: .business)
       }
     } label: {
       HStack(spacing: 6) {
@@ -231,7 +246,7 @@ public struct ProfileView: View {
           .size(12)
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
         
-        switch viewModel.currentRoleState {
+        switch profileViewModel.currentRoleState {
         case .business:
           Text("일반 회원으로 전환")
             .font(.pretendard(size: 12, weight: .bold))
@@ -291,3 +306,5 @@ import PreviewSupportUser
   }
   return ProfileView()
 }
+
+// TODO: - BusinessOwnerProfileViewModel diContainer 설정 후 프리뷰 수정

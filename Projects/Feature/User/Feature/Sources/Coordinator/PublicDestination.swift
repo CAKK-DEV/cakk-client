@@ -8,6 +8,9 @@
 
 import Foundation
 
+// TODO: #1 케이크샵 편집 shopId로만 받을 수 있게 API 분리 되면 삭제
+import DomainCakeShop
+
 public enum PublicUserSheetDestination: Identifiable {
   case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)
 
@@ -23,9 +26,9 @@ public enum PublicUserDestination: Hashable {
   case shopDetail(shopId: Int)
   case home
   
-  case editShopProfile
-  case editWorkingDay
-  case editLocation
-  case editExternalLink
-  case editCakeImage
+  case editShopBasicInfo(shopDetail: CakeShopDetail)
+  case editWorkingDay(shopId: Int, workingDaysWithTime: [WorkingDayWithTime])
+  case editLocation(shopId: Int, cakeShopLocation: CakeShopLocation)
+  case editExternalLink(shopId: Int, externalLinks: [ExternalShopLink])
+  case editCakeImages(shopId: Int)
 }

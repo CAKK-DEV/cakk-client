@@ -7,6 +7,8 @@ let project = Project.framework(
     Project.SwiftUIUtil,
     Project.DesignSystem,
     Project.Router,
+
+    Project.DomainCakeShop, // TODO: #1 번 todo 삭제되면 같이 삭제
     
     Project.DomainUser,
     Project.DomainBusinessOwner,
