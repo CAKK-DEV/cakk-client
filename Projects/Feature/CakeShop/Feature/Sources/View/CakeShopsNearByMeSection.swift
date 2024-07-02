@@ -41,7 +41,19 @@ struct CakeShopsNearByMeSection: View {
     VStack(spacing: 12) {
       SectionHeaderLarge(title: "내 근처 케이크샵",
                          description: "내 근처 \(viewModel.locatedCakeShops.count)개의 케이크샵이 발견되었어요!")
+      .overlay {
+        HStack {
+          Image(systemName: "chevron.compact.right")
+            .font(.system(size: 20))
+            .padding(6)
+            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
+      }
       .padding(.horizontal, 16)
+      .onTapGesture {
+        router.navigate(to: PublicCakeShopDestination.map)
+      }
       
       Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locatedCakeShops) { shop in
         let coordinate = CLLocationCoordinate2D(latitude: shop.latitude, longitude: shop.longitude)
@@ -51,6 +63,7 @@ struct CakeShopsNearByMeSection: View {
             .size(32)
         }
       }
+      .disabled(true)
       .frame(height: 224)
       .blur(radius: (LocationService.shared.authorizationStatus != .authorizedWhenInUse
                      && LocationService.shared.authorizationStatus != .authorizedAlways) ? 20 : 0)
@@ -81,9 +94,6 @@ struct CakeShopsNearByMeSection: View {
       }
       .padding(.horizontal, 16)
       .animation(.smooth)
-      .onTapGesture {
-        router.navigate(to: PublicCakeShopDestination.map)
-      }
     }
     .onAppear {
       viewModel.fetchLocatedCakeShops()
