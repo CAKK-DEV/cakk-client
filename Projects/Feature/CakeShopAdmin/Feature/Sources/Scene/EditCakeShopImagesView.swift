@@ -16,7 +16,7 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-struct EditCakeShopImagesView: View {
+public struct EditCakeShopImagesView: View {
   
   // MARK: - Properties
   
@@ -26,7 +26,7 @@ struct EditCakeShopImagesView: View {
 
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeShopImagesViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -35,7 +35,7 @@ struct EditCakeShopImagesView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {
@@ -83,7 +83,7 @@ struct EditCakeShopImagesView: View {
                       }
                     }
                     .onTapGesture {
-                      router.navigate(to: CakeShopDetailDestination.editCakeImageDetail(imageId: cakeImage.id))
+                      router.navigate(to: EditCakeShopDestination.editCakeImageDetail(imageId: cakeImage.id))
                     }
                 }
                 
@@ -113,7 +113,7 @@ struct EditCakeShopImagesView: View {
   
   private func addNewImageButton() -> some View {
     Button {
-      router.navigate(to: CakeShopDetailDestination.newCakeImage(shopId: viewModel.shopId))
+      router.navigate(to: EditCakeShopDestination.newCakeImage(shopId: viewModel.shopId))
     } label: {
       VStack(spacing: 8) {
         Image(systemName: "plus")

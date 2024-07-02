@@ -122,12 +122,11 @@ public final class EditCakeImageDetailViewModel: ObservableObject {
   }
   
   public func addNewTag(tagString: String) {
-    if cakeImageDetail == nil { return }
     if tagString.isEmpty { return }
     
     let tagString = tagString.trimmingCharacters(in: .whitespacesAndNewlines)
-    if !cakeImageDetail!.tags.contains(tagString) {
-      cakeImageDetail!.tags.append(tagString)
+    if !tags.contains(tagString) {
+      tags.append(tagString)
     }
     
     self.tagString = ""
@@ -135,20 +134,18 @@ public final class EditCakeImageDetailViewModel: ObservableObject {
   
   public func deleteTag(tagString: String) {
     let tagString = tagString.trimmingCharacters(in: .whitespacesAndNewlines)
-    if let index = cakeImageDetail?.tags.firstIndex(of: tagString) {
-      cakeImageDetail?.tags.remove(at: index)
+    if let index = tags.firstIndex(of: tagString) {
+      tags.remove(at: index)
     }
   }
   
   public func toggleCategory(_ category: CakeCategory) {
-    if cakeImageDetail == nil { return }
-    
-    if cakeImageDetail!.categories.contains(category) {
-      if let index = cakeImageDetail!.categories.firstIndex(of: category) {
-        cakeImageDetail!.categories.remove(at: index)
+    if categories.contains(category) {
+      if let index = categories.firstIndex(of: category) {
+        categories.remove(at: index)
       }
     } else {
-      cakeImageDetail?.categories.append(category)
+      categories.append(category)
     }
   }
   
