@@ -31,7 +31,7 @@ public struct LikeCoordinator: View {
       .fullScreenCover(item: $router.presentedFullScreenSheet) { destination in
         if let _ = destination.destination as? UserSheetDestination {
           LoginStepCoordinator(onFinish: {
-            router.presentedSheet = nil
+            router.presentedFullScreenSheet = nil
           })
         }
       }
