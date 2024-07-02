@@ -82,6 +82,7 @@ public struct BusinessCertificationView: View {
           viewModel.uploadCertifications()
         }, isLoading: .constant(viewModel.verificationState == .loading))
         .padding(.horizontal, 28)
+        .padding(.bottom, 16)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
     }
@@ -239,7 +240,7 @@ public struct BusinessCertificationView: View {
         description: "심사 시 필요에 따라 비상 연락망을 통해서 연락드려요."
       )
       
-      CKTextField(text: $viewModel.contact, placeholder: "연락처를 입력해 주세요", supportsMultiline: true)
+      CKTextField(text: $viewModel.contact, placeholder: "연락처를 입력해 주세요")
     }
     .padding(.horizontal, 24)
   }
