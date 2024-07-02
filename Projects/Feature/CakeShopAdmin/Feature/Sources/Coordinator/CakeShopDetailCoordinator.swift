@@ -13,14 +13,12 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-enum CakeShopDetailDestination: Hashable {
+public enum CakeShopDetailDestination: Hashable {
   case editBasicInfo(cakeShopDetail: CakeShopDetail)
   case editExternalLink(shopId: Int, externalLinks: [ExternalShopLink])
   case editWorkingDay(shopId: Int, workingDaysWithTime: [WorkingDayWithTime])
   case editAddress(shopId: Int, cakeShopLocation: CakeShopLocation)
   case editCakeImages(shopId: Int)
-  case newCakeImage(shopId: Int)
-  case editCakeImageDetail(imageId: Int)
 }
 
 public struct CakeShopDetailCoordinator: View {
@@ -79,26 +77,7 @@ public struct CakeShopDetailCoordinator: View {
               let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
               return EditCakeShopImagesViewModel(shopId: shopId, cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase)
             }
-            EditCakeShopImagesView()
-            
-          case .newCakeImage(let shopId):
-            let _ = diContainer.register(NewCakeImageViewModel.self) { resolver in
-              let uploadCakeImageUseCase = resolver.resolve(UploadCakeImageUseCase.self)!
-              return NewCakeImageViewModel(shopId: shopId, uploadCakeImageUseCase: uploadCakeImageUseCase)
-            }
-            NewCakeImageView()
-            
-          case .editCakeImageDetail(let imageId):
-            let _ = diContainer.register(EditCakeImageDetailViewModel.self) { resolver in
-              let cakeImageDetailUseCase = resolver.resolve(CakeImageDetailUseCase.self)!
-              let editCakeImageUseCase = resolver.resolve(EditCakeImageUseCase.self)!
-              let deleteCakeImageUseCase = resolver.resolve(DeleteCakeImageUseCase.self)!
-              return EditCakeImageDetailViewModel(cakeImageId: imageId,
-                                            cakeImageDetailUseCase: cakeImageDetailUseCase,
-                                            editCakeImageUseCase: editCakeImageUseCase,
-                                            deleteCakeImageUseCase: deleteCakeImageUseCase)
-            }
-            EditCakeImageDetailView()
+            EditCakeImagesCoordinator()
           }
         }
     }

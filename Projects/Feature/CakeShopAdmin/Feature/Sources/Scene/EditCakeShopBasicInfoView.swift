@@ -16,7 +16,7 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-struct EditCakeShopBasicInfoView: View {
+public struct EditCakeShopBasicInfoView: View {
   
   // MARK: - Properties
   
@@ -38,7 +38,7 @@ struct EditCakeShopBasicInfoView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar {
         Button {

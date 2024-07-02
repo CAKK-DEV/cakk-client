@@ -15,7 +15,7 @@ import DomainCakeShop
 import DIContainer
 import Router
 
-struct EditCakeImageDetailView: View {
+public struct EditCakeImageDetailView: View {
   
   // MARK: - Properties
   
@@ -25,7 +25,7 @@ struct EditCakeImageDetailView: View {
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeImageDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
@@ -34,7 +34,7 @@ struct EditCakeImageDetailView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {
@@ -97,7 +97,7 @@ struct EditCakeImageDetailView: View {
             ScrollView(.horizontal, showsIndicators: false) {
               HStack(spacing: 12) {
                 ForEach(CakeCategory.allCases, id: \.self) { category in
-                  let isSelected = cakeImageDetail.categories.contains(category)
+                  let isSelected = viewModel.categories.contains(category)
                   Button {
                     viewModel.toggleCategory(category)
                   } label: {
@@ -137,31 +137,29 @@ struct EditCakeImageDetailView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
               HStack(spacing: 12) {
-                if let cakeImageDetail = viewModel.cakeImageDetail {
-                  ForEach(cakeImageDetail.tags, id: \.self) { tag in
-                    HStack(spacing: 8) {
-                      Text(tag)
-                        .font(.pretendard(weight: .medium))
-                        .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
-                        .padding(.leading, 16)
-                      
-                      Button {
-                        withAnimation(.snappy) {
-                          viewModel.deleteTag(tagString: tag)
-                        }
-                      } label: {
-                        Image(systemName: "xmark.circle.fill")
-                          .font(.system(size: 16))
-                          .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+                ForEach(viewModel.tags, id: \.self) { tag in
+                  HStack(spacing: 8) {
+                    Text(tag)
+                      .font(.pretendard(weight: .medium))
+                      .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
+                      .padding(.leading, 16)
+                    
+                    Button {
+                      withAnimation(.snappy) {
+                        viewModel.deleteTag(tagString: tag)
                       }
-                      .padding(.trailing, 12)
+                    } label: {
+                      Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
                     }
-                    .frame(height: 44)
-                    .contentShape(Rectangle())
-                    .background {
-                      RoundedRectangle(cornerRadius: 16)
-                        .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
-                    }
+                    .padding(.trailing, 12)
+                  }
+                  .frame(height: 44)
+                  .contentShape(Rectangle())
+                  .background {
+                    RoundedRectangle(cornerRadius: 16)
+                      .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
                   }
                 }
               }
