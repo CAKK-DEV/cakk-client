@@ -95,7 +95,7 @@ struct CakeShopsNearByMeSection: View {
       .padding(.horizontal, 16)
       .animation(.smooth)
     }
-    .onAppear {
+    .onFirstAppear {
       viewModel.fetchLocatedCakeShops()
     }
     .onChange(of: LocationService.shared.authorizationStatus) { permissionState in
