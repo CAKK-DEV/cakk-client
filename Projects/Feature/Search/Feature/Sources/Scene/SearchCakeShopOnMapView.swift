@@ -30,6 +30,8 @@ public struct SearchCakeShopOnMapView: View {
   
   @Namespace private var namespace
   @State private var isRefreshButtonShown = false
+  
+  @State private var dragOffset: CGSize = .zero
 
   
   // MARK: - Initializers
@@ -95,10 +97,13 @@ public struct SearchCakeShopOnMapView: View {
     .overlay {
       VStack(spacing: 0) {
         Spacer()
-        cakeShopBottomSheetView(viewModel.selectedCakeShop)
+        cakeShopView(viewModel.selectedCakeShop)
+          .padding(.horizontal, 14)
+          .padding(.bottom, 16)
           .frame(maxWidth: 420)
-          .offset(y: viewModel.selectedCakeShop == nil ? 500 : 0)
-          .animation(.smooth, value: viewModel.selectedCakeShop == nil)
+          .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
+          .offset(x: dragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : dragOffset.height)
+          .animation(.snappy, value: viewModel.selectedCakeShop == nil)
       }
     }
     .gesture(
@@ -107,7 +112,7 @@ public struct SearchCakeShopOnMapView: View {
           isRefreshButtonShown = true
         }
     )
-    .onAppear {
+    .onFirstAppear {
       viewModel.fetchLocatedCakeShops()
       
       if LocationService.shared.authorizationStatus == .notDetermined {
@@ -128,14 +133,14 @@ public struct SearchCakeShopOnMapView: View {
     }
   }
   
-  private func cakeShopBottomSheetView(_ cakeShop: LocatedCakeShop?) -> some View {
-    VStack(spacing: 0) {
+  private func cakeShopView(_ cakeShop: LocatedCakeShop?) -> some View {
+    VStack(spacing: 16) {
       HStack(alignment: .top, spacing: 12) {
         if let profileImageUrl = cakeShop?.profileImageUrl {
           KFImage(URL(string: profileImageUrl))
             .resizable()
-            .size(80)
             .aspectRatio(contentMode: .fill)
+            .size(72)
             .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(Circle())
             .overlay {
@@ -145,18 +150,18 @@ public struct SearchCakeShopOnMapView: View {
         } else {
           Circle()
             .fill(DesignSystemAsset.gray10.swiftUIColor)
-            .size(80)
+            .size(72)
         }
         
         VStack(spacing: 8) {
           Text(cakeShop?.name ?? "")
-            .font(.pretendard(size: 20, weight: .bold))
+            .font(.pretendard(size: 17, weight: .bold))
             .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
             .frame(maxWidth: .infinity, alignment: .leading)
             .lineLimit(1)
           
           Text(cakeShop?.bio ?? "")
-            .font(.pretendard(size: 13))
+            .font(.pretendard(size: 13, weight: .medium))
             .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
             .frame(maxWidth: .infinity, alignment: .leading)
             .multilineTextAlignment(.leading)
@@ -168,45 +173,58 @@ public struct SearchCakeShopOnMapView: View {
       HStack(spacing: 6) {
         ForEach(0..<4, id: \.self) { index in
           if let imageUrlString = cakeShop?.cakeImageUrls[safe: index] {
-            KFImage(URL(string: imageUrlString))
-              .resizable()
+            RoundedRectangle(cornerRadius: 16)
+              .overlay {
+                KFImage(URL(string: imageUrlString))
+                  .resizable()
+                  .scaledToFill()
+                  .frame(maxWidth: .infinity)
+                  .background(DesignSystemAsset.gray10.swiftUIColor)
+              }
               .aspectRatio(1/1, contentMode: .fit)
-              .frame(maxWidth: .infinity)
-              .background(DesignSystemAsset.gray10.swiftUIColor)
-              .clipShape(RoundedRectangle(cornerRadius: 12))
+              .clipShape(RoundedRectangle(cornerRadius: 16))
           } else {
             DesignSystemAsset.gray10.swiftUIColor
               .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 12))
+              .clipShape(RoundedRectangle(cornerRadius: 16))
+              .overlay {
+                DesignSystemAsset.cakePin.swiftUIImage
+                  .resizable()
+                  .scaledToFit()
+                  .frame(width: 44)
+                  .contentShape(Rectangle())
+              }
           }
         }
       }
       .frame(maxWidth: .infinity)
-      .padding(.top, 14)
-      
-      CKButtonRegular(title: "케이크 샵 방문", fixedSize: .infinity, action: {
-        if let shopId = cakeShop?.id {
-          router.navigate(to: PublicSearchDestination.shopDetail(shopId: shopId))
-        }
-      })
-      .padding(.top, 24)
     }
-    .padding(.vertical, 20)
-    .padding(.horizontal, 28)
+    .padding(16)
     .background(Color.white.ignoresSafeArea())
-    .roundedCorner(32, corners: [.topLeft, .topRight])
-    .background {
-      VStack {
-        Spacer()
-        Color.white
-          .ignoresSafeArea()
-          .frame(height: 100)
+    .clipShape(RoundedRectangle(cornerRadius: 30))
+    .shadow(color: .black.opacity(0.25), radius: 20, x: 0, y: 4)
+    .gesture(DragGesture()
+      .onChanged { gesture in
+        withAnimation(.smooth) {
+          dragOffset = gesture.translation
+        }
+      }
+      .onEnded { gesture in
+        withAnimation(.smooth) {
+          dragOffset = .zero
+        }
+      }
+    )
+    .onTapGesture {
+      if let shopId = cakeShop?.id {
+        router.navigate(to: PublicSearchDestination.shopDetail(shopId: shopId))
       }
     }
   }
   
   private func navigationBar() -> some View {
-    HStack {
+    ZStack {
+      // Refresh Button
       Button {
         viewModel.fetchLocatedCakeShops()
       } label: {
@@ -215,27 +233,30 @@ public struct SearchCakeShopOnMapView: View {
           Text(isLoading ? "검색중" : "이 지역 재검색")
             .font(.pretendard(size: 15, weight: .semiBold))
             .foregroundStyle(isLoading ? .white.opacity(0.65) : .white)
-            .animation(.smooth, value: isLoading)
           
           if isLoading {
             ProgressView()
               .tint(.white)
-              .animation(.smooth, value: isLoading)
           }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
+        .frame(height: 48)
         .background(DesignSystemAsset.black.swiftUIColor)
         .clipShape(Capsule())
+        .overlay {
+          Capsule()
+            .stroke(DesignSystemAsset.gray70.swiftUIColor, lineWidth: 2)
+        }
         .shadow(color: .black.opacity(0.25), radius: 20, y: 4)
       }
       .modifier(BouncyPressEffect())
-    }
-    .opacity(isRefreshButtonShown ? 1.0 : 0.0)
-    .scaleEffect(isRefreshButtonShown ? 1.0 : 0.0)
-    .animation(.smooth, value: isRefreshButtonShown)
-    .frame(maxWidth: .infinity)
-    .overlay {
+      .opacity(isRefreshButtonShown ? 1.0 : 0.0)
+      .offset(y: isRefreshButtonShown ? 0 : -60)
+      .animation(.snappy, value: isRefreshButtonShown)
+      .disabled(viewModel.locatedCakeShopsFetchingState == .loading)
+      
+      // Back Button
       HStack {
         Button {
           router.navigateBack()
@@ -245,19 +266,20 @@ public struct SearchCakeShopOnMapView: View {
               .fill(.white)
             
             Circle()
-              .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 1)
+              .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 1.5)
             
             Image(systemName: "arrow.left")
               .font(.system(size: 20, weight: .medium))
               .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
           }
-          .size(52)
+          .size(48)
           .shadow(color: .black.opacity(0.25), radius: 20, y: 4)
         }
-        
-        Spacer()
+        .modifier(BouncyPressEffect())
       }
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
+    .frame(maxWidth: .infinity)
   }
 }
 
