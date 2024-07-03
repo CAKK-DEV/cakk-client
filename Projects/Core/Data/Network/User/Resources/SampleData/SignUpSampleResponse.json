@@ -1,0 +1,9 @@
+{
+  "returnCode" : "1000",
+  "returnMessage" : "요청에 성공하셨습니다.",
+  "data" : {
+    "accessToken" : "ACCESS_TOKEN_PLACEHOLDER",
+    "refreshToken" : "REFRESH_TOKEN_PLACEHOLDER",
+    "grantType" : ""
+  }
+}

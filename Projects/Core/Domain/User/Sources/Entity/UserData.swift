@@ -7,13 +7,18 @@
 
 import Foundation
 
-public struct UserData {
+public struct UserData: Codable {
   public var nickname: String
   public var email: String
   public var birthday: Date
   public var gender: Gender
   
-  public init(nickname: String, email: String, birthday: Date, gender: Gender) {
+  public init(
+    nickname: String,
+    email: String,
+    birthday: Date,
+    gender: Gender)
+  {
     self.nickname = nickname
     self.email = email
     self.birthday = birthday

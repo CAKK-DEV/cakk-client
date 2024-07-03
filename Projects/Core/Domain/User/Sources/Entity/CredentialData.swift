@@ -12,7 +12,11 @@ public struct CredentialData {
   public var idToken: String
   public var deviceToken: String?
   
-  public init(loginProvider: LoginProvider, idToken: String, deviceToken: String? = nil) {
+  public init(
+    loginProvider: LoginProvider,
+    idToken: String,
+    deviceToken: String? = nil)
+  {
     self.loginProvider = loginProvider
     self.idToken = idToken
     self.deviceToken = deviceToken

@@ -19,7 +19,10 @@ public struct StepNavigationView: View {
   
   // MARK: - Initializers
   
-  public init(title: String, onTapBackButton: (() -> Void)? = nil) {
+  public init(
+    title: String,
+    onTapBackButton: (() -> Void)? = nil)
+  {
     self.title = title
     self.onTapBackButton = onTapBackButton
   }

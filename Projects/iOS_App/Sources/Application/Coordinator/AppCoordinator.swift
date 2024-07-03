@@ -8,9 +8,12 @@
 import SwiftUI
 
 import FeatureOnboarding
-import FeatureLogin
+import FeatureUser
+import FeatureCakeShop
+
 import Router
 import DesignSystem
+
 import DIContainer
 
 // MARK: - Destinations
@@ -44,7 +47,6 @@ public enum RootDestination: Identifiable {
 }
 
 private enum Destination: Hashable {
-  case login
 }
 
 
@@ -54,17 +56,10 @@ struct AppCoordinator: View {
   
   // MARK: - Properties
   
-  private let diConatiner: DIContainerProtocol
   @StateObject private var router = Router()
-  
   @State private var root: RootDestination = .home
   
-  
-  // MARK: - Initializers
-  
-  init(diContainer: DIContainerProtocol) {
-    self.diConatiner = diContainer
-  }
+  @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
   
   
   // MARK: - Views
@@ -75,28 +70,28 @@ struct AppCoordinator: View {
       case .onboarding:
         OnboardingStepCoordinator()
       case .login:
-        LoginStepCoordinator(diContainer: diConatiner)
+        LoginStepCoordinator() {
+          router.replace(with: RootDestination.home)
+        }
       case .home:
-        Text("Home")
-      }
-    }
-    .navigationDestination(for: Destination.self) { destination in
-      switch destination {
-      case Destination.login:
-        LoginStepCoordinator(diContainer: diConatiner)
+        AppTabView()
       }
     }
     .fullScreenCover(item: $router.presentedSheet, content: { destination in
       if let destination = destination.destination as? SheetDestination {
         switch destination {
         case .login:
-          LoginStepCoordinator(diContainer: diConatiner)
+          LoginStepCoordinator(onFinish: {
+            router.presentedSheet = nil
+          })
         }
       }
     })
     .environmentObject(router)
     .onAppear {
-      router.replace(with: RootDestination.onboarding)
+      if hasSeenOnboarding == false {
+        router.replace(with: RootDestination.onboarding)
+      }
     }
     .onChange(of: router.root) { newRoot in
       if let newRoot = newRoot?.destination as? RootDestination {
@@ -107,13 +102,20 @@ struct AppCoordinator: View {
         switch newRoot {
         case .login:
           self.root = RootDestination.login
+          
+          /// 처음 Login화면에 진입했다는 것은 온보딩을 모두 봤다는 뜻으로 해석할 수 있습니다.
+          /// 따라서 root가 Login으로 변경되는 시점에 hasSeenOnboarding 값을 true로 업데이트 합니다.
+          hasSeenOnboarding = true
         }
       }
       
-      if let newRoot = newRoot?.destination as? LoginPublicDestination {
+      if let newRoot = newRoot?.destination as? PublicUserDestination {
         switch newRoot {
         case .home:
           self.root = RootDestination.home
+          
+        default:
+          break
         }
       }
     }

@@ -17,12 +17,12 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
   
   // MARK: - Properties
   
-  let provider: MoyaProvider<SocialLoginAPI>
+  let provider: MoyaProvider<UserAPI>
   
   
   // MARK: - Initializers
   
-  public init(provider: MoyaProvider<SocialLoginAPI>) {
+  public init(provider: MoyaProvider<UserAPI>) {
     self.provider = provider
   }
   
@@ -34,20 +34,22 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
-          return response.data
-        case 400, 500:
-          let errorResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw NetworkError.customError(for: errorResponse.returnCode, message: errorResponse.returnMessage)
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          guard let data = decodedResponse.data else {
+            throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          return data.toDomain()
+          
         default:
-          throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
-      .decode(type: DomainUser.SocialLoginResponse.self, decoder: JSONDecoder())
       .mapError { error in
-        if let networkError = error as? NetworkError {
+        if let networkError = error as? CAKKUserNetworkError {
           return networkError.toSocialLoginSignInError()
         } else {
-          return NetworkError.error(for: error).toSocialLoginSignInError()
+          return CAKKUserNetworkError.error(for: error).toSocialLoginSignInError()
         }
       }
       .eraseToAnyPublisher()
@@ -58,20 +60,22 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
-          return response.data
-        case 400, 500:
-          let errorResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
-          throw NetworkError.customError(for: errorResponse.returnCode, message: errorResponse.returnMessage)
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          guard let data = decodedResponse.data else {
+            throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
+          }
+          return data.toDomain()
+          
         default:
-          throw NetworkError.unexpected(NSError(domain: "", code: response.statusCode, userInfo: nil))
+          let decodedResponse = try JSONDecoder().decode(SocialLoginResponseDTO.self, from: response.data)
+          throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
         }
       }
-      .decode(type: DomainUser.SocialLoginResponse.self, decoder: JSONDecoder())
       .mapError { error in
-        if let networkError = error as? NetworkError {
+        if let networkError = error as? CAKKUserNetworkError {
           return networkError.toSocialLoginSignUpError()
         } else {
-          return NetworkError.error(for: error).toSocialLoginSignUpError()
+          return CAKKUserNetworkError.error(for: error).toSocialLoginSignUpError()
         }
       }
       .eraseToAnyPublisher()

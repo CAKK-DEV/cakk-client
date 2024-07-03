@@ -34,7 +34,11 @@ public final class LoadingManager {
   }
   
   private func showLoadingIndicator() {
-    guard loadingView == nil, let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else { return }
+    if loadingView != nil { return }
+    guard let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+          let window = windowScene.windows.first(where: { $0.isKeyWindow }) else {
+      return
+    }
     
     let loadingView = LoadingView(frame: .zero)
     

@@ -1,0 +1,21 @@
+{
+  "returnCode": "1000",
+  "returnMessage": "요청에 성공하셨습니다.",
+  "data": {
+    "cakeImages": [
+      { "cakeShopId": 1, "cakeId": 21, "cakeImageUrl": "https://images.unsplash.com/photo-1557308536-ee471ef2c390?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDB8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 22, "cakeImageUrl": "https://images.unsplash.com/photo-1616690710400-a16d146927c5?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDN8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 23, "cakeImageUrl": "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDR8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 24, "cakeImageUrl": "https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDd8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 25, "cakeImageUrl": "https://images.unsplash.com/photo-1604413191066-4dd20bedf486?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDZ8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 26, "cakeImageUrl": "https://images.unsplash.com/photo-1566121933407-3c7ccdd26763?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTR8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 27, "cakeImageUrl": "https://images.unsplash.com/photo-1615735487485-e52b9af610c1?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTV8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 28, "cakeImageUrl": "https://images.unsplash.com/photo-1612809075925-230725151da2?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NjR8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 29, "cakeImageUrl": "https://images.unsplash.com/photo-1618426703623-c1b335803e07?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Njh8fGNha2V8ZW58MHx8MHx8fDA%3D" },
+      { "cakeShopId": 1, "cakeId": 30, "cakeImageUrl": "https://images.unsplash.com/photo-1557925923-33b27f891f88?w=700&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzF8fGNha2V8ZW58MHx8MHx8fDA%3D" }
+    ],
+    "lastCakeId": 20,
+    "size": 10
+  }
+}
+

@@ -17,7 +17,15 @@ public struct AuthData {
   public var birthday: Date
   public var gender: Gender
   
-  public init(provider: LoginProvider, idToken: String, deviceToken: String? = nil, nickname: String, email: String, birthday: Date, gender: Gender) {
+  public init(
+    provider: LoginProvider,
+    idToken: String,
+    deviceToken: String? = nil,
+    nickname: String,
+    email: String,
+    birthday: Date,
+    gender: Gender)
+  {
     self.provider = provider
     self.idToken = idToken
     self.deviceToken = deviceToken

@@ -11,12 +11,16 @@ let packageSettings = PackageSettings(
     "SnapKit": .framework,
     "Haptico": .framework,
     "Moya": .framework,
-    "Swinject": .framework
+    "CombineMoya": .framework,
+    "Swinject": .framework,
+    "Kingfisher": .framework,
+    "SDWebImageWebPCoder": .framework
   ],
   baseSettings: .settings(
     configurations: [
-      .debug(name: .debug),
-      .release(name: .release)
+      .build(.stub),
+      .build(.prod),
+      .build(.release)
     ]
   )
 )
@@ -30,6 +34,8 @@ let package = Package(
     .package(url: "https://github.com/iSapozhnik/Haptico", from: "1.0.1"),
     .package(url: "https://github.com/Moya/Moya", from: "15.0.3"),
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.22.2"),
-    .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8")
+    .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8"),
+    .package(url: "https://github.com/onevcat/Kingfisher", from: "7.12.0"),
+    .package(url: "https://github.com/SDWebImage/SDWebImageWebPCoder.git", from: "0.14.6")
   ]
 )

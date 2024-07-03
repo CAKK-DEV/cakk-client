@@ -17,8 +17,10 @@ let project = Project.framework(
     ]
   ],
   dependencies: [
-    .external(name: "Lottie"),
-    .external(name: "SnapKit")
+    External.lottie,
+    External.snapKit,
+    External.kingfisher,
+    Project.SwiftUIUtil
   ],
   supportsResources: true
 )

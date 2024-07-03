@@ -8,14 +8,15 @@
 
 import Foundation
 
-public struct SocialLoginResponse: Decodable {
-  public let returnCode: String
-  public let returnMessage: String
-  public let data: Data?
+public struct SocialLoginResponse {
+  public let accessToken: String
+  public let refreshToken: String
   
-  public struct Data: Decodable {
-    public let accessToken: String
-    public let refreshToken: String
-    public let grantType: String
+  public init(
+    accessToken: String,
+    refreshToken: String)
+  {
+    self.accessToken = accessToken
+    self.refreshToken = refreshToken
   }
 }

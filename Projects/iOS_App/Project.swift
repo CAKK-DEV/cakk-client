@@ -4,6 +4,8 @@ import ProjectDescriptionHelpers
 let project = Project.app(
   name: "CAKK",
   infoPlist: [
+    "CFBundleShortVersionString": "2.0.0",
+    "CFBundleVersion": "1",
     "UILaunchStoryboardName": "LaunchScreen",
     "BASE_URL": "$(BASE_URL)",
     "GIDClientID": "$(GIDClientID)",
@@ -21,13 +23,31 @@ let project = Project.app(
         "CFBundleTypeRole": "Editor",
         "CFBundleURLSchemes": ["$(KAKAO_URL_SCHEME)"]
       ]
-    ]
+    ],
+    "NSPhotoLibraryUsageDescription": "프로필 사진 선택을 위해 사진첩 접근 권한이 필요합니다.",
+    "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": "YES",
+    "NSLocationWhenInUseUsageDescription": "보다 정확한 검색 결과를 위해서 위치 권한이 필요합니다."
   ],
   dependencies: [
-    .project(target: "DIContainer", path: "../Shared/DIContainer"),
-    .project(target: "FeatureLogin", path: "../Feature/Login"),
-    .project(target: "FeatureOnboarding", path: "../Feature/Onboarding"),
-    .project(target: "OAuthToken", path: "../Core/Data/Token/OAuthToken")
+    Project.FeatureUser,
+    Project.NetworkUser,
+
+    Project.FeatureSearch,
+    Project.NetworkSearch,
+    Project.UserDefaultsSearchHistory,
+
+    Project.FeatureCakeShop,
+    Project.NetworkCakeShop,
+
+    Project.DomainBusinessOwner,
+    Project.NetworkBusinessOwner,
+
+    Project.FeatureCakeShopAdmin,
+
+    Project.FeatureOnboarding,
+    Project.KeyChainOAuthToken,
+    Project.UserSession,
+    Project.DIContainer
   ],
   entitlements: "App.entitlements"
 )

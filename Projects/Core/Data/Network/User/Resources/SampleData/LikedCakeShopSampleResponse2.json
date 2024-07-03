@@ -1,0 +1,87 @@
+{
+  "returnCode": "1000",
+  "returnMessage": "요청에 성공하셨습니다.",
+  "data": {
+    "cakeShops": [
+      {
+        "cakeShopHeartId": 9,
+        "cakeShopId": 9,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1559622210-72d2d35fbd97?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "디저트의 천국",
+        "cakeShopBio": "다양한 맛과 디자인의 케이크를 제공합니다.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1559622210-72d2d35fbd97?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D"
+        ],
+        "operationDays": ["MON", "TUE", "WED", "THU", "FRI"]
+      },
+      {
+        "cakeShopHeartId": 10,
+        "cakeShopId": 10,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1587517450096-6ca6746a7b96?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "스위트 드림 케이크샵",
+        "cakeShopBio": "달콤한 꿈을 꾸게 해주는 케이크 전문점.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1587517450096-6ca6746a7b96?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D"
+        ],
+        "operationDays": ["MON", "TUE", "WED", "THU", "FRI", "SAT"]
+      },
+      {
+        "cakeShopHeartId": 11,
+        "cakeShopId": 11,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1599785209792-14a0b4a3d6a8?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "프리미엄 케이크",
+        "cakeShopBio": "최고급 재료로 만든 프리미엄 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1599785209792-14a0b4a3d6a8?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": ["MON", "WED", "FRI", "SAT"]
+      },
+      {
+        "cakeShopHeartId": 12,
+        "cakeShopId": 12,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1586784387444-1062f4c48d6c?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D",
+        "cakeShopName": "아름다운 케이크",
+        "cakeShopBio": "예쁜 디자인과 맛있는 케이크를 만드는 케이크샵.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1586784387444-1062f4c48d6c?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2FrZXxlbnwwfHwwfHx8MA%3D%3D"
+        ],
+        "operationDays": ["MON", "TUE", "THU", "FRI"]
+      },
+      {
+        "cakeShopHeartId": 13,
+        "cakeShopId": 13,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1519869325930-b4633ce974a2?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "파티 케이크샵",
+        "cakeShopBio": "모든 파티에 어울리는 특별한 케이크를 만듭니다.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1519869325930-b4633ce974a2?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": ["MON", "WED", "FRI"]
+      },
+      {
+        "cakeShopHeartId": 14,
+        "cakeShopId": 14,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1519308218905-39497d0bdb7c?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzZ8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "클래식 베이커리",
+        "cakeShopBio": "전통적인 방식으로 만든 클래식 케이크.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1519308218905-39497d0bdb7c?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzZ8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": ["TUE", "THU", "SAT"]
+      },
+      {
+        "cakeShopHeartId": 15,
+        "cakeShopId": 15,
+        "thumbnailUrl": "https://images.unsplash.com/photo-1519869325930-b4633ce974a2?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fGNha2V8ZW58MHx8MHx8fDA%3D",
+        "cakeShopName": "디자인 케이크",
+        "cakeShopBio": "독특한 디자인의 케이크를 제공합니다.",
+        "cakeImageUrls": [
+          "https://images.unsplash.com/photo-1519869325930-b4633ce974a2?w=1400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzl8fGNha2V8ZW58MHx8MHx8fDA%3D"
+        ],
+        "operationDays": ["MON", "WED", "FRI"]
+      }
+    ],
+    "lastCakeShopHeartId": 15,
+    "size": 7
+  }
+}
