@@ -255,6 +255,7 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
