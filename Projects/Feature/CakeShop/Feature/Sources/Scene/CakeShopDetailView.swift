@@ -89,17 +89,20 @@ public struct CakeShopDetailView: View {
         Spacer()
         
         if let shopDetail = viewModel.cakeShopDetail {
-          ZStack {
-            bottomPromptButton(shopDetail: shopDetail)
-              .offset(y: selectedDetailSection == .order ? 0 : 200)
-              .animation(.smooth, value: selectedDetailSection)
-              .opacity(viewModel.isOwned ? 0 : 1)
-          }
-          .background {
-            bottomGeneralButtons(shopDetail: shopDetail)
-              .offset(y: selectedDetailSection != .order ? 0 : 200)
-              .animation(.snappy, value: selectedDetailSection)
-          }
+//          ZStack {
+//            bottomPromptButton(shopDetail: shopDetail)
+//              .offset(y: selectedDetailSection == .order ? 0 : 200)
+//              .animation(.smooth, value: selectedDetailSection)
+//              .opacity(viewModel.isOwned ? 0 : 1)
+//          }
+//          .background {
+//            bottomGeneralButtons(shopDetail: shopDetail)
+//              .offset(y: selectedDetailSection != .order ? 0 : 200)
+//              .animation(.snappy, value: selectedDetailSection)
+//          }
+          bottomGeneralButtons(shopDetail: shopDetail)
+            .offset(y: selectedDetailSection != .order ? 0 : 200)
+            .animation(.snappy, value: selectedDetailSection)
         }
       }
     }
