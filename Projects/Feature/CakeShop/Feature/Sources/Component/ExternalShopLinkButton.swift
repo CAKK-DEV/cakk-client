@@ -68,6 +68,9 @@ struct ExternalShopLinkButton: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   VStack {
     ForEach(ExternalShopLink.LinkType.allCases, id: \.self) { linkType in

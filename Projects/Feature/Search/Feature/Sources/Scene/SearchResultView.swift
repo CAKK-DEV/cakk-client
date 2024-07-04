@@ -210,10 +210,13 @@ private struct PreviewContent: View {
   }
 }
 
-#Preview {
+
+// MARK: - Preview
+
+#Preview("Success") {
   PreviewContent(scenario: .success)
 }
 
-#Preview {
+#Preview("Failure") {
   PreviewContent(scenario: .failure)
 }

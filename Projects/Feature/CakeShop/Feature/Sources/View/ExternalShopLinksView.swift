@@ -45,6 +45,9 @@ struct ExternalShopLinksView: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   ExternalShopLinksView(externalShopLinks: [
     .init(linkType: .instagram, linkPath: "https://www.google.com"),

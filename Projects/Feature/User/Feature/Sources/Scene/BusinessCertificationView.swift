@@ -302,9 +302,7 @@ public struct BusinessCertificationView: View {
 
 import PreviewSupportUser
 
-// Success scenario
-
-#Preview {
+#Preview("Success") {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
     let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase()
@@ -314,10 +312,7 @@ import PreviewSupportUser
   return BusinessCertificationView()
 }
 
-
-// Failure scenario
-
-#Preview {
+#Preview("Failure") {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
     let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase(scenario: .failure)
@@ -327,10 +322,7 @@ import PreviewSupportUser
   return BusinessCertificationView()
 }
 
-
-// Server error scenario
-
-#Preview {
+#Preview("Server Error") {
   let diContainer = DIContainer.shared.container
   diContainer.register(BusinessCertificationViewModel.self) { _ in
     let cakeShopOwnerVerificationUseCase = MockCakeShopOwnerVerificationUseCase(scenario: .serverError)
