@@ -210,7 +210,7 @@ struct CakeShopContentsSection: View {
 import PreviewSupportCakeShop
 import PreviewSupportUser
 
-#Preview {
+#Preview("Success") {
   struct PreviewContent: View {
     
     @State private var selectedSection = CakeShopContentsSection.DetailSection.detail
@@ -249,7 +249,7 @@ import PreviewSupportUser
 }
 
 
-#Preview {
+#Preview("Failure") {
   struct PreviewContent: View {
     
     @State private var selectedSection = CakeShopContentsSection.DetailSection.detail

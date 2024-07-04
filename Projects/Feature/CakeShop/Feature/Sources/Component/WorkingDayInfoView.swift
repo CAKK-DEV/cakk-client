@@ -39,6 +39,9 @@ struct WorkingDayInfoView: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   WorkingDayInfoView(workingDays: [.tue, .wed, .fri, .sat, .sun])
 }

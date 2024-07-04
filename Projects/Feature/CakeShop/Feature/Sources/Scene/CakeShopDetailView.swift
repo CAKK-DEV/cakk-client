@@ -297,7 +297,7 @@ public struct CakeShopDetailView: View {
 import PreviewSupportCakeShop
 import PreviewSupportUser
 
-#Preview {
+#Preview("Success") {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
@@ -322,7 +322,7 @@ import PreviewSupportUser
 
 // NoExists, Failure Scenario
 
-#Preview {
+#Preview("Failure") {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .noExists)

@@ -96,8 +96,7 @@ struct CakeCategoryDetailView: View {
 
 import PreviewSupportCakeShop
 
-// Success scenario
-#Preview {
+#Preview("Success") {
   let diContainer = DIContainer.shared.container
   
   diContainer.register(CategoryDetailViewModel.self) { resolver in
@@ -111,7 +110,7 @@ import PreviewSupportCakeShop
 
 // Failure scenario
 
-#Preview {
+#Preview("Failure") {
   let diContainer = DIContainer.shared.container
   
   diContainer.register(CategoryDetailViewModel.self) { resolver in

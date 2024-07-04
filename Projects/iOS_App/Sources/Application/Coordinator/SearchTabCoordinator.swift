@@ -127,6 +127,9 @@ struct SearchTabCoordinator: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   SearchTabCoordinator()
 }
