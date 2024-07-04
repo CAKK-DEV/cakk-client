@@ -32,7 +32,7 @@ struct CakeShopContentsSection: View {
   enum DetailSection: String, CaseIterable {
     case images = "사진"
     case order = "주문하기"
-    case detail = "가게 상세 정보"
+    case detail = "상세정보"
     
     var item: CKSegmentItem {
       CKSegmentItem(title: rawValue)
@@ -121,7 +121,7 @@ struct CakeShopContentsSection: View {
           ProgressView()
         }
       }
-      .padding(.vertical, 20)
+      .padding(.vertical, 12)
       .padding(.horizontal, 12)
       .onFirstAppear {
         viewModel.fetchCakeImages()
@@ -151,9 +151,9 @@ struct CakeShopContentsSection: View {
         }
       
     case .success:
-      VStack(spacing: 28) {
-        if let additionalInfo = viewModel.additionalInfo {
-          VStack(spacing: 16) {
+      if let additionalInfo = viewModel.additionalInfo {
+        VStack(spacing: 28) {
+          VStack {
             SectionHeaderCompact(title: "가게 영업 시간", icon: DesignSystemAsset.clock.swiftUIImage)
               .padding(.horizontal, 28)
               .padding(.top, 20)
@@ -181,23 +181,23 @@ struct CakeShopContentsSection: View {
               }
             }
             .padding(.horizontal, 28)
-            
-            VStack(spacing: 0) {
-              SectionHeaderCompact(title: "가게 위치", icon: DesignSystemAsset.marker.swiftUIImage)
-              
-              Text(additionalInfo.location.address)
-                .font(.pretendard())
-                .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .multilineTextAlignment(.leading)
-              
-              ShopLocationMapView(shopName: viewModel.cakeShopDetail?.shopName ?? "",
-                                  latitude: additionalInfo.location.latitude,
-                                  longitude: additionalInfo.location.longitude)
-              .padding(.top, 12)
-            }
-            .padding(.horizontal, 28)
           }
+          
+          VStack(spacing: 4) {
+            SectionHeaderCompact(title: "가게 위치", icon: DesignSystemAsset.marker.swiftUIImage)
+            
+            Text(additionalInfo.location.address)
+              .font(.pretendard())
+              .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .multilineTextAlignment(.leading)
+            
+            ShopLocationMapView(shopName: viewModel.cakeShopDetail?.shopName ?? "",
+                                latitude: additionalInfo.location.latitude,
+                                longitude: additionalInfo.location.longitude)
+            .padding(.top, 12)
+          }
+          .padding(.horizontal, 28)
         }
       }
     }
