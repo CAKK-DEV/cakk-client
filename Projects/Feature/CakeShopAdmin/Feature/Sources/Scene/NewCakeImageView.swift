@@ -213,6 +213,7 @@ public struct NewCakeImageView: View {
     }
     .sheet(isPresented: $isPhotoPickerShown) {
       PhotoPicker(selectedImage: $viewModel.cakeImage)
+        .ignoresSafeArea()
     }
     .onReceive(viewModel.$imageUploadingState, perform: { uploadState in
       switch uploadState {
