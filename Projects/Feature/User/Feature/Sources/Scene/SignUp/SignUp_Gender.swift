@@ -15,9 +15,9 @@ struct SignUp_Gender: View {
   // MARK: - Properties
   
   @EnvironmentObject private var stepRouter: StepRouter
+  @EnvironmentObject private var viewModel: SocialLoginViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
-  @State private var selectedGender: Gender?
   
   
   // MARK: - Initializers
@@ -46,37 +46,37 @@ struct SignUp_Gender: View {
           .blur(radius: isDisappearing ? 100 : 0)
         
         HStack(spacing: 24) {
-          genderSelectorItem(gender: .female, isSelected: selectedGender == .female)
+          genderSelectorItem(gender: .female, isSelected: viewModel.userData.gender == .female)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
             .offset(x: isShowing ? 0 : 40)
             .animation(.spring.delay(0.3), value: isShowing)
             // isDisappearing animation
-            .offset(x: selectedGender == .female && isDisappearing ? 100 : 0)
-            .offset(y: selectedGender == .female && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+            .offset(x: viewModel.userData.gender == .female && isDisappearing ? 100 : 0)
+            .offset(y: viewModel.userData.gender == .female && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
           
-          genderSelectorItem(gender: .male, isSelected: selectedGender == .male)
+          genderSelectorItem(gender: .male, isSelected: viewModel.userData.gender == .male)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
             .animation(.spring.delay(0.3), value: isShowing)
             // isDisappearing animation
-            .offset(y: selectedGender == .male && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+            .offset(y: viewModel.userData.gender == .male && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
           
-          genderSelectorItem(gender: .unknown, isSelected: selectedGender == .unknown)
+          genderSelectorItem(gender: .unknown, isSelected: viewModel.userData.gender == .unknown)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
             .blur(radius: isShowing ? 0 : 30)
             .offset(x: isShowing ? 0 : -40)
             .animation(.spring.delay(0.3), value: isShowing)
             // isDisappearing animation
-            .offset(x: selectedGender == .unknown && isDisappearing ? -100 : 0)
-            .offset(y: selectedGender == .unknown && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+            .offset(x: viewModel.userData.gender == .unknown && isDisappearing ? -100 : 0)
+            .offset(y: viewModel.userData.gender == .unknown && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
         }
@@ -101,9 +101,6 @@ struct SignUp_Gender: View {
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
       .padding(28)
-      .opacity(selectedGender == nil ? 0.3 : 1.0)
-      .disabled(selectedGender == nil)
-      .animation(.easeInOut, value: selectedGender == nil)
     }
     .overlay {
       VStack(spacing: 0) {
@@ -127,11 +124,13 @@ struct SignUp_Gender: View {
   
   private func genderSelectorItem(gender: Gender, isSelected: Bool) -> some View {
     Button {
-      selectedGender = gender
+//      selectedGender = gender
+      /// 뷰모델에도 gender를 업데이트 해줍니다.
+      viewModel.userData.gender = gender
     } label: {
       VStack(spacing: 12) {
         RoundedRectangle(cornerRadius: 14)
-          .fill(selectedGender == gender ? .white : .white.opacity(0.4))
+          .fill(viewModel.userData.gender == gender ? .white : .white.opacity(0.4))
           .size(60)
           .overlay {
             Text(gender.emoji)
@@ -169,6 +168,9 @@ private struct PreviewContent: View {
       .environmentObject(viewModel)
   }
 }
+
+
+// MARK: - Preview
 
 #Preview {
   ZStack {

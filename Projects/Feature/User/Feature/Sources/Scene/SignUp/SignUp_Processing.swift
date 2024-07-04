@@ -111,6 +111,9 @@ private struct PreviewContent: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   ZStack {
     Color.gray.ignoresSafeArea()

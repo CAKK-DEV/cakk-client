@@ -41,36 +41,43 @@ public struct CKSegmentedControl: View {
   // MARK: - Views
   
   public var body: some View {
-    HStack(spacing: 20) {
+    HStack(spacing: 40) {
       ForEach(items, id: \.self) { item in
-        Text(item.title)
-          .font(.pretendard(size: 15, weight: .bold))
-          .foregroundStyle(selection == item
-                           ? DesignSystemAsset.black.swiftUIColor
-                           : DesignSystemAsset.gray50.swiftUIColor)
-          .frame(maxWidth: .infinity)
-          .frame(height: sizeOption == .regular ? 60 : 40)
-          .contentShape(Rectangle())
-          .overlay {
-            if selection == item {
-              VStack(spacing: 0) {
-                Spacer()
-                Capsule()
-                  .fill(DesignSystemAsset.black.swiftUIColor)
-                  .frame(width: 84, height: 2)
-                  .matchedGeometryEffect(id: "indicator", in: namespace)
+        ZStack {
+          Text(item.title)
+            .font(.pretendard(size: 15, weight: .bold))
+            .foregroundStyle(selection == item
+                             ? DesignSystemAsset.black.swiftUIColor
+                             : DesignSystemAsset.gray50.swiftUIColor)
+            .frame(maxWidth: .infinity)
+            .frame(height: sizeOption == .regular ? 60 : 40)
+            .contentShape(Rectangle())
+            .fixedSize()
+            .overlay {
+              if selection == item {
+                VStack(spacing: 0) {
+                  Spacer()
+                  Capsule()
+                    .fill(DesignSystemAsset.black.swiftUIColor)
+                    .frame(height: 3)
+                    .matchedGeometryEffect(id: "indicator", in: namespace)
+                }
+                .frame(maxWidth: .infinity)
               }
             }
+        }
+        .frame(maxWidth: .infinity)
+        .contentShape(Rectangle())
+        .onTapGesture {
+          withAnimation(.snappy(duration: 0.34)) {
+            selection = item
           }
-          .onTapGesture {
-            withAnimation(.snappy(duration: 0.34)) {
-              selection = item
-            }
-          }
+        }
       }
     }
-    .padding(.horizontal, 28)
+    .padding(.horizontal, 60)
     .background {
+      // divider
       VStack(spacing: 0) {
         Spacer()
         Rectangle()

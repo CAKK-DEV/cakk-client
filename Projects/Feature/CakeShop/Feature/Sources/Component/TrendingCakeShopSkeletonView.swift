@@ -81,6 +81,9 @@ struct TrendingCakeShopSkeletonView: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   TrendingCakeShopSkeletonView()
 }

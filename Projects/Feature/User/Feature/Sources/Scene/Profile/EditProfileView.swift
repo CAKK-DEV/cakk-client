@@ -371,9 +371,7 @@ struct EditProfileView: View {
 
 import PreviewSupportUser
 
-// 프로필 업데이트 성공 시나리오
-
-#Preview {
+#Preview("Success") {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
@@ -385,10 +383,7 @@ import PreviewSupportUser
   return EditProfileView()
 }
 
-
-// 프로필 업데이트 실패 시나리오
-
-#Preview {
+#Preview("Failure") {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase(scenario: .failure)

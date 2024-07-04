@@ -35,6 +35,9 @@ struct UploadNewCakeShopView: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   UploadNewCakeShopView()
 }

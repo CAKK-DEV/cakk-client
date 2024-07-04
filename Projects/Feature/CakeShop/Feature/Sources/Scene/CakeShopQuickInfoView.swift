@@ -91,6 +91,7 @@ public struct CakeShopQuickInfoView: View {
       HStack(spacing: 8) {
         Button {
           viewModel.toggleLike()
+          UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
           RoundedRectangle(cornerRadius: 20)
             .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)

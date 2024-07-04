@@ -81,6 +81,9 @@ struct UploadMultipleCakeShopView: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   NavigationSplitView {
     EmptyView()

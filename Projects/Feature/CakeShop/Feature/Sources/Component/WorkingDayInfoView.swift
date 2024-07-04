@@ -30,14 +30,17 @@ struct WorkingDayInfoView: View {
     HStack(spacing: 6) {
       ForEach(WorkingDay.allCases, id: \.self) { workingDay in
         Text(workingDay.displayName)
-          .font(.pretendard(size: 15, weight: .medium))
+          .font(.pretendard(size: 13, weight: .medium))
           .foregroundStyle(workingDays.contains(workingDay)
-                           ? Color(hex: "FF5CBE")
+                           ? DesignSystemAsset.brandcolor2.swiftUIColor
                            : DesignSystemAsset.gray40.swiftUIColor )
       }
     }
   }
 }
+
+
+// MARK: - Preview
 
 #Preview {
   WorkingDayInfoView(workingDays: [.tue, .wed, .fri, .sat, .sun])

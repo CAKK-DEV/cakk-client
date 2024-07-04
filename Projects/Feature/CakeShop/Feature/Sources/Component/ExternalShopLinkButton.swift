@@ -41,11 +41,11 @@ struct ExternalShopLinkButton: View {
       Link(destination: url, label: {
         Text(linkType.existsDisplayName)
           .font(.pretendard(size: 13, weight: .medium))
-          .padding(.horizontal, 20)
-          .frame(height: 30)
+          .padding(.horizontal, 22)
+          .frame(height: 36)
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
           .background(DesignSystemAsset.gray10.swiftUIColor)
-          .clipShape(RoundedRectangle(cornerRadius: 12))
+          .clipShape(RoundedRectangle(cornerRadius: 14))
       })
       .modifier(BouncyPressEffect())
     } else {
@@ -54,11 +54,11 @@ struct ExternalShopLinkButton: View {
       } label: {
         Text(linkType.noExistsDisplayName)
           .font(.pretendard(size: 13, weight: .medium))
-          .padding(.horizontal, 20)
-          .frame(height: 30)
+          .padding(.horizontal, 22)
+          .frame(height: 36)
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
           .overlay {
-            RoundedRectangle(cornerRadius: 12)
+            RoundedRectangle(cornerRadius: 14)
               .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
               .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
           }
@@ -67,6 +67,9 @@ struct ExternalShopLinkButton: View {
     }
   }
 }
+
+
+// MARK: - Preview
 
 #Preview {
   VStack {
