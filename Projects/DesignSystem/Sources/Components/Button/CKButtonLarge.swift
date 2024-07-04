@@ -51,9 +51,11 @@ public struct CKButtonLarge: View {
           RoundedRectangle(cornerRadius: 20)
             .fill(DesignSystemAsset.black.swiftUIColor)
             .frame(minWidth: 40)
-            .frame(maxWidth: fixedSize)
+            .frame(width: fixedSize == .infinity ? nil : fixedSize)
+            .frame(maxWidth: fixedSize == .infinity ? CGFloat.infinity : nil)
         }
-        .frame(maxWidth: fixedSize)
+        .frame(width: fixedSize == .infinity ? nil : fixedSize)
+        .frame(maxWidth: fixedSize == .infinity ? CGFloat.infinity : nil)
         .overlay {
           if isLoading {
             ProgressView()
