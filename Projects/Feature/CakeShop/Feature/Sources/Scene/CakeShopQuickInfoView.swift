@@ -8,7 +8,7 @@
 
 import SwiftUI
 import DesignSystem
-import SwiftUIUtil
+import CommonUtil
 
 import Kingfisher
 

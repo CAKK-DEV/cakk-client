@@ -11,8 +11,8 @@ import DesignSystem
 
 import PhotosUI
 
-import SwiftUIUtil
-import UIKitUtil
+import CommonUtil
+import CommonUtil
 
 import Router
 

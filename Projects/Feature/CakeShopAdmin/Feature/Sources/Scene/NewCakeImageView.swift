@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import UIKit
 import DesignSystem
 import PhotosUI

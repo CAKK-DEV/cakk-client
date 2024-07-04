@@ -1,6 +1,6 @@
 //
 //  PhotoPicker.swift
-//  SwiftUIUtil
+//  CommonUtil
 //
 //  Created by 이승기 on 6/14/24.
 //  Copyright © 2024 cakk. All rights reserved.

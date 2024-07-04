@@ -10,7 +10,7 @@ import SwiftUI
 
 import PhotosUI
 
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 
 import Router
