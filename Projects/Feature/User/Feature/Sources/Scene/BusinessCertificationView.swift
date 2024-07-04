@@ -181,6 +181,7 @@ public struct BusinessCertificationView: View {
       .padding(.horizontal, 24)
       .sheet(isPresented: $isBusinessCertPhotoPickerShown, content: {
         PhotoPicker(selectedImage: $viewModel.selectedBusinessCertImage)
+          .ignoresSafeArea()
       })
     }
   }
@@ -229,6 +230,7 @@ public struct BusinessCertificationView: View {
       .padding(.horizontal, 24)
       .sheet(isPresented: $isIdCardPhotoPickerShown, content: {
         PhotoPicker(selectedImage: $viewModel.selectedIdCardImage)
+          .ignoresSafeArea()
       })
     }
   }

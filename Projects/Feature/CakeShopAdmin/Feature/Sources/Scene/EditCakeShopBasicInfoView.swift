@@ -217,6 +217,7 @@ public struct EditCakeShopBasicInfoView: View {
                   viewModel.editedBasicInfo.profileImage = .new(image: image)
                 }
               }))
+              .ignoresSafeArea()
             }
           }
         }

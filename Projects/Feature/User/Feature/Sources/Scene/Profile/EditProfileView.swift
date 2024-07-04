@@ -152,6 +152,7 @@ struct EditProfileView: View {
                           viewModel.editedUserProfile.profileImage = .new(image: image)
                         }
                       }))
+                      .ignoresSafeArea()
                     }
                   }
                 }
