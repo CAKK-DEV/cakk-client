@@ -1,19 +1,20 @@
 //
-//  some.swift
-//  PreviewSupportCakeShop
+//  MockCakeImagesByShopIdUseCase.swift
+//  PreviewSupportSearch
 //
-//  Created by 이승기 on 6/7/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-import DomainCakeShop
+import CommonDomain
+import DomainSearch
 
-public struct MockCakeImagesByCategoryUseCase: CakeImagesByCategoryUseCase {
+public struct MockCakeImagesByShopIdUseCase: CakeImagesByShopIdUseCase {
   
-  // MARK: - Preview
+  // MARK: - Properties
   
   private let delay: TimeInterval
   private let scenario: Scenario
@@ -37,7 +38,7 @@ public struct MockCakeImagesByCategoryUseCase: CakeImagesByCategoryUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(category: DomainCakeShop.CakeCategory, count: Int, lastCakeId: Int?) -> AnyPublisher<[DomainCakeShop.CakeImage], any Error> {
+  public func execute(shopId: Int, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
     switch scenario {
     case .failure:
       return Fail(error: NSError(domain: "preview", code: -1))

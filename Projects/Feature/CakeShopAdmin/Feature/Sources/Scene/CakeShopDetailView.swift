@@ -239,6 +239,7 @@ struct CakeShopDetailView: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShop
+import PreviewSupportSearch
 
 #Preview {
   let diContainer = DIContainer.shared.container

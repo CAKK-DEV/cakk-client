@@ -95,6 +95,7 @@ struct CakeCategoryDetailView: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShop
+import PreviewSupportSearch
 
 #Preview("Success") {
   let diContainer = DIContainer.shared.container

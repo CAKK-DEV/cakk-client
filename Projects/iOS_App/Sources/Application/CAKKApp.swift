@@ -148,10 +148,6 @@ struct CAKKApp: App {
       #endif
     }
     
-    diContainer.register(CakeImagesByCategoryRepository.self) { resolver in
-      CakeImagesByCategoryRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
-    }
-    
     diContainer.register(CakeShopDetailRepository.self) { resolver in
       CakeShopDetailRepositoryImpl(provider: resolver.resolve(MoyaProvider<CakeShopAPI>.self)!)
     }
@@ -161,7 +157,8 @@ struct CAKKApp: App {
     }
     
     diContainer.register(CakeImagesByCategoryUseCase.self) { resolver in
-      CakeImagesByCategoryUseCaseImpl(repository: resolver.resolve(CakeImagesByCategoryRepository.self)!)
+      let repository = resolver.resolve(SearchRepository.self)!
+      return CakeImagesByCategoryUseCaseImpl(repository: repository)
     }
     
     diContainer.register(CakeShopQuickInfoUseCase.self) { resolver in
@@ -173,7 +170,8 @@ struct CAKKApp: App {
     }
     
     diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
-      CakeImagesByShopIdUseCaseImpl(repository: resolver.resolve(CakeShopDetailRepository.self)!)
+      let repository = resolver.resolve(SearchRepository.self)!
+      return CakeImagesByShopIdUseCaseImpl(repository: repository)
     }
     
     diContainer.register(CakeShopAdditionalInfoUseCase.self) { resolver in
@@ -354,11 +352,6 @@ struct CAKKApp: App {
     diContainer.register(EditShopAddressUseCase.self) { resolver in
       let repository = resolver.resolve(CakeShopRepository.self)!
       return EditShopAddressUseCaseImpl(repository: repository)
-    }
-    
-    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
-      let repository = resolver.resolve(CakeShopDetailRepository.self)!
-      return CakeImagesByShopIdUseCaseImpl(repository: repository)
     }
     
     diContainer.register(UploadCakeImageUseCase.self) { resolver in

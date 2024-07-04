@@ -9,9 +9,9 @@
 import Foundation
 
 import DesignSystem
-import DomainUser
+import CommonDomain
 
-extension DomainUser.WorkingDay {
+extension WorkingDay {
   func mapping() -> CakeShopThumbnailView.WorkingDay {
     switch self {
     case .sun:

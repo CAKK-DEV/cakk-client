@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainSearch
 
 public struct MockSearchCakeImagesUseCase: SearchCakeImagesUseCase {

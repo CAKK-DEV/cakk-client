@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonDomain
 
 public struct CakeImageDetail: Equatable {
   public var shopId: Int

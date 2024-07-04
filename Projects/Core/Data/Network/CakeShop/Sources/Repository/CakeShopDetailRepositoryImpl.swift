@@ -80,16 +80,6 @@ final public class CakeShopDetailRepositoryImpl: CakeShopDetailRepository {
       .eraseToAnyPublisher()
   }
   
-  public func fetchCakeImages(shopId: Int, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error> {
-    provider.requestPublisher(.fetchCakeImagesByShopId(shopId, count: count, lastCakeId: lastCakeId))
-      .map { $0.data }
-      .decode(type: CakeImagesResponseDTO.self, decoder: JSONDecoder())
-      .tryMap { response in
-        response.toDomain()
-      }
-      .eraseToAnyPublisher()
-  }
-  
   public func isOwned(shopId: Int, accessToken: String) -> AnyPublisher<Bool, CakeShopError> {
     provider.requestPublisher(.isOwned(shopId: shopId, accessToken: accessToken))
       .tryMap { response in

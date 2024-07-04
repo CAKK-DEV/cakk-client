@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 
+import CommonDomain
 import DomainSearch
 
 import LocationService

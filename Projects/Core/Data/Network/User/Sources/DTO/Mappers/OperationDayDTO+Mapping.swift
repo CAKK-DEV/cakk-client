@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainUser
+import CommonDomain
 
 extension OperationDayDTO {
   func toDomain() -> WorkingDay {

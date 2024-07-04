@@ -8,6 +8,8 @@
 
 import Foundation
 import Combine
+
+import CommonDomain
 import DomainSearch
 
 public final class TrendingCakeImagesUseCaseImpl: TrendingCakeImagesUseCase {
@@ -27,7 +29,7 @@ public final class TrendingCakeImagesUseCaseImpl: TrendingCakeImagesUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(lastImageId: Int?, pageSize: Int) -> AnyPublisher<[DomainSearch.CakeImage], any Error> {
+  public func execute(lastImageId: Int?, pageSize: Int) -> AnyPublisher<[CakeImage], any Error> {
     repository.fetchCakeImages(keyword: nil, latitude: nil, longitude: nil, pageSize: pageSize, lastCakeId: lastImageId)
   }
 }

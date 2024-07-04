@@ -12,6 +12,7 @@ import UIKit
 import DesignSystem
 import PhotosUI
 
+import CommonDomain
 import DomainCakeShop
 
 import DIContainer

@@ -10,6 +10,7 @@ import SwiftUI
 import DesignSystem
 import Kingfisher
 
+import CommonDomain
 import DomainCakeShop
 
 import DIContainer

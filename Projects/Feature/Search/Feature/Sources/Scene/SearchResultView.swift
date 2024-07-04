@@ -11,6 +11,7 @@ import DesignSystem
 
 import Kingfisher
 
+import CommonDomain
 import DomainSearch
 
 import Router

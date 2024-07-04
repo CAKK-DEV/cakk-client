@@ -15,6 +15,8 @@ import DomainCakeShop
 import FeatureUser
 import FeatureCakeShopAdmin
 
+import DomainSearch
+
 import DIContainer
 
 struct ProfileTabCoordinator: View {

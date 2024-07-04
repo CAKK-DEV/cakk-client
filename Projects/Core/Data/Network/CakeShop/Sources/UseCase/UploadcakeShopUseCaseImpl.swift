@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainCakeShop
 
 public final class UploadCakeShopUseCaseImpl: UploadCakeShopUseCase {
@@ -27,7 +28,7 @@ public final class UploadCakeShopUseCaseImpl: UploadCakeShopUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(name: String, bio: String?, description: String?, businessNumber: String?, address: String, latitude: Double, longitude: Double, workingDaysWithTime: [DomainCakeShop.WorkingDayWithTime], externalLinks: [ExternalShopLink]) -> AnyPublisher<Void, CakeShopError> {
+  public func execute(name: String, bio: String?, description: String?, businessNumber: String?, address: String, latitude: Double, longitude: Double, workingDaysWithTime: [WorkingDayWithTime], externalLinks: [ExternalShopLink]) -> AnyPublisher<Void, CakeShopError> {
     repository.uploadCakeShop(name: name,
                               bio: bio,
                               description: description,

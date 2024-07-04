@@ -9,6 +9,8 @@
 import UIKit
 import Combine
 
+import CommonDomain
+
 public protocol CakeShopRepository {
   func fetchImageDetail(cakeImageId: Int) -> AnyPublisher<CakeImageDetail, CakeShopError>
   

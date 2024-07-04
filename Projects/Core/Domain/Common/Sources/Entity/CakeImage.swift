@@ -1,8 +1,8 @@
 //
 //  CakeImage.swift
-//  DomainSearch
+//  CommonDomain
 //
-//  Created by 이승기 on 6/15/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
@@ -23,3 +23,4 @@ public struct CakeImage: Decodable, Identifiable {
     self.imageUrl = imageUrl
   }
 }
+
