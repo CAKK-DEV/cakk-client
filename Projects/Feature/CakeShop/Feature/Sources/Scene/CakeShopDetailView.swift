@@ -137,7 +137,7 @@ public struct CakeShopDetailView: View {
   private func headerView(cakeShopDetail: CakeShopDetail) -> some View {
     VStack(spacing: 24) {
       VStack(alignment: .leading, spacing: 24) {
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top, spacing: 16) {
           if let thumbnailImageUrl = cakeShopDetail.thumbnailImageUrl {
             KFImage(URL(string: thumbnailImageUrl))
               .resizable()
