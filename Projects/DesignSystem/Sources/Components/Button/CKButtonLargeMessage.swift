@@ -61,9 +61,11 @@ public struct CKButtonLargeMessage: View {
       .background {
         RoundedRectangle(cornerRadius: 20)
           .fill(DesignSystemAsset.black.swiftUIColor)
-          .frame(width: fixedSize)
+          .frame(width: fixedSize == .infinity ? nil : fixedSize)
+          .frame(maxWidth: fixedSize == .infinity ? CGFloat.infinity : nil)
       }
-      .frame(width: fixedSize)
+      .frame(width: fixedSize == .infinity ? nil : fixedSize)
+      .frame(maxWidth: fixedSize == .infinity ? CGFloat.infinity : nil)
       .overlay {
         if isLoading {
           ProgressView()

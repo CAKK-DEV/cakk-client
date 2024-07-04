@@ -25,7 +25,6 @@ struct RoundedCorner: Shape {
 }
 
 
-
 // MARK: - Preview
 
 #Preview {

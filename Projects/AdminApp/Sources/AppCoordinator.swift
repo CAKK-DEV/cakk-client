@@ -33,6 +33,8 @@ struct AppCoordinator: View {
   }
 }
 
+// MARK: - Preview
+
 #Preview {
   AppCoordinator()
 }

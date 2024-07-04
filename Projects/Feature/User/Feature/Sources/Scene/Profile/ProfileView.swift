@@ -273,8 +273,7 @@ public struct ProfileView: View {
 
 import PreviewSupportUser
 
-// 로그아웃 상태
-#Preview {
+#Preview("Logged Out") {
   UserSession.shared.update(signInState: false)
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
@@ -284,9 +283,7 @@ import PreviewSupportUser
   return ProfileView()
 }
 
-
-// 일반 유저 로그인 상태
-#Preview {
+#Preview("User") {
   UserSession.shared.update(signInState: true)
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in
@@ -296,8 +293,7 @@ import PreviewSupportUser
   return ProfileView()
 }
 
-// 비즈니스 유저 로그인 상태
-#Preview {
+#Preview("Business User") {
   UserSession.shared.update(signInState: true)
   let diContainer = DIContainer.shared.container
   diContainer.register(ProfileViewModel.self) { resolver in

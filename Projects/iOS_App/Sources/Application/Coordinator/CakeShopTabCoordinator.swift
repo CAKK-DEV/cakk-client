@@ -107,6 +107,9 @@ struct CakeShopTabCoordinator: View {
   }
 }
 
+
+// MARK: - Preview
+
 #Preview {
   CakeShopTabCoordinator()
 }

@@ -90,7 +90,7 @@ struct TrendingCakeShopSection: View {
 
 import PreviewSupportSearch
 
-#Preview {
+#Preview("Success") {
   let diConatiner = DIContainer.shared.container
   diConatiner.register(TrendingCakeShopViewModel.self) { _ in
     let mockUseCase = MockTrendingCakeShopsUseCase()
@@ -100,7 +100,7 @@ import PreviewSupportSearch
   return TrendingCakeShopSection()
 }
 
-#Preview {
+#Preview("Failure") {
   let diConatiner = DIContainer.shared.container
   diConatiner.register(TrendingCakeShopViewModel.self) { _ in
     let mockUseCase = MockTrendingCakeShopsUseCase(scenario: .failure)

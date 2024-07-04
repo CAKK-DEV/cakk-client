@@ -9,6 +9,7 @@
 import SwiftUI
 import SwiftUIUtil
 import DesignSystem
+import ExpandableText
 
 import Kingfisher
 
@@ -66,10 +67,10 @@ public struct CakeShopDetailView: View {
           ScrollViewOffset { offset in
             navigationTitleOpacity = min(1, -offset / 100)
           } content: {
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
               headerView(cakeShopDetail: cakeShopDetail)
                 .padding(.horizontal, 24)
-                .padding(.top, 24)
+                .padding(.top, 12)
               
               CakeShopContentsSection(selectedSection: $selectedDetailSection)
                 .environmentObject(viewModel)
@@ -134,9 +135,9 @@ public struct CakeShopDetailView: View {
   }
   
   private func headerView(cakeShopDetail: CakeShopDetail) -> some View {
-    VStack(spacing: 28) {
+    VStack(spacing: 24) {
       VStack(alignment: .leading, spacing: 24) {
-        HStack(alignment: .top, spacing: 20) {
+        HStack(alignment: .top, spacing: 16) {
           if let thumbnailImageUrl = cakeShopDetail.thumbnailImageUrl {
             KFImage(URL(string: thumbnailImageUrl))
               .resizable()
@@ -160,16 +161,16 @@ public struct CakeShopDetailView: View {
               }
           }
 
-          VStack(spacing: 12) {
+          VStack(spacing: 10) {
             VStack(spacing: 4) {
               Text(cakeShopDetail.shopName)
-                .font(.pretendard(size: 20, weight: .bold))
+                .font(.pretendard(size: 24, weight: .bold))
                 .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
               
               Text(cakeShopDetail.shopBio)
                 .font(.pretendard(size: 13, weight: .regular))
-                .foregroundStyle(DesignSystemAsset.gray50.swiftUIColor)
+                .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             
@@ -212,10 +213,15 @@ public struct CakeShopDetailView: View {
       VStack(spacing: 0) {
         SectionHeaderCompact(title: "가게 정보", icon: DesignSystemAsset.info.swiftUIImage)
         
-        ExpandableTextView(text: cakeShopDetail.shopDescription, 
-                           font: .pretendard(size: 15),
-                           lineLimit: 5)
-        .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
+        ExpandableText(cakeShopDetail.shopDescription)
+          .font(.pretendard(size: 13))
+          .lineLimit(3)
+          .moreButtonText("더보기")
+          .moreButtonFont(.pretendard(size: 13))
+          .moreButtonColor(DesignSystemAsset.black.swiftUIColor)
+          .expandAnimation(.snappy)
+          .trimMultipleNewlinesWhenTruncated(false)
+          .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
       }
       .padding(.horizontal, 4)
     }
@@ -255,6 +261,7 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
@@ -296,7 +303,7 @@ public struct CakeShopDetailView: View {
 import PreviewSupportCakeShop
 import PreviewSupportUser
 
-#Preview {
+#Preview("Success") {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
@@ -321,7 +328,7 @@ import PreviewSupportUser
 
 // NoExists, Failure Scenario
 
-#Preview {
+#Preview("Failure") {
   let diContainer = DIContainer.shared.container
   diContainer.register(CakeShopDetailViewModel.self) { resolver in
     let cakeShopDetailUseCase = MockCakeShopDetailUseCase(scenario: .noExists)
