@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureUserAdmin",
   dependencies: [
-    Project.SwiftUIUtil,
+    Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
     Project.LocationService,
@@ -15,7 +15,7 @@ let project = Project.framework(
     Project.PreviewSupportUser,
     Project.PreviewSupportSearch,
 
-    Project.UIKitUtil,
+    Project.CommonUtil,
     Project.UserSession,
     .package(product: "GoogleSignIn")
   ],

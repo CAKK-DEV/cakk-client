@@ -8,7 +8,7 @@
 
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 
 import FeatureUser
 import DomainUser

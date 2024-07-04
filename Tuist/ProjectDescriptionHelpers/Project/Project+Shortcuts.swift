@@ -3,25 +3,20 @@ import ProjectDescription
 public extension Project {
   
   // MARK: - Shared
+
+  static let CommonUtil: TargetDependency = .project(
+    target: "CommonUtil",
+    path: .relativeToRoot("Projects/Shared/Util/CommonUtil")
+  )
   
   static let MoyaUtil: TargetDependency = .project(
     target: "MoyaUtil",
     path: .relativeToRoot("Projects/Shared/Util/MoyaUtil")
   )
   
-  static let SwiftUIUtil: TargetDependency = .project(
-    target: "SwiftUIUtil",
-    path: .relativeToRoot("Projects/Shared/Util/SwiftUIUtil")
-  )
-  
   static let TokenUtil: TargetDependency = .project(
     target: "TokenUtil",
     path: .relativeToRoot("Projects/Shared/Util/TokenUtil")
-  )
-
-  static let UIKitUtil: TargetDependency = .project(
-    target: "UIKitUtil",
-    path: .relativeToRoot("Projects/Shared/Util/UIKitUtil")
   )
 
   static let LocationService: TargetDependency = .project(

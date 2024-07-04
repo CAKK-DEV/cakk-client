@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureUser",
   dependencies: [
-    Project.SwiftUIUtil,
+    Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
 
@@ -16,7 +16,7 @@ let project = Project.framework(
     Project.PreviewSupportUser,
     Project.PreviewSupportSearch,
 
-    Project.UIKitUtil,
+    Project.CommonUtil,
     Project.UserSession,
     Project.DIContainer,
     External.kakaoSDKCommon,

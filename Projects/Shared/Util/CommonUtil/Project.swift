@@ -1,4 +1,4 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.framework(name: "SwiftUIUtil")
+let project = Project.framework(name: "CommonUtil")
