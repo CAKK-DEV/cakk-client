@@ -50,9 +50,9 @@ public struct CKButtonRegular: View {
         .background {
           RoundedRectangle(cornerRadius: 14)
             .fill(DesignSystemAsset.black.swiftUIColor)
-            .frame(width: fixedSize)
+            .frame(maxWidth: fixedSize)
         }
-        .frame(width: fixedSize)
+        .frame(maxWidth: fixedSize)
         .overlay {
           if isLoading {
             ProgressView()

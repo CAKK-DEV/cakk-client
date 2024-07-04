@@ -55,9 +55,9 @@ public struct CKButtonLargeStroked: View {
                 .stroke(Color.white.opacity(0.24), lineWidth: 2)
                 .padding(1)
             }
-            .frame(width: fixedSize)
+            .frame(maxWidth: fixedSize)
         }
-        .frame(width: fixedSize)
+        .frame(maxWidth: fixedSize)
         .overlay {
           if isLoading {
             ProgressView()
