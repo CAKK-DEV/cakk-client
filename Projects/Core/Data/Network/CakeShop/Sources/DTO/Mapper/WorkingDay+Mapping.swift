@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainCakeShop
+import CommonDomain
 
 extension WorkingDay {
   func toDTO() -> OperationDayDTO {

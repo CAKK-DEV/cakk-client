@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainCakeShop
+import CommonDomain
 
 extension CakeCategoryDTO {
   func toDomain() -> CakeCategory {

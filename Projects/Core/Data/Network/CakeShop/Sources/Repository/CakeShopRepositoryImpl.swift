@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 
+import CommonDomain
 import DomainCakeShop
 
 import Moya
@@ -37,7 +38,7 @@ public final class CakeShopRepositoryImpl: CakeShopRepository {
                              address: String,
                              latitude: Double,
                              longitude: Double
-                             , workingDaysWithTime: [DomainCakeShop.WorkingDayWithTime],
+                             , workingDaysWithTime: [WorkingDayWithTime],
                              externalLinks: [ExternalShopLink]) -> AnyPublisher<Void, CakeShopError> {
     let newCakeShopDTO = NewCakeShopDTO(businessNumber: businessNumber,
                                         operationDays: workingDaysWithTime.map { $0.toDTO() },
@@ -129,7 +130,7 @@ public final class CakeShopRepositoryImpl: CakeShopRepository {
       .eraseToAnyPublisher()
   }
   
-  public func editWorkingDaysWithTime(cakeShopId: Int, workingDaysWithTime: [DomainCakeShop.WorkingDayWithTime], accessToken: String) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
+  public func editWorkingDaysWithTime(cakeShopId: Int, workingDaysWithTime: [WorkingDayWithTime], accessToken: String) -> AnyPublisher<Void, CakeShopError> {
     provider.requestPublisher(.updateOperationDays(shopId: cakeShopId, operationDays: workingDaysWithTime.toDTO(), accessToken: accessToken))
       .tryMap { response in
         switch response.statusCode {
@@ -173,7 +174,7 @@ public final class CakeShopRepositoryImpl: CakeShopRepository {
       .eraseToAnyPublisher()
   }
   
-  public func uploadCakeImage(cakeShopId: Int, image: UIImage, categories: [DomainCakeShop.CakeCategory], tags: [String], accessToken: String) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
+  public func uploadCakeImage(cakeShopId: Int, image: UIImage, categories: [CakeCategory], tags: [String], accessToken: String) -> AnyPublisher<Void, CakeShopError> {
     uploadImage(image: image)
       .flatMap { [provider] imageUrl -> AnyPublisher<Void, CakeShopError> in
         let newCakeImage = NewCakeImageDTO(cakeImageUrl: imageUrl,
@@ -204,7 +205,7 @@ public final class CakeShopRepositoryImpl: CakeShopRepository {
       .eraseToAnyPublisher()
   }
   
-  public func editCakeImage(cakeImageId: Int, imageUrl: String, categories: [DomainCakeShop.CakeCategory], tags: [String], accessToken: String) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
+  public func editCakeImage(cakeImageId: Int, imageUrl: String, categories: [CakeCategory], tags: [String], accessToken: String) -> AnyPublisher<Void, CakeShopError> {
     let newCakeImage = NewCakeImageDTO(cakeImageUrl: imageUrl,
                                        cakeDesignCategories: categories.map { $0.toDTO() },
                                        tagNames: tags)

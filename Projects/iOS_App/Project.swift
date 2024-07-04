@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.app(
   name: "CAKK",
   infoPlist: [
-    "CFBundleShortVersionString": "2.0.0",
+    "CFBundleShortVersionString": "2.0.2",
     "CFBundleVersion": "1",
     "UILaunchStoryboardName": "LaunchScreen",
     "BASE_URL": "$(BASE_URL)",

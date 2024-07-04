@@ -1,26 +1,27 @@
 //
 //  CakeImagesByShopIdUseCaseImpl.swift
-//  NetworkCakeShop
+//  NetworkSearch
 //
-//  Created by 이승기 on 6/13/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-import DomainCakeShop
+import CommonDomain
+import DomainSearch
 
 public final class CakeImagesByShopIdUseCaseImpl: CakeImagesByShopIdUseCase {
   
   // MARK: - Properties
   
-  private let repository: CakeShopDetailRepository
+  private let repository: SearchRepository
   
   
   // MARK: - Initializers
   
-  public init(repository: CakeShopDetailRepository) {
+  public init(repository: SearchRepository) {
     self.repository = repository
   }
   

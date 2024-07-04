@@ -8,6 +8,7 @@
 
 import Foundation
 
+import CommonDomain
 import DesignSystem
 import DomainSearch
 

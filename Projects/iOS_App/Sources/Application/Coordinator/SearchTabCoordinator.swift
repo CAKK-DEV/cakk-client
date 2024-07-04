@@ -13,6 +13,7 @@ import Router
 import DIContainer
 
 import FeatureSearch
+import DomainSearch
 
 import FeatureCakeShop
 import DomainCakeShop
@@ -20,6 +21,7 @@ import DomainCakeShop
 import FeatureUser
 import DomainBusinessOwner
 
+import CommonDomain
 import DomainUser
 
 struct SearchTabCoordinator: View {

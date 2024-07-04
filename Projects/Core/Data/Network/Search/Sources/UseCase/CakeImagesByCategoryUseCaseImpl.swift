@@ -1,26 +1,27 @@
 //
 //  CakeImagesByCategoryUseCaseImpl.swift
-//  NetworkCakeShop
+//  NetworkSearch
 //
-//  Created by 이승기 on 6/2/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
 import Combine
 
-import DomainCakeShop
+import CommonDomain
+import DomainSearch
 
 public final class CakeImagesByCategoryUseCaseImpl: CakeImagesByCategoryUseCase {
   
   // MARK: - Properties
   
-  private let repository: CakeImagesByCategoryRepository
+  private let repository: SearchRepository
   
   
   // MARK: - Initializers
   
-  public init(repository: CakeImagesByCategoryRepository) {
+  public init(repository: SearchRepository) {
     self.repository = repository
   }
   
@@ -28,6 +29,6 @@ public final class CakeImagesByCategoryUseCaseImpl: CakeImagesByCategoryUseCase 
   // MARK: - Public Methods
   
   public func execute(category: CakeCategory, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
-    repository.fetch(category: category, count: count, lastCakeId: lastCakeId)
+    repository.fetchCakeImages(category: category, count: count, lastCakeId: lastCakeId)
   }
 }

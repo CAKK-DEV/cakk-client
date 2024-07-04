@@ -302,6 +302,7 @@ public struct CakeShopDetailView: View {
 
 import PreviewSupportCakeShop
 import PreviewSupportUser
+import PreviewSupportSearch
 
 #Preview("Success") {
   let diContainer = DIContainer.shared.container

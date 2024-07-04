@@ -1,13 +1,13 @@
 //
-//  CakeImage+Mock.swift
-//  PreviewSupportCakeShop
+//  CakeImage+Mocking.swift
+//  PreviewSupportUser
 //
-//  Created by 이승기 on 6/7/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 
 import Foundation
-import DomainCakeShop
+import CommonDomain
 
 extension CakeImage {
   

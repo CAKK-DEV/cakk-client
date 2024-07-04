@@ -7,6 +7,8 @@
 //
 
 import Foundation
+
+import CommonDomain
 import DomainCakeShop
 
 extension Array where Element == WorkingDayWithTime {

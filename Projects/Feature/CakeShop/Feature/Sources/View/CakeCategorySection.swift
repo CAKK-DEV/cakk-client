@@ -9,7 +9,9 @@
 import SwiftUI
 import DesignSystem
 
+import CommonDomain
 import DomainCakeShop
+
 import Router
 
 struct CakeCategorySection: View {

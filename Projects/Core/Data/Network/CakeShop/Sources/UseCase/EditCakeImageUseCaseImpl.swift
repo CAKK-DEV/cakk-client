@@ -9,7 +9,9 @@
 import UIKit
 import Combine
 
+import CommonDomain
 import DomainCakeShop
+
 import UserSession
 
 public final class EditCakeImageUseCaseImpl: EditCakeImageUseCase {

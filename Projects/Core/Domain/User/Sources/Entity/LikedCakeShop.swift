@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonDomain
 
 public struct LikedCakeShop {
   public let id: Int

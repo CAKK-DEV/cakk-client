@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainCakeShop
+import CommonDomain
 
 extension CakeImagesResponseDTO {
   func toDomain() -> [CakeImage] {

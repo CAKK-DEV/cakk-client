@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonDomain
+
 public protocol EditCakeImageUseCase {
   func execute(cakeImageId: Int, imageUrl: String, categories: [CakeCategory], tags: [String]) -> AnyPublisher<Void, CakeShopError>
 }

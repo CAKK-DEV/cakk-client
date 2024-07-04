@@ -42,6 +42,11 @@ public extension Project {
   
   
   // MARK: - Core / Domain
+
+  static let CommonDomain: TargetDependency = .project(
+    target: "CommonDomain",
+    path: .relativeToRoot("Projects/Core/Domain/Common")
+  )
   
   static let DomainUser: TargetDependency = .project(
     target: "DomainUser",

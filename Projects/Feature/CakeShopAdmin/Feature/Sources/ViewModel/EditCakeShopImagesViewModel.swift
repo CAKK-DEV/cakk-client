@@ -9,7 +9,9 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainCakeShop
+import DomainSearch
 
 public final class EditCakeShopImagesViewModel: ObservableObject {
   

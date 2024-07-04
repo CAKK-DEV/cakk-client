@@ -1,8 +1,8 @@
 //
 //  WorkingDay.swift
-//  DomainCakeShop
+//  CommonDomain
 //
-//  Created by 이승기 on 6/11/24.
+//  Created by 이승기 on 7/4/24.
 //  Copyright © 2024 cakk. All rights reserved.
 //
 

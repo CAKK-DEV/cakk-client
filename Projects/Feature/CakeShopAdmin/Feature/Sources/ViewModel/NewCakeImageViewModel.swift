@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 
+import CommonDomain
 import DomainCakeShop
 
 public final class NewCakeImageViewModel: ObservableObject {

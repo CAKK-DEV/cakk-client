@@ -19,6 +19,7 @@ import DomainCakeShop
 import DomainBusinessOwner
 
 import FeatureSearch
+import DomainSearch
 
 import Router
 import DIContainer

@@ -10,6 +10,7 @@ import Foundation
 
 // TODO: #1 케이크샵 편집 shopId로만 받을 수 있게 API 분리 되면 삭제
 import DomainCakeShop
+import CommonDomain
 
 public enum PublicUserSheetDestination: Identifiable {
   case quickInfo(imageId: Int, cakeImageUrl: String, shopId: Int)

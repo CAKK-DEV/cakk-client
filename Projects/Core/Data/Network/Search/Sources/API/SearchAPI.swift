@@ -15,6 +15,8 @@ public enum SearchAPI {
   case fetchTrendingCakeImages(lastCakeId: Int?, pageSize: Int)
   case fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?)
   case fetchLocatedCakeShops(latitude: Double, longitude: Double)
+  case fetchCakeImagesByCategory(_ category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
+  case fetchCakeImagesByShopId(_ shopId: Int, count: Int, lastCakeId: Int?)
 }
 
 extension SearchAPI: TargetType {
@@ -39,6 +41,12 @@ extension SearchAPI: TargetType {
       
     case .fetchLocatedCakeShops:
       return "/api/v1/shops/location-based"
+      
+    case .fetchCakeImagesByCategory:
+      return "/api/v1/cakes/search/categories"
+      
+    case .fetchCakeImagesByShopId:
+      return "/api/v1/cakes/search/shops"
     }
   }
   
@@ -57,6 +65,12 @@ extension SearchAPI: TargetType {
       return .get
       
     case .fetchLocatedCakeShops:
+      return .get
+      
+    case .fetchCakeImagesByCategory:
+      return .get
+      
+    case .fetchCakeImagesByShopId:
       return .get
     }
   }
@@ -108,6 +122,26 @@ extension SearchAPI: TargetType {
         "longitude": longitude
       ]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
+    case .fetchCakeImagesByCategory(let category, let count, let lastCakeId):
+      var params: [String: Any] = [
+        "category": category.rawValue,
+        "pageSize": count
+      ]
+      if let lastCakeId {
+        params["cakeId"] = lastCakeId
+      }
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
+    case .fetchCakeImagesByShopId(let shopId, let count, let lastCakeId):
+      var params: [String: Any] = [
+        "cakeShopId": shopId,
+        "pageSize": count
+      ]
+      if let lastCakeId {
+        params["cakeId"] = lastCakeId
+      }
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
     }
   }
   
@@ -121,7 +155,9 @@ extension SearchAPI: TargetType {
       return try! Data(contentsOf: Bundle.module.url(forResource: "TrendingSearchKeywordSampleResponse", withExtension: "json")!)
       
     case .fetchCakeImages(_, _, _, _, let lastCakeId),
-        .fetchTrendingCakeImages(let lastCakeId, _):
+        .fetchTrendingCakeImages(let lastCakeId, _),
+        .fetchCakeImagesByCategory(_, _, let lastCakeId),
+        .fetchCakeImagesByShopId(_, _, let lastCakeId):
       if let lastCakeId {
         switch lastCakeId {
         case 10:

@@ -10,7 +10,9 @@ import SwiftUI
 
 import FeatureCakeShop
 import FeatureCakeShopAdmin
+
 import FeatureSearch
+import DomainSearch
 
 import FeatureCakeShop
 import DomainCakeShop

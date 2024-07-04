@@ -9,6 +9,8 @@
 import UIKit
 import Combine
 
+import CommonDomain
+
 public protocol UploadCakeImageUseCase {
   func execute(cakeShopId: Int, image: UIImage, categories: [CakeCategory], tags: [String]) -> AnyPublisher<Void, CakeShopError>
 }
