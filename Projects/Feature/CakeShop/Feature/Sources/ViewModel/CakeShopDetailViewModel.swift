@@ -181,6 +181,16 @@ public final class CakeShopDetailViewModel: ObservableObject {
     }
   }
   
+  public func makeNaverMapUrl() -> URL? {
+    guard let placeName = cakeShopDetail?.shopName,
+          let appName = Bundle.main.bundleIdentifier else {
+      return nil
+    }
+    
+    let urlStr = "nmap://search?query=\(placeName)&appname=com.example.myapp"
+    return URL(string: urlStr)
+  }
+  
   
   // MARK: - Private Methods
   
