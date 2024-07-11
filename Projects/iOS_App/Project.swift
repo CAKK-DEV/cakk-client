@@ -47,7 +47,9 @@ let project = Project.app(
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
     Project.UserSession,
-    Project.DIContainer
+    Project.DIContainer,
+
+    Project.NetworkImage
   ],
   entitlements: "App.entitlements"
 )

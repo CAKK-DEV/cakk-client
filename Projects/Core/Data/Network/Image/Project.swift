@@ -2,12 +2,9 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let project = Project.framework(
-  name: "NetworkUser",
+  name: "NetworkImage",
   dependencies: [
-    Project.DomainUser,
     Project.MoyaUtil,
-    Project.UserSession,
-    Project.NetworkImage
-  ],
-  supportsResources: true
+    External.sdWebImageWebPCoder
+  ]
 )

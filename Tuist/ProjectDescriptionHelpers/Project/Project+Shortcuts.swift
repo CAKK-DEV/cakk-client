@@ -95,8 +95,13 @@ public extension Project {
     target: "NetworkBusinessOwner",
     path: .relativeToRoot("Projects/Core/Data/Network/BusinessOwner")
   )
+
+  static let NetworkImage: TargetDependency = .project(
+    target: "NetworkImage",
+    path: .relativeToRoot("Projects/Core/Data/Network/Image")
+  )
   
-  
+
   // MARK: - Core / Data / KeyChain
   
   static let KeyChainOAuthToken: TargetDependency = .project(
