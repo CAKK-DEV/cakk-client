@@ -27,21 +27,13 @@ public enum CakeShopAPI {
   case editCakeImage(imageId: Int, newCakeImage: NewCakeImageDTO, accessToken: String)
   case deleteCakeImage(imageId: Int, accessToken: String)
   
-  case requestPresignedUrl
-  case uploadPresignedImage(presignedUrl: String, image: Data)
   case isOwned(shopId: Int, accessToken: String)
 }
 
 extension CakeShopAPI: TargetType {
   public var baseURL: URL {
-    switch self {
-    case .uploadPresignedImage(let presignedUrl, _):
-      return URL(string: presignedUrl)!
-      
-    default:
-      let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
-      return URL(string: baseURLString)!
-    }
+    let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
+    return URL(string: baseURLString)!
   }
   
   public var path: String {
@@ -79,12 +71,6 @@ extension CakeShopAPI: TargetType {
     case .editCakeImage(let cakeImageId, _, _),
         .deleteCakeImage(let cakeImageId, _):
       return "/api/v1/cakes/\(cakeImageId)"
-      
-    case .requestPresignedUrl:
-      return "/api/v1/aws/img"
-      
-    case .uploadPresignedImage:
-      return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
       
     case .isOwned(let shopId, _):
       return "/api/v1/shops/\(shopId)/owner"
@@ -128,13 +114,7 @@ extension CakeShopAPI: TargetType {
       
     case .deleteCakeImage:
       return .delete
-      
-    case .requestPresignedUrl:
-      return .get
-      
-    case .uploadPresignedImage:
-      return .put
-      
+
     case .isOwned:
       return .get
     }
@@ -194,13 +174,7 @@ extension CakeShopAPI: TargetType {
       
     case .deleteCakeImage:
       return .requestPlain
-      
-    case .requestPresignedUrl:
-      return .requestPlain
-      
-    case .uploadPresignedImage(_, let image):
-      return .requestData(image)
-      
+
     case .isOwned:
       return .requestPlain
     }
@@ -219,9 +193,6 @@ extension CakeShopAPI: TargetType {
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"
       ]
-    
-    case .uploadPresignedImage:
-      return ["Content-Type": "image/jpeg"]
       
     default:
       return ["Content-Type": "application/json"]

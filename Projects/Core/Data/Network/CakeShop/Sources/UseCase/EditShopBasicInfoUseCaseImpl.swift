@@ -12,17 +12,24 @@ import Combine
 import DomainCakeShop
 import UserSession
 
+import NetworkImage
+
 public final class EditShopBasicInfoUseCaseImpl: EditShopBasicInfoUseCase {
   
   // MARK: - Properties
   
-  private let repository: CakeShopRepository
+  private let cakeShopRepository: CakeShopRepository
+  private let imageUploadRepository: ImageUploadRepository
   
   
   // MARK: - Initializers
   
-  public init(repository: CakeShopRepository) {
-    self.repository = repository
+  public init(
+    cakeShopRepository: CakeShopRepository,
+    imageUploadRepository: ImageUploadRepository
+  ) {
+    self.cakeShopRepository = cakeShopRepository
+    self.imageUploadRepository = imageUploadRepository
   }
   
   
@@ -30,7 +37,42 @@ public final class EditShopBasicInfoUseCaseImpl: EditShopBasicInfoUseCase {
   
   public func execute(cakeShopId: Int, newCakeShopBasicInfo: NewCakeShopBasicInfo) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
     if let accessToken = UserSession.shared.accessToken {
-      repository.editShopBasicInfo(shopId: cakeShopId, newCakeShopBasicInfo: newCakeShopBasicInfo, accessToken: accessToken)
+      switch newCakeShopBasicInfo.profileImage {
+      case .delete, .none:
+        cakeShopRepository.editShopBasicInfo(shopId: cakeShopId,
+                                             profileImageUrl: nil,
+                                             shopName: newCakeShopBasicInfo.shopName,
+                                             shopBio: newCakeShopBasicInfo.shopBio,
+                                             shopDescription: newCakeShopBasicInfo.shopDescription,
+                                             accessToken: accessToken)
+        
+      case .new(let image):
+        imageUploadRepository.uploadImage(image: image)
+          .mapError { error in
+            switch error {
+            case .imageConvertError, .failure:
+              return CakeShopError.imageUploadFailure
+            }
+          }
+          .flatMap { [cakeShopRepository] imageUrl in
+            cakeShopRepository.editShopBasicInfo(shopId: cakeShopId,
+                                                 profileImageUrl: imageUrl,
+                                                 shopName: newCakeShopBasicInfo.shopName,
+                                                 shopBio: newCakeShopBasicInfo.shopBio,
+                                                 shopDescription: newCakeShopBasicInfo.shopDescription,
+                                                 accessToken: accessToken)
+          }
+          .eraseToAnyPublisher()
+        
+      case .original(let imageUrl):
+        cakeShopRepository.editShopBasicInfo(shopId: cakeShopId,
+                                             profileImageUrl: imageUrl,
+                                             shopName: newCakeShopBasicInfo.shopName,
+                                             shopBio: newCakeShopBasicInfo.shopBio,
+                                             shopDescription: newCakeShopBasicInfo.shopDescription,
+                                             accessToken: accessToken)
+      }
+      
     } else {
       Fail(error: CakeShopError.sessionExpired)
         .eraseToAnyPublisher()

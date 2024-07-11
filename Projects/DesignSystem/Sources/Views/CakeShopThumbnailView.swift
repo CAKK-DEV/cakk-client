@@ -167,16 +167,6 @@ public struct CakeShopThumbnailView: View {
 }
 
 
-// MARK: - Array Extension for Safe Indexing
-// TODO: 공통 Util 모듈로 빼기
-
-private extension Array {
-  subscript(safe index: Index) -> Element? {
-    return indices.contains(index) ? self[index] : nil
-  }
-}
-
-
 // MARK: - Preview
 
 #Preview("Image") {

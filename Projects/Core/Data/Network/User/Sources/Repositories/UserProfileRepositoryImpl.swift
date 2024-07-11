@@ -14,10 +14,7 @@ import DomainUser
 import Moya
 import CombineMoya
 
-import SDWebImageWebPCoder
-
 public final class UserProfileRepositoryImpl: UserProfileRepository {
-  
   
   // MARK: - Properties
   
@@ -59,13 +56,13 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       .eraseToAnyPublisher()
   }
   
-  public func updateUserProfile(newUserProfile: DomainUser.NewUserProfile, accessToken: String) -> AnyPublisher<Void, DomainUser.UserProfileError> {
-    uploadProfileImageIfNeeded(image: newUserProfile.profileImage)
-      .flatMap { [provider] profileImageUrl -> AnyPublisher<Response, UserProfileError> in
-        provider.requestPublisher(.updateUserProfile(newUserProfile: newUserProfile.toDTO(profileImageUrl: profileImageUrl), accessToken: accessToken))
-          .mapError { _ in UserProfileError.failure }
-          .eraseToAnyPublisher()
-      }
+  public func updateUserProfile(profileImageUrl: String?, nickName: String, email: String, gender: DomainUser.Gender, birthday: Date?, accessToken: String) -> AnyPublisher<Void, DomainUser.UserProfileError> {
+    let newUserProfileDTO = NewUserProfileDTO(profileImageUrl: profileImageUrl,
+                                              nickname: nickName,
+                                              email: email,
+                                              gender: gender.toDTO(),
+                                              birthday: birthday?.toDTO())
+    return provider.requestPublisher(.updateUserProfile(newUserProfile: newUserProfileDTO, accessToken: accessToken))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
@@ -136,91 +133,6 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           return CAKKUserNetworkError.error(for: error).toUserProfileError()
         }
       }
-      .eraseToAnyPublisher()
-  }
-  
-  
-  // MARK: - Private Methods
-  
-  private func uploadProfileImageIfNeeded(image: NewUserProfile.ProfileImage) -> AnyPublisher<String?, UserProfileError> {
-    switch image {
-    case .delete, .none:
-      return Just(nil)
-        .setFailureType(to: UserProfileError.self)
-        .eraseToAnyPublisher()
-      
-    case .original(let originalImageUrl):
-      return Just(originalImageUrl)
-        .setFailureType(to: UserProfileError.self)
-        .eraseToAnyPublisher()
-      
-    case .new(let image):
-      return provider.requestPublisher(.requestPresignedUrl)
-        .tryMap { response -> (String, String) in
-          switch response.statusCode {
-          case 200..<300:
-            let decodedResponse = try JSONDecoder().decode(PresignedUrlResponseDTO.self, from: response.data)
-            let presignedUrl = decodedResponse.data.presignedUrl
-            let imageUrl = decodedResponse.data.imageUrl
-            return (presignedUrl, imageUrl)
-            
-          default:
-            throw UserProfileError.imageUploadFailure
-          }
-        }
-        .flatMap { [provider] (presignedUrl, imageUrl) -> AnyPublisher<String?, Error> in
-          // TODO: - 이미지 Webp로 변환
-          guard let data = image.jpegData(compressionQuality: 1) else {
-            return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
-          }
-          /// 이미지를 webP 형식으로 변환 후 PresignedURL에 업로드 합니다.
-//          SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
-//          guard let data = image.sd_imageData(as: .webP, compressionQuality: 1) else {
-//            return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
-//          }
-          
-          return provider.requestPublisher(.uploadPresignedImage(presignedUrl: presignedUrl, image: data))
-          .map { _ in imageUrl }
-          .mapError { _ in UserProfileError.imageUploadFailure }
-          .eraseToAnyPublisher()
-        }
-        .mapError { _ in UserProfileError.imageUploadFailure }
-        .eraseToAnyPublisher()
-    }
-  }
-  
-  /// PresignedUrl 요청 후 해당 url에 이미지를 업로드 한 후 imageUrl을 반환합니다.
-  private func uploadImage(image: UIImage) -> AnyPublisher<String, UserProfileError> {
-    provider.requestPublisher(.requestPresignedUrl)
-      .tryMap { response -> (String, String) in
-        switch response.statusCode {
-        case 200..<300:
-          let decodedResponse = try JSONDecoder().decode(PresignedUrlResponseDTO.self, from: response.data)
-          let presignedUrl = decodedResponse.data.presignedUrl
-          let imageUrl = decodedResponse.data.imageUrl
-          return (presignedUrl, imageUrl)
-          
-        default:
-          throw UserProfileError.imageUploadFailure
-        }
-      }
-      .flatMap { [provider] (presignedUrl, imageUrl) -> AnyPublisher<String, Error> in
-        // TODO: - Webp로 변환하도록 변경
-        guard let data = image.jpegData(compressionQuality: 1) else {
-          return Fail(error: UserProfileError.imageUploadFailure).eraseToAnyPublisher()
-        }
-        /// 이미지를 webP 형식으로 변환 후 PresignedURL에 업로드 합니다.
-//        SDImageCodersManager.shared.addCoder(SDImageWebPCoder.shared)
-//        guard let data = image.sd_imageData(as: .webP, compressionQuality: 1) else {
-//          return Fail(error: UploadCertificationError.imageUploadFailure).eraseToAnyPublisher()
-//        }
-        
-        return provider.requestPublisher(.uploadPresignedImage(presignedUrl: presignedUrl, image: data))
-        .map { _ in imageUrl }
-        .mapError { _ in UserProfileError.imageUploadFailure }
-        .eraseToAnyPublisher()
-      }
-      .mapError { _ in UserProfileError.failure }
       .eraseToAnyPublisher()
   }
 }
