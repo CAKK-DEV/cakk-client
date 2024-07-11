@@ -15,7 +15,6 @@ let project = Project.framework(
     Project.PreviewSupportUser,
     Project.PreviewSupportSearch,
 
-    Project.CommonUtil,
     Project.UserSession,
     .package(product: "GoogleSignIn")
   ],
