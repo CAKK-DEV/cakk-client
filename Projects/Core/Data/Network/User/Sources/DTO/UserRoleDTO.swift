@@ -7,9 +7,27 @@
 //
 
 import Foundation
+import DomainUser
 
 enum UserRoleDTO: String, Decodable {
   case admin = "ADMIN"
   case businessOwner = "BUSINESS_OWNER"
   case user = "USER"
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension UserRoleDTO {
+  func toDomain() -> UserRole {
+    switch self {
+    case .admin:
+      return .admin
+    case .businessOwner:
+      return .businessOwner
+    case .user:
+      return .user
+    }
+  }
 }

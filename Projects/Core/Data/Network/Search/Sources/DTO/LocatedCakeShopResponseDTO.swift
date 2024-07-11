@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainSearch
 
 struct LocatedCakeShopResponseDTO: Decodable {
   let returnCode: String
@@ -15,5 +16,15 @@ struct LocatedCakeShopResponseDTO: Decodable {
   
   struct Data: Decodable {
     let cakeShops: [LocatedCakeShopDTO]
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension LocatedCakeShopResponseDTO {
+  func toDomain() -> [LocatedCakeShop] {
+    self.data.cakeShops.map { $0.toDomain() }
   }
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainCakeShop
 
 struct CakeShopQuickInfoDTO: Decodable {
   let returnCode: String
@@ -18,5 +19,19 @@ struct CakeShopQuickInfoDTO: Decodable {
     let thumbnailUrl: String
     let cakeShopName: String
     let cakeShopBio: String
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension CakeShopQuickInfoDTO {
+  func toDomain() -> CakeShopQuickInfo {
+    return .init(
+      shopId: self.data.cakeShopId,
+      shopName: self.data.cakeShopName,
+      shopBio: self.data.cakeShopBio,
+      thumbnailUrl: self.data.thumbnailUrl)
   }
 }

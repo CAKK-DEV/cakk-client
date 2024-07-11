@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainUser
 
 struct UserProfileData: Decodable {
   let profileImageUrl: String?
@@ -15,4 +16,19 @@ struct UserProfileData: Decodable {
   let gender: GenderDTO
   let birthday: String?
   let role: UserRoleDTO
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension UserProfileData {
+  func toDomain() -> UserProfile {
+    return .init(profileImageUrl: self.profileImageUrl,
+                 nickname: self.nickname,
+                 email: self.email,
+                 gender: self.gender.toDomain(),
+                 birthday: self.birthday?.toDomainDate(),
+                 role: self.role.toDomain())
+  }
 }

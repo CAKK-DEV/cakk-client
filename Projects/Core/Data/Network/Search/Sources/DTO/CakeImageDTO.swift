@@ -7,9 +7,22 @@
 //
 
 import Foundation
+import CommonDomain
 
 struct CakeImageDTO: Decodable {
   let cakeShopId: Int
   let cakeId: Int
   let cakeImageUrl: String
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension CakeImageDTO {
+  func toDomain() -> CakeImage {
+    .init(id: self.cakeId,
+          shopId: self.cakeShopId,
+          imageUrl: self.cakeImageUrl)
+  }
 }

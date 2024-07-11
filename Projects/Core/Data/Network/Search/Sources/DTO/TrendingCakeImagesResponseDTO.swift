@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CommonDomain
+import DomainSearch
 
 struct TrendingCakeImagesResponseDTO: Decodable {
   let returnCode: String
@@ -16,5 +18,15 @@ struct TrendingCakeImagesResponseDTO: Decodable {
   struct Data: Decodable {
     let cakeImages: [CakeImageDTO]
     let size: Int
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension TrendingCakeImagesResponseDTO {
+  func toDomain() -> [CakeImage] {
+    self.data.cakeImages.map { $0.toDomain() }
   }
 }

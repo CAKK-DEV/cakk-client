@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainUser
 
 public struct NewUserProfileDTO: Codable {
   let profileImageUrl: String?
@@ -27,5 +28,19 @@ public struct NewUserProfileDTO: Codable {
     self.email = email
     self.gender = gender
     self.birthday = birthday
+  }
+}
+
+
+// MARK: - Mapper
+
+/// Domain -> DTO
+extension NewUserProfile {
+  func toDTO(profileImageUrl: String?) -> NewUserProfileDTO {
+    return .init(profileImageUrl: profileImageUrl,
+                 nickname: self.nickname,
+                 email: self.email,
+                 gender: self.gender.toDTO(),
+                 birthday: self.birthday?.toDTO())
   }
 }
