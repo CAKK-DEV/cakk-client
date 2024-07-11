@@ -37,7 +37,7 @@ public extension Project {
 
    static let DIContainer: TargetDependency = .project(
     target: "DIContainer",
-    path: .relativeToRoot("Projects/Core/DIContainer")
+    path: .relativeToRoot("Projects/Shared/DIContainer")
   )
   
   
