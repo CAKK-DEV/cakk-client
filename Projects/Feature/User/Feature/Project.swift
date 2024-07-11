@@ -15,8 +15,7 @@ let project = Project.framework(
     
     Project.PreviewSupportUser,
     Project.PreviewSupportSearch,
-
-    Project.CommonUtil,
+    
     Project.UserSession,
     Project.DIContainer,
     External.kakaoSDKCommon,
