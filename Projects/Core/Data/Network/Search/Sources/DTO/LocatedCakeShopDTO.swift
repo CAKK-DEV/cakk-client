@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainSearch
 
 struct LocatedCakeShopDTO: Decodable {
   let cakeShopId: Int
@@ -16,4 +17,20 @@ struct LocatedCakeShopDTO: Decodable {
   let cakeImageUrls: [String]
   let longitude: Double
   let latitude: Double
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension LocatedCakeShopDTO {
+  func toDomain() -> LocatedCakeShop {
+    return .init(id: self.cakeShopId,
+                 profileImageUrl: self.thumbnailUrl,
+                 name: self.cakeShopName,
+                 bio: self.cakeShopBio,
+                 cakeImageUrls: self.cakeImageUrls,
+                 longitude: self.longitude,
+                 latitude: self.latitude)
+  }
 }

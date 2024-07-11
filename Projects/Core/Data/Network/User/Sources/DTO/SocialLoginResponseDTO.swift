@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DomainUser
 
 public struct SocialLoginResponseDTO: Decodable {
   let returnCode: String
@@ -16,5 +17,16 @@ public struct SocialLoginResponseDTO: Decodable {
     let accessToken: String
     let refreshToken: String
     let grantType: String
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension SocialLoginResponseDTO.Data {
+  func toDomain() -> SocialLoginResponse {
+    .init(accessToken: self.accessToken,
+          refreshToken: self.refreshToken)
   }
 }

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-
 import DomainCakeShop
 
 struct CakeShopDetailResponseDTO: Decodable {
@@ -23,5 +22,21 @@ struct CakeShopDetailResponseDTO: Decodable {
     var cakeShopDescription: String
     var operationDays: [OperationDayDTO]
     var links: [ExternalLinkDTO]
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension CakeShopDetailResponseDTO.Data {
+  func toDomain() -> CakeShopDetail {
+    .init(shopId: self.cakeShopId,
+          shopName: self.cakeShopName,
+          thumbnailImageUrl: self.thumbnailUrl,
+          shopBio: self.cakeShopBio,
+          shopDescription: self.cakeShopDescription,
+          workingDays: self.operationDays.map { $0.toDomain() },
+          externalShopLinks: self.links.map { $0.toDomain() })
   }
 }
