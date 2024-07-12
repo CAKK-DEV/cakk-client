@@ -46,7 +46,7 @@ public final class TrendingCakeShopViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.trendingCakeShopFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.trendingCakeShopFetchingState = .success
         }

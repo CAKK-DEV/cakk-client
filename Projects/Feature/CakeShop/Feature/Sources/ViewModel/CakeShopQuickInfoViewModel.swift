@@ -157,7 +157,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.likeUpdatingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.likeUpdatingState = .idle
         }

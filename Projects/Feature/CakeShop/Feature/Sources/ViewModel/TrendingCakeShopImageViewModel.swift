@@ -69,7 +69,7 @@ public final class TrendingCakeImagesViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .loadMoreFailure
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .success
           }
