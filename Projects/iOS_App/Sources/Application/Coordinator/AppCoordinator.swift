@@ -46,9 +46,6 @@ public enum RootDestination: Identifiable {
   case home
 }
 
-private enum Destination: Hashable {
-}
-
 
 // MARK: - Coordinator
 

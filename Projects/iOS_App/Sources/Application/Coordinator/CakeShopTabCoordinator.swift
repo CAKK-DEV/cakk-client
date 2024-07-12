@@ -7,96 +7,65 @@
 //
 
 import SwiftUI
+import Router
 
 import FeatureCakeShop
 import FeatureCakeShopAdmin
-
 import FeatureSearch
-import DomainSearch
-
 import FeatureCakeShop
-import DomainCakeShop
-
-import DomainBusinessOwner
 import FeatureUser
-
-import DomainUser
-
-import DIContainer
-import Router
 
 struct CakeShopTabCoordinator: View {
   
+  // MARK: - Properties
+  
   @StateObject private var router = Router()
-  private let diContainer = DIContainer.shared.container
+  private let viewModelRegistry = ViewModelRegistry()
+  
+
+  // MARK: - Internal Methods
   
   var body: some View {
     NavigationStack(path: $router.navPath) {
       CakeShopCoordinator()
         .navigationDestination(for: PublicCakeShopDestination.self) { destination in
           switch destination {
+            // 지도
           case .map:
             SearchCakeShopOnMapView()
               .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
             
+            // 사장님 인증
           case .businessCertification(targetShopId: let targetShopId):
-            let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-              let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
-              return BusinessCertificationViewModel(
-                targetShopId: targetShopId,
-                cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
-            }
-            
+            let _ = viewModelRegistry.registerBusinessCertificationViewModel(shopId: targetShopId)
             BusinessCertificationView()
               .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
             
+            // 외부링크 수정
           case .editExternalLink(let shopId, let externalLinks):
-            let _ = diContainer.register(EditExternalLinkViewModel.self) { resolver in
-              let editExternalLinkUseCase = resolver.resolve(EditExternalLinkUseCase.self)!
-              return EditExternalLinkViewModel(shopId: shopId, 
-                                               editExternalLinkUseCase: editExternalLinkUseCase,
-                                               externalShopLinks: externalLinks)
-            }
+            let _ = viewModelRegistry.registerEditExternalLinkViewModel(shopId: shopId, externalLinks: externalLinks)
             EditExternalLinkView()
               .environmentObject(router)
           }
         }
         .navigationDestination(for: PublicSearchDestination.self) { destination in
           switch destination {
+            // 케이크샵 상세
           case .shopDetail(let shopId):
-            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
-              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
-              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
-              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
-              
-              return CakeShopDetailViewModel(shopId: shopId,
-                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase,
-                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
-                                             myShopIdUseCase: myShopIdUseCase)
-            }.inObjectScope(.transient)
+            let _ = viewModelRegistry.registerCakeShopDetailViewModel(shopId: shopId)
             CakeShopDetailCoordinator()
-              .navigationBarBackButtonHidden()
+              .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
           }
         }
         .fullScreenCover(item: $router.presentedFullScreenSheet) { destination in
           if let destination = destination.destination as? PublicCakeShopSheetDestination {
             switch destination {
+              // 로그인
             case .login:
-              let _ = diContainer.register(SocialLoginViewModel.self) { resolver in
-                let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
-                let singUPUseCase = resolver.resolve(SocialLoginSignUpUseCase.self)!
-                return SocialLoginViewModel(signInUseCase: signInUseCase,
-                                            signUpUseCase: singUPUseCase)
-              }
+              let _ = viewModelRegistry.registerSocialLoginViewModel()
               LoginStepCoordinator(onFinish: {
                 router.presentedFullScreenSheet = nil
               })
