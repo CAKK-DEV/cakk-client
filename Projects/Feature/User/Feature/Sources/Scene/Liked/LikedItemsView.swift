@@ -141,6 +141,7 @@ struct LikedItemsView: View {
                   )
                 }
             }
+            .animation(.snappy, value: viewModel.cakeImages)
             
             if viewModel.imageFetchingState == .loading {
               ProgressView()
@@ -154,7 +155,7 @@ struct LikedItemsView: View {
           viewModel.fetchCakeImages()
         }
         .onAppear {
-          if GlobalSettings.didChangeCakeImageLikeState {
+          if GlobalSettings.didChangeCakeShopLikeState {
             viewModel.fetchCakeImages()
           }
         }
@@ -204,6 +205,7 @@ struct LikedItemsView: View {
                 router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
               }
             }
+            .animation(.snappy, value: viewModel.cakeShops)
             
             if viewModel.cakeShopFetchingState == .loading {
               ProgressView()
