@@ -43,7 +43,7 @@ extension BusinessOwnerAPI: TargetType {
         "emergencyContact": contact,
         "message": message
       ]
-      return .requestParameters(parameters: params, encoding: JSONEncoding())
+      return .requestParameters(parameters: params, encoding: JSONEncoding.default)
     }
   }
   
