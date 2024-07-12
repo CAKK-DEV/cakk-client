@@ -9,7 +9,7 @@
 import Foundation
 import CommonDomain
 
-public struct LikedCakeShop {
+public struct LikedCakeShop: Equatable {
   public let id: Int
   public let name: String
   public let bio: String
