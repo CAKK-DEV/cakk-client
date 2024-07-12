@@ -8,26 +8,22 @@
 
 
 import SwiftUI
+import Router
 import CommonUtil
 
 import FeatureUser
-import DomainUser
-
 import FeatureCakeShop
-import DomainCakeShop
-
-import DomainBusinessOwner
-
 import FeatureSearch
-import DomainSearch
-
-import Router
-import DIContainer
 
 struct LikeTabCoordinator: View {
   
+  // MARK: - Properties
+  
   @StateObject private var router = Router()
-  private let diContainer = DIContainer.shared.container
+  private let viewModelRegistry = ViewModelRegistry()
+  
+  
+  // MARK: - Internal Methods
   
   var body: some View {
     NavigationStack(path: $router.navPath) {
@@ -35,77 +31,27 @@ struct LikeTabCoordinator: View {
         .sheet(item: $router.presentedSheet) { sheet in
           if let destination = sheet.destination as? PublicUserSheetDestination {
             switch destination {
+              // 케이크 이미지 간단 보기
             case .quickInfo(let imageId, let cakeImageUrl, let shopId):
-              let _ = diContainer.register(CakeShopQuickInfoViewModel.self) { resolver in
-                let cakeQuickInfoUseCase = resolver.resolve(CakeShopQuickInfoUseCase.self)!
-                let likeCakeImageUseCase = resolver.resolve(LikeCakeImageUseCase.self)!
-                return CakeShopQuickInfoViewModel(imageId: imageId,
-                                                  cakeImageUrl: cakeImageUrl,
-                                                  shopId: shopId,
-                                                  cakeQuickInfoUseCase: cakeQuickInfoUseCase,
-                                                  likeCakeImageUseCase: likeCakeImageUseCase)
-              }
+              let _ = viewModelRegistry.registerCakeShopQuickInfoViewModel(imageId: imageId, cakeImageUrl: cakeImageUrl, shopId: shopId)
               CakeShopQuickInfoView()
+                .environmentObject(router)
             }
           }
         }
         .navigationDestination(for: PublicUserDestination.self) { destination in
+          // 케이크샵 디테일
           if case .shopDetail(let shopId) = destination {
-            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
-              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
-              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
-              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
-              
-              return CakeShopDetailViewModel(shopId: shopId,
-                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase,
-                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
-                                             myShopIdUseCase: myShopIdUseCase)
-            }.inObjectScope(.transient)
-            
-            CakeShopDetailCoordinator()
-              .navigationBarBackButtonHidden()
-              .environmentObject(router)
-          }
-        }
-        .navigationDestination(for: CakeShopDestination.self) { destination in
-          if case .shopDetail(let shopId) = destination {
-            let _ = diContainer.register(CakeShopDetailViewModel.self) { resolver in
-              let cakeShopDetailUseCase = resolver.resolve(CakeShopDetailUseCase.self)!
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              let cakeShopAdditionalInfoUseCase = resolver.resolve(CakeShopAdditionalInfoUseCase.self)!
-              let likeCakeShopUseCase = resolver.resolve(LikeCakeShopUseCase.self)!
-              let cakeShopOwnedStateUseCase = resolver.resolve(CakeShopOwnedStateUseCase.self)!
-              let myShopIdUseCase = resolver.resolve(MyShopIdUseCase.self)!
-              
-              return CakeShopDetailViewModel(shopId: shopId,
-                                             cakeShopDetailUseCase: cakeShopDetailUseCase,
-                                             cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase,
-                                             cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
-                                             likeCakeShopUseCase: likeCakeShopUseCase,
-                                             cakeShopOwnedStateUseCase: cakeShopOwnedStateUseCase,
-                                             myShopIdUseCase: myShopIdUseCase)
-            }.inObjectScope(.transient)
-            
+            let _ = viewModelRegistry.registerCakeShopDetailViewModel(shopId: shopId)
             CakeShopDetailCoordinator()
               .navigationBarBackButtonHidden()
               .environmentObject(router)
           }
         }
         .navigationDestination(for: PublicCakeShopDestination.self) { destination in
+          // 사장님 인증
           if case .businessCertification(targetShopId: let targetShopId) = destination {
-            let _ = diContainer.register(BusinessCertificationViewModel.self) { resolver in
-              let cakeShopOwnerVerificationUseCase = resolver.resolve(CakeShopOwnerVerificationUseCase.self)!
-              return BusinessCertificationViewModel(
-                targetShopId: targetShopId,
-                cakeShopOwnerVerificationUseCase: cakeShopOwnerVerificationUseCase)
-            }
-            
+            let _ = viewModelRegistry.registerBusinessCertificationViewModel(shopId: targetShopId)
             BusinessCertificationView()
               .toolbar(.hidden, for: .navigationBar)
               .environmentObject(router)
