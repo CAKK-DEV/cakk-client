@@ -115,7 +115,9 @@ struct LikedItemsView: View {
       } else if viewModel.cakeImages.isEmpty {
         FailureStateView(title: "아직 저장된 케이크 사진이 없어요")
           .onAppear {
-            viewModel.fetchMoreCakeImages()
+            if GlobalSettings.didChangeCakeImageLikeState {
+              viewModel.fetchCakeImages()
+            }
           }
       } else {
         ScrollView {
@@ -126,7 +128,7 @@ struct LikedItemsView: View {
                 .aspectRatio(contentMode: .fit)
                 .background(DesignSystemAsset.gray10.swiftUIColor)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
-                .onAppear {
+                .onFirstAppear {
                   if cakeImage.cakeHeartId == viewModel.cakeImages.last?.cakeHeartId {
                     viewModel.fetchMoreCakeImages()
                   }
@@ -151,6 +153,11 @@ struct LikedItemsView: View {
         .refreshable {
           viewModel.fetchCakeImages()
         }
+        .onAppear {
+          if GlobalSettings.didChangeCakeImageLikeState {
+            viewModel.fetchCakeImages()
+          }
+        }
       }
     }
   }
@@ -173,7 +180,9 @@ struct LikedItemsView: View {
       } else if viewModel.cakeShops.isEmpty {
         FailureStateView(title: "아직 저장된 케이크샵이 없어요")
           .onAppear {
-            viewModel.fetchCakeShops()
+            if GlobalSettings.didChangeCakeShopLikeState {
+              viewModel.fetchCakeShops()
+            }
           }
       } else {
         ScrollView {
@@ -206,7 +215,14 @@ struct LikedItemsView: View {
           .padding(.bottom, 100)
         }
         .refreshable {
-          viewModel.fetchCakeShops()
+          if GlobalSettings.didChangeCakeShopLikeState {
+            viewModel.fetchCakeShops()
+          }
+        }
+        .onAppear {
+          if GlobalSettings.didChangeCakeShopLikeState {
+            viewModel.fetchCakeShops()
+          }
         }
       }
     }
