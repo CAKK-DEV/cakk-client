@@ -173,7 +173,7 @@ struct CakeShopContentsSection: View {
                       .font(.pretendard())
                       .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
                   } else {
-                    Text("휴무")
+                    Text("정보 없음")
                       .font(.pretendard())
                       .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
                   }
