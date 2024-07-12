@@ -16,6 +16,7 @@ public protocol SearchRepository {
   // MARK: - Trendings
   
   func fetchTrendingSearchKeywords(count: Int) -> AnyPublisher<[String], Error>
+  func fetchTrendingCakeShops(count: Int) -> AnyPublisher<[CakeShop], Error>
   
   // MARK: - CakeImages
   

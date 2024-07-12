@@ -1,5 +1,5 @@
 //
-//  TrendingCakeShopUseCaseImpl.swift
+//  TrendingCakeShopsUseCaseImpl.swift
 //  NetworkSearch
 //
 //  Created by 이승기 on 7/1/24.
@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import DomainSearch
 
-public final class TrendingCakeShopUseCaseImpl: TrendingCakeShopsUseCase {
+public final class TrendingCakeShopsUseCaseImpl: TrendingCakeShopsUseCase {
   
   // MARK: - Properties
   
@@ -27,7 +27,6 @@ public final class TrendingCakeShopUseCaseImpl: TrendingCakeShopsUseCase {
   // MARK: - Public Methods
   
   public func execute() -> AnyPublisher<[CakeShop], any Error> {
-    // TODO: 추후 개발 될 인기 케이크샵 API로 변경
-    repository.fetchCakeShops(keyword: nil, latitude: nil, longitude: nil, pageSize: 10, lastCakeShopId: nil)
+    repository.fetchTrendingCakeShops(count: 10)
   }
 }
