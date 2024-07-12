@@ -60,7 +60,7 @@ public final class CakeShopNearByMeViewModel: ObservableObject {
     .sink { [weak self] completion in
       if case .failure(let error) = completion {
         self?.locatedCakeShopsFetchingState = .failure
-        print(error)
+        print(error.localizedDescription)
       } else {
         self?.locatedCakeShopsFetchingState = .success
         self?.updateRegion()
