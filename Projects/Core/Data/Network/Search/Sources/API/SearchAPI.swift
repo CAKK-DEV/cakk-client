@@ -11,6 +11,8 @@ import Moya
 
 public enum SearchAPI {
   case fetchTrendingSearchKeyword(count: Int)
+  case fetchTrendingCakeShops(count: Int)
+  
   case fetchCakeImages(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?)
   case fetchTrendingCakeImages(lastCakeId: Int?, pageSize: Int)
   case fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?)
@@ -29,6 +31,9 @@ extension SearchAPI: TargetType {
     switch self {
     case .fetchTrendingSearchKeyword:
       return "/api/v1/search/top-searched"
+      
+    case .fetchTrendingCakeShops:
+      return "/api/v1/shops/search/views"
       
     case .fetchCakeImages:
       return "/api/v1/cakes/search/cakes"
@@ -53,6 +58,9 @@ extension SearchAPI: TargetType {
   public var method: Moya.Method {
     switch self {
     case .fetchTrendingSearchKeyword:
+      return .get
+      
+    case .fetchTrendingCakeShops:
       return .get
     
     case .fetchCakeImages:
@@ -80,6 +88,12 @@ extension SearchAPI: TargetType {
     case .fetchTrendingSearchKeyword(let count):
       let params: [String: Any] = [
         "count": count
+      ]
+      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
+      
+    case .fetchTrendingCakeShops(let count):
+      let params: [String: Any] = [
+        "pageSize": count
       ]
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
@@ -153,6 +167,9 @@ extension SearchAPI: TargetType {
     switch self {
     case .fetchTrendingSearchKeyword:
       return try! Data(contentsOf: Bundle.module.url(forResource: "TrendingSearchKeywordSampleResponse", withExtension: "json")!)
+      
+    case .fetchTrendingCakeShops:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages1", withExtension: "json")!)
       
     case .fetchCakeImages(_, _, _, _, let lastCakeId),
         .fetchTrendingCakeImages(let lastCakeId, _),

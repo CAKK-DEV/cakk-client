@@ -252,7 +252,7 @@ struct CAKKApp: App {
     
     diContainer.register(TrendingCakeShopsUseCase.self) { resolver in
       let repository = resolver.resolve(SearchRepository.self)!
-      return TrendingCakeShopUseCaseImpl(repository: repository)
+      return TrendingCakeShopsUseCaseImpl(repository: repository)
     }
     
     diContainer.register(TrendingCakeShopViewModel.self) { resolver in
