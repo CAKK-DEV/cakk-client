@@ -177,8 +177,12 @@ public struct ProfileView: View {
           .padding(.top, 56)
           .padding(.bottom, 100)
         }
+        .refreshable {
+          profileViewModel.fetchUserProfile()
+          businessOwnerProfileViewModel.fetchMyCakeShopId()
+        }
       }
-      .onAppear {
+      .onFirstAppear {
         profileViewModel.fetchUserProfile()
         businessOwnerProfileViewModel.fetchMyCakeShopId()
       }
