@@ -74,9 +74,7 @@ struct SearchResultView: View {
         ScrollView {
           VStack(spacing: 100) {
             FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-              KFImage(URL(string: cakeImage.imageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+              CakeImageGridItem(imageUrlString: cakeImage.imageUrl)
                 .background(DesignSystemAsset.gray10.swiftUIColor)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
                 .onAppear {

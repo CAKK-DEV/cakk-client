@@ -76,15 +76,16 @@ public struct CakeShopThumbnailView: View {
       HStack(spacing: 12) {
         if let profileImageUrl {
           KFImage(URL(string: profileImageUrl))
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .size(64)
-              .background(DesignSystemAsset.gray10.swiftUIColor)
-              .clipShape(Circle())
-              .overlay {
-                Circle()
-                  .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
-              }
+            .downsampling(size: .init(width: 200, height: 200))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .size(64)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(Circle())
+            .overlay {
+              Circle()
+                .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+            }
         } else {
           Circle()
             .fill(Color(hex: "FFA9DC"))
@@ -137,6 +138,7 @@ public struct CakeShopThumbnailView: View {
             .overlay {
               if let cakeImageUrl = cakeImageUrls[safe: index] {
                 KFImage(URL(string: cakeImageUrl))
+                  .downsampling(size: .init(width: 200, height: 200))
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .background(DesignSystemAsset.gray10.swiftUIColor)
