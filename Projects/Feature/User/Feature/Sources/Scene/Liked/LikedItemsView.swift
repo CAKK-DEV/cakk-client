@@ -72,13 +72,19 @@ struct LikedItemsView: View {
           cakeImagesView()
             .tag(SearchResultSection.images)
             .onFirstAppear {
-              viewModel.fetchCakeImages()
+              /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                viewModel.fetchCakeImages()
+              }
             }
         
           cakeShopsView()
             .tag(SearchResultSection.cakeShop)
             .onFirstAppear {
-              viewModel.fetchCakeShops()
+              /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                viewModel.fetchCakeShops()
+              }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
