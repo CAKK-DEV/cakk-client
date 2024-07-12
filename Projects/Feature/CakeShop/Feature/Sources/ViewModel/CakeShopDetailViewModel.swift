@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonUtil
+
 import CommonDomain
 import DomainCakeShop
 import DomainUser
@@ -202,15 +204,20 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        switch completion {
+        case .failure(let error):
           if error == .sessionExpired {
             self?.likeUpdatingState = .sessionExpired
           } else {
             self?.likeUpdatingState = .failure
           }
-        } else {
+          
+        case .finished:
           self?.likeUpdatingState = .idle
           self?.isLiked = true
+          
+          /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeShopLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
@@ -224,15 +231,20 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        switch completion {
+        case .failure(let error):
           if error == .sessionExpired {
             self?.likeUpdatingState = .sessionExpired
           } else {
             self?.likeUpdatingState = .failure
           }
-        } else {
+          
+        case .finished:
           self?.likeUpdatingState = .idle
           self?.isLiked = false
+          
+          /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeShopLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)

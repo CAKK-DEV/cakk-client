@@ -27,6 +27,6 @@ public struct LikedCakeImage: Identifiable {
   }
   
   public var id: Int {
-    return shopId
+    return imageId
   }
 }

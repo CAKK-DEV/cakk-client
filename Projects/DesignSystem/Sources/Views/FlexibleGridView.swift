@@ -58,7 +58,6 @@ public struct FlexibleGridView<Data: RandomAccessCollection, Content: View>: Vie
       GeometryReader { proxy in
         Color.clear
           .onAppear {
-            print(calculateColumn(for: proxy.size.width))
             self.columns = calculateColumn(for: proxy.size.width)
           }
       }
