@@ -7,7 +7,7 @@ let project = Project.framework(
     Project.DomainUser,
     Project.MoyaUtil,
     Project.UserSession,
-    External.sdWebImageWebPCoder
+    Project.NetworkImage
   ],
   supportsResources: true
 )

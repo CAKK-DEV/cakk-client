@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainSearch
+import CommonDomain
 
 extension CakeImage {
   

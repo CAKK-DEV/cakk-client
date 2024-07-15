@@ -10,5 +10,5 @@ import UIKit
 import Combine
 
 public protocol BusinessOwnerRepository {
-  func requestCakeShopOwnerVerification(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String, accessToken: String) -> AnyPublisher<Void, BusinessOwnerError>
+  func requestCakeShopOwnerVerification(shopId: Int, businessRegistrationImageUrl: String, idCardImageUrl: String, contact: String, message: String, accessToken: String) -> AnyPublisher<Void, BusinessOwnerError>
 }

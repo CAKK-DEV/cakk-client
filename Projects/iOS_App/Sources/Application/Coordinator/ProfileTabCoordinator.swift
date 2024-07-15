@@ -9,74 +9,51 @@
 import SwiftUI
 import Router
 
-import DomainBusinessOwner
-import DomainCakeShop
-
 import FeatureUser
 import FeatureCakeShopAdmin
-
-import DIContainer
 
 struct ProfileTabCoordinator: View {
   
   // MARK: - Properties
   
   @StateObject private var router = Router()
-  private let diContainer = DIContainer.shared.container
+  private let viewModelRegistry = ViewModelRegistry()
   
   
   // MARK: - Views
   
   var body: some View {
     NavigationStack(path: $router.navPath) {
-      let _ = Self._printChanges()
       UserCoordinator()
         .navigationDestination(for: PublicUserDestination.self) { destination in
           switch destination {
+            // 케이크샵 이미지 수정
           case .editCakeImages(let shopId):
-            let _ = diContainer.register(EditCakeShopImagesViewModel.self) { resolver in
-              let cakeImagesByShopIdUseCase = resolver.resolve(CakeImagesByShopIdUseCase.self)!
-              return EditCakeShopImagesViewModel(shopId: shopId,
-                                                 cakeImagesByShopIdUseCase: cakeImagesByShopIdUseCase)
-            }
+            let _ = viewModelRegistry.registerEditCakeShopImagesViewModel(shopId: shopId)
             EditCakeImagesCoordinator()
               .environmentObject(router)
             
+            // 가게 외부 링크 수정
           case .editExternalLink(let shopId, let externalLinks):
-            let _ = diContainer.register(EditExternalLinkViewModel.self) { resolver in
-              let editExternalLinkUseCase = resolver.resolve(EditExternalLinkUseCase.self)!
-              return EditExternalLinkViewModel(shopId: shopId,
-                                               editExternalLinkUseCase: editExternalLinkUseCase,
-                                               externalShopLinks: externalLinks)
-            }
+            let _ = viewModelRegistry.registerEditExternalLinkViewModel(shopId: shopId, externalLinks: externalLinks)
             EditExternalLinkView()
               .environmentObject(router)
             
+            // 가게 위치 수정
           case .editLocation(let shopId, let cakeShopLocation):
-            let _ = diContainer.register(EditCakeShopAddressViewModel.self) { resolver in
-              let editShopAddressUseCase = resolver.resolve(EditShopAddressUseCase.self)!
-              return EditCakeShopAddressViewModel(shopId: shopId,
-                                                  cakeShopLocation: cakeShopLocation,
-                                                  editShopAddressUseCase: editShopAddressUseCase)
-            }
+            let _ = viewModelRegistry.registerEditCakeShopAddressViewModel(shopId: shopId, cakeShopLocation: cakeShopLocation)
             EditCakeShopAddressView()
               .environmentObject(router)
             
+            // 가게 기본정보 수정
           case .editShopBasicInfo(let shopDetail):
-            let _ = diContainer.register(EditCakeShopBasicInfoViewModel.self) { resolver in
-              let editShopBasicInfoUseCase = resolver.resolve(EditShopBasicInfoUseCase.self)!
-              return EditCakeShopBasicInfoViewModel(shopDetail: shopDetail, editShopBasicInfoUseCase: editShopBasicInfoUseCase)
-            }
+            let _ = viewModelRegistry.registerEditCakeShopBasicInfoViewModel(shopDetail: shopDetail)
             EditCakeShopBasicInfoView()
               .environmentObject(router)
             
+            // 영업일 수정
           case .editWorkingDay(let shopId, let workingDaysWithTime):
-            let _ = diContainer.register(EditWorkingDayViewModel.self) { resolver in
-              let editWorkingDayUseCase = resolver.resolve(EditWorkingDayUseCase.self)!
-              return EditWorkingDayViewModel(shopId: shopId,
-                                             editWorkingDayUseCase: editWorkingDayUseCase,
-                                             workingDaysWithTime: workingDaysWithTime)
-            }
+            let _ = viewModelRegistry.registerEditWorkingDayViewModel(shopId: shopId, workingDaysWithTime: workingDaysWithTime)
             EditWorkingDayView()
               .environmentObject(router)
             

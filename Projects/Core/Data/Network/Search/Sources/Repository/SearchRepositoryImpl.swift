@@ -12,6 +12,7 @@ import Combine
 import Moya
 import CombineMoya
 
+import CommonDomain
 import DomainSearch
 
 public final class SearchRepositoryImpl: SearchRepository {
@@ -46,6 +47,22 @@ public final class SearchRepositoryImpl: SearchRepository {
       .eraseToAnyPublisher()
   }
   
+  public func fetchTrendingCakeShops(count: Int) -> AnyPublisher<[CakeShop], any Error> {
+    provider.requestPublisher(.fetchTrendingCakeShops(count: count))
+      .tryMap { response in
+        switch response.statusCode {
+        case 200..<300:
+          let decodedData = try JSONDecoder().decode(TrendingCakeShopsResponseDTO.self, from: response.data)
+          return decodedData.toDomain()
+          
+        default:
+          let decodedData = try JSONDecoder().decode(TrendingCakeShopsResponseDTO.self, from: response.data)
+          throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
+        }
+      }
+      .eraseToAnyPublisher()
+  }
+  
   public func fetchCakeImages(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
     provider.requestPublisher(.fetchCakeImages(keyword: keyword, latitude: latitude, longitude: longitude, pageSize: pageSize, lastCakeId: lastCakeId))
       .tryMap { response in
@@ -58,6 +75,26 @@ public final class SearchRepositoryImpl: SearchRepository {
           let decodedData = try JSONDecoder().decode(CakeImagesResponseDTO.self, from: response.data)
           throw SearchNetworkError.customError(for: decodedData.returnCode, message: decodedData.returnMessage)
         }
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  public func fetchCakeImages(category: CakeCategory, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], any Error> {
+    provider.requestPublisher(.fetchCakeImagesByCategory(category.toDTO(), count: count, lastCakeId: lastCakeId))
+      .map { $0.data }
+      .decode(type: CakeImagesResponseDTO.self, decoder: JSONDecoder())
+      .tryMap { response in
+        response.toDomain()
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  public func fetchCakeImages(shopId: Int, count: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error> {
+    provider.requestPublisher(.fetchCakeImagesByShopId(shopId, count: count, lastCakeId: lastCakeId))
+      .map { $0.data }
+      .decode(type: CakeImagesResponseDTO.self, decoder: JSONDecoder())
+      .tryMap { response in
+        response.toDomain()
       }
       .eraseToAnyPublisher()
   }

@@ -75,7 +75,9 @@ public struct EditCakeShopAddressView: View {
             }
           }
         
-        ShopLocationMapView(shopName: "", latitude: viewModel.cakeShopLocation.latitude, longitude: viewModel.cakeShopLocation.longitude)
+        ShopLocationMapView(annotationItem: .init(shopName: "",
+                                                  latitude: viewModel.cakeShopLocation.latitude, 
+                                                  longitude: viewModel.cakeShopLocation.longitude))
           .id(reloadTrigger)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

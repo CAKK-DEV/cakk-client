@@ -14,21 +14,13 @@ public enum UserAPI {
   case fetchUserProfile(accessToken: String)
   case updateUserProfile(newUserProfile: NewUserProfileDTO, accessToken: String)
   case withdraw(accessToken: String)
-  case requestPresignedUrl
-  case uploadPresignedImage(presignedUrl: String, image: Data)
   case fetchMyShopId(accessToken: String)
 }
 
 extension UserAPI: TargetType {
   public var baseURL: URL {
-    switch self {
-    case .uploadPresignedImage(let presignedUrl, _):
-      return URL(string: presignedUrl)!
-      
-    default:
-      let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
-      return URL(string: baseURLString)!
-    }
+    let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
+    return URL(string: baseURLString)!
   }
   
   public var path: String {
@@ -44,12 +36,6 @@ extension UserAPI: TargetType {
       
     case .withdraw:
       return "/api/v1/me"
-      
-    case .requestPresignedUrl:
-      return "/api/v1/aws/img"
-      
-    case .uploadPresignedImage:
-      return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
       
     case .fetchMyShopId:
       return "/api/v1/shops/mine"
@@ -69,12 +55,6 @@ extension UserAPI: TargetType {
       
     case .withdraw:
       return .delete
-      
-    case .requestPresignedUrl:
-      return .get
-      
-    case .uploadPresignedImage:
-      return .put
       
     case .fetchMyShopId:
       return .get
@@ -98,12 +78,6 @@ extension UserAPI: TargetType {
     case .withdraw:
       return .requestPlain
       
-    case .requestPresignedUrl:
-      return .requestPlain
-      
-    case .uploadPresignedImage(_, let image):
-      return .requestData(image)
-      
     case .fetchMyShopId:
       return .requestPlain
     }
@@ -111,11 +85,8 @@ extension UserAPI: TargetType {
   
   public var headers: [String: String]? {
     switch self {
-    case .signUp, .signIn, .requestPresignedUrl:
+    case .signUp, .signIn:
       return ["Content-Type": "application/json"]
-      
-    case .uploadPresignedImage:
-      return ["Content-Type": "image/jpeg"]
       
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),

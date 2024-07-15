@@ -8,6 +8,8 @@
 
 import Foundation
 import Combine
+
+import CommonDomain
 import DomainCakeShop
 
 public struct MockUploadCakeShopUseCase: UploadCakeShopUseCase {

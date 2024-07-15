@@ -9,7 +9,7 @@
 import SwiftUI
 
 import DesignSystem
-import SwiftUIUtil
+import CommonUtil
 
 struct UploadNewCakeShopView: View {
   var body: some View {

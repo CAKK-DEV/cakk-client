@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonDomain
+
 public protocol EditWorkingDayUseCase {
   func execute(shopId: Int, workingDaysWithTime: [WorkingDayWithTime]) -> AnyPublisher<Void, CakeShopError>
 }

@@ -3,25 +3,20 @@ import ProjectDescription
 public extension Project {
   
   // MARK: - Shared
+
+  static let CommonUtil: TargetDependency = .project(
+    target: "CommonUtil",
+    path: .relativeToRoot("Projects/Shared/Util/CommonUtil")
+  )
   
   static let MoyaUtil: TargetDependency = .project(
     target: "MoyaUtil",
     path: .relativeToRoot("Projects/Shared/Util/MoyaUtil")
   )
   
-  static let SwiftUIUtil: TargetDependency = .project(
-    target: "SwiftUIUtil",
-    path: .relativeToRoot("Projects/Shared/Util/SwiftUIUtil")
-  )
-  
   static let TokenUtil: TargetDependency = .project(
     target: "TokenUtil",
     path: .relativeToRoot("Projects/Shared/Util/TokenUtil")
-  )
-
-  static let UIKitUtil: TargetDependency = .project(
-    target: "UIKitUtil",
-    path: .relativeToRoot("Projects/Shared/Util/UIKitUtil")
   )
 
   static let LocationService: TargetDependency = .project(
@@ -42,11 +37,16 @@ public extension Project {
 
    static let DIContainer: TargetDependency = .project(
     target: "DIContainer",
-    path: .relativeToRoot("Projects/Core/DIContainer")
+    path: .relativeToRoot("Projects/Shared/DIContainer")
   )
   
   
   // MARK: - Core / Domain
+
+  static let CommonDomain: TargetDependency = .project(
+    target: "CommonDomain",
+    path: .relativeToRoot("Projects/Core/Domain/Common")
+  )
   
   static let DomainUser: TargetDependency = .project(
     target: "DomainUser",
@@ -95,8 +95,13 @@ public extension Project {
     target: "NetworkBusinessOwner",
     path: .relativeToRoot("Projects/Core/Data/Network/BusinessOwner")
   )
+
+  static let NetworkImage: TargetDependency = .project(
+    target: "NetworkImage",
+    path: .relativeToRoot("Projects/Core/Data/Network/Image")
+  )
   
-  
+
   // MARK: - Core / Data / KeyChain
   
   static let KeyChainOAuthToken: TargetDependency = .project(

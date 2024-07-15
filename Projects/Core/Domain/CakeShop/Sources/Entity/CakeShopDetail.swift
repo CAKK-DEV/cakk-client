@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonDomain
 
 public struct CakeShopDetail: Hashable {
   public var shopId: Int

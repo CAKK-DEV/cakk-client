@@ -10,7 +10,7 @@ import SwiftUI
 import DesignSystem
 import Router
 
-import SwiftUIUtil
+import CommonUtil
 
 struct Login_Root: View {
   

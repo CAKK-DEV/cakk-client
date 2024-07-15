@@ -206,7 +206,7 @@ extension SocialLoginViewModel {
                   guard let self = self else { return }
                   
                   if let error = error {
-                    print(error)
+                    print(error.localizedDescription)
                     self.signInState = .failure
                     return
                   }
@@ -294,7 +294,7 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
   }
   
   public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
-    print(error)
+    print(error.localizedDescription)
     signInState = .failure
   }
 }

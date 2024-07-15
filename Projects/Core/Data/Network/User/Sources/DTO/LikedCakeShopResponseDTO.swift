@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainUser
 
 struct LikedCakeShopsResponseDTO: Decodable {
   let returnCode: String
@@ -17,5 +18,14 @@ struct LikedCakeShopsResponseDTO: Decodable {
     let cakeShops: [LikedCakeShopDTO]
     let lastCakeShopHeartId: Int?
     let size: Int
+  }
+}
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension LikedCakeShopsResponseDTO {
+  func toDomain() -> [LikedCakeShop] {
+    return self.data.cakeShops.map { $0.toDomain() }
   }
 }

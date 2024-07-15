@@ -10,6 +10,7 @@ import Foundation
 import Combine
 
 import DomainSearch
+import CommonDomain
 
 public struct MockTrendingCakeImagesUseCase: TrendingCakeImagesUseCase {
   

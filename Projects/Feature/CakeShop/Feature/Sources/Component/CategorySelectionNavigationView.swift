@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 
+import CommonDomain
 import DomainCakeShop
+
 import Router
 
 struct CategorySelectionNavigationView: View {

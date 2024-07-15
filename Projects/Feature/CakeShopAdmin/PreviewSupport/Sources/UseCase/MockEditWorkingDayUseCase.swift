@@ -8,6 +8,8 @@
 
 import Foundation
 import Combine
+
+import CommonDomain
 import DomainCakeShop
 
 public struct MockEditWorkingDayUseCase: EditWorkingDayUseCase {
@@ -35,7 +37,7 @@ public struct MockEditWorkingDayUseCase: EditWorkingDayUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(shopId: Int, workingDaysWithTime: [DomainCakeShop.WorkingDayWithTime]) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
+  public func execute(shopId: Int, workingDaysWithTime: [WorkingDayWithTime]) -> AnyPublisher<Void, CakeShopError> {
     switch scenario {
     case .failure:
       Fail(error: CakeShopError.failure)

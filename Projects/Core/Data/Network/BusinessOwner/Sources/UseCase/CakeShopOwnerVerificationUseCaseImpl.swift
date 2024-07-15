@@ -10,6 +10,7 @@ import UIKit
 import Combine
 
 import DomainBusinessOwner
+import NetworkImage
 
 import UserSession
 
@@ -17,13 +18,18 @@ public final class CakeShopOwnerVerificationUseCaseImpl: CakeShopOwnerVerificati
   
   // MARK: - Properties
   
-  private let repository: BusinessOwnerRepository
+  private let businessOwnerRepository: BusinessOwnerRepository
+  private let imageUploadRepository: ImageUploadRepository
   
   
   // MARK: - Initializers
   
-  public init(repository: BusinessOwnerRepository) {
-    self.repository = repository
+  public init(
+    businessOwnerRepository: BusinessOwnerRepository,
+    imageUploadRepository: ImageUploadRepository
+  ) {
+    self.businessOwnerRepository = businessOwnerRepository
+    self.imageUploadRepository = imageUploadRepository
   }
   
   
@@ -31,12 +37,21 @@ public final class CakeShopOwnerVerificationUseCaseImpl: CakeShopOwnerVerificati
   
   public func execute(shopId: Int, businessRegistrationImage: UIImage, idCardImage: UIImage, contact: String, message: String) -> AnyPublisher<Void, BusinessOwnerError> {
     if let accessToken = UserSession.shared.accessToken {
-      repository.requestCakeShopOwnerVerification(shopId: shopId,
-                                          businessRegistrationImage: businessRegistrationImage,
-                                          idCardImage: idCardImage,
-                                          contact: contact,
-                                          message: message,
-                                          accessToken: accessToken)
+      
+      imageUploadRepository.uploadImage(image: businessRegistrationImage)
+        .combineLatest(imageUploadRepository.uploadImage(image: idCardImage))
+        .mapError { error -> BusinessOwnerError in
+          return .imageUploadFailure
+        }
+        .flatMap { [businessOwnerRepository] businessRegistrationImageUrl, idCardImageUrl in
+          businessOwnerRepository.requestCakeShopOwnerVerification(shopId: shopId,
+                                                                   businessRegistrationImageUrl: businessRegistrationImageUrl,
+                                                                   idCardImageUrl: idCardImageUrl,
+                                                                   contact: contact,
+                                                                   message: message,
+                                                                   accessToken: accessToken)
+        }
+        .eraseToAnyPublisher()
     } else {
       Fail(error: BusinessOwnerError.sessionExpired)
         .eraseToAnyPublisher()

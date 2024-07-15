@@ -7,10 +7,12 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 
+import CommonDomain
 import DomainCakeShop
 import DomainUser
+import DomainSearch
 
 import DIContainer
 import Router
@@ -123,6 +125,7 @@ public struct CakeShopCoordinator: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShop
+import PreviewSupportSearch
 
 struct CakeShopCoordinator_Preview: PreviewProvider {
   struct ContentView: View {

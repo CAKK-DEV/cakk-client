@@ -8,6 +8,8 @@
 
 import UIKit
 import Combine
+
+import CommonDomain
 import DomainCakeShop
 
 public struct MockUploadCakeImageUseCase: UploadCakeImageUseCase {
@@ -35,7 +37,7 @@ public struct MockUploadCakeImageUseCase: UploadCakeImageUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(cakeShopId: Int, image: UIImage, categories: [DomainCakeShop.CakeCategory], tags: [String]) -> AnyPublisher<Void, DomainCakeShop.CakeShopError> {
+  public func execute(cakeShopId: Int, image: UIImage, categories: [CakeCategory], tags: [String]) -> AnyPublisher<Void, CakeShopError> {
     switch scenario {
     case .failure:
       Fail(error: CakeShopError.failure)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,8 +16,30 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dGY-c2-04x">
+                                <rect key="frame" x="0.0" y="59" width="393" height="639"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SplashLogo" translatesAutoresizingMaskIntoConstraints="NO" id="5lU-UZ-nlU">
+                                        <rect key="frame" x="86.666666666666686" y="220" width="220" height="199"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="5lU-UZ-nlU" firstAttribute="top" secondItem="dGY-c2-04x" secondAttribute="top" constant="220" id="EfR-9n-h83"/>
+                                    <constraint firstItem="5lU-UZ-nlU" firstAttribute="centerX" secondItem="dGY-c2-04x" secondAttribute="centerX" id="qqw-Y2-Cje"/>
+                                    <constraint firstItem="5lU-UZ-nlU" firstAttribute="centerY" secondItem="dGY-c2-04x" secondAttribute="centerY" id="wyB-vn-cPO"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="Blue_3"/>
+                        <constraints>
+                            <constraint firstItem="dGY-c2-04x" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="HZv-XY-w2n"/>
+                            <constraint firstItem="dGY-c2-04x" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Uk7-8T-S5b"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dGY-c2-04x" secondAttribute="trailing" id="bf6-lA-N0V"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="dGY-c2-04x" secondAttribute="bottom" constant="120" id="dgF-N2-DGl"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -26,6 +48,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="SplashLogo" width="220" height="60"/>
         <namedColor name="Blue_3">
             <color red="0.51399999856948853" green="0.57300001382827759" blue="0.88599997758865356" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

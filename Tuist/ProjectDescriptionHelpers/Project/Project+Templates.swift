@@ -77,6 +77,7 @@ extension Project {
     ]
     mergedInfoPlist["UISupportedInterfaceOrientations"] = .array(supportedOrientations.map { .string($0) })
     mergedInfoPlist["UIUserInterfaceStyle"] = .string("Light")
+    mergedInfoPlist["ITSAppUsesNonExemptEncryption"] = .string("NO")
     
     let target = Target.target(
       name: name,
