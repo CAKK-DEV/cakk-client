@@ -110,7 +110,7 @@ struct Login_Root: View {
         isShowing = true
       }
     }
-    .onChange(of: viewModel.signInState) { loginState in
+    .onReceive(viewModel.$signInState) { loginState in
       if loginState == .loading {
         LoadingManager.shared.startLoading()
         return
