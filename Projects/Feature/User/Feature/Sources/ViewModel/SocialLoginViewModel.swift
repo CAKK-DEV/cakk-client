@@ -33,7 +33,6 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case serverError
     case loggedIn
     case newUser
-    case noKakaoAvailable
   }
   
   @Published private(set) var signUpState: SignUpState = .idle
@@ -133,6 +132,8 @@ extension SocialLoginViewModel {
       
       let credentialData = CredentialData(loginProvider: .google, idToken: idToken)
       let signUpProcess = {
+        self.loginType = .google
+        
         guard let profile = result.user.profile else {
           self.signInState = .failure
           return
@@ -168,6 +169,8 @@ extension SocialLoginViewModel {
       
       let credentialData = CredentialData(loginProvider: .kakao, idToken: idToken)
       let signUpProcess = {
+        self.loginType = .kakao
+        
         UserApi.shared.me { [weak self] user, error in
           guard let self = self else { return }
           
@@ -223,6 +226,7 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
     
     let credentialData = CredentialData(loginProvider: .apple, idToken: idToken)
     let signUpProcess = {
+      self.loginType = .apple
       if let email = credential.email, let fullName = credential.fullName {
         self.userData.email = email
         self.userData.nickname = "\(fullName.familyName ?? "")\(fullName.givenName ?? "")"
