@@ -34,22 +34,28 @@ struct SignUp_Birth: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      VStack(spacing: 44) {
+      VStack(spacing: 24) {
         VStack(spacing: 8) {
-          Text("생년월일을 선택해 주세요")
-            .font(.pretendard(size: 27, weight: .bold))
-            .foregroundStyle(Color.white)
-            .whiteTextShadow()
-            .multilineTextAlignment(.center)
-            // isShowing animation
-            .offset(x: 0, y: isShowing ? 0 : 120)
-            .scaleEffect(isShowing ? 1.0 : 0.95)
-            .opacity(isShowing ? 1.0 : 0)
-            .blur(radius: isShowing ? 0 : 10)
-            // isDisappearing animation
-            .offset(y: isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
-            .scaleEffect(isDisappearing ? 0.4 : 1)
-            .blur(radius: isDisappearing ? 100 : 0)
+          VStack(spacing: 4) {
+            Text("생년월일을 선택해 주세요")
+              .font(.pretendard(size: 27, weight: .bold))
+              .foregroundStyle(Color.white)
+              .whiteTextShadow()
+              
+            Text("생일 정보는 맞춤형 콘텐츠 제공 및 이벤트\n참여를 위해 필요해요")
+              .font(.pretendard(size: 15, weight: .semiBold))
+              .foregroundStyle(Color.white.opacity(0.5))
+          }
+          .multilineTextAlignment(.center)
+          // isShowing animation
+          .offset(x: 0, y: isShowing ? 0 : 120)
+          .scaleEffect(isShowing ? 1.0 : 0.95)
+          .opacity(isShowing ? 1.0 : 0)
+          .blur(radius: isShowing ? 0 : 10)
+          // isDisappearing animation
+          .offset(y: isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
+          .scaleEffect(isDisappearing ? 0.4 : 1)
+          .blur(radius: isDisappearing ? 100 : 0)
         }
         
         Text(viewModel.userData.birthday.formatted(.dateTime.day().month().year()))
