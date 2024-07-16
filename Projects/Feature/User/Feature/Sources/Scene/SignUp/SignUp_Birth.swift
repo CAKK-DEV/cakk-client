@@ -109,6 +109,20 @@ struct SignUp_Birth: View {
             stepRouter.popStep()
           }
         })
+        .overlay {
+          HStack {
+            Button {
+              stepRouter.pushStep()
+            } label: {
+              Text("건너뛰기")
+                .font(.pretendard(size: 17, weight: .semiBold))
+                .foregroundStyle(Color.white.opacity(0.4))
+                .padding(.vertical, 12)
+                .padding(.trailing, 20)
+            }
+          }
+          .frame(maxWidth: .infinity, alignment: .trailing)
+        }
         
         Spacer()
       }

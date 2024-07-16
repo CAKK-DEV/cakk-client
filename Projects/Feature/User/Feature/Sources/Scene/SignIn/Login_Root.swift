@@ -139,8 +139,6 @@ struct Login_Root: View {
         showDialog(title: "서버 에러", message: "서버에 문제가 생겼어요🥲\n나중에 다시 시도해주세요.")
       case .appleSingInExpired:
         isShowingAppleSignInExpiredAlert = true
-      case .noKakaoAvailable:
-        showDialog(title: "카카오 로그인 실패", message: "카카오톡이 설치되어있지 않아요.\n카카오톡 설치후 다시 시도해주세요.")
       default:
         break
       }
