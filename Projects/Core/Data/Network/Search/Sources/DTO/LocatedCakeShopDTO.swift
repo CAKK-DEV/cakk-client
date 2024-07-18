@@ -11,7 +11,7 @@ import DomainSearch
 
 struct LocatedCakeShopDTO: Decodable {
   let cakeShopId: Int
-  let thumbnailUrl: String
+  let thumbnailUrl: String?
   let cakeShopName: String
   let cakeShopBio: String
   let cakeImageUrls: [String]
