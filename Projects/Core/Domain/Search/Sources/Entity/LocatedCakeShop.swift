@@ -10,7 +10,7 @@ import Foundation
 
 public struct LocatedCakeShop: Identifiable, Equatable {
   public let id: Int
-  public let profileImageUrl: String
+  public let profileImageUrl: String?
   public let name: String
   public let bio: String
   public let cakeImageUrls: [String]
@@ -19,7 +19,7 @@ public struct LocatedCakeShop: Identifiable, Equatable {
   
   public init(
     id: Int,
-    profileImageUrl: String,
+    profileImageUrl: String?,
     name: String,
     bio: String,
     cakeImageUrls: [String],
