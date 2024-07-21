@@ -39,6 +39,8 @@ import GoogleSignIn
 import KakaoSDKCommon
 import KakaoSDKAuth
 
+import FirebaseCore
+
 
 @main
 struct CAKKApp: App {
@@ -409,5 +411,9 @@ struct CAKKApp: App {
     } else {
       assertionFailure("🔑 유효호지 않은 카카오 APP key 입니다.")
     }
+  }
+  
+  private func initFirebase() {
+    FirebaseApp.configure()
   }
 }

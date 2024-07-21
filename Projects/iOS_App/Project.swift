@@ -49,7 +49,12 @@ let project = Project.app(
     Project.UserSession,
     Project.DIContainer,
 
-    Project.NetworkImage
+    Project.NetworkImage,
+
+    .package(product: "FirebaseAnalytics")
+  ],
+  packages: [
+     .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.29.0"))
   ],
   entitlements: "App.entitlements"
 )
