@@ -41,10 +41,6 @@ public enum External {
     return .external(name: "Kingfisher")
   }
 
-  public static var sdWebImageWebPCoder: TargetDependency {
-    return .external(name: "SDWebImageWebPCoder")
-  }
-
   public static var expandableText: TargetDependency {
     return .external(name: "ExpandableText")
   }

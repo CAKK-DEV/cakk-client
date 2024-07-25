@@ -14,7 +14,6 @@ let packageSettings = PackageSettings(
     "CombineMoya": .framework,
     "Swinject": .framework,
     "Kingfisher": .framework,
-    "SDWebImageWebPCoder": .framework,
     "ExpandableText": .framework
   ],
   baseSettings: .settings(
@@ -37,7 +36,6 @@ let package = Package(
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.22.2"),
     .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8"),
     .package(url: "https://github.com/onevcat/Kingfisher", from: "7.12.0"),
-    .package(url: "https://github.com/SDWebImage/SDWebImageWebPCoder.git", from: "0.14.6"),
     .package(url: "https://github.com/n3d1117/ExpandableText.git", from: "1.0.0")
   ]
 )
