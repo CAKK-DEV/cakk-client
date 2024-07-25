@@ -26,7 +26,8 @@ let project = Project.app(
     ],
     "NSPhotoLibraryUsageDescription": "프로필 사진 선택을 위해 사진첩 접근 권한이 필요합니다.",
     "PHPhotoLibraryPreventAutomaticLimitedAccessAlert": "YES",
-    "NSLocationWhenInUseUsageDescription": "보다 정확한 검색 결과를 위해서 위치 권한이 필요합니다."
+    "NSLocationWhenInUseUsageDescription": "보다 정확한 검색 결과를 위해서 위치 권한이 필요합니다.",
+    "NSUserTrackingUsageDescription": "맞춤형 광고와 향상된 서비스를 제공하기 위해 광고 식별자를 사용하고자 합니다"
   ],
   dependencies: [
     Project.FeatureUser,
