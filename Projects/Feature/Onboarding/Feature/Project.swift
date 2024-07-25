@@ -7,6 +7,6 @@ let project = Project.framework(
     Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
-    External.haptico
+    External.Haptico
   ]
 )
