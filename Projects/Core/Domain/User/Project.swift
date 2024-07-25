@@ -5,7 +5,7 @@ let project = Project.framework(
   name: "DomainUser",
   dependencies: [
     Project.CommonDomain,
-    External.moya,
-    External.combineMoya
+    External.Moya,
+    External.CombineMoya
   ]
 )

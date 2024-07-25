@@ -17,9 +17,9 @@ let project = Project.framework(
     ]
   ],
   dependencies: [
-    External.lottie,
-    External.snapKit,
-    External.kingfisher,
+    External.Lottie,
+    External.SnapKit,
+    External.Kingfisher,
     Project.CommonUtil
   ],
   supportsResources: true

@@ -5,7 +5,7 @@ let project = Project.framework(
   name: "DomainSearch",
   dependencies: [
     Project.CommonDomain,
-    External.moya,
-    External.combineMoya
+    External.Moya,
+    External.CombineMoya
   ]
 )
