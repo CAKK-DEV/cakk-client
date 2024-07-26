@@ -23,8 +23,13 @@ public extension Project {
     target: "LocationService",
     path: .relativeToRoot("Projects/Shared/Services/LocationService")
   )
+
+  static let Logger: TargetDependency = .project(
+    target: "Logger",
+    path: .relativeToRoot("Projects/Shared/Logger")
+  )
   
-  
+
   // MARK: - DesignSystem
   
   static let DesignSystem: TargetDependency = .project(

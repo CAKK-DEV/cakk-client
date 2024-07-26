@@ -8,6 +8,7 @@
 
 import SwiftUI
 import DesignSystem
+import Logger
 
 import DIContainer
 
@@ -49,7 +50,7 @@ struct CakeShopHomeView: View {
   private func requestIDFAPermission() {
     ATTrackingManager.requestTrackingAuthorization { status in
       /// status를 가지고 필요한 작업이 있다면 합니다.
-      print(status)
+      Loggers.featureCakeShop.info("앱 추적 권한 \(status)", category: .auth)
     }
   }
 }

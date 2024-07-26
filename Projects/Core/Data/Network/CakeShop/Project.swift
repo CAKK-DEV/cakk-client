@@ -11,7 +11,8 @@ let project = Project.framework(
     Project.DomainOAuthToken,
     Project.MoyaUtil,
     Project.UserSession,
-    Project.NetworkImage
+    Project.NetworkImage,
+    Project.Logger
   ],
   supportsResources: true
 )

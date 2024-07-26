@@ -14,6 +14,8 @@ import DomainUser
 import Moya
 import CombineMoya
 
+import Logger
+
 public final class UserProfileRepositoryImpl: UserProfileRepository {
   
   // MARK: - Properties
@@ -31,7 +33,9 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
   // MARK: - Public Methods
   
   public func fetchUserProfile(accessToken: String) -> AnyPublisher<DomainUser.UserProfile, DomainUser.UserProfileError> {
-    provider.requestPublisher(.fetchUserProfile(accessToken: accessToken))
+    Loggers.networkUser.info("유저 정보를 요청합니다.", category: .network)
+    
+    return provider.requestPublisher(.fetchUserProfile(accessToken: accessToken))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
@@ -39,6 +43,8 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           guard let data = decodedResponse.data else {
             throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
+          
+          Loggers.networkUser.info("유저 정보를 가져오는데 성공하였습니다.\n\(data)", category: .network)
           return data.toDomain()
           
         default:
@@ -48,8 +54,10 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       }
       .mapError { error in
         if let cakkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.error("네트워크 에러 \(cakkError.localizedDescription)", category: .network)
           return cakkError.toUserProfileError()
         } else {
+          Loggers.networkUser.error("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toUserProfileError()
         }
       }
@@ -57,6 +65,8 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
   }
   
   public func updateUserProfile(profileImageUrl: String?, nickName: String, email: String, gender: DomainUser.Gender, birthday: Date?, accessToken: String) -> AnyPublisher<Void, DomainUser.UserProfileError> {
+    Loggers.networkUser.info("\(nickName)의 프로필을 업데이트 합니다.", category: .network)
+    
     let newUserProfileDTO = NewUserProfileDTO(profileImageUrl: profileImageUrl,
                                               nickname: nickName,
                                               email: email,
@@ -70,6 +80,8 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           if decodedResponse.returnCode != "1000" {
             throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
+          
+          Loggers.networkUser.info("\(nickName)의 프로필을 업데이트에 성공하였습니다.", category: .network)
           return Void()
           
         default:
@@ -79,8 +91,10 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       }
       .mapError { error in
         if let cakkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.error("네트워크 에러 \(cakkError.localizedDescription)", category: .network)
           return cakkError.toUserProfileError()
         } else {
+          Loggers.networkUser.error("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toUserProfileError()
         }
       }
@@ -88,7 +102,9 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
   }
   
   public func withdraw(accessToken: String) -> AnyPublisher<Void, DomainUser.UserProfileError> {
-    provider.requestPublisher(.withdraw(accessToken: accessToken))
+    Loggers.networkUser.info("회원 탈퇴를 요청합니다.", category: .network)
+    
+    return provider.requestPublisher(.withdraw(accessToken: accessToken))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
@@ -96,6 +112,8 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
           if decodedResponse.returnCode != "1000" {
             throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
+          
+          Loggers.networkUser.info("회원 탈퇴에 성공하였습니다.", category: .network)
           return Void()
           
         default:
@@ -105,8 +123,10 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       }
       .mapError { error in
         if let cakkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.error("네트워크 에러 \(cakkError.localizedDescription)", category: .network)
           return cakkError.toUserProfileError()
         } else {
+          Loggers.networkUser.error("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toUserProfileError()
         }
       }
@@ -114,11 +134,15 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
   }
   
   public func fetchMyCakeShopId(accessToken: String) -> AnyPublisher<Int?, UserProfileError> {
-    provider.requestPublisher(.fetchMyShopId(accessToken: accessToken))
+    Loggers.networkUser.info("나의 케이크샵 아이디를 요청합니다.", category: .network)
+    
+    return provider.requestPublisher(.fetchMyShopId(accessToken: accessToken))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(MyShopResponseDTO.self, from: response.data)
+          
+          Loggers.networkUser.info("나의 케이크샵 아이디를 불러오는데 성공하였습니다.\n\(decodedResponse.data == nil ? "소유하고있는 케이크샵이 없습니다." : "내 케이크샵 아이디: \(decodedResponse.data!.cakeShopId)")", category: .network)
           return decodedResponse.data?.cakeShopId
           
         default:
@@ -128,8 +152,10 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
       }
       .mapError { error in
         if let cakkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.error("네트워크 에러 \(cakkError.localizedDescription)", category: .network)
           return cakkError.toUserProfileError()
         } else {
+          Loggers.networkUser.error("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toUserProfileError()
         }
       }
