@@ -13,6 +13,8 @@ import CombineMoya
 
 import DomainUser
 
+import Logger
+
 public final class SocialLoginRepositoryImpl: SocialLoginRepository {
   
   // MARK: - Properties
@@ -30,6 +32,8 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
   // MARK: - Public Method
   
   public func signIn(credential: DomainUser.CredentialData) -> AnyPublisher<DomainUser.SocialLoginResponse, SocialLoginSignInError> {
+    Loggers.networkUser.info("로그인을 시도합니다.\nCredential: \(credential)", category: .network)
+    
     return provider.requestPublisher(.signIn(credential: credential.toDTO()))
       .tryMap { response in
         switch response.statusCode {
@@ -38,6 +42,8 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           guard let data = decodedResponse.data else {
             throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
+          
+          Loggers.networkUser.info("로그인에 성공하였습니다.", category: .network)
           return data.toDomain()
           
         default:
@@ -47,8 +53,10 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       }
       .mapError { error in
         if let networkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.info("네트워크 에러 \(networkError.localizedDescription)", category: .network)
           return networkError.toSocialLoginSignInError()
         } else {
+          Loggers.networkUser.info("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toSocialLoginSignInError()
         }
       }
@@ -56,7 +64,9 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
   }
   
   public func signUp(auth: DomainUser.AuthData) -> AnyPublisher<DomainUser.SocialLoginResponse, SocialLoginSignUpError> {
-    provider.requestPublisher(.signUp(authRequest: auth.toDTO()))
+    Loggers.networkUser.info("회원가입을 시도합니다.\nAuthData: \(auth)", category: .network)
+    
+    return provider.requestPublisher(.signUp(authRequest: auth.toDTO()))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
@@ -64,6 +74,8 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
           guard let data = decodedResponse.data else {
             throw CAKKUserNetworkError.customError(for: decodedResponse.returnCode, message: decodedResponse.returnMessage)
           }
+          
+          Loggers.networkUser.info("회원가입에 성공하였습니다.", category: .network)
           return data.toDomain()
           
         default:
@@ -73,8 +85,10 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       }
       .mapError { error in
         if let networkError = error as? CAKKUserNetworkError {
+          Loggers.networkUser.info("네트워크 에러 \(networkError.localizedDescription)", category: .network)
           return networkError.toSocialLoginSignUpError()
         } else {
+          Loggers.networkUser.info("예측되지 못한 에러 \(error.localizedDescription)", category: .network)
           return CAKKUserNetworkError.error(for: error).toSocialLoginSignUpError()
         }
       }
