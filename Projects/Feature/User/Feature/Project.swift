@@ -18,6 +18,8 @@ let project = Project.framework(
     
     Project.UserSession,
     Project.DIContainer,
+    Project.Logger,
+
     External.KakaoSDKCommon,
     External.KakaoSDKAuth,
     External.KakaoSDKUser,

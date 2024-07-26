@@ -16,6 +16,8 @@ import GoogleSignIn
 
 import Moya
 
+import Logger
+
 public final class SocialLoginViewModel: NSObject, ObservableObject {
   
   // MARK: - Properties
@@ -80,12 +82,15 @@ extension SocialLoginViewModel {
   public func signUp() {
     signUpState = .loading
     
-    // 모든 항목 존재하는지 검사.
+    /// 모든 항목 존재하는지 검사.
     guard let credentialData else {
+      Loggers.featureUser.info("Credential 데이터가 존재하지 않습니다.", category: .network)
       signUpState = .failure
       return
     }
+    
     if userData.nickname.isEmpty && userData.email.isEmpty {
+      Loggers.featureUser.info("이름 또는 이메일정보가 없습니다.", category: .network)
       signUpState = .failure
       return
     }
@@ -114,6 +119,7 @@ extension SocialLoginViewModel {
 
 extension SocialLoginViewModel {
   public func signInWithGoogle() {
+    Loggers.featureUser.info("구글 로그인에 시도합니다.", category: .network)
     guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
     
     signInState = .loading
@@ -122,17 +128,19 @@ extension SocialLoginViewModel {
       guard let self else { return }
       
       if let error {
-        print(error.localizedDescription)
+        Loggers.featureUser.error("에러 발생: \(error.localizedDescription)", category: .network)
         self.signInState = .failure
         return
       }
       
       guard let result = signInResult else {
+        Loggers.featureUser.error("GISignInResult가 누락되었습니다.", category: .network)
         self.signInState = .failure
         return
       }
       
       guard let idToken = result.user.idToken?.tokenString else {
+        Loggers.featureUser.error("구글 토큰 정보가 없습니다.", category: .network)
         self.signInState = .failure
         return
       }
@@ -147,7 +155,9 @@ extension SocialLoginViewModel {
               self?.signInState = .failure
               
             case .newUser:
+              Loggers.featureUser.info("등록된 계정이 없어 계정을 신규등록합니다.", category: .network)
               guard let profile = result.user.profile else {
+                Loggers.featureUser.error("계정 등록에 필요한 계정 정보가 누락되었습니다.", category: .network)
                 self?.signInState = .failure
                 return
               }
@@ -174,6 +184,7 @@ extension SocialLoginViewModel {
 
 extension SocialLoginViewModel {
   public func signInWithKakao() {
+    Loggers.featureUser.info("카카오 로그인에 시도합니다.", category: .network)
     signInState = .loading
     
     if UserApi.isKakaoTalkLoginAvailable() {
@@ -181,13 +192,13 @@ extension SocialLoginViewModel {
         guard let self = self else { return }
         
         if let error = error {
-          print(error.localizedDescription)
+          Loggers.featureUser.error("에러 발생\(error.localizedDescription)", category: .network)
           self.signInState = .failure
           return
         }
         
         guard let idToken = oauthToken?.idToken else {
-          print("Failed to get oauth token")
+          Loggers.featureUser.error("OAuth token 정보를 받아오는데 실패하였습니다.", category: .network)
           self.signInState = .failure
           return
         }
@@ -206,13 +217,13 @@ extension SocialLoginViewModel {
                   guard let self = self else { return }
                   
                   if let error = error {
-                    print(error.localizedDescription)
+                    Loggers.featureUser.error("에러 발생\(error.localizedDescription)", category: .network)
                     self.signInState = .failure
                     return
                   }
                   
                   guard let name = user?.properties?["nickname"] else {
-                    print("Failed to get user info")
+                    Loggers.featureUser.error("유저 정보를 받아오는데 실패하였습니다.", category: .network)
                     self.signInState = .failure
                     return
                   }
@@ -243,6 +254,7 @@ extension SocialLoginViewModel {
 
 extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
   public func signInWithApple() {
+    Loggers.featureUser.info("애플 로그인에 시도합니다.", category: .network)
     signInState = .loading
     
     let appleIdProvider = ASAuthorizationAppleIDProvider()
@@ -259,6 +271,7 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
     guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential else { return }
     
     guard let idToken = String(data: credential.identityToken ?? Data(), encoding: .utf8) else {
+      Loggers.featureUser.error("id token을 받아오는데 실패하였습니다.", category: .network)
       signInState = .failure
       return
     }
