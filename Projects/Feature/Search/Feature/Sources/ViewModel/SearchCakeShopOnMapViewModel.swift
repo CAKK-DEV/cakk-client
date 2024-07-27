@@ -32,6 +32,35 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
                                                                             longitude: LocationService.defaultCoordinates.longitude),
                                              span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
   
+  @Published var searchDistanceOption: SearchDistanceOption = .fiveHundredMeter
+  public enum SearchDistanceOption: CaseIterable {
+    case fiveHundredMeter
+    case oneKilometer
+    case threeKilometer
+    
+    var isAdRequired: Bool {
+      switch self {
+      case .fiveHundredMeter:
+        return false
+      case .oneKilometer:
+        return false
+      case .threeKilometer:
+        return true
+      }
+    }
+    
+    var displayName: String {
+      switch self {
+      case .fiveHundredMeter:
+        return "500m"
+      case .oneKilometer:
+        return "1km"
+      case .threeKilometer:
+        return "3km"
+      }
+    }
+  }
+  
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -48,10 +77,10 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   
   public func fetchLocatedCakeShops() {
     /// 위치 권한이 허용되어있지 않는 경우 검색하지 않습니다.
-    if LocationService.shared.authorizationStatus != .authorizedWhenInUse
-        && LocationService.shared.authorizationStatus != .authorizedAlways {
-      return
-    }
+//    if LocationService.shared.authorizationStatus != .authorizedWhenInUse
+//        && LocationService.shared.authorizationStatus != .authorizedAlways {
+//      return
+//    }
     
     locatedCakeShopsFetchingState = .loading
     
@@ -76,6 +105,15 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   
   public func setSelected(cakeShop: LocatedCakeShop) {
     selectedCakeShop = cakeShop
+  }
+  
+  public func moveToUserLocation() {
+    guard let userLocation = LocationService.shared.userLocation else { return }
+    
+    self.region = MKCoordinateRegion(
+      center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude),
+      span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
   }
   
   
