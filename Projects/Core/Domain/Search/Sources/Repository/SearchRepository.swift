@@ -28,5 +28,5 @@ public protocol SearchRepository {
   // MARK: - CakeShops
   
   func fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?) -> AnyPublisher<[CakeShop], Error>
-  func fetchLocatedCakeShops(latitude: Double, longitude: Double) -> AnyPublisher<[LocatedCakeShop], Error>
+  func fetchLocatedCakeShops(distance: Int, latitude: Double, longitude: Double) -> AnyPublisher<[LocatedCakeShop], Error>
 }

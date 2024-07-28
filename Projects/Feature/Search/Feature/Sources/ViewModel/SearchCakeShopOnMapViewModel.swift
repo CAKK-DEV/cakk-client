@@ -28,15 +28,15 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     case success
   }
   
-  @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: LocationService.defaultCoordinates.latitude,
-                                                                            longitude: LocationService.defaultCoordinates.longitude),
+  @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: LocationService.shared.userLocation?.latitude ?? LocationService.defaultCoordinates.latitude,
+                                                                            longitude: LocationService.shared.userLocation?.longitude ?? LocationService.defaultCoordinates.longitude),
                                              span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
   
   @Published var searchDistanceOption: SearchDistanceOption = .fiveHundredMeter
-  public enum SearchDistanceOption: CaseIterable {
-    case fiveHundredMeter
-    case oneKilometer
-    case threeKilometer
+  public enum SearchDistanceOption: Int, CaseIterable {
+    case fiveHundredMeter = 500 /// 단위는 미터로 rawValue를 통해서 바로 사용할 수 있습니다.
+    case oneKilometer = 1000
+    case threeKilometer = 3000
     
     var isAdRequired: Bool {
       switch self {
@@ -77,14 +77,15 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   
   public func fetchLocatedCakeShops() {
     /// 위치 권한이 허용되어있지 않는 경우 검색하지 않습니다.
-//    if LocationService.shared.authorizationStatus != .authorizedWhenInUse
-//        && LocationService.shared.authorizationStatus != .authorizedAlways {
-//      return
-//    }
+    if LocationService.shared.authorizationStatus != .authorizedWhenInUse
+        && LocationService.shared.authorizationStatus != .authorizedAlways {
+      return
+    }
     
     locatedCakeShopsFetchingState = .loading
     
-    useCase.execute(longitude: region.center.longitude,
+    useCase.execute(distance: searchDistanceOption.rawValue,
+                    longitude: region.center.longitude,
                     latitude: region.center.latitude)
     .delay(for: .seconds(0.5), scheduler: DispatchQueue.main)
     .subscribe(on: DispatchQueue.global())

@@ -207,10 +207,10 @@ public final class SearchRepositoryImpl: SearchRepository {
       .eraseToAnyPublisher()
   }
   
-  public func fetchLocatedCakeShops(latitude: Double, longitude: Double) -> AnyPublisher<[LocatedCakeShop], any Error> {
+  public func fetchLocatedCakeShops(distance: Int, latitude: Double, longitude: Double) -> AnyPublisher<[LocatedCakeShop], any Error> {
     Loggers.networkSearch.info("위치기반 케이크샵을 불러옵니다.", category: .network)
     
-    return provider.requestPublisher(.fetchLocatedCakeShops(latitude: latitude, longitude: longitude))
+    return provider.requestPublisher(.fetchLocatedCakeShops(distance: distance, latitude: latitude, longitude: longitude))
       .tryMap { response in
         switch response.statusCode {
         case 200..<300:
