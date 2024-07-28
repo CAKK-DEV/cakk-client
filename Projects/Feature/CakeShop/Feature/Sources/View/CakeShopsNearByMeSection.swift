@@ -55,7 +55,7 @@ struct CakeShopsNearByMeSection: View {
         router.navigate(to: PublicCakeShopDestination.map)
       }
       
-      Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locatedCakeShops) { shop in
+      Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locatedCakeShops) { shop in
         let coordinate = CLLocationCoordinate2D(latitude: shop.latitude, longitude: shop.longitude)
         return MapAnnotation(coordinate: coordinate) {
           DesignSystemAsset.shopMarkerRegular.swiftUIImage

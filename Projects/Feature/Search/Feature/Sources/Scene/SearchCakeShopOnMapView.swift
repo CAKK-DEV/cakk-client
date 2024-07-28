@@ -32,6 +32,8 @@ public struct SearchCakeShopOnMapView: View {
   @State private var isRefreshButtonShown = false
   
   @State private var dragOffset: CGSize = .zero
+  
+  @StateObject private var motionData = MotionObserver()
 
   
   // MARK: - Initializers
@@ -45,65 +47,77 @@ public struct SearchCakeShopOnMapView: View {
   // MARK: - Views
   
   public var body: some View {
-    Map(coordinateRegion: $viewModel.region, annotationItems: viewModel.locatedCakeShops) { shop in
-      let coordinate = CLLocationCoordinate2D(latitude: shop.latitude, longitude: shop.longitude)
-      return MapAnnotation(coordinate: coordinate) {
-        ZStack {
-          let isSelected = shop == viewModel.selectedCakeShop
-          
-          VStack(spacing: 6) {
-            DesignSystemAsset.shopMarkerLarge.swiftUIImage
-              .resizable()
-              .frame(width: 46)
-              .scaledToFit()
-              .scaleEffect(isSelected ? 1.0 : 0)
-              .offset(y: isSelected ? 0 : 20)
-              .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1), value: isSelected)
+    ZStack {
+      Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locatedCakeShops) { shop in
+        let coordinate = CLLocationCoordinate2D(latitude: shop.latitude, longitude: shop.longitude)
+        return MapAnnotation(coordinate: coordinate) {
+          ZStack {
+            let isSelected = shop == viewModel.selectedCakeShop
             
-            Text(shop.name)
-              .font(.pretendard(size: 12, weight: .bold))
-              .opacity(isSelected ? 1.0 : 0.0)
-              .scaleEffect(isSelected ? 1.0 : 0.3)
-              .opacity(isSelected ? 1.0 : 0.0)
-              .offset(y: isSelected ? 0 : -16)
-              .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1).delay(0.1), value: isSelected)
+            VStack(spacing: 6) {
+              DesignSystemAsset.shopMarkerLarge.swiftUIImage
+                .resizable()
+                .frame(width: 46)
+                .scaledToFit()
+                .scaleEffect(isSelected ? 1.0 : 0)
+                .offset(y: isSelected ? 0 : 20)
+                .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1), value: isSelected)
+              
+              Text(shop.name)
+                .font(.pretendard(size: 12, weight: .bold))
+                .opacity(isSelected ? 1.0 : 0.0)
+                .scaleEffect(isSelected ? 1.0 : 0.3)
+                .opacity(isSelected ? 1.0 : 0.0)
+                .offset(y: isSelected ? 0 : -16)
+                .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1).delay(0.1), value: isSelected)
+            }
+            .padding(.bottom, 30)
+            
+            DesignSystemAsset.shopMarkerRegular.swiftUIImage
+              .resizable()
+              .size(32)
+              .padding(.bottom, 16)
+              .padding()
+              .scaleEffect(isSelected ? 0.0 : 1.0)
+              .offset(y: isSelected ? 16 : 0.0)
+              .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1), value: isSelected)
           }
-          .padding(.bottom, 30)
-          
-          DesignSystemAsset.shopMarkerRegular.swiftUIImage
-            .resizable()
-            .size(32)
-            .padding(.bottom, 16)
-            .padding()
-            .scaleEffect(isSelected ? 0.0 : 1.0)
-            .offset(y: isSelected ? 16 : 0.0)
-            .animation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 1), value: isSelected)
-        }
-        .onTapGesture {
-          viewModel.setSelected(cakeShop: shop)
+          .onTapGesture {
+            viewModel.setSelected(cakeShop: shop)
+          }
         }
       }
-    }
-    .animation(.smooth)
-    .ignoresSafeArea()
-    .overlay {
+      .animation(.smooth)
+      .ignoresSafeArea()
+      
+      // Navigation bar
       VStack(spacing: 0) {
         navigationBar()
         Spacer()
       }
       .padding(.vertical, 20)
       .padding(.horizontal, 16)
-    }
-    .overlay {
-      VStack(spacing: 0) {
+      
+      // CakeShop View
+      VStack(spacing: 16) {
         Spacer()
         cakeShopView(viewModel.selectedCakeShop)
           .padding(.horizontal, 14)
-          .padding(.bottom, 16)
           .frame(maxWidth: 420)
           .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
+          .opacity(viewModel.selectedCakeShop == nil ? 0 : 1)
           .offset(x: dragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : dragOffset.height)
           .animation(.snappy, value: viewModel.selectedCakeShop == nil)
+          .animation(.snappy, value: viewModel.selectedCakeShop)
+          .offset(motionData.movingOffset)
+          .onAppear {
+            motionData.fetchMotionData(duration: 15)
+          }
+        
+        bottomConfigureBar()
+          .padding(.horizontal, 14)
+          .padding(.bottom, 12)
+          .frame(maxWidth: 420)
       }
     }
     .gesture(
@@ -135,7 +149,7 @@ public struct SearchCakeShopOnMapView: View {
   
   private func cakeShopView(_ cakeShop: LocatedCakeShop?) -> some View {
     VStack(spacing: 16) {
-      HStack(alignment: .top, spacing: 12) {
+      HStack(alignment: .top, spacing: 0) {
         if let profileImageUrl = cakeShop?.profileImageUrl {
           KFImage(URL(string: profileImageUrl))
             .resizable()
@@ -168,6 +182,16 @@ public struct SearchCakeShopOnMapView: View {
             .lineLimit(2)
         }
         .padding(.vertical, 8)
+        .padding(.leading, 12)
+        
+        Button {
+          viewModel.selectedCakeShop = nil
+        } label: {
+          Image(systemName: "xmark")
+            .font(.system(size: 15))
+            .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+            .size(24)
+        }
       }
       
       HStack(spacing: 6) {
@@ -280,6 +304,54 @@ public struct SearchCakeShopOnMapView: View {
       .frame(maxWidth: .infinity, alignment: .leading)
     }
     .frame(maxWidth: .infinity)
+  }
+  
+  private func bottomConfigureBar() -> some View {
+    HStack {
+      ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
+        Button {
+          viewModel.searchDistanceOption = distanceOption
+          UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        } label: {
+          HStack(spacing: 6) {
+            if distanceOption.isAdRequired {
+              DesignSystemAsset.ad.swiftUIImage
+                .resizable()
+                .size(20)
+                .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+            }
+            
+            Text(distanceOption.displayName)
+              .font(.pretendard(size: 12, weight: .semiBold))
+              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+          }
+          .padding(.horizontal, 12)
+          .frame(height: 40)
+          .background(.white)
+          .clipShape(RoundedRectangle(cornerRadius: 10))
+          .opacity(viewModel.searchDistanceOption == distanceOption ? 1 : 0.5)
+        }
+        .modifier(BouncyPressEffect())
+      }
+      
+      Spacer()
+      
+      Button {
+        viewModel.moveToUserLocation()
+        UISelectionFeedbackGenerator().selectionChanged()
+      } label: {
+        Image(systemName: "location.fill")
+          .font(.system(size: 20))
+          .foregroundStyle(Color.black.opacity(0.5))
+          .foregroundStyle(.regularMaterial)
+          .frame(width: 40, height: 40)
+      }
+      .modifier(BouncyPressEffect())
+    }
+    .padding(.horizontal, 20)
+    .frame(height: 64)
+    .background(.regularMaterial)
+    .clipShape(RoundedRectangle(cornerRadius: 24))
   }
 }
 

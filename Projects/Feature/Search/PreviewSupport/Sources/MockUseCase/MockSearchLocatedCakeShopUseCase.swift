@@ -27,7 +27,7 @@ public struct MockSearchLocatedCakeShopUseCase: SearchLocatedCakeShopUseCase {
   
   // MARK: - Public Methods
   
-  public func execute(longitude: Double, latitude: Double) -> AnyPublisher<[LocatedCakeShop], any Error> {
+  public func execute(distance: Int, longitude: Double, latitude: Double) -> AnyPublisher<[LocatedCakeShop], any Error> {
     Just(LocatedCakeShop.mockCakeShops)
       .delay(for: .seconds(delay), scheduler: RunLoop.main)
       .setFailureType(to: Error.self)

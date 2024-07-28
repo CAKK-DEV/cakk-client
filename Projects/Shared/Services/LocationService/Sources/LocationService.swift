@@ -67,4 +67,8 @@ public class LocationService: NSObject, ObservableObject, CLLocationManagerDeleg
   public var longitude: Double {
     self.lastLocation?.coordinate.longitude ?? Self.defaultCoordinates.longitude
   }
+  
+  public var userLocation: CLLocationCoordinate2D? {
+    return locationManager.location?.coordinate
+  }
 }
