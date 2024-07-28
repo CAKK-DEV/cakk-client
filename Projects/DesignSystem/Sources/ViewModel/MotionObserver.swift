@@ -10,14 +10,19 @@ import Foundation
 import CoreMotion
 import Logger
 
-class MotionObserver: ObservableObject {
+public class MotionObserver: ObservableObject {
   
   // MARK: - Properties
   
   @Published private(set) var motionManager = CMMotionManager()
   @Published private(set) var xValue: CGFloat = 0
   @Published private(set) var yValue: CGFloat = 0
-  @Published private(set) var movingOffset: CGSize = .zero
+  @Published public var movingOffset: CGSize = .zero
+  
+  
+  // MARK: - Initializers
+  
+  public init() { }
   
   
   // MARK: - Methods
@@ -40,7 +45,7 @@ class MotionObserver: ObservableObject {
     }
   }
   
-  func getOffset(duration: CGFloat) -> CGSize {
+  public func getOffset(duration: CGFloat) -> CGSize {
     var width = xValue * duration
     var height = yValue * duration
     

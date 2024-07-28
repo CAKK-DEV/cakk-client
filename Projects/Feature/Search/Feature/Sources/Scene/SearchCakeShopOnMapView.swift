@@ -32,6 +32,8 @@ public struct SearchCakeShopOnMapView: View {
   @State private var isRefreshButtonShown = false
   
   @State private var dragOffset: CGSize = .zero
+  
+  @StateObject private var motionData = MotionObserver()
 
   
   // MARK: - Initializers
@@ -107,6 +109,10 @@ public struct SearchCakeShopOnMapView: View {
           .offset(x: dragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : dragOffset.height)
           .animation(.snappy, value: viewModel.selectedCakeShop == nil)
           .animation(.snappy, value: viewModel.selectedCakeShop)
+          .offset(motionData.movingOffset)
+          .onAppear {
+            motionData.fetchMotionData(duration: 15)
+          }
         
         bottomConfigureBar()
           .padding(.horizontal, 14)
