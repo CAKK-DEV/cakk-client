@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreMotion
+import Logger
 
 class MotionObserver: ObservableObject {
   
@@ -21,15 +22,15 @@ class MotionObserver: ObservableObject {
   
   // MARK: - Methods
   
-  func fetchMotionData(duration: CGFloat) {
+  public func fetchMotionData(duration: CGFloat) {
     motionManager.startDeviceMotionUpdates(to: .main) { data, error in
       if let error {
-        print(error.localizedDescription)
+        Loggers.designSystem.error("Error in motion data: \(error)", category: .ui)
         return
       }
       
       guard let data else {
-        print("Error in data")
+        Loggers.designSystem.error("Error in motion data", category: .ui)
         return
       }
       

@@ -20,7 +20,8 @@ let project = Project.framework(
     External.Lottie,
     External.SnapKit,
     External.Kingfisher,
-    Project.CommonUtil
+    Project.CommonUtil,
+    Project.Logger
   ],
   supportsResources: true
 )

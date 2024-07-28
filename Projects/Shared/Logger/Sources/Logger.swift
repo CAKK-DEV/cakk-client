@@ -56,4 +56,6 @@ public struct Loggers {
   
   public static let networkUser = Logger(subsystem: "com.cakk.NetworkUser")
   public static let featureUser = Logger(subsystem: "com.cakk.FeatureUser")
+  
+  public static let designSystem = Logger(subsystem: "com.cakk.DesignSystem")
 }
