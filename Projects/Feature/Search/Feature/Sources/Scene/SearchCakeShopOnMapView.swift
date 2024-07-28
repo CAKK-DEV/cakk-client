@@ -103,8 +103,10 @@ public struct SearchCakeShopOnMapView: View {
           .padding(.horizontal, 14)
           .frame(maxWidth: 420)
           .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
+          .opacity(viewModel.selectedCakeShop == nil ? 0 : 1)
           .offset(x: dragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : dragOffset.height)
           .animation(.snappy, value: viewModel.selectedCakeShop == nil)
+          .animation(.snappy, value: viewModel.selectedCakeShop)
         
         bottomConfigureBar()
           .padding(.horizontal, 14)
@@ -141,7 +143,7 @@ public struct SearchCakeShopOnMapView: View {
   
   private func cakeShopView(_ cakeShop: LocatedCakeShop?) -> some View {
     VStack(spacing: 16) {
-      HStack(alignment: .top, spacing: 12) {
+      HStack(alignment: .top, spacing: 0) {
         if let profileImageUrl = cakeShop?.profileImageUrl {
           KFImage(URL(string: profileImageUrl))
             .resizable()
@@ -174,6 +176,16 @@ public struct SearchCakeShopOnMapView: View {
             .lineLimit(2)
         }
         .padding(.vertical, 8)
+        .padding(.leading, 12)
+        
+        Button {
+          viewModel.selectedCakeShop = nil
+        } label: {
+          Image(systemName: "xmark")
+            .font(.system(size: 15))
+            .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+            .size(24)
+        }
       }
       
       HStack(spacing: 6) {
@@ -300,6 +312,7 @@ public struct SearchCakeShopOnMapView: View {
               DesignSystemAsset.ad.swiftUIImage
                 .resizable()
                 .size(20)
+                .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
             }
             
             Text(distanceOption.displayName)

@@ -18,7 +18,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   // MARK: - Properties
   
   @Published var locatedCakeShops: [LocatedCakeShop] = []
-  @Published private(set) var selectedCakeShop: LocatedCakeShop?
+  @Published var selectedCakeShop: LocatedCakeShop?
   private let useCase: SearchLocatedCakeShopUseCase
   @Published private(set) var locatedCakeShopsFetchingState: LocatedCakeShopsFetchingState = .idle
   enum LocatedCakeShopsFetchingState {
