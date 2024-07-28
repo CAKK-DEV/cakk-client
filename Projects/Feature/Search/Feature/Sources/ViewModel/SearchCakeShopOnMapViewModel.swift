@@ -33,34 +33,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
                                              span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
   
   @Published var searchDistanceOption: SearchDistanceOption = .fiveHundredMeter
-  public enum SearchDistanceOption: Int, CaseIterable {
-    case fiveHundredMeter = 500 /// 단위는 미터로 rawValue를 통해서 바로 사용할 수 있습니다.
-    case oneKilometer = 1000
-    case threeKilometer = 3000
-    
-    var isAdRequired: Bool {
-      switch self {
-      case .fiveHundredMeter:
-        return false
-      case .oneKilometer:
-        return false
-      case .threeKilometer:
-        return true
-      }
-    }
-    
-    var displayName: String {
-      switch self {
-      case .fiveHundredMeter:
-        return "500m"
-      case .oneKilometer:
-        return "1km"
-      case .threeKilometer:
-        return "3km"
-      }
-    }
-  }
-  
+
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -84,7 +57,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     
     locatedCakeShopsFetchingState = .loading
     
-    useCase.execute(distance: searchDistanceOption.rawValue,
+    useCase.execute(distance: searchDistanceOption.distance,
                     longitude: region.center.longitude,
                     latitude: region.center.latitude)
     .delay(for: .seconds(0.5), scheduler: DispatchQueue.main)

@@ -302,7 +302,7 @@ public struct SearchCakeShopOnMapView: View {
   
   private func bottomConfigureBar() -> some View {
     HStack {
-      ForEach(SearchCakeShopOnMapViewModel.SearchDistanceOption.allCases, id: \.self) { distanceOption in
+      ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
         Button {
           viewModel.searchDistanceOption = distanceOption
           UIImpactFeedbackGenerator(style: .light).impactOccurred()
