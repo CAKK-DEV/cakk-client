@@ -240,8 +240,9 @@ public struct SearchCakeShopOnMapView: View {
           /// 까지 아래로 당겨졌을 때 scale 조정, 최대로 작아질 수 있는 scale은 0.9
           cakeShopViewScale = min(max(1 - gesture.translation.height / 70, 0.9), 1)
           
-          /// 아래로 당기는 Velocity가 1200이 넘고 80보다 아래로 당겨지면 케이크샵 뷰 가림
-          if gesture.velocity.height > 1200 && gesture.translation.height > 80 {
+          /// 아래로 당기는 Velocity가 1200이 넘고 100보다 아래로 당겨지면 케이크샵 뷰 가림
+          print(gesture.translation.height)
+          if gesture.velocity.height > 1200 && gesture.translation.height > 100 || gesture.translation.height > 100 {
             viewModel.selectedCakeShop = nil
           }
         }
