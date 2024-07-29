@@ -44,4 +44,8 @@ public enum External {
   public static var ExpandableText: TargetDependency {
     return .external(name: "ExpandableText")
   }
+
+  public static var GoogleMobileAds: TargetDependency {
+    return .external(name: "GoogleMobileAds")
+  }
 }

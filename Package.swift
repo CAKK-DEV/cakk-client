@@ -14,7 +14,8 @@ let packageSettings = PackageSettings(
     "CombineMoya": .framework,
     "Swinject": .framework,
     "Kingfisher": .framework,
-    "ExpandableText": .framework
+    "ExpandableText": .framework,
+    "GoogleMobileAds": .framework
   ],
   baseSettings: .settings(
     configurations: [
@@ -36,6 +37,7 @@ let package = Package(
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.22.2"),
     .package(url: "https://github.com/Swinject/Swinject", from: "2.8.8"),
     .package(url: "https://github.com/onevcat/Kingfisher", from: "7.12.0"),
-    .package(url: "https://github.com/n3d1117/ExpandableText.git", from: "1.0.0")
+    .package(url: "https://github.com/n3d1117/ExpandableText.git", from: "1.0.0"),
+    .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.7.0")
   ]
 )

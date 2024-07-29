@@ -21,6 +21,8 @@ import Router
 
 import LocationService
 
+import AdManager
+
 public struct SearchCakeShopOnMapView: View {
   
   // MARK: - Properties
@@ -34,6 +36,8 @@ public struct SearchCakeShopOnMapView: View {
   @State private var cakeShopViewScale: CGFloat = 1
   
   @StateObject private var motionData = MotionObserver()
+  
+  @StateObject private var interstitialAdManager = InterstitialAdsManager()
 
   
   // MARK: - Initializers
@@ -142,6 +146,9 @@ public struct SearchCakeShopOnMapView: View {
           router.navigateBack()
         }))
       }
+    }
+    .onAppear {
+      interstitialAdManager.loadInterstitialAd(adUnit: .mapDistanceAd)
     }
     .onChange(of: viewModel.locatedCakeShopsFetchingState) { state in
       if state == .success {
@@ -266,6 +273,10 @@ public struct SearchCakeShopOnMapView: View {
       // Refresh Button
       Button {
         viewModel.fetchLocatedCakeShops()
+        
+        if viewModel.searchDistanceOption.isAdRequired {
+          interstitialAdManager.displayInterstitialAd(adUnit: .mapDistanceAd)
+        }
       } label: {
         let isLoading = viewModel.locatedCakeShopsFetchingState == .loading
         HStack(spacing: 12) {
