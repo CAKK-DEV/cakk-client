@@ -28,10 +28,10 @@ public struct SearchCakeShopOnMapView: View {
   @StateObject var viewModel: SearchCakeShopOnMapViewModel
   @EnvironmentObject private var router: Router
   
-  @Namespace private var namespace
   @State private var isRefreshButtonShown = false
   
-  @State private var dragOffset: CGSize = .zero
+  @State private var cakeShopViewDragOffset: CGSize = .zero
+  @State private var cakeShopViewScale: CGFloat = 1
   
   @StateObject private var motionData = MotionObserver()
 
@@ -106,12 +106,17 @@ public struct SearchCakeShopOnMapView: View {
           .frame(maxWidth: 420)
           .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
           .opacity(viewModel.selectedCakeShop == nil ? 0 : 1)
-          .offset(x: dragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : dragOffset.height)
+          .scaleEffect(cakeShopViewScale)
+          .offset(x: cakeShopViewDragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : cakeShopViewDragOffset.height)
           .animation(.snappy, value: viewModel.selectedCakeShop == nil)
           .animation(.snappy, value: viewModel.selectedCakeShop)
           .offset(motionData.movingOffset)
-          .onAppear {
-            motionData.fetchMotionData(duration: 15)
+          .onChange(of: viewModel.selectedCakeShop == nil) { newValue in
+            if newValue {
+              motionData.stopMotionUpdates()
+            } else {
+              motionData.fetchMotionData(duration: 15)
+            }
           }
         
         bottomConfigureBar()
@@ -230,12 +235,22 @@ public struct SearchCakeShopOnMapView: View {
     .gesture(DragGesture()
       .onChanged { gesture in
         withAnimation(.smooth) {
-          dragOffset = gesture.translation
+          cakeShopViewDragOffset = gesture.translation
+          
+          /// 까지 아래로 당겨졌을 때 scale 조정, 최대로 작아질 수 있는 scale은 0.9
+          cakeShopViewScale = min(max(1 - gesture.translation.height / 70, 0.9), 1)
+          
+          /// 아래로 당기는 Velocity가 1200이 넘고 100보다 아래로 당겨지면 케이크샵 뷰 가림
+          print(gesture.translation.height)
+          if gesture.velocity.height > 1200 && gesture.translation.height > 100 || gesture.translation.height > 100 {
+            viewModel.selectedCakeShop = nil
+          }
         }
       }
       .onEnded { gesture in
         withAnimation(.smooth) {
-          dragOffset = .zero
+          cakeShopViewDragOffset = .zero
+          cakeShopViewScale = 1
         }
       }
     )
@@ -311,6 +326,7 @@ public struct SearchCakeShopOnMapView: View {
       ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
         Button {
           viewModel.searchDistanceOption = distanceOption
+          isRefreshButtonShown = true
           UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
           HStack(spacing: 6) {
