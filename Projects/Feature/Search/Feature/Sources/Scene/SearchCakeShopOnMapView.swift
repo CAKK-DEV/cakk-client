@@ -111,8 +111,12 @@ public struct SearchCakeShopOnMapView: View {
           .animation(.snappy, value: viewModel.selectedCakeShop == nil)
           .animation(.snappy, value: viewModel.selectedCakeShop)
           .offset(motionData.movingOffset)
-          .onAppear {
-            motionData.fetchMotionData(duration: 15)
+          .onChange(of: viewModel.selectedCakeShop == nil) { newValue in
+            if newValue {
+              motionData.stopMotionUpdates()
+            } else {
+              motionData.fetchMotionData(duration: 15)
+            }
           }
         
         bottomConfigureBar()

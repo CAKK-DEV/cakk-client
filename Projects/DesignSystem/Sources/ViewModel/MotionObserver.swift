@@ -45,6 +45,11 @@ public class MotionObserver: ObservableObject {
     }
   }
   
+  public func stopMotionUpdates() {
+    motionManager.stopDeviceMotionUpdates()
+    motionManager.stopGyroUpdates()
+  }
+  
   public func getOffset(duration: CGFloat) -> CGSize {
     var width = xValue * duration
     var height = yValue * duration
