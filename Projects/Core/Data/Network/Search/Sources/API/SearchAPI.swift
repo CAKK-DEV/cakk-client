@@ -16,7 +16,7 @@ public enum SearchAPI {
   case fetchCakeImages(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?)
   case fetchTrendingCakeImages(lastCakeId: Int?, pageSize: Int)
   case fetchCakeShops(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeShopId: Int?)
-  case fetchLocatedCakeShops(latitude: Double, longitude: Double)
+  case fetchLocatedCakeShops(distance: Int, latitude: Double, longitude: Double)
   case fetchCakeImagesByCategory(_ category: CakeCategoryDTO, count: Int, lastCakeId: Int?)
   case fetchCakeImagesByShopId(_ shopId: Int, count: Int, lastCakeId: Int?)
 }
@@ -130,8 +130,9 @@ extension SearchAPI: TargetType {
       }
       return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
       
-    case .fetchLocatedCakeShops(let latitude, let longitude):
+    case .fetchLocatedCakeShops(let distance, let latitude, let longitude):
       let params: [String: Any] = [
+        "distance": distance,
         "latitude": latitude,
         "longitude": longitude
       ]

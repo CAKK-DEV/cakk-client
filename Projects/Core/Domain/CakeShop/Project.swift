@@ -5,7 +5,7 @@ let project = Project.framework(
   name: "DomainCakeShop",
   dependencies: [
     Project.CommonDomain,
-    External.moya,
-    External.combineMoya
+    External.Moya,
+    External.CombineMoya
   ]
 )

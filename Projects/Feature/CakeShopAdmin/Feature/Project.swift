@@ -16,6 +16,6 @@ let project = Project.framework(
 
     Project.Router,
     Project.DIContainer,
-    External.kingfisher
+    External.Kingfisher
   ]
 )

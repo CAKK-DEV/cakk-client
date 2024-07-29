@@ -18,10 +18,12 @@ let project = Project.framework(
     
     Project.UserSession,
     Project.DIContainer,
-    External.kakaoSDKCommon,
-    External.kakaoSDKAuth,
-    External.kakaoSDKUser,
-    External.kingfisher,
+    Project.Logger,
+
+    External.KakaoSDKCommon,
+    External.KakaoSDKAuth,
+    External.KakaoSDKUser,
+    External.Kingfisher,
     .package(product: "GoogleSignIn")
   ],
   packages: [

@@ -4,7 +4,6 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "NetworkImage",
   dependencies: [
-    Project.MoyaUtil,
-    External.sdWebImageWebPCoder
+    Project.MoyaUtil
   ]
 )

@@ -4,6 +4,6 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "MoyaUtil",
   dependencies: [
-    External.moya
+    External.Moya
   ]
 )

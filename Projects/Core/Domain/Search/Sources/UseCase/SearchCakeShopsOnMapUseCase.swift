@@ -10,5 +10,5 @@ import Foundation
 import Combine
 
 public protocol SearchLocatedCakeShopUseCase {
-  func execute(longitude: Double, latitude: Double) -> AnyPublisher<[LocatedCakeShop], Error>
+  func execute(distance: Int, longitude: Double, latitude: Double) -> AnyPublisher<[LocatedCakeShop], Error>
 }

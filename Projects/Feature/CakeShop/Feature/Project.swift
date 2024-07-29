@@ -15,7 +15,8 @@ let project = Project.framework(
     Project.PreviewSupportUser,
     Project.LocationService,
     Project.DIContainer,
-    External.kingfisher,
-    External.expandableText
+    Project.Logger,
+    External.Kingfisher,
+    External.ExpandableText
   ]
 )

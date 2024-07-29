@@ -27,7 +27,7 @@ public final class SearchLocatedCakeShopUseCaseImpl: SearchLocatedCakeShopUseCas
   
   // MARK: - Public Methods
   
-  public func execute(longitude: Double, latitude: Double) -> AnyPublisher<[DomainSearch.LocatedCakeShop], any Error> {
-    repository.fetchLocatedCakeShops(latitude: latitude, longitude: longitude)
+  public func execute(distance: Int, longitude: Double, latitude: Double) -> AnyPublisher<[DomainSearch.LocatedCakeShop], any Error> {
+    repository.fetchLocatedCakeShops(distance: distance, latitude: latitude, longitude: longitude)
   }
 }

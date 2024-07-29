@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>526102455926-upk9m1m3rd7rjuq8if7gj3gbemei6cdf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.526102455926-upk9m1m3rd7rjuq8if7gj3gbemei6cdf</string>
+	<key>API_KEY</key>
+	<string>AIzaSyATjo9_y6lfI2HFci0UsqbFzxdE7Q_dv6c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>526102455926</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.prography.CAKK</string>
+	<key>PROJECT_ID</key>
+	<string>spry-analyzer-422008</string>
+	<key>STORAGE_BUCKET</key>
+	<string>spry-analyzer-422008.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:526102455926:ios:a63278b417b9c4d7ef2157</string>
+</dict>
+</plist>
