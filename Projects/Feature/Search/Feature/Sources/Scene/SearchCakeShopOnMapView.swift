@@ -325,6 +325,7 @@ public struct SearchCakeShopOnMapView: View {
       ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
         Button {
           viewModel.searchDistanceOption = distanceOption
+          isRefreshButtonShown = true
           UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
           HStack(spacing: 6) {
