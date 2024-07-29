@@ -20,6 +20,8 @@ import DomainCakeShop
 
 import MapKit
 
+import Logger
+
 struct CakeShopContentsSection: View {
   
   // MARK: - Properties
@@ -205,9 +207,14 @@ struct CakeShopContentsSection: View {
                   if let url = viewModel.makeNaverMapUrl() {
                     UIApplication.shared.open(url, options: [:]) { successToOpenUrl in
                       if successToOpenUrl {
-                        /// 네이버 맵이 설치되지 않은 경우
+                        /// 네이버 맵이 설치되어있는 경우 네이버 지도에 검색어 검색 후 결과 표시
                         if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/id311867728") {
                           UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                        }
+                      } else {
+                        /// 네이버 맵이 설치되지 않은 경우 앱스토어(네이버지도)로 이동
+                        if let url = URL(string: "https://apps.apple.com/kr/app/naver-map-navigation/id311867728?l=ko-GB") {
+                          UIApplication.shared.open(url, options: [:], completionHandler: nil)
                         }
                       }
                     }
