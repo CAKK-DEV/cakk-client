@@ -57,7 +57,7 @@ public final class CakeShopNearByMeViewModel: ObservableObject {
                                   span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
     }
     
-    useCase.execute(distance: 500, /// 단위는 미터 입니다
+    useCase.execute(distance: 2000, /// 단위는 미터 입니다
                     longitude: region.center.longitude,
                     latitude: region.center.latitude)
     .subscribe(on: DispatchQueue.global())

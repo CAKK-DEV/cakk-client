@@ -17,6 +17,14 @@ public extension View {
 // MARK: - Preview
 
 #Preview {
-  CKButtonLarge(title: "Title")
+  ZStack {
+    Button {
+      // no action
+    } label: {
+      Text("title")
+        .frame(width: 120)
+    }
+    .buttonStyle(CAKKButtonStyle_Large())
     .largeButtonShadow()
+  }
 }

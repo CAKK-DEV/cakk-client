@@ -11,22 +11,22 @@ import DesignSystem
 import Router
 
 struct SignUp_Email: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var stepRouter: StepRouter
   @EnvironmentObject private var viewModel: SocialLoginViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
-  
+
+
   // MARK: - Initializers
-  
+
   init() { }
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     VStack(spacing: 0) {
       VStack(spacing: 44) {
@@ -45,7 +45,7 @@ struct SignUp_Email: View {
             .offset(y: isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
-          
+
           if !viewModel.isEmailValid && !viewModel.isEmailEmpty {
             Text("이메일 형식이 올바르지 않아요")
               .font(.pretendard(size: 15, weight: .medium))
@@ -53,7 +53,7 @@ struct SignUp_Email: View {
           }
         }
         .animation(.easeInOut, value: (!viewModel.isEmailValid && !viewModel.isEmailEmpty))
-        
+
         TextField("email", text: $viewModel.userData.email)
           .font(.pretendard(size: 20, weight: .bold))
           .foregroundStyle(Color.white)
@@ -73,10 +73,10 @@ struct SignUp_Email: View {
           .animation(.easeInOut, value: (!viewModel.isEmailValid && !viewModel.isEmailEmpty))
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-        
+
         let animationDuration: CGFloat = 1
         withAnimation(.spring(duration: animationDuration)) {
           // 🎬 isDisappearing animation trigger point
@@ -103,7 +103,7 @@ struct SignUp_Email: View {
           // ⬅️ pop step
           stepRouter.popStep()
         }
-        
+
         Spacer()
       }
     }
@@ -125,7 +125,7 @@ import DomainUser
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
-  
+
   init() {
     let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
                                          signUpUseCase: MockSocialLoginSignUpUseCase())

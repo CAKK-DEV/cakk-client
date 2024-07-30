@@ -12,17 +12,17 @@ import DesignSystem
 import Router
 
 struct Onboarding_LetsGetStarted: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var stepRouter: StepRouter
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     VStack(spacing: 0) {
       VStack {
@@ -42,10 +42,10 @@ struct Onboarding_LetsGetStarted: View {
           .blur(radius: isDisappearing ? 1000 : 0)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "로그인", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-        
+
         let animationDuration: CGFloat = 2
         withAnimation(.easeIn(duration: animationDuration)) {
           // 🎬 isDisappearing animation trigger point
@@ -59,8 +59,8 @@ struct Onboarding_LetsGetStarted: View {
         }
       })
       .largeButtonShadow()
+      .modifier(BouncyPressEffect())
       .padding(28)
-      .activeAfter(0.75)
       // idDisappearing animation
       .blur(radius: isDisappearing ? 100 : 0)
       .scaleEffect(isDisappearing ? 0.01: 1.0)
@@ -78,11 +78,11 @@ struct Onboarding_LetsGetStarted: View {
 
 struct Onboarding_LetsGetStarted_Preview: PreviewProvider {
   static let coordinator = StepRouter(steps: [])
-  
+
   static var previews: some View {
     ZStack {
       Color.gray.ignoresSafeArea()
-      
+
       Onboarding_LetsGetStarted()
         .environmentObject(coordinator)
     }

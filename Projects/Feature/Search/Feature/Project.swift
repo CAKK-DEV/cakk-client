@@ -10,6 +10,7 @@ let project = Project.framework(
     Project.DomainSearch,
     Project.PreviewSupportSearch,
     Project.DIContainer,
-    Project.LocationService
+    Project.LocationService,
+    Project.AdManager
   ]
 )

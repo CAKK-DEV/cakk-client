@@ -11,22 +11,22 @@ import DesignSystem
 import Router
 
 struct SignUp_Gender: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var stepRouter: StepRouter
   @EnvironmentObject private var viewModel: SocialLoginViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
-  
+
+
   // MARK: - Initializers
-  
+
   init() { }
-  
-  
+
+
   // MARK: - Views
-  
+
   public var body: some View {
     VStack(spacing: 0) {
       VStack(spacing: 44) {
@@ -44,7 +44,7 @@ struct SignUp_Gender: View {
           .offset(y: isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
           .scaleEffect(isDisappearing ? 0.4 : 1)
           .blur(radius: isDisappearing ? 100 : 0)
-        
+
         HStack(spacing: 24) {
           genderSelectorItem(gender: .female, isSelected: viewModel.userData.gender == .female)
             // isShowing animation
@@ -57,7 +57,7 @@ struct SignUp_Gender: View {
             .offset(y: viewModel.userData.gender == .female && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
-          
+
           genderSelectorItem(gender: .male, isSelected: viewModel.userData.gender == .male)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
@@ -67,7 +67,7 @@ struct SignUp_Gender: View {
             .offset(y: viewModel.userData.gender == .male && isDisappearing ? -(UIScreen.main.bounds.height / 2) : 0)
             .scaleEffect(isDisappearing ? 0.4 : 1)
             .blur(radius: isDisappearing ? 100 : 0)
-          
+
           genderSelectorItem(gender: .unknown, isSelected: viewModel.userData.gender == .unknown)
             // isShowing animation
             .scaleEffect(isShowing ? 1.0 : 0.8)
@@ -82,10 +82,10 @@ struct SignUp_Gender: View {
         }
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-        
+
         let animationDuration: CGFloat = 1
         withAnimation(.spring(duration: animationDuration)) {
           // 🎬 isDisappearing animation trigger point
@@ -110,7 +110,7 @@ struct SignUp_Gender: View {
             stepRouter.popStep()
           }
         })
-        
+
         Spacer()
       }
     }
@@ -121,7 +121,7 @@ struct SignUp_Gender: View {
       }
     }
   }
-  
+
   private func genderSelectorItem(gender: Gender, isSelected: Bool) -> some View {
     Button {
 //      selectedGender = gender
@@ -136,7 +136,7 @@ struct SignUp_Gender: View {
             Text(gender.emoji)
               .font(.system(size: 27))
           }
-        
+
         Text(gender.displayName)
           .font(.pretendard(size: 15, weight: .bold))
           .foregroundStyle(Color.black)
@@ -155,7 +155,7 @@ import DomainUser
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
-  
+
   init() {
     let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
                                          signUpUseCase: MockSocialLoginSignUpUseCase())

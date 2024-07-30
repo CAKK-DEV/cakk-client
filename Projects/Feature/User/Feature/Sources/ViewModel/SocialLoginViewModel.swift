@@ -34,7 +34,6 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case serverError
     case loggedIn
     case newUser
-    case noKakaoAvailable
   }
   
   @Published private(set) var signUpState: SignUpState = .idle
@@ -88,7 +87,6 @@ extension SocialLoginViewModel {
       signUpState = .failure
       return
     }
-    
     if userData.nickname.isEmpty && userData.email.isEmpty {
       Loggers.featureUser.info("이름 또는 이메일정보가 없습니다.", category: .network)
       signUpState = .failure
@@ -188,6 +186,7 @@ extension SocialLoginViewModel {
     signInState = .loading
     
     if UserApi.isKakaoTalkLoginAvailable() {
+      /// 카카오가 설치되어있는 경우
       UserApi.shared.loginWithKakaoTalk { [weak self] (oauthToken, error) in
         guard let self = self else { return }
         
@@ -244,7 +243,62 @@ extension SocialLoginViewModel {
           .store(in: &cancellables)
       }
     } else {
-      signInState = .noKakaoAvailable
+      /// 카카오가 설치되어있지 않은 경우
+      UserApi.shared.loginWithKakaoAccount { [weak self] oauthToken, error in
+        guard let self else { return }
+        
+        if let error = error {
+          Loggers.featureUser.error("에러 발생\(error.localizedDescription)", category: .network)
+          self.signInState = .failure
+          return
+        }
+        
+        guard let idToken = oauthToken?.idToken else {
+          Loggers.featureUser.error("OAuth token 정보를 받아오는데 실패하였습니다.", category: .network)
+          self.signInState = .failure
+          return
+        }
+        
+        self.signInUseCase.execute(credential: CredentialData(loginProvider: .kakao, idToken: idToken))
+          .subscribe(on: DispatchQueue.global())
+          .receive(on: DispatchQueue.main)
+          .sink { [weak self] completion in
+            if case .failure(let error) = completion {
+              switch error {
+              case .failure:
+                self?.signInState = .failure
+                
+              case .newUser:
+                UserApi.shared.me { [weak self] user, error in
+                  guard let self = self else { return }
+                  
+                  if let error = error {
+                    Loggers.featureUser.error("에러 발생\(error.localizedDescription)", category: .network)
+                    self.signInState = .failure
+                    return
+                  }
+                  
+                  guard let name = user?.properties?["nickname"] else {
+                    Loggers.featureUser.error("유저 정보를 받아오는데 실패하였습니다.", category: .network)
+                    self.signInState = .failure
+                    return
+                  }
+                  
+                  self.credentialData = .init(loginProvider: .kakao, idToken: idToken)
+                  self.loginType = .kakao
+                  self.userData.nickname = name
+                  self.signInState = .newUser
+                }
+                
+              case .serverError:
+                self?.signInState = .serverError
+              }
+            }
+          } receiveValue: { [weak self] in
+            self?.signInState = .loggedIn
+          }
+          .store(in: &cancellables)
+      }
     }
   }
 }
@@ -311,3 +365,4 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
     signInState = .failure
   }
 }
+

@@ -11,16 +11,16 @@ import DesignSystem
 import Router
 
 struct Onboarding_WhatWeDo2: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var stepRouter: StepRouter
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     VStack(spacing: 0) {
       VStack {
@@ -39,10 +39,10 @@ struct Onboarding_WhatWeDo2: View {
           .blur(radius: isDisappearing ? 1000 : 0)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-        
+
         let animationDuration: CGFloat = 1
         withAnimation(.easeIn(duration: animationDuration)) {
           // 🎬 isDisappearing animation trigger point
@@ -56,8 +56,8 @@ struct Onboarding_WhatWeDo2: View {
         }
       })
       .largeButtonShadow()
+      .modifier(BouncyPressEffect())
       .padding(28)
-      .activeAfter(0.75)
     }
     .onAppear {
       withAnimation(.bouncy(duration: 1)) {
@@ -70,11 +70,11 @@ struct Onboarding_WhatWeDo2: View {
 
 struct Onboarding_WhatWeDo2_Preview: PreviewProvider {
   static let coordinator = StepRouter(steps: [])
-  
+
   static var previews: some View {
     ZStack {
       Color.gray.ignoresSafeArea()
-      
+
       Onboarding_WhatWeDo2()
         .environmentObject(coordinator)
     }

@@ -45,6 +45,11 @@ import FirebaseCore
 @main
 struct CAKKApp: App {
   
+  // MARK: - Properties
+  
+  @UIApplicationDelegateAdaptor var delegate: AppDelegate
+  
+  
   // MARK: - Initializers
   
   init() {
