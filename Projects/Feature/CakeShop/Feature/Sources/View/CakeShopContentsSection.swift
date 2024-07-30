@@ -199,29 +199,32 @@ struct CakeShopContentsSection: View {
             .padding(.top, 12)
             .contentShape(Rectangle())
             .onTapGesture {
-              DialogManager.shared.showDialog(
-                title: "지도 열기",
-                message: "지도를 열면 네이버 지도로 이동하게 됩니다.\n지도를 열까요?",
-                primaryButtonTitle: "지도 열기",
-                primaryButtonAction: .custom({
-                  if let url = viewModel.makeNaverMapUrl() {
-                    UIApplication.shared.open(url, options: [:]) { successToOpenUrl in
-                      if successToOpenUrl {
-                        /// 네이버 맵이 설치되어있는 경우 네이버 지도에 검색어 검색 후 결과 표시
-                        if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/id311867728") {
-                          UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
-                        }
-                      } else {
-                        /// 네이버 맵이 설치되지 않은 경우 앱스토어(네이버지도)로 이동
-                        if let url = URL(string: "https://apps.apple.com/kr/app/naver-map-navigation/id311867728?l=ko-GB") {
-                          UIApplication.shared.open(url, options: [:], completionHandler: nil)
+              /// 한국에 한해서 지도 열기를 허용하는 것은 별다른 이유는 없고 억지 스러운 앱스토어 심사에 대응하기 위함입니다.
+              if Locale.isKorea {
+                DialogManager.shared.showDialog(
+                  title: "지도 열기",
+                  message: "지도를 열면 네이버 지도로 이동하게 됩니다.\n지도를 열까요?",
+                  primaryButtonTitle: "지도 열기",
+                  primaryButtonAction: .custom({
+                    if let url = viewModel.makeNaverMapUrl() {
+                      UIApplication.shared.open(url, options: [:]) { successToOpenUrl in
+                        if successToOpenUrl {
+                          /// 네이버 맵이 설치되어있는 경우 네이버 지도에 검색어 검색 후 결과 표시
+                          if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/id311867728") {
+                            UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                          }
+                        } else {
+                          /// 네이버 맵이 설치되지 않은 경우 앱스토어(네이버지도)로 이동
+                          if let url = URL(string: "https://apps.apple.com/kr/app/naver-map-navigation/id311867728?l=ko-GB") {
+                            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                          }
                         }
                       }
                     }
-                  }
-                }),
-                secondaryButtonTitle: "취소",
-                secondaryButtonAction: .cancel)
+                  }),
+                  secondaryButtonTitle: "취소",
+                  secondaryButtonAction: .cancel)
+              }
             }
           }
           .padding(.horizontal, 28)
