@@ -13,21 +13,21 @@ import Router
 import CommonUtil
 
 struct Login_Root: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var stepRouter: StepRouter
   @EnvironmentObject private var viewModel: SocialLoginViewModel
-  
+
   @Environment(\.dismiss) private var dismiss
-  
+
   @State private var isShowing = false
   @State private var isShowingAppleSignInExpiredAlert = false
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     ZStack {
       VStack(spacing: 0) {
@@ -43,7 +43,7 @@ struct Login_Root: View {
             .scaleEffect(isShowing ? 1.0 : 0.95)
             .opacity(isShowing ? 1.0 : 0)
             .blur(radius: isShowing ? 0 : 10)
-          
+
           HStack(spacing: 16) {
             loginButton(image: DesignSystemAsset.logoKakao.swiftUIImage, loginAction: {
               viewModel.signInWithKakao()
@@ -53,7 +53,7 @@ struct Login_Root: View {
               .opacity(isShowing ? 1.0 : 0)
               .blur(radius: isShowing ? 0 : 10)
               .animation(.bouncy(duration: 1).delay(0.2), value: isShowing)
-            
+
             loginButton(image: DesignSystemAsset.logoApple.swiftUIImage, loginAction: {
               viewModel.signInWithApple()
             })
@@ -62,7 +62,7 @@ struct Login_Root: View {
               .opacity(isShowing ? 1.0 : 0)
               .blur(radius: isShowing ? 0 : 10)
               .animation(.bouncy(duration: 1).delay(0.4), value: isShowing)
-            
+
             loginButton(image: DesignSystemAsset.logoGoogle.swiftUIImage, loginAction: {
               viewModel.signInWithGoogle()
             })
@@ -74,7 +74,7 @@ struct Login_Root: View {
           }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        
+
         Button {
           stepRouter.pushStep()
         } label: {
@@ -96,10 +96,10 @@ struct Login_Root: View {
               .offset(x: isShowing ? 0 : -80, y: 0)
               .blur(radius: isShowing ? 0 : 10)
               .animation(.spring, value: isShowing)
-            
+
             Spacer()
           }
-          
+
           Spacer()
         }
       }
@@ -115,10 +115,12 @@ struct Login_Root: View {
         LoadingManager.shared.startLoading()
         return
       }
-      
+
       LoadingManager.shared.stopLoading()
-      
+
       switch loginState {
+      case .loading:
+        LoadingManager.shared.startLoading()
       case .loggedIn:
         stepRouter.pushStep()
       case .newUser:
@@ -132,12 +134,15 @@ struct Login_Root: View {
           })))
         }
         stepRouter.pushStep()
-        
+
       case .failure:
-        showDialog(title: "로그인 실패", message: "로그인에 실패하였습니다.\n다시 시도해주세요.")
+        // alert
+        LoadingManager.shared.stopLoading()
       case .serverError:
-        showDialog(title: "서버 에러", message: "서버에 문제가 생겼어요🥲\n나중에 다시 시도해주세요.")
+        // alert
+        LoadingManager.shared.stopLoading()
       case .appleSingInExpired:
+        LoadingManager.shared.stopLoading()
         isShowingAppleSignInExpiredAlert = true
       default:
         break
@@ -154,7 +159,7 @@ struct Login_Root: View {
       Text("이미 애플 로그인에 시도 하였기에 설정 > AppleID > 로그인 및 보안 > Apple로 로그인 에서 케이크크 애플아이디 사용중단 후 다시 시도하여주세요.")
     }
   }
-  
+
   private func loginButton(image: Image, loginAction: @escaping () -> Void) -> some View {
     Button {
       UIImpactFeedbackGenerator(style: .light).impactOccurred()
@@ -172,13 +177,6 @@ struct Login_Root: View {
     }
     .modifier(BouncyPressEffect())
   }
-  
-  
-  // MARK: - Private Methods
-  
-  private func showDialog(title: String, message: String) {
-    DialogManager.shared.showDialog(title: title, message: message, primaryButtonTitle: "확인", primaryButtonAction: .cancel)
-  }
 }
 
 
@@ -190,7 +188,7 @@ import DomainUser
 private struct PreviewContent: View {
   @StateObject var parentCoordinator = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
-  
+
   init() {
     let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
                                          signUpUseCase: MockSocialLoginSignUpUseCase())
@@ -200,7 +198,7 @@ private struct PreviewContent: View {
   var body: some View {
     ZStack {
       Color.gray.ignoresSafeArea()
-      
+
       Login_Root()
         .environmentObject(parentCoordinator)
         .environmentObject(viewModel)
@@ -214,4 +212,3 @@ private struct PreviewContent: View {
 #Preview {
   PreviewContent()
 }
-

@@ -11,27 +11,27 @@ import DesignSystem
 import Router
 
 struct SignUp_Birth: View {
-  
+
   // MARK: - Properties
-  
+
   @EnvironmentObject private var stepRouter: StepRouter
   @EnvironmentObject private var viewModel: SocialLoginViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
-  
+
   private let birthDateFormatter: DateFormatter
-  
-  
+
+
   // MARK: - Initializers
-  
+
   init() {
     birthDateFormatter = DateFormatter()
     birthDateFormatter.dateFormat = "yyyy MM dd"
   }
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     VStack(spacing: 0) {
       VStack(spacing: 24) {
@@ -41,7 +41,7 @@ struct SignUp_Birth: View {
               .font(.pretendard(size: 27, weight: .bold))
               .foregroundStyle(Color.white)
               .whiteTextShadow()
-              
+
             Text("생일 정보는 맞춤형 콘텐츠 제공 및 이벤트\n참여를 위해 필요해요")
               .font(.pretendard(size: 15, weight: .semiBold))
               .foregroundStyle(Color.white.opacity(0.5))
@@ -57,7 +57,7 @@ struct SignUp_Birth: View {
           .scaleEffect(isDisappearing ? 0.4 : 1)
           .blur(radius: isDisappearing ? 100 : 0)
         }
-        
+
         Text(viewModel.userData.birthday.formatted(.dateTime.day().month().year()))
           .font(.pretendard(size: 27, weight: .bold))
           .frame(width: 295, height: 56)
@@ -81,10 +81,10 @@ struct SignUp_Birth: View {
           .blur(radius: isDisappearing ? 100 : 0)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "완료", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        
+
         let animationDuration: CGFloat = 1
         withAnimation(.spring(duration: animationDuration)) {
           // 🎬 isDisappearing animation trigger point
@@ -123,7 +123,7 @@ struct SignUp_Birth: View {
           }
           .frame(maxWidth: .infinity, alignment: .trailing)
         }
-        
+
         Spacer()
       }
     }
@@ -145,7 +145,7 @@ import DomainUser
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
-  
+
   init() {
     let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
                                          signUpUseCase: MockSocialLoginSignUpUseCase())

@@ -14,19 +14,19 @@ import Router
 struct OnboardingStep_Welcome: View {
 
   // MARK: - Properties
-  
+
   @State private var waveHandCount = 0
   @State private var waveHand = false
   @State private var timer = Timer.publish(every: 0.31, on: .main, in: .common).autoconnect()
   @State private var isShowing = false
   @State private var handPosition = CGSize.zero
   @State private var isDragging = false
-  
+
   @EnvironmentObject private var stepRouter: StepRouter
-  
-  
+
+
   // MARK: - Views
-  
+
   var body: some View {
     VStack(spacing: 0) {
       VStack(spacing: 0) {
@@ -50,7 +50,7 @@ struct OnboardingStep_Welcome: View {
               waveHandCount = 0
             }
           }
-        
+
         Text("환영합니다")
           .font(.pretendard(size: 34, weight: .bold))
           .foregroundStyle(Color.white)
@@ -63,16 +63,17 @@ struct OnboardingStep_Welcome: View {
           .blur(radius: isShowing ? 0 : 10)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
-      
+
       CKButtonLargeStroked(title: "다음", fixedSize: 148, action: {
         UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-        
+
         withAnimation {
           // ➡️ push step
           stepRouter.pushStep()
         }
       })
       .largeButtonShadow()
+      .modifier(BouncyPressEffect())
       .padding(.vertical, 28)
       .activeAfter(0.75)
       // isShowing animation
@@ -116,11 +117,11 @@ struct OnboardingStep_Welcome: View {
 
 struct OnboardingStep_Welcome_Preview: PreviewProvider {
   static let coordinator = StepRouter(steps: [])
-  
+
   static var previews: some View {
     ZStack {
       Color.gray.ignoresSafeArea()
-      
+
       OnboardingStep_Welcome()
         .environmentObject(coordinator)
     }
