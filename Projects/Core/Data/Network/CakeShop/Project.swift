@@ -10,7 +10,9 @@ let project = Project.framework(
     Project.DomainCakeShop,
     Project.DomainOAuthToken,
     Project.MoyaUtil,
-    Project.UserSession
+    Project.UserSession,
+    Project.NetworkImage,
+    Project.Logger
   ],
   supportsResources: true
 )

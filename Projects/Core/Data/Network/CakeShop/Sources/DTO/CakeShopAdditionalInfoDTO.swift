@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DomainCakeShop
 
 struct CakeShopAdditionalInfoDTO: Decodable {
   let returnCode: String
@@ -18,5 +19,18 @@ struct CakeShopAdditionalInfoDTO: Decodable {
     let latitude: Double
     let longitude: Double
     let shopOperationDays: [OperationDayWithTimeDTO]
+  }
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension CakeShopAdditionalInfoDTO.Data {
+  func toDomain() -> CakeShopAdditionalInfo {
+    .init(location: .init(address: self.shopAddress,
+                          latitude: self.latitude,
+                          longitude: self.longitude),
+          workingDaysWithTime: self.shopOperationDays.map { $0.toDomain() })
   }
 }

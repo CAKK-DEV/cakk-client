@@ -10,7 +10,7 @@ import SwiftUI
 import DesignSystem
 import Router
 
-import SwiftUIUtil
+import CommonUtil
 
 struct Login_Root: View {
 
@@ -110,7 +110,14 @@ struct Login_Root: View {
         isShowing = true
       }
     }
-    .onChange(of: viewModel.signInState) { loginState in
+    .onReceive(viewModel.$signInState) { loginState in
+      if loginState == .loading {
+        LoadingManager.shared.startLoading()
+        return
+      }
+
+      LoadingManager.shared.stopLoading()
+
       switch loginState {
       case .loading:
         LoadingManager.shared.startLoading()

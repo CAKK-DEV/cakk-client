@@ -12,6 +12,6 @@ let project = Project.app(
     Project.FeatureSearch,
     Project.NetworkSearch,
     Project.UserDefaultsSearchHistory,
-    External.kingfisher
+    External.Kingfisher
   ]
 )

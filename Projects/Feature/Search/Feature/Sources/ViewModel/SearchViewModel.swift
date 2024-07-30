@@ -9,6 +9,7 @@
 import SwiftUI
 import Combine
 
+import CommonDomain
 import DomainSearch
 
 import LocationService
@@ -124,7 +125,7 @@ public final class SearchViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .loadMoreFailure
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .success
           }
@@ -149,7 +150,7 @@ public final class SearchViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.cakeShopFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.cakeShopFetchingState = .success
           self?.lastSearchCakeShopKeyword = self?.searchKeyword ?? ""
@@ -175,7 +176,7 @@ public final class SearchViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case .failure(let error) = completion {
             self?.cakeShopFetchingState = .failure
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.cakeShopFetchingState = .success
           }

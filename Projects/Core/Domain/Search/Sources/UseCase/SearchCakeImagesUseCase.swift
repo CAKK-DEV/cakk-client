@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonDomain
+
 public protocol SearchCakeImagesUseCase {
   func execute(keyword: String?, latitude: Double?, longitude: Double?, pageSize: Int, lastCakeId: Int?) -> AnyPublisher<[CakeImage], Error>
 }

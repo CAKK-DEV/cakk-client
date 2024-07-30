@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 
 import LocationService
@@ -97,15 +97,27 @@ struct SearchView: View {
                   search()
                 }
               
-              Button {
-                search()
-              } label: {
-                DesignSystemAsset.magnifyingGlass.swiftUIImage
-                  .resizable()
-                  .size(18)
-                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+              if isSearchResultViewShown {
+                Button {
+                  isFocused = true
+                  viewModel.searchKeyword.removeAll()
+                } label: {
+                  Image(systemName: "xmark.circle.fill")
+                    .font(.system(size: 15))
+                    .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+                }
+                .modifier(BouncyPressEffect())
+              } else {
+                Button {
+                  search()
+                } label: {
+                  DesignSystemAsset.magnifyingGlass.swiftUIImage
+                    .resizable()
+                    .size(18)
+                    .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                }
+                .modifier(BouncyPressEffect())
               }
-              .modifier(BouncyPressEffect())
             }
             .padding(.horizontal, 20)
           }

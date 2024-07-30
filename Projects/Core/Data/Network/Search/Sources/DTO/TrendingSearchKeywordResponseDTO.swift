@@ -18,3 +18,13 @@ struct TrendingSearchKeywordResponseDTO: Decodable {
     let totalCount: Int
   }
 }
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension TrendingSearchKeywordResponseDTO {
+  func toDomain() -> [String] {
+    return self.data.keywordList
+  }
+}

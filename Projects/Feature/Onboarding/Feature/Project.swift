@@ -4,9 +4,9 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureOnboarding",
   dependencies: [
-    Project.SwiftUIUtil,
+    Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
-    External.haptico
+    External.Haptico
   ]
 )

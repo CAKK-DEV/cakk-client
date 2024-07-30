@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainCakeShop
 
 public final class EditCakeImageDetailViewModel: ObservableObject {

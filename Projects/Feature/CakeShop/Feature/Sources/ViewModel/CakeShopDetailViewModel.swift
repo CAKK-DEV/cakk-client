@@ -9,8 +9,12 @@
 import Foundation
 import Combine
 
+import CommonUtil
+
+import CommonDomain
 import DomainCakeShop
 import DomainUser
+import DomainSearch
 
 public final class CakeShopDetailViewModel: ObservableObject {
   
@@ -123,7 +127,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case let .failure(error) = completion {
           self?.imageFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.imageFetchingState = .success
         }
@@ -143,7 +147,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .failureLoadMore
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .idle
           }
@@ -161,7 +165,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.additionalInfoFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.additionalInfoFetchingState = .success
         }
@@ -179,6 +183,16 @@ public final class CakeShopDetailViewModel: ObservableObject {
     }
   }
   
+  public func makeNaverMapUrl() -> URL? {
+    guard let placeName = cakeShopDetail?.shopName,
+          let appName = Bundle.main.bundleIdentifier else {
+      return nil
+    }
+    
+    let urlStr = "nmap://search?query=\(placeName)&appname=com.example.myapp"
+    return URL(string: urlStr)
+  }
+  
   
   // MARK: - Private Methods
   
@@ -190,15 +204,20 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        switch completion {
+        case .failure(let error):
           if error == .sessionExpired {
             self?.likeUpdatingState = .sessionExpired
           } else {
             self?.likeUpdatingState = .failure
           }
-        } else {
+          
+        case .finished:
           self?.likeUpdatingState = .idle
           self?.isLiked = true
+          
+          /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeShopLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
@@ -212,15 +231,20 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        switch completion {
+        case .failure(let error):
           if error == .sessionExpired {
             self?.likeUpdatingState = .sessionExpired
           } else {
             self?.likeUpdatingState = .failure
           }
-        } else {
+          
+        case .finished:
           self?.likeUpdatingState = .idle
           self?.isLiked = false
+          
+          /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeShopLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
@@ -235,7 +259,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.likeUpdatingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.likeUpdatingState = .idle
         }

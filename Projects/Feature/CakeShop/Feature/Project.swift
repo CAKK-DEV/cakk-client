@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureCakeShop",
   dependencies: [
-    Project.SwiftUIUtil,
+    Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
     Project.DomainCakeShop,
@@ -15,7 +15,8 @@ let project = Project.framework(
     Project.PreviewSupportUser,
     Project.LocationService,
     Project.DIContainer,
-    External.kingfisher,
-    External.expandableText
+    Project.Logger,
+    External.Kingfisher,
+    External.ExpandableText
   ]
 )

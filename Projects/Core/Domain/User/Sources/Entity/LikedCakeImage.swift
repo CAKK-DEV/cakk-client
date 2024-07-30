@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct LikedCakeImage: Identifiable {
+public struct LikedCakeImage: Identifiable, Equatable {
   public let shopId: Int
   public let imageId: Int
   public let cakeHeartId: Int
@@ -27,6 +27,6 @@ public struct LikedCakeImage: Identifiable {
   }
   
   public var id: Int {
-    return shopId
+    return imageId
   }
 }

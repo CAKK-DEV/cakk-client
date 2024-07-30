@@ -9,6 +9,8 @@
 import SwiftUI
 import Combine
 
+import CommonUtil
+
 import DomainUser
 
 public final class LikedItemsViewModel: ObservableObject {
@@ -67,6 +69,9 @@ public final class LikedItemsViewModel: ObservableObject {
           self?.imageFetchingState = .failure
         } else {
           self?.imageFetchingState = .success
+          
+          /// 변경된 데이터를 새로 불러왔다면 변경됨 상태를 false 초기화 합니다.
+          GlobalSettings.didChangeCakeImageLikeState = false
         }
       } receiveValue: { [weak self] cakeImages in
         self?.cakeImages = cakeImages
@@ -83,10 +88,12 @@ public final class LikedItemsViewModel: ObservableObject {
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
-          if case let .failure(error) = completion {
+          switch completion {
+          case .failure(let error):
             self?.imageFetchingState = .loadMoreFailure
-            print(error)
-          } else {
+            print(error.localizedDescription)
+            
+          case .finished:
             self?.imageFetchingState = .success
           }
         } receiveValue: { [weak self] value in
@@ -104,11 +111,16 @@ public final class LikedItemsViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        switch completion {
+        case .failure(let error):
           self?.cakeShopFetchingState = .failure
-          print(error)
-        } else {
+          print(error.localizedDescription)
+          
+        case .finished:
           self?.cakeShopFetchingState = .success
+          
+          /// 변경된 데이터를 새로 불러왔다면 변경됨 상태를 false 초기화 합니다.
+          GlobalSettings.didChangeCakeShopLikeState = false
         }
       } receiveValue: { [weak self] cakeShops in
         self?.cakeShops = cakeShops
@@ -127,7 +139,7 @@ public final class LikedItemsViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case .failure(let error) = completion {
             self?.cakeShopFetchingState = .failure
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.cakeShopFetchingState = .success
           }

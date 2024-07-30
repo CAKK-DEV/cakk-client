@@ -7,8 +7,22 @@
 //
 
 import Foundation
+
+import CommonDomain
 import DomainCakeShop
 
 public struct OperationDaysDTO: Encodable {
   let operationDays: [OperationDayWithTimeDTO]
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension OperationDayWithTimeDTO {
+  func toDomain() -> WorkingDayWithTime {
+    .init(workingDay: self.operationDay.toDomain(),
+          startTime: self.operationStartTime,
+          endTime: self.operationEndTime)
+  }
 }

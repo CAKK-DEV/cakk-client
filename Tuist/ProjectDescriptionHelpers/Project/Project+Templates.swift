@@ -77,6 +77,7 @@ extension Project {
     ]
     mergedInfoPlist["UISupportedInterfaceOrientations"] = .array(supportedOrientations.map { .string($0) })
     mergedInfoPlist["UIUserInterfaceStyle"] = .string("Light")
+    mergedInfoPlist["ITSAppUsesNonExemptEncryption"] = .string("NO")
     
     let target = Target.target(
       name: name,
@@ -90,7 +91,7 @@ extension Project {
       entitlements: entitlements,
       dependencies: dependencies,
       settings: .init(.settings(
-        base: ["DEVELOPMENT_TEAM": "YOUR_TEAM_ID"],
+        base: ["DEVELOPMENT_TEAM": "497P4L97SV"],
         configurations: [
           .build(.prod, name: name),
           .build(.stub, name: name),
@@ -118,7 +119,7 @@ extension Project {
       resources: supportsResources ? ["Resources/**"] : [],
       dependencies: dependencies,
       settings: .init(.settings(
-        base: ["DEVELOPMENT_TEAM": "YOUR_TEAM_ID"],
+        base: ["DEVELOPMENT_TEAM": "497P4L97SV"],
         configurations: [
           .build(.prod, name: name),
           .build(.release, name: name),

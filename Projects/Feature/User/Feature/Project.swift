@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureUser",
   dependencies: [
-    Project.SwiftUIUtil,
+    Project.CommonUtil,
     Project.DesignSystem,
     Project.Router,
 
@@ -15,14 +15,15 @@ let project = Project.framework(
     
     Project.PreviewSupportUser,
     Project.PreviewSupportSearch,
-
-    Project.UIKitUtil,
+    
     Project.UserSession,
     Project.DIContainer,
-    External.kakaoSDKCommon,
-    External.kakaoSDKAuth,
-    External.kakaoSDKUser,
-    External.kingfisher,
+    Project.Logger,
+
+    External.KakaoSDKCommon,
+    External.KakaoSDKAuth,
+    External.KakaoSDKUser,
+    External.Kingfisher,
     .package(product: "GoogleSignIn")
   ],
   packages: [

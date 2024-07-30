@@ -4,7 +4,8 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "DomainSearch",
   dependencies: [
-    External.moya,
-    External.combineMoya
+    Project.CommonDomain,
+    External.Moya,
+    External.CombineMoya
   ]
 )

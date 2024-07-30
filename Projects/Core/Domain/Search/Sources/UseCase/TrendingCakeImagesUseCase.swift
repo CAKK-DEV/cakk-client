@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonDomain
+
 public protocol TrendingCakeImagesUseCase {
   func execute(lastImageId: Int?, pageSize: Int) -> AnyPublisher<[CakeImage], Error>
 }

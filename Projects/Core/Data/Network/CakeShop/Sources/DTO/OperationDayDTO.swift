@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import CommonDomain
+import DomainCakeShop
 
 enum OperationDayDTO: String, Codable {
   case sun = "SUN"
@@ -16,4 +18,29 @@ enum OperationDayDTO: String, Codable {
   case thu = "THU"
   case fri = "FRI"
   case sat = "SAT"
+}
+
+
+// MARK: - Mapper
+
+/// DTO -> Domain
+extension OperationDayDTO {
+  func toDomain() -> WorkingDay {
+    switch self {
+    case .sun:
+      return .sun
+    case .mon:
+      return .mon
+    case .tue:
+      return .tue
+    case .wed:
+      return .wed
+    case .thu:
+      return .thu
+    case .fri:
+      return .fri
+    case .sat:
+      return .sat
+    }
+  }
 }

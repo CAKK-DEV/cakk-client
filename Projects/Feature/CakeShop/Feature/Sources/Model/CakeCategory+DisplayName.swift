@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import DomainCakeShop
+import CommonDomain
 
 extension CakeCategory: Identifiable {
   public var id: String {

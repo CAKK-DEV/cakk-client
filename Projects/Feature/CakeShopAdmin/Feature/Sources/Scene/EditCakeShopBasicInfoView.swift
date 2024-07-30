@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 import PhotosUI
 
@@ -217,6 +217,7 @@ public struct EditCakeShopBasicInfoView: View {
                   viewModel.editedBasicInfo.profileImage = .new(image: image)
                 }
               }))
+              .ignoresSafeArea()
             }
           }
         }

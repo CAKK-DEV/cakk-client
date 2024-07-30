@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonDomain
+
 public protocol UploadCakeShopUseCase {
   func execute(name: String, bio: String?, description: String?, businessNumber: String?, address: String, latitude: Double, longitude: Double, workingDaysWithTime: [WorkingDayWithTime], externalLinks: [ExternalShopLink]) -> AnyPublisher<Void, CakeShopError>
 }

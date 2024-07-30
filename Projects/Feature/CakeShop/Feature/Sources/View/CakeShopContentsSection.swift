@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -15,6 +15,7 @@ import Kingfisher
 import DIContainer
 import Router
 
+import CommonDomain
 import DomainCakeShop
 
 import MapKit
@@ -101,9 +102,7 @@ struct CakeShopContentsSection: View {
     } else {
       VStack(spacing: 100) {
         FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-          KFImage(URL(string: cakeImage.imageUrl))
-            .resizable()
-            .aspectRatio(contentMode: .fit)
+          CakeImageGridItem(imageUrlString: cakeImage.imageUrl)
             .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(RoundedRectangle(cornerRadius: 14))
             .onAppear {
@@ -172,7 +171,7 @@ struct CakeShopContentsSection: View {
                       .font(.pretendard())
                       .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
                   } else {
-                    Text("휴무")
+                    Text("정보 없음")
                       .font(.pretendard())
                       .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
                   }
@@ -192,13 +191,35 @@ struct CakeShopContentsSection: View {
               .frame(maxWidth: .infinity, alignment: .leading)
               .multilineTextAlignment(.leading)
             
-            ShopLocationMapView(shopName: viewModel.cakeShopDetail?.shopName ?? "",
-                                latitude: additionalInfo.location.latitude,
-                                longitude: additionalInfo.location.longitude)
+            ShopLocationMapView(annotationItem: .init(shopName: viewModel.cakeShopDetail?.shopName ?? "",
+                                                      latitude: additionalInfo.location.latitude,
+                                                      longitude: additionalInfo.location.longitude))
             .padding(.top, 12)
+            .contentShape(Rectangle())
+            .onTapGesture {
+              DialogManager.shared.showDialog(
+                title: "지도 열기",
+                message: "지도를 열면 네이버 지도로 이동하게 됩니다.\n지도를 열까요?",
+                primaryButtonTitle: "지도 열기",
+                primaryButtonAction: .custom({
+                  if let url = viewModel.makeNaverMapUrl() {
+                    UIApplication.shared.open(url, options: [:]) { successToOpenUrl in
+                      if successToOpenUrl {
+                        /// 네이버 맵이 설치되지 않은 경우
+                        if let appStoreURL = URL(string: "itms-apps://itunes.apple.com/app/id311867728") {
+                          UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+                        }
+                      }
+                    }
+                  }
+                }),
+                secondaryButtonTitle: "취소",
+                secondaryButtonAction: .cancel)
+            }
           }
           .padding(.horizontal, 28)
         }
+        .padding(.bottom, 100)
       }
     }
   }
@@ -209,6 +230,7 @@ struct CakeShopContentsSection: View {
 
 import PreviewSupportCakeShop
 import PreviewSupportUser
+import PreviewSupportSearch
 
 #Preview("Success") {
   struct PreviewContent: View {

@@ -9,7 +9,9 @@ let project = Project.framework(
   dependencies: [
     Project.DomainBusinessOwner,
     Project.MoyaUtil,
-    Project.UserSession
+    Project.UserSession,
+    Project.NetworkImage,
+    Project.Logger
   ],
   supportsResources: true
 )

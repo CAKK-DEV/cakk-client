@@ -9,7 +9,9 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainCakeShop
+import DomainSearch
 
 public final class CakeShopDetailViewModel: ObservableObject {
   
@@ -97,7 +99,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case let .failure(error) = completion {
           self?.imageFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.imageFetchingState = .success
         }
@@ -117,7 +119,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .failureLoadMore
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .idle
           }
@@ -135,7 +137,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.additionalInfoFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.additionalInfoFetchingState = .success
         }

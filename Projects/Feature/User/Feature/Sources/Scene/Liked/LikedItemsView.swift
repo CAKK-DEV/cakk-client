@@ -9,7 +9,7 @@
 import SwiftUI
 
 import DesignSystem
-import SwiftUIUtil
+import CommonUtil
 
 import Kingfisher
 
@@ -72,13 +72,19 @@ struct LikedItemsView: View {
           cakeImagesView()
             .tag(SearchResultSection.images)
             .onFirstAppear {
-              viewModel.fetchCakeImages()
+              /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                viewModel.fetchCakeImages()
+              }
             }
         
           cakeShopsView()
             .tag(SearchResultSection.cakeShop)
             .onFirstAppear {
-              viewModel.fetchCakeShops()
+              /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                viewModel.fetchCakeShops()
+              }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
@@ -115,7 +121,9 @@ struct LikedItemsView: View {
       } else if viewModel.cakeImages.isEmpty {
         FailureStateView(title: "아직 저장된 케이크 사진이 없어요")
           .onAppear {
-            viewModel.fetchMoreCakeImages()
+            if GlobalSettings.didChangeCakeImageLikeState {
+              viewModel.fetchCakeImages()
+            }
           }
       } else {
         ScrollView {
@@ -126,7 +134,7 @@ struct LikedItemsView: View {
                 .aspectRatio(contentMode: .fit)
                 .background(DesignSystemAsset.gray10.swiftUIColor)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
-                .onAppear {
+                .onFirstAppear {
                   if cakeImage.cakeHeartId == viewModel.cakeImages.last?.cakeHeartId {
                     viewModel.fetchMoreCakeImages()
                   }
@@ -139,6 +147,7 @@ struct LikedItemsView: View {
                   )
                 }
             }
+            .animation(.snappy, value: viewModel.cakeImages)
             
             if viewModel.imageFetchingState == .loading {
               ProgressView()
@@ -150,6 +159,11 @@ struct LikedItemsView: View {
         }
         .refreshable {
           viewModel.fetchCakeImages()
+        }
+        .onAppear {
+          if GlobalSettings.didChangeCakeShopLikeState {
+            viewModel.fetchCakeImages()
+          }
         }
       }
     }
@@ -173,7 +187,9 @@ struct LikedItemsView: View {
       } else if viewModel.cakeShops.isEmpty {
         FailureStateView(title: "아직 저장된 케이크샵이 없어요")
           .onAppear {
-            viewModel.fetchCakeShops()
+            if GlobalSettings.didChangeCakeShopLikeState {
+              viewModel.fetchCakeShops()
+            }
           }
       } else {
         ScrollView {
@@ -195,6 +211,7 @@ struct LikedItemsView: View {
                 router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
               }
             }
+            .animation(.snappy, value: viewModel.cakeShops)
             
             if viewModel.cakeShopFetchingState == .loading {
               ProgressView()
@@ -206,7 +223,14 @@ struct LikedItemsView: View {
           .padding(.bottom, 100)
         }
         .refreshable {
-          viewModel.fetchCakeShops()
+          if GlobalSettings.didChangeCakeShopLikeState {
+            viewModel.fetchCakeShops()
+          }
+        }
+        .onAppear {
+          if GlobalSettings.didChangeCakeShopLikeState {
+            viewModel.fetchCakeShops()
+          }
         }
       }
     }

@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 
 import Kingfisher
 
@@ -76,15 +76,16 @@ public struct CakeShopThumbnailView: View {
       HStack(spacing: 12) {
         if let profileImageUrl {
           KFImage(URL(string: profileImageUrl))
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .size(64)
-              .background(DesignSystemAsset.gray10.swiftUIColor)
-              .clipShape(Circle())
-              .overlay {
-                Circle()
-                  .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
-              }
+            .downsampling(size: .init(width: 200, height: 200))
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .size(64)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(Circle())
+            .overlay {
+              Circle()
+                .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
+            }
         } else {
           Circle()
             .fill(Color(hex: "FFA9DC"))
@@ -137,6 +138,7 @@ public struct CakeShopThumbnailView: View {
             .overlay {
               if let cakeImageUrl = cakeImageUrls[safe: index] {
                 KFImage(URL(string: cakeImageUrl))
+                  .downsampling(size: .init(width: 200, height: 200))
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .background(DesignSystemAsset.gray10.swiftUIColor)
@@ -163,16 +165,6 @@ public struct CakeShopThumbnailView: View {
       RoundedRectangle(cornerRadius: 20)
         .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1)
     }
-  }
-}
-
-
-// MARK: - Array Extension for Safe Indexing
-// TODO: 공통 Util 모듈로 빼기
-
-private extension Array {
-  subscript(safe index: Index) -> Element? {
-    return indices.contains(index) ? self[index] : nil
   }
 }
 

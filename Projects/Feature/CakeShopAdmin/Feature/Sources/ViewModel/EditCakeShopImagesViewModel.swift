@@ -9,7 +9,9 @@
 import Foundation
 import Combine
 
+import CommonDomain
 import DomainCakeShop
+import DomainSearch
 
 public final class EditCakeShopImagesViewModel: ObservableObject {
   
@@ -55,7 +57,7 @@ public final class EditCakeShopImagesViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case let .failure(error) = completion {
           self?.imageFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.imageFetchingState = .success
         }
@@ -75,7 +77,7 @@ public final class EditCakeShopImagesViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .failureLoadMore
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .idle
           }

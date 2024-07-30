@@ -9,6 +9,8 @@
 import Foundation
 import Combine
 
+import CommonUtil
+
 import DomainCakeShop
 import DomainUser
 
@@ -39,7 +41,6 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
     case failure
     case sessionExpired
   }
-  
   
   private var cancellables = Set<AnyCancellable>()
   
@@ -114,6 +115,9 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
         } else {
           self?.likeUpdatingState = .idle
           self?.isLiked = true
+          
+          /// 케이크 이미지 좋아요가 변경되었다면 좋아요 한 케이크이미지 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeImageLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
@@ -136,6 +140,9 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
         } else {
           self?.likeUpdatingState = .idle
           self?.isLiked = false
+          
+          /// 케이크 이미지 좋아요가 변경되었다면 좋아요 한 케이크이미지 데이터를 리프레시하기 위한 플래그 입니다
+          GlobalSettings.didChangeCakeImageLikeState = true
         }
       } receiveValue: { _ in }
       .store(in: &cancellables)
@@ -150,7 +157,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case .failure(let error) = completion {
           self?.likeUpdatingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.likeUpdatingState = .idle
         }

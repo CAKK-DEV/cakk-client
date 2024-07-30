@@ -18,7 +18,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   // MARK: - Properties
   
   @Published var locatedCakeShops: [LocatedCakeShop] = []
-  @Published private(set) var selectedCakeShop: LocatedCakeShop?
+  @Published var selectedCakeShop: LocatedCakeShop?
   private let useCase: SearchLocatedCakeShopUseCase
   @Published private(set) var locatedCakeShopsFetchingState: LocatedCakeShopsFetchingState = .idle
   enum LocatedCakeShopsFetchingState {
@@ -28,10 +28,12 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     case success
   }
   
-  @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: LocationService.defaultCoordinates.latitude,
-                                                                            longitude: LocationService.defaultCoordinates.longitude),
+  @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: LocationService.shared.userLocation?.latitude ?? LocationService.defaultCoordinates.latitude,
+                                                                            longitude: LocationService.shared.userLocation?.longitude ?? LocationService.defaultCoordinates.longitude),
                                              span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
   
+  @Published var searchDistanceOption: SearchDistanceOption = .fiveHundredMeter
+
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -55,7 +57,8 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     
     locatedCakeShopsFetchingState = .loading
     
-    useCase.execute(longitude: region.center.longitude,
+    useCase.execute(distance: searchDistanceOption.distance,
+                    longitude: region.center.longitude,
                     latitude: region.center.latitude)
     .delay(for: .seconds(0.5), scheduler: DispatchQueue.main)
     .subscribe(on: DispatchQueue.global())
@@ -63,7 +66,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
     .sink { [weak self] completion in
       if case .failure(let error) = completion {
         self?.locatedCakeShopsFetchingState = .failure
-        print(error)
+        print(error.localizedDescription)
       } else {
         self?.locatedCakeShopsFetchingState = .success
         self?.updateRegion()
@@ -76,6 +79,15 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
   
   public func setSelected(cakeShop: LocatedCakeShop) {
     selectedCakeShop = cakeShop
+  }
+  
+  public func moveToUserLocation() {
+    guard let userLocation = LocationService.shared.userLocation else { return }
+    
+    self.region = MKCoordinateRegion(
+      center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude),
+      span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
   }
   
   

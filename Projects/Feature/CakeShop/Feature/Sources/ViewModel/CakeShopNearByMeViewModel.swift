@@ -39,8 +39,6 @@ public final class CakeShopNearByMeViewModel: ObservableObject {
   
   public init(useCase: SearchLocatedCakeShopUseCase) {
     self.useCase = useCase
-    
-    LocationService.shared.startUpdatingLocation()
   }
   
   
@@ -53,14 +51,21 @@ public final class CakeShopNearByMeViewModel: ObservableObject {
       return
     }
     
-    useCase.execute(longitude: LocationService.shared.longitude,
-                    latitude: LocationService.shared.latitude)
+    /// 현재 내 위치로 이동
+    if let userLocation = LocationService.shared.userLocation {
+      region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: userLocation.latitude, longitude: userLocation.longitude),
+                                  span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1))
+    }
+    
+    useCase.execute(distance: 500, /// 단위는 미터 입니다
+                    longitude: region.center.longitude,
+                    latitude: region.center.latitude)
     .subscribe(on: DispatchQueue.global())
     .receive(on: DispatchQueue.main)
     .sink { [weak self] completion in
       if case .failure(let error) = completion {
         self?.locatedCakeShopsFetchingState = .failure
-        print(error)
+        print(error.localizedDescription)
       } else {
         self?.locatedCakeShopsFetchingState = .success
         self?.updateRegion()

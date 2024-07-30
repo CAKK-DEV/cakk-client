@@ -7,13 +7,14 @@
 //
 
 import Foundation
-import DomainCakeShop
 import Moya
 
 import Combine
-
-import Combine
 import SwiftUI
+
+import CommonDomain
+import DomainCakeShop
+import DomainSearch
 
 public final class CategoryDetailViewModel: ObservableObject {
   
@@ -70,7 +71,7 @@ public final class CategoryDetailViewModel: ObservableObject {
       .sink { [weak self] completion in
         if case let .failure(error) = completion {
           self?.imageFetchingState = .failure
-          print(error)
+          print(error.localizedDescription)
         } else {
           self?.imageFetchingState = .success
         }
@@ -93,7 +94,7 @@ public final class CategoryDetailViewModel: ObservableObject {
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
             self?.imageFetchingState = .failureLoadMore
-            print(error)
+            print(error.localizedDescription)
           } else {
             self?.imageFetchingState = .success
           }

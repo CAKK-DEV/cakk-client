@@ -8,8 +8,11 @@
 
 import SwiftUI
 import DesignSystem
+import Logger
 
 import DIContainer
+
+import AppTrackingTransparency
 
 struct CakeShopHomeView: View {
   var body: some View {
@@ -35,6 +38,19 @@ struct CakeShopHomeView: View {
         }
         .padding(.vertical, 16)
       }
+    }
+    .onFirstAppear {
+      requestIDFAPermission()
+    }
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func requestIDFAPermission() {
+    ATTrackingManager.requestTrackingAuthorization { status in
+      /// status를 가지고 필요한 작업이 있다면 합니다.
+      Loggers.featureCakeShop.info("앱 추적 권한 \(status)", category: .auth)
     }
   }
 }

@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-import SwiftUIUtil
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -35,6 +35,7 @@ struct TrendingCakeShopView: View {
       HStack(spacing: 12) {
         if let profileImageUrl = trendingCakeShop.profileImageUrl {
           KFImage(URL(string: profileImageUrl))
+            .downsampling(size: .init(width: 200, height: 200))
             .resizable()
             .aspectRatio(contentMode: .fill)
             .size(52)
@@ -71,7 +72,7 @@ struct TrendingCakeShopView: View {
       
       VStack {
         HStack {
-          imageView(imageUrlString: trendingCakeShop.cakeImageUrls[safe: 0])
+          imageView(imageUrlString: trendingCakeShop.cakeImageUrls[safe: 0], downSamplingSize: .init(width: 400, height: 400))
             .size(152)
             .roundedCorner(8, corners: .allCorners)
             .roundedCorner(12, corners: [.topLeft])
@@ -116,8 +117,9 @@ struct TrendingCakeShopView: View {
     .frame(maxWidth: 264)
   }
   
-  private func imageView(imageUrlString: String?) -> some View {
+  private func imageView(imageUrlString: String?, downSamplingSize: CGSize = .init(width: 200, height: 200)) -> some View {
     KFImage(URL(string: imageUrlString ?? ""))
+      .downsampling(size: downSamplingSize)
       .placeholder {
         DesignSystemAsset.gray10.swiftUIColor
           .overlay {
@@ -133,16 +135,6 @@ struct TrendingCakeShopView: View {
       .clipShape(
         Rectangle()
       )
-  }
-}
-
-
-// MARK: - Array Extension for Safe Indexing
-// TODO: 공통 Util 모듈로 빼기
-
-private extension Array {
-  subscript(safe index: Index) -> Element? {
-    return indices.contains(index) ? self[index] : nil
   }
 }
 

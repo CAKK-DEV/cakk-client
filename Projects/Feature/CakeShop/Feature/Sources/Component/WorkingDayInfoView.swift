@@ -9,6 +9,7 @@
 import SwiftUI
 import DesignSystem
 
+import CommonDomain
 import DomainCakeShop
 
 struct WorkingDayInfoView: View {

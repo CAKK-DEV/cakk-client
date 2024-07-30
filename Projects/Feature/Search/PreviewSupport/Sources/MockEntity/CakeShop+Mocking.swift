@@ -8,6 +8,7 @@
 
 import Foundation
 import DomainSearch
+import CommonDomain
 
 extension CakeShop {
   static let mockCakeShops1: [CakeShop] = [

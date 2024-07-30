@@ -10,9 +10,6 @@ import Foundation
 import Moya
 
 public enum CakeShopAPI {
-  case fetchCakeImagesByCategory(_ category: CakeCategoryDTO, count: Int, lastCakeId: Int?) // TODO: Search module로 빼기
-  case fetchCakeImagesByShopId(_ shopId: Int, count: Int, lastCakeId: Int?) // TODO: Search module로 빼기
-  
   /// cakeImageId파라미터가 있다면 케이크 이미지 조회수를 올립니다
   case fetchCakeShopQuickInfo(shopId: Int, cakeImageId: Int?)
   
@@ -30,31 +27,17 @@ public enum CakeShopAPI {
   case editCakeImage(imageId: Int, newCakeImage: NewCakeImageDTO, accessToken: String)
   case deleteCakeImage(imageId: Int, accessToken: String)
   
-  case requestPresignedUrl
-  case uploadPresignedImage(presignedUrl: String, image: Data)
   case isOwned(shopId: Int, accessToken: String)
 }
 
 extension CakeShopAPI: TargetType {
   public var baseURL: URL {
-    switch self {
-    case .uploadPresignedImage(let presignedUrl, _):
-      return URL(string: presignedUrl)!
-      
-    default:
-      let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
-      return URL(string: baseURLString)!
-    }
+    let baseURLString = Bundle.main.infoDictionary?["BASE_URL"] as! String
+    return URL(string: baseURLString)!
   }
   
   public var path: String {
     switch self {
-    case .fetchCakeImagesByCategory:
-      return "/api/v1/cakes/search/categories"
-      
-    case .fetchCakeImagesByShopId:
-      return "/api/v1/cakes/search/shops"
-      
     case .fetchCakeShopQuickInfo(let shopId, _):
       return "/api/v1/shops/\(shopId)/simple"
       
@@ -89,12 +72,6 @@ extension CakeShopAPI: TargetType {
         .deleteCakeImage(let cakeImageId, _):
       return "/api/v1/cakes/\(cakeImageId)"
       
-    case .requestPresignedUrl:
-      return "/api/v1/aws/img"
-      
-    case .uploadPresignedImage:
-      return "" /// Presigned URL은 전체 URL을 제공하므로 별도의 경로가 필요 없습니다.
-      
     case .isOwned(let shopId, _):
       return "/api/v1/shops/\(shopId)/owner"
     }
@@ -102,12 +79,6 @@ extension CakeShopAPI: TargetType {
   
   public var method: Moya.Method {
     switch self {
-    case .fetchCakeImagesByCategory:
-      return .get
-      
-    case .fetchCakeImagesByShopId:
-      return .get
-      
     case .fetchCakeShopQuickInfo:
       return .get
       
@@ -143,13 +114,7 @@ extension CakeShopAPI: TargetType {
       
     case .deleteCakeImage:
       return .delete
-      
-    case .requestPresignedUrl:
-      return .get
-      
-    case .uploadPresignedImage:
-      return .put
-      
+
     case .isOwned:
       return .get
     }
@@ -157,26 +122,6 @@ extension CakeShopAPI: TargetType {
   
   public var task: Moya.Task {
     switch self {
-    case .fetchCakeImagesByCategory(let category, let count, let lastCakeId):
-      var params: [String: Any] = [
-        "category": category.rawValue,
-        "pageSize": count
-      ]
-      if let lastCakeId {
-        params["cakeId"] = lastCakeId
-      }
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
-      
-    case .fetchCakeImagesByShopId(let shopId, let count, let lastCakeId):
-      var params: [String: Any] = [
-        "cakeShopId": shopId,
-        "pageSize": count
-      ]
-      if let lastCakeId {
-        params["cakeId"] = lastCakeId
-      }
-      return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
-      
     case .fetchCakeShopQuickInfo(_, let cakeImageId):
       var params = [String: Any]()
       if let cakeImageId {
@@ -229,13 +174,7 @@ extension CakeShopAPI: TargetType {
       
     case .deleteCakeImage:
       return .requestPlain
-      
-    case .requestPresignedUrl:
-      return .requestPlain
-      
-    case .uploadPresignedImage(_, let image):
-      return .requestData(image)
-      
+
     case .isOwned:
       return .requestPlain
     }
@@ -254,9 +193,6 @@ extension CakeShopAPI: TargetType {
         "Content-Type": "application/json",
         "Authorization": "Bearer \(accessToken)"
       ]
-    
-    case .uploadPresignedImage:
-      return ["Content-Type": "image/jpeg"]
       
     default:
       return ["Content-Type": "application/json"]
@@ -265,21 +201,6 @@ extension CakeShopAPI: TargetType {
   
   public var sampleData: Data {
     switch self {
-    case .fetchCakeImagesByCategory(_, _, let lastCakeId),
-        .fetchCakeImagesByShopId(_, _, let lastCakeId):
-      if let lastCakeId {
-        switch lastCakeId {
-        case 10:
-          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages2", withExtension: "json")!)
-        case 20:
-          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages3", withExtension: "json")!)
-        default:
-          return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages4", withExtension: "json")!)
-        }
-      } else {
-        return try! Data(contentsOf: Bundle.module.url(forResource: "SampleCakeImages1", withExtension: "json")!)
-      }
-      
     case .fetchCakeShopQuickInfo:
       return try! Data(contentsOf: Bundle.module.url(forResource: "CakeShopQuickInfoSampleResponse", withExtension: "json")!)
       

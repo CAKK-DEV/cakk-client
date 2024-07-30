@@ -22,6 +22,8 @@ import NetworkCakeShop
 import DomainSearch
 import NetworkSearch
 
+import NetworkImage
+
 import Router
 import DIContainer
 
@@ -74,6 +76,15 @@ struct CAKKAdminApp: App {
       #else
       MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
       #endif
+    }
+    
+    diContainer.register(MoyaProvider<ImageUploadAPI>.self) { _ in
+      MoyaProvider<ImageUploadAPI>(plugins: [MoyaLoggingPlugin()])
+    }
+    
+    diContainer.register(ImageUploadRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<ImageUploadAPI>.self)!
+      return ImageUploadRepository(provider: provider)
     }
     
     diContainer.register(SocialLoginRepository.self) { resolver in
@@ -149,7 +160,7 @@ struct CAKKAdminApp: App {
     }
     
     diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
-      let repository = resolver.resolve(CakeShopDetailRepository.self)!
+      let repository = resolver.resolve(SearchRepository.self)!
       return CakeImagesByShopIdUseCaseImpl(repository: repository)
     }
     
@@ -172,8 +183,10 @@ struct CAKKAdminApp: App {
     }
     
     diContainer.register(EditShopBasicInfoUseCase.self) { resolver in
-      let repository = resolver.resolve(CakeShopRepository.self)!
-      return EditShopBasicInfoUseCaseImpl(repository: repository)
+      let cakeShopRepository = resolver.resolve(CakeShopRepository.self)!
+      let imageUploadRepository = resolver.resolve(ImageUploadRepository.self)!
+      return EditShopBasicInfoUseCaseImpl(cakeShopRepository: cakeShopRepository,
+                                          imageUploadRepository: imageUploadRepository)
     }
     
     diContainer.register(EditExternalLinkUseCase.self) { resolver in
@@ -190,15 +203,13 @@ struct CAKKAdminApp: App {
       let repository = resolver.resolve(CakeShopRepository.self)!
       return EditShopAddressUseCaseImpl(repository: repository)
     }
-    
-    diContainer.register(CakeImagesByShopIdUseCase.self) { resolver in
-      let repository = resolver.resolve(CakeShopDetailRepository.self)!
-      return CakeImagesByShopIdUseCaseImpl(repository: repository)
-    }
+
     
     diContainer.register(UploadCakeImageUseCase.self) { resolver in
-      let repository = resolver.resolve(CakeShopRepository.self)!
-      return UploadCakeImageUseCaseImpl(repository: repository)
+      let cakeShopRepository = resolver.resolve(CakeShopRepository.self)!
+      let imageUploadRepository = resolver.resolve(ImageUploadRepository.self)!
+      return UploadCakeImageUseCaseImpl(cakeShopRepository: cakeShopRepository,
+                                        imageUploadRepository: imageUploadRepository)
     }
     
     diContainer.register(EditCakeImageUseCase.self) { resolver in
