@@ -9,6 +9,7 @@
 import SwiftUI
 
 import DomainCakeShop
+import AdManager
 
 struct ExternalShopLinksView: View {
   
@@ -16,6 +17,10 @@ struct ExternalShopLinksView: View {
   
   private let externalShopLinks: [ExternalShopLink]
   private let emptyLinkButtonAction: (() -> Void)?
+  
+  @AppStorage("external_link_click_count") var externalLinkClickCount = 0
+  @Environment(\.scenePhase) private var scenePhase
+  private let interstitialAdManager = InterstitialAdsManager()
   
   
   // MARK: - Initializers
@@ -41,6 +46,24 @@ struct ExternalShopLinksView: View {
           ExternalShopLinkButton(linkType: linkType, emptyLinkButtonAction: emptyLinkButtonAction)
         }
       }
+    }
+    .onChange(of: scenePhase) { newPhase in
+      switch newPhase {
+      case .active:
+        showInterstitialLinkIfNeeded()
+      default:
+        break
+      }
+    }
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func showInterstitialLinkIfNeeded() {
+    /// 전면 광고는 외부 링크 클릭 3번에 한 번씩 표시
+    if externalLinkClickCount % 3 == 0 {
+      interstitialAdManager.displayInterstitialAd(adUnit: .externalLinkAd)
     }
   }
 }
