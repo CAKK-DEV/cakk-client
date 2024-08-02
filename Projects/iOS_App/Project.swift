@@ -55,10 +55,7 @@ let project = Project.app(
 
     Project.AdManager,
 
-    .package(product: "FirebaseAnalytics")
-  ],
-  packages: [
-     .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.29.0"))
+    External.FirebaseAnalytics
   ],
   entitlements: "App.entitlements"
 )
