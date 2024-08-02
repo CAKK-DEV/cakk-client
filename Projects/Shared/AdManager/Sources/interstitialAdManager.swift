@@ -22,7 +22,7 @@ public class InterstitialAdsManager: NSObject, GADFullScreenContentDelegate, Obs
       case .mapDistanceAd:
         return "ca-app-pub-3998172297943713/2033537593"
         
-      case .externalLink:
+      case .externalLinkAd:
         return "ca-app-pub-3998172297943713/1925834189"
       }
       #endif
