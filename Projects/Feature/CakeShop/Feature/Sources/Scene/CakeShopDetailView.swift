@@ -90,25 +90,23 @@ public struct CakeShopDetailView: View {
         Spacer()
         
         if let shopDetail = viewModel.cakeShopDetail {
-//          ZStack {
-//            bottomPromptButton(shopDetail: shopDetail)
-//              .offset(y: selectedDetailSection == .order ? 0 : 200)
-//              .animation(.smooth, value: selectedDetailSection)
-//              .opacity(viewModel.isOwned ? 0 : 1)
-//          }
-//          .background {
-//            bottomGeneralButtons(shopDetail: shopDetail)
-//              .offset(y: selectedDetailSection != .order ? 0 : 200)
-//              .animation(.snappy, value: selectedDetailSection)
-//          }
-          bottomGeneralButtons(shopDetail: shopDetail)
-            .offset(y: selectedDetailSection != .order ? 0 : 200)
-            .animation(.snappy, value: selectedDetailSection)
+          ZStack {
+            bottomPromptButton(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection == .order ? 0 : 200)
+              .animation(.smooth, value: selectedDetailSection)
+              .opacity(viewModel.isOwned ? 0 : 1)
+          }
+          .background {
+            bottomGeneralButtons(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection != .order ? 0 : 200)
+              .animation(.snappy, value: selectedDetailSection)
+          }
         }
       }
     }
     .onFirstAppear {
       viewModel.fetchCakeShopDetail()
+      viewModel.fetchCakeShopPromptCount()
     }
     .onChange(of: viewModel.cakeShopDetailFetchingState) { state in
       switch state {
@@ -236,7 +234,8 @@ public struct CakeShopDetailView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
       
       Button {
-        // 따봉 action
+        viewModel.increaseCakeShopPromptCount()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
       } label: {
         VStack(spacing: 5) {
           DesignSystemAsset.thumbsUp.swiftUIImage
@@ -244,7 +243,7 @@ public struct CakeShopDetailView: View {
             .scaledToFit()
             .size(24)
           
-          Text("3,300")
+          Text(viewModel.cakeShopPromptCount.description)
             .font(.pretendard(size: 13, weight: .bold))
         }
         .foregroundStyle(.white)

@@ -7,16 +7,15 @@ import ProjectDescriptionHelpers
 
 let packageSettings = PackageSettings(
   productTypes: [
-    "Lottie": .framework,
+    "Lottie": .staticFramework,
     "SnapKit": .framework,
-    "Haptico": .framework,
+    "Haptico": .staticFramework,
     "Moya": .framework,
     "CombineMoya": .framework,
     "Swinject": .framework,
     "Kingfisher": .framework,
     "ExpandableText": .framework,
-    "GoogleMobileAds": .framework,
-    "FirebaseAnalytics": .framework
+    "GoogleMobileAds": .framework
   ],
   baseSettings: .settings(
     configurations: [

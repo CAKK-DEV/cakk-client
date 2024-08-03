@@ -53,6 +53,7 @@ struct CAKKApp: App {
   // MARK: - Initializers
   
   init() {
+    FirebaseApp.configure()
     setupDIContainer()
     initKakaoSDK()
   }

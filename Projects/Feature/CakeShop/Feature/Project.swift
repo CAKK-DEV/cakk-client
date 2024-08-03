@@ -17,6 +17,7 @@ let project = Project.framework(
     Project.DIContainer,
     Project.Logger,
     External.Kingfisher,
-    External.ExpandableText
+    External.ExpandableText,
+    External.FirebaseFirestore
   ]
 )
