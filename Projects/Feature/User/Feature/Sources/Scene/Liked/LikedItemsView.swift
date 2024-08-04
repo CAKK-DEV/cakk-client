@@ -39,6 +39,8 @@ struct LikedItemsView: View {
     }
   }
   
+  @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapLikedTab)
+  
   
   // MARK: - Initializers
   
@@ -126,43 +128,58 @@ struct LikedItemsView: View {
             }
           }
       } else {
-        ScrollView {
-          VStack(spacing: 100) {
-            FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-              KFImage(URL(string: cakeImage.imageUrl))
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .background(DesignSystemAsset.gray10.swiftUIColor)
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-                .onFirstAppear {
-                  if cakeImage.cakeHeartId == viewModel.cakeImages.last?.cakeHeartId {
-                    viewModel.fetchMoreCakeImages()
-                  }
+        ScrollViewReader { scrollProxy in
+          ScrollView {
+            VStack(spacing: 0) {
+              /// Scroll to top에 사용되는 임의 뷰 입니다.
+              Color.clear.frame(height: 0.01)
+                .id("first_section")
+              
+              VStack(spacing: 100) {
+                FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
+                  KFImage(URL(string: cakeImage.imageUrl))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .background(DesignSystemAsset.gray10.swiftUIColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .onFirstAppear {
+                      if cakeImage.cakeHeartId == viewModel.cakeImages.last?.cakeHeartId {
+                        viewModel.fetchMoreCakeImages()
+                      }
+                    }
+                    .onTapGesture {
+                      router.presentSheet(destination: PublicUserSheetDestination.quickInfo(
+                        imageId: cakeImage.imageId,
+                        cakeImageUrl: cakeImage.imageUrl,
+                        shopId: cakeImage.shopId)
+                      )
+                    }
                 }
-                .onTapGesture {
-                  router.presentSheet(destination: PublicUserSheetDestination.quickInfo(
-                    imageId: cakeImage.imageId,
-                    cakeImageUrl: cakeImage.imageUrl,
-                    shopId: cakeImage.shopId)
-                  )
+                .animation(.snappy, value: viewModel.cakeImages)
+                
+                if viewModel.imageFetchingState == .loading {
+                  ProgressView()
                 }
-            }
-            .animation(.snappy, value: viewModel.cakeImages)
-            
-            if viewModel.imageFetchingState == .loading {
-              ProgressView()
+              }
+              .padding(.horizontal, 12)
+              .padding(.top, 16)
+              .padding(.bottom, 100)
             }
           }
-          .padding(.horizontal, 12)
-          .padding(.top, 16)
-          .padding(.bottom, 100)
-        }
-        .refreshable {
-          viewModel.fetchCakeImages()
-        }
-        .onAppear {
-          if GlobalSettings.didChangeCakeShopLikeState {
+          .refreshable {
             viewModel.fetchCakeImages()
+          }
+          .onAppear {
+            if GlobalSettings.didChangeCakeShopLikeState {
+              viewModel.fetchCakeImages()
+            }
+          }
+          .onChange(of: tabDoubleTapObserver.doubleTabActivated) { _ in
+            if selectedSection == .images {
+              withAnimation {
+                scrollProxy.scrollTo("first_section")
+              }
+            }
           }
         }
       }
@@ -192,44 +209,59 @@ struct LikedItemsView: View {
             }
           }
       } else {
-        ScrollView {
-          LazyVStack(spacing: 16) {
-            ForEach(viewModel.cakeShops, id: \.shopHeartId) { cakeShop in
-              CakeShopThumbnailView(
-                shopName: cakeShop.name,
-                shopBio: cakeShop.bio,
-                workingDays: cakeShop.workingDays.map { $0.mapping() },
-                profileImageUrl: cakeShop.profileImageUrl,
-                cakeImageUrls: cakeShop.cakeImageUrls
-              )
-              .onFirstAppear {
-                if viewModel.cakeShops.last?.shopHeartId == cakeShop.shopHeartId {
-                  viewModel.fetchMoreCakeShops()
+        ScrollViewReader { scrollProxy in
+          ScrollView {
+            VStack(spacing: 0) {
+              /// Scroll to top에 사용되는 임의 뷰 입니다.
+              Color.clear.frame(height: 0.01)
+                .id("first_section")
+              
+              LazyVStack(spacing: 16) {
+                ForEach(viewModel.cakeShops, id: \.shopHeartId) { cakeShop in
+                  CakeShopThumbnailView(
+                    shopName: cakeShop.name,
+                    shopBio: cakeShop.bio,
+                    workingDays: cakeShop.workingDays.map { $0.mapping() },
+                    profileImageUrl: cakeShop.profileImageUrl,
+                    cakeImageUrls: cakeShop.cakeImageUrls
+                  )
+                  .onFirstAppear {
+                    if viewModel.cakeShops.last?.shopHeartId == cakeShop.shopHeartId {
+                      viewModel.fetchMoreCakeShops()
+                    }
+                  }
+                  .onTapGesture {
+                    router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
+                  }
+                }
+                .animation(.snappy, value: viewModel.cakeShops)
+                
+                if viewModel.cakeShopFetchingState == .loading {
+                  ProgressView()
+                    .frame(height: 100)
                 }
               }
-              .onTapGesture {
-                router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
+              .padding(.horizontal, 28)
+              .padding(.top, 16)
+              .padding(.bottom, 100)
+            }
+          }
+          .refreshable {
+            if GlobalSettings.didChangeCakeShopLikeState {
+              viewModel.fetchCakeShops()
+            }
+          }
+          .onAppear {
+            if GlobalSettings.didChangeCakeShopLikeState {
+              viewModel.fetchCakeShops()
+            }
+          }
+          .onChange(of: tabDoubleTapObserver.doubleTabActivated) { _ in
+            if selectedSection == .cakeShop {
+              withAnimation {
+                scrollProxy.scrollTo("first_section")
               }
             }
-            .animation(.snappy, value: viewModel.cakeShops)
-            
-            if viewModel.cakeShopFetchingState == .loading {
-              ProgressView()
-                .frame(height: 100)
-            }
-          }
-          .padding(.horizontal, 28)
-          .padding(.top, 16)
-          .padding(.bottom, 100)
-        }
-        .refreshable {
-          if GlobalSettings.didChangeCakeShopLikeState {
-            viewModel.fetchCakeShops()
-          }
-        }
-        .onAppear {
-          if GlobalSettings.didChangeCakeShopLikeState {
-            viewModel.fetchCakeShops()
           }
         }
       }
