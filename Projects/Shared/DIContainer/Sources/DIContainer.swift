@@ -13,8 +13,8 @@ public final class DIContainer {
 
   // MARK: - Properties
   
-  public static let shared = DIContainer()
-  public let container = Container()
+  public static var shared = DIContainer()
+  public var container = Container()
   
   
   // MARK: - Initializers
