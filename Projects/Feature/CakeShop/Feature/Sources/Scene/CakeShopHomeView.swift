@@ -8,13 +8,22 @@
 
 import SwiftUI
 import DesignSystem
-import Logger
 
+import CommonUtil
+import Logger
 import DIContainer
 
 import AppTrackingTransparency
 
 struct CakeShopHomeView: View {
+  
+  // MARK: - Properties
+  
+  @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapCakeShopTab)
+
+  
+  // MARK: - Views
+  
   var body: some View {
     VStack(spacing: 0) {
       NavigationBar(
@@ -26,17 +35,25 @@ struct CakeShopHomeView: View {
             .frame(height: 30)
         })
       
-      ScrollView {
-        VStack(spacing: 44) {
-          CakeCategorySection()
-          
-          TrendingCakeShopSection()
-          
-          CakeShopsNearByMeSection()
-          
-          TrendingCakeImageSection()
+      ScrollViewReader { scrollProxy in
+        ScrollView {
+          VStack(spacing: 44) {
+            CakeCategorySection()
+              .id("first_section")
+            
+            TrendingCakeShopSection()
+            
+            CakeShopsNearByMeSection()
+            
+            TrendingCakeImageSection()
+          }
+          .padding(.vertical, 16)
         }
-        .padding(.vertical, 16)
+        .onChange(of: tabDoubleTapObserver.doubleTabActivated) { _ in
+          withAnimation {
+            scrollProxy.scrollTo("first_section")
+          }
+        }
       }
     }
     .onFirstAppear {

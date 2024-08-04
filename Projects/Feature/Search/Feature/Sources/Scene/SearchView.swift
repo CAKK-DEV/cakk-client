@@ -30,6 +30,7 @@ struct SearchView: View {
   @FocusState private var isFocused
   
   @EnvironmentObject private var router: Router
+  @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapSearchTab)
   
   
   // MARK: - Initializers
@@ -64,6 +65,9 @@ struct SearchView: View {
     .onAppear {
       LocationService.shared.requestLocationPermission()
       LocationService.shared.startUpdatingLocation()
+    }
+    .onChange(of: tabDoubleTapObserver.doubleTabActivated) { _ in
+      restoreSearch()
     }
   }
   

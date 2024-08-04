@@ -18,14 +18,14 @@ struct AppTabView: View {
   
   // MARK: - Properties
   
-  @State private var selectedTab: CAKKTabBar.Tab = .cakeShop
+  @StateObject var tabStateManager = TabStateManager()
   @StateObject private var keyboardObserver = KeyboardObserver()
   
   // MARK: - Views
   
   var body: some View {
     ZStack(alignment: .bottom) {
-      TabView(selection: $selectedTab) {
+      TabView(selection: $tabStateManager.selectedTab) {
         CakeShopTabCoordinator()
           .tag(CAKKTabBar.Tab.cakeShop)
         
@@ -42,7 +42,7 @@ struct AppTabView: View {
       .ignoresSafeArea(.keyboard, edges: .bottom)
       .toolbar(.hidden, for: .tabBar)
       
-      CAKKTabBar(selectedTab: $selectedTab)
+      CAKKTabBar(selectedTab: $tabStateManager.selectedTab)
         .ignoresSafeArea(.keyboard)
         .offset(y: keyboardObserver.isKeyboardVisible ? 200 : 0)
         .animation(.snappy, value: keyboardObserver.isKeyboardVisible)
