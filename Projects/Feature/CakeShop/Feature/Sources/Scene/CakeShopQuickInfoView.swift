@@ -176,10 +176,10 @@ public struct CakeShopQuickInfoView: View {
           .overlay {
             GeometryReader { proxy in
               let size = proxy.size
-              ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
+              return ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
             }
           }
-          .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
+          .scaleEffect(1 + imageScale, anchor: .center)
       case .failure:
         // Error handling
         RoundedRectangle(cornerRadius: 22)
