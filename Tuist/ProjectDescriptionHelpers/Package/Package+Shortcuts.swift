@@ -56,4 +56,8 @@ public enum External {
   public static var FirebaseFirestore: TargetDependency {
     return .external(name: "FirebaseFirestore")
   }
+
+  public static var PopupView: TargetDependency {
+    return .external(name: "PopupView")
+  }
 }
