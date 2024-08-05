@@ -8,7 +8,9 @@
 
 import SwiftUI
 import CommonUtil
+
 import DesignSystem
+import PopupView
 
 import Kingfisher
 
@@ -38,6 +40,8 @@ public struct SearchCakeShopOnMapView: View {
   @StateObject private var motionData = MotionObserver()
   
   @StateObject private var interstitialAdManager = InterstitialAdsManager()
+  
+  @State private var isNoResultPopupShown = false
 
   
   // MARK: - Initializers
@@ -156,6 +160,42 @@ public struct SearchCakeShopOnMapView: View {
       } else {
         isRefreshButtonShown = true
       }
+    }
+    .onReceive(viewModel.$locatedCakeShops) { searchResultCakeShops in
+      if searchResultCakeShops.isEmpty {
+        isNoResultPopupShown = true
+      }
+    }
+    .popup(isPresented: $isNoResultPopupShown) {
+      HStack {
+        Spacer()
+        
+        HStack(spacing: 8) {
+          Text("🤔")
+            .font(.system(size: 24))
+          
+          Text("근처에 발견된 케이크샵이 없어요.\n범위를 넓히거나 위치를\n이동하여 다시 검색해 보세요!")
+            .font(.pretendard(size: 13, weight: .semiBold))
+            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+            .multilineTextAlignment(.trailing)
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(Color.white)
+        .clipShape(RoundedRectangle(cornerRadius: 24))
+        .overlay {
+          RoundedRectangle(cornerRadius: 24)
+            .stroke(DesignSystemAsset.gray20.swiftUIColor)
+        }
+        .shadow(color: .black.opacity(0.25), radius: 20, x: 0, y: 4)
+      }
+    } customize: { configuration in
+      configuration
+        .type (.floater(verticalPadding: 8, horizontalPadding: 14, useSafeAreaInset: true))
+        .position(.topTrailing)
+        .dragToDismiss(true)
+        .autohideIn(3)
+        .animation(.snappy)
     }
   }
   
