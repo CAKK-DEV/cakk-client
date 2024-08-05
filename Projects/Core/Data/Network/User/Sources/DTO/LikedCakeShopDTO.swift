@@ -12,7 +12,7 @@ import DomainUser
 struct LikedCakeShopDTO: Decodable {
   let cakeShopHeartId: Int
   let cakeShopId: Int
-  let thumbnailUrl: String
+  let thumbnailUrl: String?
   let cakeShopName: String
   let cakeShopBio: String
   let cakeImageUrls: [String]

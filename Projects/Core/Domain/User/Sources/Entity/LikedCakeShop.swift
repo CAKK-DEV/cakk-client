@@ -14,7 +14,7 @@ public struct LikedCakeShop: Equatable {
   public let name: String
   public let bio: String
   public let shopHeartId: Int
-  public let profileImageUrl: String
+  public let profileImageUrl: String?
   public let cakeImageUrls: [String]
   public let workingDays: [WorkingDay]
   
@@ -23,7 +23,7 @@ public struct LikedCakeShop: Equatable {
     name: String,
     bio: String,
     shopHeartId: Int,
-    profileImageUrl: String,
+    profileImageUrl: String?,
     cakeImageUrls: [String],
     workingDays: [WorkingDay]
   ) {
