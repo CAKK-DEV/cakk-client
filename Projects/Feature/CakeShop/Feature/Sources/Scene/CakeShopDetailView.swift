@@ -261,6 +261,9 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
+        withAnimation {
+          isHeartAnimationShown = !viewModel.isLiked
+        }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
       } label: {
         RoundedRectangle(cornerRadius: 20)
@@ -289,11 +292,6 @@ public struct CakeShopDetailView: View {
             primaryButtonAction: .cancel)
         }
       })
-      .onChange(of: viewModel.isLiked) { isLiked in
-        withAnimation {
-          isHeartAnimationShown = isLiked
-        }
-      }
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {

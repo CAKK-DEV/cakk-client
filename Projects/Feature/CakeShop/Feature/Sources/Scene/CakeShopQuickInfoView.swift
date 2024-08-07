@@ -93,6 +93,9 @@ public struct CakeShopQuickInfoView: View {
       HStack(spacing: 8) {
         Button {
           viewModel.toggleLike()
+          withAnimation {
+            isHeartAnimationShown = !viewModel.isLiked
+          }
           UIImpactFeedbackGenerator(style: .light).impactOccurred()
         } label: {
           RoundedRectangle(cornerRadius: 20)
@@ -119,11 +122,6 @@ public struct CakeShopQuickInfoView: View {
             }))
           }
         })
-        .onChange(of: viewModel.isLiked) { isLiked in
-          withAnimation {
-            isHeartAnimationShown = isLiked
-          }
-        }
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
