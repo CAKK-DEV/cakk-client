@@ -31,6 +31,8 @@ public struct CakeShopQuickInfoView: View {
   @State private var imageScale: CGFloat = 0
   @State private var imageScalePosition: CGPoint = .zero
   
+  @State private var isHeartAnimationShown = false
+  
   
   // MARK: - Initializers
   
@@ -101,6 +103,12 @@ public struct CakeShopQuickInfoView: View {
                 .font(.system(size: 24))
                 .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
             }
+            .overlay {
+              if isHeartAnimationShown {
+                LottieViewRepresentable(lottieFile: .heartFlyAway, loopMode: .playOnce)
+                  .offset(x: -12, y: -40)
+              }
+            }
         }
         .modifier(BouncyPressEffect())
         .onReceive(viewModel.$likeUpdatingState, perform: { state in
@@ -111,6 +119,11 @@ public struct CakeShopQuickInfoView: View {
             }))
           }
         })
+        .onChange(of: viewModel.isLiked) { isLiked in
+          withAnimation {
+            isHeartAnimationShown = isLiked
+          }
+        }
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
