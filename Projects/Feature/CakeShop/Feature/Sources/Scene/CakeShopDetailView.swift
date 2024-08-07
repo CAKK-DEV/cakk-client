@@ -28,6 +28,7 @@ public struct CakeShopDetailView: View {
   @State private var selectedDetailSection = CakeShopContentsSection.DetailSection.images
   
   @State private var navigationTitleOpacity: CGFloat = 0
+  @State private var isHeartAnimationShown = false
   
   
   // MARK: - Initializers
@@ -260,7 +261,7 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
@@ -270,6 +271,12 @@ public struct CakeShopDetailView: View {
             Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
               .font(.system(size: 24))
               .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
+          }
+          .overlay {
+            if isHeartAnimationShown {
+              LottieViewRepresentable(lottieFile: .heartFlyAway, loopMode: .playOnce)
+                .offset(x: -12, y: -40)
+            }
           }
       }
       .modifier(BouncyPressEffect())
@@ -282,6 +289,11 @@ public struct CakeShopDetailView: View {
             primaryButtonAction: .cancel)
         }
       })
+      .onChange(of: viewModel.isLiked) { isLiked in
+        withAnimation {
+          isHeartAnimationShown = isLiked
+        }
+      }
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {

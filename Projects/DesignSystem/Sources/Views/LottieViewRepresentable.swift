@@ -24,6 +24,7 @@ public struct LottieViewRepresentable: UIViewRepresentable {
     /// rawValue를 lottie animation의 json 이름으로 설정해주세요.
     case confetti = "confetti"
     case cakeRunning = "cake_running"
+    case heartFlyAway = "heart_fly_away"
   }
   
   
