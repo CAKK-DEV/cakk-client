@@ -96,7 +96,7 @@ public struct CakeShopQuickInfoView: View {
           withAnimation {
             isHeartAnimationShown = !viewModel.isLiked
           }
-          UIImpactFeedbackGenerator(style: .light).impactOccurred()
+          UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
           RoundedRectangle(cornerRadius: 20)
             .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
