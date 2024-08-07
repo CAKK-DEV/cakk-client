@@ -292,6 +292,7 @@ public struct CakeShopDetailView: View {
             primaryButtonAction: .cancel)
         }
       })
+      .disabled(viewModel.likeUpdatingState == .loading)
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {
