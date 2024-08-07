@@ -122,6 +122,7 @@ public struct CakeShopQuickInfoView: View {
             }))
           }
         })
+        .disabled(viewModel.likeUpdatingState == .loading)
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
