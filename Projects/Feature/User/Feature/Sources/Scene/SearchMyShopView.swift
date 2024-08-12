@@ -50,6 +50,11 @@ struct SearchMyShopView: View {
     .onAppear {
       isFocused = true
     }
+    .onChange(of: isFocused) { isFocused in
+      if isFocused {
+        isSearchResultShown = false
+      }
+    }
   }
   
   private func searchBar() -> some View {
@@ -158,8 +163,8 @@ struct SearchMyShopView: View {
   
   private func idleStateView() -> some View {
     VStack {
-      Text("내 케이크 샵을 검색하여\n사장님 인증 후 손 쉽게\n가게를 꾸며보세요!")
-        .font(.pretendard(size: 17))
+      Text("내 케이크샵을 검색해 사장님 인증을 받고,\n손쉽게 가게를 꾸며보세요!")
+        .font(.pretendard(size: 16))
         .multilineTextAlignment(.center)
         .foregroundStyle(DesignSystemAsset.gray30.swiftUIColor)
     }
