@@ -66,6 +66,7 @@ struct CakeShopTabCoordinator: View {
               // 로그인
             case .login:
               let _ = viewModelRegistry.registerSocialLoginViewModel()
+              let _ = viewModelRegistry.registerEmailVerificationViewModel()
               LoginStepCoordinator(onFinish: {
                 router.presentedFullScreenSheet = nil
               })
