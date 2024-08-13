@@ -79,6 +79,15 @@ struct ViewModelRegistry {
     }
   }
   
+  func registerEmailVerificationViewModel() {
+    diContainer.register(EmailVerificationViewModel.self) { resolver in
+      let sendVerificationCodeUseCase = resolver.resolve(SendVerificationCodeUseCase.self)!
+      let confirmVerificationCodeUseCase = resolver.resolve(ConfirmVerificationCodeUseCase.self)!
+      return EmailVerificationViewModel(sendVerificationCodeUseCase: sendVerificationCodeUseCase,
+                                        confirmVerificationCodeUseCase: confirmVerificationCodeUseCase)
+    }
+  }
+  
   func registerEditExternalLinkViewModel(shopId: Int, externalLinks: [ExternalShopLink]) {
     diContainer.register(EditExternalLinkViewModel.self) { resolver in
       let editExternalLinkUseCase = resolver.resolve(EditExternalLinkUseCase.self)!

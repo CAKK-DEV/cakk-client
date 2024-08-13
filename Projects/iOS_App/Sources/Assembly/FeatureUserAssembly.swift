@@ -87,5 +87,34 @@ final class FeatureUserAssembly: Assembly {
       let searchCakeShopUseCase = resolver.resolve(SearchCakeShopUseCase.self)!
       return SearchMyShopViewModel(searchCakeShopUseCase: searchCakeShopUseCase)
     }
+    
+    
+    // MARK: - Email verification
+    
+    container.register(MoyaProvider<EmailVerificationAPI>.self) { _ in
+      MoyaProvider<EmailVerificationAPI>()
+    }
+    
+    container.register(EmailVerificationRepository.self) { resolver in
+      let provider = resolver.resolve(MoyaProvider<EmailVerificationAPI>.self)!
+      return EmailVerificationRepositoryImpl(provider: provider)
+    }
+    
+    container.register(SendVerificationCodeUseCase.self) { resolver in
+      let repository = resolver.resolve(EmailVerificationRepository.self)!
+      return SendVerificationCodeUseCaseImpl(repository: repository)
+    }
+    
+    container.register(ConfirmVerificationCodeUseCase.self) { resolver in
+      let repository = resolver.resolve(EmailVerificationRepository.self)!
+      return ConfirmVerificationCodeUseCaseImpl(repository: repository)
+    }
+    
+    container.register(EmailVerificationViewModel.self) { resolver in
+      let sendVerificationCodeUseCase = resolver.resolve(SendVerificationCodeUseCase.self)!
+      let confirmVerificationCodeUseCase = resolver.resolve(ConfirmVerificationCodeUseCase.self)!
+      return EmailVerificationViewModel(sendVerificationCodeUseCase: sendVerificationCodeUseCase,
+                                        confirmVerificationCodeUseCase: confirmVerificationCodeUseCase)
+    }
   }
 }
