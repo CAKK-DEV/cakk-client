@@ -24,7 +24,9 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
   
   @Published var userData = UserData(nickname: "", email: "", birthday: .now, gender: .unknown)
   @Published private(set) var loginType: LoginProvider?
+  private var credentialData: CredentialData?
   
+  private let signInUseCase: SocialLoginSignInUseCase
   @Published private(set) var signInState: SignInState = .idle
   enum SignInState: Equatable {
     case idle
@@ -36,6 +38,7 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case newUser
   }
   
+  private let signUpUseCase: SocialLoginSignUpUseCase
   @Published private(set) var signUpState: SignUpState = .idle
   enum SignUpState: Equatable {
     case idle
@@ -44,12 +47,6 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case serverError
     case success
   }
-  
-  private let signInUseCase: SocialLoginSignInUseCase
-  private let signUpUseCase: SocialLoginSignUpUseCase
-  
-  private var credentialData: CredentialData?
-  private var cancellables = Set<AnyCancellable>()
   
   var isEmailValid: Bool {
     let pattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -62,13 +59,15 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     userData.email.isEmpty
   }
   
+  private var cancellables = Set<AnyCancellable>()
+  
   
   // MARK: - Initializers
   
   public init(
     signInUseCase: SocialLoginSignInUseCase,
-    signUpUseCase: SocialLoginSignUpUseCase)
-  {
+    signUpUseCase: SocialLoginSignUpUseCase
+  ) {
     self.signInUseCase = signInUseCase
     self.signUpUseCase = signUpUseCase
   }

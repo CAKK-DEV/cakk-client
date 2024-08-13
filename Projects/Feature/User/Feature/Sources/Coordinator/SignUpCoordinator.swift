@@ -10,6 +10,8 @@ import SwiftUI
 import DesignSystem
 import Router
 
+import DIContainer
+
 public struct SignUpStepCoordinator: View {
   
   // MARK: - Properties
@@ -26,6 +28,8 @@ public struct SignUpStepCoordinator: View {
   @EnvironmentObject private var router: Router
   @EnvironmentObject private var parentCoordinator: StepRouter
   @StateObject private var coordinator = StepRouter(steps: [])
+  
+  @StateObject private var emailVerificationViewModel: EmailVerificationViewModel
   
   
   // MARK: - Initializers
@@ -48,6 +52,8 @@ public struct SignUpStepCoordinator: View {
         AnyView(SignUp_Processing())
       ], onFinish: onFinish))
     }
+    
+    _emailVerificationViewModel = .init(wrappedValue: DIContainer.shared.container.resolve(EmailVerificationViewModel.self)!)
   }
   
   
@@ -59,6 +65,7 @@ public struct SignUpStepCoordinator: View {
       
       coordinator.steps[coordinator.currentStep]
         .environmentObject(coordinator.withParent(coordinator: parentCoordinator))
+        .environmentObject(emailVerificationViewModel)
     }
     .ignoresSafeArea(.keyboard)
   }
