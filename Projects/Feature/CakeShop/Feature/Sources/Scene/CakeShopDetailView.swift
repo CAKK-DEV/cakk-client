@@ -28,6 +28,7 @@ public struct CakeShopDetailView: View {
   @State private var selectedDetailSection = CakeShopContentsSection.DetailSection.images
   
   @State private var navigationTitleOpacity: CGFloat = 0
+  @State private var isHeartAnimationShown = false
   
   
   // MARK: - Initializers
@@ -90,25 +91,23 @@ public struct CakeShopDetailView: View {
         Spacer()
         
         if let shopDetail = viewModel.cakeShopDetail {
-//          ZStack {
-//            bottomPromptButton(shopDetail: shopDetail)
-//              .offset(y: selectedDetailSection == .order ? 0 : 200)
-//              .animation(.smooth, value: selectedDetailSection)
-//              .opacity(viewModel.isOwned ? 0 : 1)
-//          }
-//          .background {
-//            bottomGeneralButtons(shopDetail: shopDetail)
-//              .offset(y: selectedDetailSection != .order ? 0 : 200)
-//              .animation(.snappy, value: selectedDetailSection)
-//          }
-          bottomGeneralButtons(shopDetail: shopDetail)
-            .offset(y: selectedDetailSection != .order ? 0 : 200)
-            .animation(.snappy, value: selectedDetailSection)
+          ZStack {
+            bottomPromptButton(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection == .order ? 0 : 200)
+              .animation(.smooth, value: selectedDetailSection)
+              .opacity(viewModel.isOwned ? 0 : 1)
+          }
+          .background {
+            bottomGeneralButtons(shopDetail: shopDetail)
+              .offset(y: selectedDetailSection != .order ? 0 : 200)
+              .animation(.snappy, value: selectedDetailSection)
+          }
         }
       }
     }
     .onFirstAppear {
       viewModel.fetchCakeShopDetail()
+      viewModel.fetchCakeShopPromptCount()
     }
     .onChange(of: viewModel.cakeShopDetailFetchingState) { state in
       switch state {
@@ -236,7 +235,8 @@ public struct CakeShopDetailView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
       
       Button {
-        // 따봉 action
+        viewModel.increaseCakeShopPromptCount()
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
       } label: {
         VStack(spacing: 5) {
           DesignSystemAsset.thumbsUp.swiftUIImage
@@ -244,7 +244,7 @@ public struct CakeShopDetailView: View {
             .scaledToFit()
             .size(24)
           
-          Text("3,300")
+          Text(viewModel.cakeShopPromptCount.description)
             .font(.pretendard(size: 13, weight: .bold))
         }
         .foregroundStyle(.white)
@@ -261,7 +261,10 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        withAnimation {
+          isHeartAnimationShown = !viewModel.isLiked
+        }
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
@@ -271,6 +274,12 @@ public struct CakeShopDetailView: View {
             Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
               .font(.system(size: 24))
               .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
+          }
+          .overlay {
+            if isHeartAnimationShown {
+              LottieViewRepresentable(lottieFile: .heartFlyAway, loopMode: .playOnce)
+                .offset(x: -12, y: -40)
+            }
           }
       }
       .modifier(BouncyPressEffect())
@@ -283,6 +292,7 @@ public struct CakeShopDetailView: View {
             primaryButtonAction: .cancel)
         }
       })
+      .disabled(viewModel.likeUpdatingState == .loading)
       
       CKButtonLarge(title: "주문하기", fixedSize: .infinity) {
         withAnimation(.snappy) {

@@ -31,6 +31,8 @@ public struct CakeShopQuickInfoView: View {
   @State private var imageScale: CGFloat = 0
   @State private var imageScalePosition: CGPoint = .zero
   
+  @State private var isHeartAnimationShown = false
+  
   
   // MARK: - Initializers
   
@@ -91,7 +93,10 @@ public struct CakeShopQuickInfoView: View {
       HStack(spacing: 8) {
         Button {
           viewModel.toggleLike()
-          UIImpactFeedbackGenerator(style: .light).impactOccurred()
+          withAnimation {
+            isHeartAnimationShown = !viewModel.isLiked
+          }
+          UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
           RoundedRectangle(cornerRadius: 20)
             .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
@@ -100,6 +105,12 @@ public struct CakeShopQuickInfoView: View {
               Image(systemName: viewModel.isLiked ? "heart.fill" : "heart")
                 .font(.system(size: 24))
                 .foregroundStyle(viewModel.isLiked ? DesignSystemAsset.brandcolor2.swiftUIColor : DesignSystemAsset.black.swiftUIColor)
+            }
+            .overlay {
+              if isHeartAnimationShown {
+                LottieViewRepresentable(lottieFile: .heartFlyAway, loopMode: .playOnce)
+                  .offset(x: -12, y: -40)
+              }
             }
         }
         .modifier(BouncyPressEffect())
@@ -111,6 +122,7 @@ public struct CakeShopQuickInfoView: View {
             }))
           }
         })
+        .disabled(viewModel.likeUpdatingState == .loading)
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
@@ -176,10 +188,10 @@ public struct CakeShopQuickInfoView: View {
           .overlay {
             GeometryReader { proxy in
               let size = proxy.size
-              ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
+              return ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
             }
           }
-          .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
+          .scaleEffect(1 + imageScale, anchor: .center)
       case .failure:
         // Error handling
         RoundedRectangle(cornerRadius: 22)

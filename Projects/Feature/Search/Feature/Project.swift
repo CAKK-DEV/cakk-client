@@ -11,6 +11,7 @@ let project = Project.framework(
     Project.PreviewSupportSearch,
     Project.DIContainer,
     Project.LocationService,
-    Project.AdManager
+    Project.AdManager,
+    External.PopupView
   ]
 )
