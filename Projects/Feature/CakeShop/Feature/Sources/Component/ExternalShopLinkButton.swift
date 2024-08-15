@@ -10,6 +10,7 @@ import SwiftUI
 import DesignSystem
 
 import DomainCakeShop
+import AdManager
 
 struct ExternalShopLinkButton: View {
   
@@ -18,6 +19,9 @@ struct ExternalShopLinkButton: View {
   private let linkType: ExternalShopLink.LinkType
   private let urlString: String?
   private let emptyLinkButtonAction: (() -> Void)?
+  
+  @AppStorage("external_link_click_count") var externalLinkClickCount = 0
+  private let interstitialAdManager = InterstitialAdsManager()
   
   
   // MARK: - Initializers
@@ -36,35 +40,52 @@ struct ExternalShopLinkButton: View {
   // MARK: - Views
   
   var body: some View {
-    if let urlString,
-       let url = URL(string: urlString) {
-      Link(destination: url, label: {
-        Text(linkType.existsDisplayName)
-          .font(.pretendard(size: 13, weight: .medium))
-          .padding(.horizontal, 22)
-          .frame(height: 36)
-          .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-          .background(DesignSystemAsset.gray10.swiftUIColor)
-          .clipShape(RoundedRectangle(cornerRadius: 14))
-      })
-      .modifier(BouncyPressEffect())
-    } else {
-      Button {
-        emptyLinkButtonAction?()
-      } label: {
-        Text(linkType.noExistsDisplayName)
-          .font(.pretendard(size: 13, weight: .medium))
-          .padding(.horizontal, 22)
-          .frame(height: 36)
-          .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-          .overlay {
-            RoundedRectangle(cornerRadius: 14)
-              .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
-              .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
-          }
+    Group {
+      if let urlString,
+         let url = URL(string: urlString) {
+        Button {
+          increaseExternalLinkClickCount()
+          UIApplication.shared.open(url)
+        } label: {
+          Text(linkType.existsDisplayName)
+            .font(.pretendard(size: 13, weight: .medium))
+            .padding(.horizontal, 22)
+            .frame(height: 36)
+            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+            .background(DesignSystemAsset.gray10.swiftUIColor)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+        }
+        .modifier(BouncyPressEffect())
+      } else {
+        Button {
+          emptyLinkButtonAction?()
+        } label: {
+          Text(linkType.noExistsDisplayName)
+            .font(.pretendard(size: 13, weight: .medium))
+            .padding(.horizontal, 22)
+            .frame(height: 36)
+            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+            .overlay {
+              RoundedRectangle(cornerRadius: 14)
+                .stroke(style: StrokeStyle(lineWidth: 1, dash: [4]))
+                .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+            }
+        }
+        .modifier(BouncyPressEffect())
       }
-      .modifier(BouncyPressEffect())
     }
+  }
+  
+  
+  // MARK: - Private Methods
+  
+  private func increaseExternalLinkClickCount() {
+    externalLinkClickCount += 1
+    
+    if externalLinkClickCount % 3 == 0 {
+      interstitialAdManager.loadInterstitialAd(adUnit: .externalLinkAd)
+    }
+    print(externalLinkClickCount)
   }
 }
 

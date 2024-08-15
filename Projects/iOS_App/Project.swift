@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.app(
   name: "CAKK",
   infoPlist: [
-    "CFBundleShortVersionString": "2.0.2",
+    "CFBundleShortVersionString": "2.0.3",
     "CFBundleVersion": "1",
     "UILaunchStoryboardName": "LaunchScreen",
     "BASE_URL": "$(BASE_URL)",
@@ -53,12 +53,7 @@ let project = Project.app(
 
     Project.NetworkImage,
 
-    Project.AdManager,
-
-    .package(product: "FirebaseAnalytics")
-  ],
-  packages: [
-     .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.29.0"))
+    Project.AdManager
   ],
   entitlements: "App.entitlements"
 )

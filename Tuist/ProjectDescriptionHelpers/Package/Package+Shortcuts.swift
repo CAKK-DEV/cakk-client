@@ -48,4 +48,16 @@ public enum External {
   public static var GoogleMobileAds: TargetDependency {
     return .external(name: "GoogleMobileAds")
   }
+
+  public static var FirebaseAnalytics: TargetDependency {
+    return .external(name: "FirebaseAnalytics")
+  }
+
+  public static var FirebaseFirestore: TargetDependency {
+    return .external(name: "FirebaseFirestore")
+  }
+
+  public static var PopupView: TargetDependency {
+    return .external(name: "PopupView")
+  }
 }

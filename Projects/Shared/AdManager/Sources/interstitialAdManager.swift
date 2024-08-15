@@ -12,6 +12,7 @@ public class InterstitialAdsManager: NSObject, GADFullScreenContentDelegate, Obs
   private var lastUsedAdUnit: AdUnit?
   public enum AdUnit {
     case mapDistanceAd
+    case externalLinkAd
     
     var unitId: String {
       #if DEBUG
@@ -20,6 +21,9 @@ public class InterstitialAdsManager: NSObject, GADFullScreenContentDelegate, Obs
       switch self {
       case .mapDistanceAd:
         return "ca-app-pub-3998172297943713/2033537593"
+        
+      case .externalLinkAd:
+        return "ca-app-pub-3998172297943713/1925834189"
       }
       #endif
     }

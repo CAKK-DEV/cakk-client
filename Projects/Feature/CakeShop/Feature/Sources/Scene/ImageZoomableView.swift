@@ -82,7 +82,7 @@ public struct ImageZoomableView: View {
             ZoomGesture(size: size, scale: $imageScale, offset: $imageOffset, scalePosition: $imageScalePosition)
           }
         }
-        .scaleEffect(1 + imageScale, anchor: .init(x: imageScalePosition.x, y: imageScalePosition.y))
+        .scaleEffect(1 + imageScale, anchor: .center)
         .scaleEffect(1 - dragDistance / 1000)
         .gesture(
           DragGesture()
