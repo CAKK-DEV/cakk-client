@@ -29,6 +29,15 @@ public final class EditProfileViewModel: ObservableObject {
     case failure(error: UserProfileError)
   }
   
+  private let signOutUseCase: SocialLoginSignOutUseCase
+  @Published private(set) var signOutState: SignOutState = .idle
+  enum SignOutState {
+    case idle
+    case loading
+    case success
+    case failure
+  }
+  
   private let withdrawUseCase: WithdrawUseCase
   @Published private(set) var withdrawState: WithdrawState = .idle
   enum WithdrawState: Equatable {
@@ -46,6 +55,7 @@ public final class EditProfileViewModel: ObservableObject {
   public init(
     userProfile: UserProfile,
     updateUserProfileUseCase: UpdateUserProfileUseCase,
+    signOutUseCase: SocialLoginSignOutUseCase,
     withdrawUseCase: WithdrawUseCase
   ) {
     self.originalUserProfile = userProfile
@@ -56,6 +66,7 @@ public final class EditProfileViewModel: ObservableObject {
       gender: userProfile.gender,
       birthday: userProfile.birthday)
     self.updateUserProfileUseCase = updateUserProfileUseCase
+    self.signOutUseCase = signOutUseCase
     self.withdrawUseCase = withdrawUseCase
   }
   
@@ -98,7 +109,20 @@ public final class EditProfileViewModel: ObservableObject {
   }
   
   public func signOut() {
-    UserSession.shared.clearSession()
+    signOutState = .loading
+    
+    signOutUseCase.execute()
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.signOutState = .failure
+        } else {
+          UserSession.shared.clearSession()
+          self?.signOutState = .success
+        }
+      } receiveValue: { _ in }
+      .store(in: &cancellables)
   }
   
   public func withdraw() {
