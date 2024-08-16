@@ -10,7 +10,8 @@ import Moya
 
 public enum UserAPI {
   case signUp(authRequest: AuthRequestDTO)
-  case signIn(credential: CredentialDTO)
+  case signIn(credential: SignInDTO)
+  case signOut(accessToken: String, refreshToken: String)
   case fetchUserProfile(accessToken: String)
   case updateUserProfile(newUserProfile: NewUserProfileDTO, accessToken: String)
   case withdraw(accessToken: String)
@@ -31,6 +32,9 @@ extension UserAPI: TargetType {
     case .signIn:
       return "/api/v1/sign-in"
       
+    case .signOut:
+      return "/api/v1/sign-out"
+      
     case .fetchUserProfile, .updateUserProfile:
       return "/api/v1/me"
       
@@ -44,7 +48,7 @@ extension UserAPI: TargetType {
   
   public var method: Moya.Method {
     switch self {
-    case .signUp, .signIn:
+    case .signUp, .signIn, .signOut:
       return .post
       
     case .updateUserProfile:
@@ -68,6 +72,9 @@ extension UserAPI: TargetType {
       
     case .signIn(let credential):
       return .requestJSONEncodable(credential)
+    
+    case .signOut:
+      return .requestPlain
       
     case .fetchUserProfile:
       return .requestPlain
@@ -88,6 +95,13 @@ extension UserAPI: TargetType {
     case .signUp, .signIn:
       return ["Content-Type": "application/json"]
       
+    case .signOut(let accessToken, let refreshToken):
+      return [
+        "Content-Type": "application/json",
+        "Authorization": "Bearer \(accessToken)",
+        "Refresh": refreshToken
+      ]
+      
     case .fetchUserProfile(let accessToken),
         .updateUserProfile(_, let accessToken),
         .withdraw(let accessToken),
@@ -106,6 +120,9 @@ extension UserAPI: TargetType {
       
     case .signIn:
       return try! Data(contentsOf: Bundle.module.url(forResource: "SignInSampleResponse", withExtension: "json")!)
+      
+    case .signOut:
+      return try! Data(contentsOf: Bundle.module.url(forResource: "SignOutSampleResponse", withExtension: "json")!)
       
     case .fetchUserProfile:
       return try! Data(contentsOf: Bundle.module.url(forResource: "UserProfileSampleResponse", withExtension: "json")!)
