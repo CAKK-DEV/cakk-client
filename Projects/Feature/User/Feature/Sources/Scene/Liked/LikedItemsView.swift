@@ -54,15 +54,10 @@ struct LikedItemsView: View {
   // MARK: - Views
   
   var body: some View {
-    VStack(spacing: 0) {
-      NavigationBar(isDividerShown: false,
-                    centerContent: {
-        Text("저장됨")
-          .font(.pretendard(size: 17, weight: .bold))
-          .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-      })
-      
-      if userSession.isSignedIn {
+    if userSession.isSignedIn {
+      VStack(spacing: 0) {
+        navigationBar()
+        
         CKSegmentedControl(items: SearchResultSection.allCases.map { $0.item },
                            selection: .init(get: {
           selectedSection.item
@@ -75,7 +70,7 @@ struct LikedItemsView: View {
             .tag(SearchResultSection.images)
             .onFirstAppear {
               /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+              DispatchQueue.main.asyncAfter(deadline: .now()) {
                 viewModel.fetchCakeImages()
               }
             }
@@ -84,16 +79,28 @@ struct LikedItemsView: View {
             .tag(SearchResultSection.cakeShop)
             .onFirstAppear {
               /// Paging 했을 때 즉시 데이터를 요청하게 되면 페이징이 중간에 멈추는 이슈 때문에 delay를 추가하였습니다
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+              DispatchQueue.main.asyncAfter(deadline: .now()) {
                 viewModel.fetchCakeShops()
               }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-      } else {
+      }
+    } else {
+      VStack(spacing: 0) {
+        navigationBar()
         notLoggedInStateView()
       }
     }
+  }
+  
+  private func navigationBar() -> some View {
+    NavigationBar(isDividerShown: false,
+                  centerContent: {
+      Text("저장됨")
+        .font(.pretendard(size: 17, weight: .bold))
+        .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+    })
   }
   
   private func notLoggedInStateView() -> some View {
