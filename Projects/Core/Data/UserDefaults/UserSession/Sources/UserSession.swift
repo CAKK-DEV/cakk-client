@@ -16,8 +16,16 @@ public final class UserSession: ObservableObject {
   
   // MARK: - Initializers
   
-  private init() { 
-    setupInitialValues()
+  private init() { }
+  
+  public func initialize() {
+    if oauthToken.getAccessToken() == nil {
+      UserDefaults.standard.setValue(false, forKey: isSignedInKey)
+      isSignedIn = false
+      cachedUserData = nil
+    } else {
+      isSignedIn = UserDefaults.standard.bool(forKey: isSignedInKey)
+    }
   }
   
   
@@ -79,7 +87,12 @@ public final class UserSession: ObservableObject {
   
   public var accessToken: String? {
     get {
-      oauthToken.getAccessToken()
+      if let accessToken = oauthToken.getAccessToken() {
+        return accessToken
+      } else {
+        UserDefaults.standard.setValue(false, forKey: isSignedInKey)
+        return nil
+      }
     }
   }
   
@@ -96,7 +109,12 @@ public final class UserSession: ObservableObject {
   
   public var refreshToken: String? {
     get {
-      oauthToken.getRefreshToken()
+      if let refreshToken = oauthToken.getRefreshToken() {
+        return refreshToken
+      } else {
+        UserDefaults.standard.setValue(false, forKey: isSignedInKey)
+        return nil
+      }
     }
   }
   
@@ -139,12 +157,5 @@ public final class UserSession: ObservableObject {
     clearRefreshToken()
     
     isSignedIn = false
-  }
-  
-  
-  // MARK: - Private Methods
-  
-  private func setupInitialValues() {
-    isSignedIn = UserDefaults.standard.bool(forKey: isSignedInKey)
   }
 }

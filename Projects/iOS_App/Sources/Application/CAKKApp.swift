@@ -17,6 +17,8 @@ import KakaoSDKAuth
 import DIContainer
 import Swinject
 
+import UserSession
+
 @main
 struct CAKKApp: App {
   
@@ -32,6 +34,8 @@ struct CAKKApp: App {
     initKakaoSDK()
     setupDIContainer()
     loadRocketSimConnect()
+    
+    UserSession.shared.initialize()
   }
   
   
