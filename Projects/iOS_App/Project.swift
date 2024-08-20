@@ -53,7 +53,8 @@ let project = Project.app(
 
     Project.NetworkImage,
 
-    Project.AdManager
+    Project.AdManager,
+    External.FirebaseAnalytics
   ],
   entitlements: "App.entitlements"
 )

@@ -20,7 +20,10 @@ let packageSettings = PackageSettings(
     "KakaoSDKCommon": .framework,
     "KakaoSDKAuth": .framework,
     "KakaoSDKUser": .framework,
-    "Alamofire": .framework
+    "Alamofire": .framework,
+
+    "FirebaseAnalytics": .framework,
+    "FirebaseFirestore": .framework
   ],
   baseSettings: .settings(
     configurations: [
