@@ -21,6 +21,7 @@ let project = Project.app(
         "CFBundleURLSchemes": ["$(KAKAO_URL_SCHEME)"]
       ]
     ],
+    "GADApplicationIdentifier": "$(GAD_APPLICATION_ID)"
   ],
   dependencies: [
     Project.FeatureUserAdmin,
@@ -28,6 +29,7 @@ let project = Project.app(
     Project.NetworkUser,
 
     Project.FeatureCakeShopAdmin,
+    Project.FeatureSearch,
     Project.NetworkCakeShop,
     Project.NetworkSearch,
     
