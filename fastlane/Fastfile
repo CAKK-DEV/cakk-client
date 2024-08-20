@@ -1,0 +1,17 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Develop 브랜치의 빌드를 빌드하고 TestFlight에 배포합니다"
+  lane :develop do
+    cert
+    sigh
+    build_app(
+      scheme: "CAKK",
+      export_method: "app-store",
+      export_options: {
+        uploadBitcode: false,
+        uploadSymbols: true
+      }
+    )
+  end
+end
