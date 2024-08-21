@@ -15,6 +15,9 @@ import Router
 
 import CommonDomain
 
+import DIContainer
+import AnalyticsService
+
 struct CakeCategoryView: View {
   
   // MARK: - Properties
@@ -22,11 +25,16 @@ struct CakeCategoryView: View {
   @EnvironmentObject private var router: Router
   @State private var category: CakeCategory
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
   init(category: CakeCategory) {
     self.category = category
+    
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -45,6 +53,9 @@ struct CakeCategoryView: View {
 
       .tabViewStyle(.page(indexDisplayMode: .never))
       .ignoresSafeArea()
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self, parameters: ["category": category.displayName])
     }
   }
 }

@@ -20,6 +20,8 @@ import DomainUser
 
 import DIContainer
 
+import AnalyticsService
+
 struct EditProfileView: View {
   
   // MARK: - Properties
@@ -33,6 +35,8 @@ struct EditProfileView: View {
   @State private var isPhotoPickerShown = false
   @State private var isProfileImageOptionActionSheetShown = false
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -43,6 +47,8 @@ struct EditProfileView: View {
     
     let profileViewModel = diContainer.resolve(ProfileViewModel.self)!
     _profileViewModel = .init(wrappedValue: profileViewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -289,6 +295,9 @@ struct EditProfileView: View {
           }
         }
       }
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   

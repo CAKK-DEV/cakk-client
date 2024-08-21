@@ -34,9 +34,9 @@ public extension Project {
     path: .relativeToRoot("Projects/Shared/AdManager")
   )
 
-  static let AnalyticsManager: TargetDependency = .project(
-    target: "AnalyticsManager",
-    path: .relativeToRoot("Projects/Shared/AnalyticsManager")
+  static let AnalyticsService: TargetDependency = .project(
+    target: "AnalyticsService",
+    path: .relativeToRoot("Projects/Shared/AnalyticsService")
   )
   
 

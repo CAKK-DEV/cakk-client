@@ -17,6 +17,8 @@ import DomainSearch
 import DIContainer
 import Router
 
+import AnalyticsService
+
 struct SearchView: View {
   
   // MARK: - Properties
@@ -32,6 +34,8 @@ struct SearchView: View {
   @EnvironmentObject private var router: Router
   @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapSearchTab)
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -42,6 +46,8 @@ struct SearchView: View {
     
     let searchHistoryViewModel = diContainer.resolve(SearchHistoryViewModel.self)!
     _searchHistoryViewModel = .init(wrappedValue: searchHistoryViewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -132,6 +138,9 @@ struct SearchView: View {
     .background(Color.white.ignoresSafeArea())
     .onFirstAppear {
       isFocused = true
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   
@@ -296,6 +305,7 @@ struct SearchView: View {
     }
 
     searchHistoryViewModel.addSearchHistory(searchKeyword: viewModel.searchKeyword)
+    analytics?.logEvent(name: "search", parameters: ["keyword": viewModel.searchKeyword])
     
     switch selectedSegmentItem {
     case .images:

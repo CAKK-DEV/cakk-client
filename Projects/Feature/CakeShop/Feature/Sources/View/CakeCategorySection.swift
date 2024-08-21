@@ -14,12 +14,25 @@ import DomainCakeShop
 
 import Router
 
+import DIContainer
+import AnalyticsService
+
 struct CakeCategorySection: View {
   
   // MARK: - Properties
   
   @EnvironmentObject private var router: Router
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+  
+  private let analytics: AnalyticsService?
+  
+  
+  // MARK: - Initializers
+  
+  public init() {
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
+  }
   
   
   // MARK: - Views
@@ -38,6 +51,8 @@ struct CakeCategorySection: View {
   private func categoryItem(category: CakeCategory) -> some View {
     Button {
       router.navigate(to: CakeShopDestination.categoryDetail(initialCategory: category))
+      analytics?.logEvent(name: "category_tap_from_home",
+                          parameters: ["category": category.displayName])
     } label: {
       VStack(spacing: 8) {
         RoundedRectangle(cornerRadius: 20)
