@@ -20,6 +20,8 @@ import DomainUser
 import Router
 import DIContainer
 
+import AnalyticsService
+
 struct LikedItemsView: View {
   
   // MARK: - Properties
@@ -41,6 +43,8 @@ struct LikedItemsView: View {
   
   @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapLikedTab)
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -48,6 +52,8 @@ struct LikedItemsView: View {
     let container = DIContainer.shared.container
     let viewModel = container.resolve(LikedItemsViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = container.resolve(AnalyticsService.self)
   }
   
   
@@ -180,6 +186,8 @@ struct LikedItemsView: View {
             if GlobalSettings.didChangeCakeShopLikeState {
               viewModel.fetchCakeImages()
             }
+            
+            analytics?.logEngagement(view: self)
           }
           .onChange(of: tabDoubleTapObserver.doubleTabActivated) { _ in
             if selectedSection == .images {

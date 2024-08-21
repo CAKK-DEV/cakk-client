@@ -16,7 +16,7 @@ import DomainCakeShop
 import DomainUser
 import DomainSearch
 
-import FirebaseFirestore
+//import FirebaseFirestore
 import Logger
 
 public final class CakeShopDetailViewModel: ObservableObject {
@@ -72,8 +72,8 @@ public final class CakeShopDetailViewModel: ObservableObject {
   private let myShopIdUseCase: MyShopIdUseCase
   @Published private(set) var isMyShop = false
   
-  private let firestoreDB = Firestore.firestore()
-  private var cakeShopPromptListener: ListenerRegistration?
+//  private let firestoreDB = Firestore.firestore()
+//  private var cakeShopPromptListener: ListenerRegistration?
   private let collectionName = "ShopPrompt"
   @Published private(set) var cakeShopPromptCount = 0
   
@@ -105,7 +105,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   }
   
   deinit {
-    cakeShopPromptListener?.remove()
+//    cakeShopPromptListener?.remove()
   }
   
   
@@ -206,37 +206,37 @@ public final class CakeShopDetailViewModel: ObservableObject {
   }
   
   public func fetchCakeShopPromptCount() {
-    let shopPromptRef = firestoreDB.collection(collectionName).document(shopId.description)
-    self.cakeShopPromptListener = shopPromptRef.addSnapshotListener { [weak self] documentSnapshot, error in
-      if let error = error {
-        Loggers.featureCakeShop.log("Firestore 에러 발생: \(error.localizedDescription)", category: .network)
-        return
-      }
-      
-      guard let document = documentSnapshot else {
-        Loggers.featureCakeShop.log("CakeShopPrompt Firestore 스냅샷 읽기에 실패하였습니다.", category: .network)
-        return
-      }
-      
-      if let data = document.data(), let promptCount = data["prompt_count"] as? Int {
-        DispatchQueue.main.async {
-          self?.cakeShopPromptCount = promptCount
-          print("Current prompt count: \(promptCount)")
-        }
-      } else {
-        print("데이터 로드 실패")
-      }
-    }
+//    let shopPromptRef = firestoreDB.collection(collectionName).document(shopId.description)
+//    self.cakeShopPromptListener = shopPromptRef.addSnapshotListener { [weak self] documentSnapshot, error in
+//      if let error = error {
+//        Loggers.featureCakeShop.log("Firestore 에러 발생: \(error.localizedDescription)", category: .network)
+//        return
+//      }
+//      
+//      guard let document = documentSnapshot else {
+//        Loggers.featureCakeShop.log("CakeShopPrompt Firestore 스냅샷 읽기에 실패하였습니다.", category: .network)
+//        return
+//      }
+//      
+//      if let data = document.data(), let promptCount = data["prompt_count"] as? Int {
+//        DispatchQueue.main.async {
+//          self?.cakeShopPromptCount = promptCount
+//          print("Current prompt count: \(promptCount)")
+//        }
+//      } else {
+//        print("데이터 로드 실패")
+//      }
+//    }
   }
   
   public func increaseCakeShopPromptCount() {
-    let shopPromptRef = firestoreDB.collection(collectionName).document(shopId.description)
-    shopPromptRef.setData(["prompt_count" : cakeShopPromptCount + 1]) { [weak self] error in
-      if let error {
-        Loggers.featureCakeShop.log("Firestore 업데이트 실패 \(error.localizedDescription)", category: .network)
-        return
-      }
-    }
+//    let shopPromptRef = firestoreDB.collection(collectionName).document(shopId.description)
+//    shopPromptRef.setData(["prompt_count" : cakeShopPromptCount + 1]) { [weak self] error in
+//      if let error {
+//        Loggers.featureCakeShop.log("Firestore 업데이트 실패 \(error.localizedDescription)", category: .network)
+//        return
+//      }
+//    }
   }
   
   

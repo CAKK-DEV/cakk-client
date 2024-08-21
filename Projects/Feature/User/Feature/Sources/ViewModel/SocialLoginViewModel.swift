@@ -18,6 +18,9 @@ import Moya
 
 import Logger
 
+import DIContainer
+import AnalyticsService
+
 public final class SocialLoginViewModel: NSObject, ObservableObject {
   
   // MARK: - Properties
@@ -59,6 +62,7 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     userData.email.isEmpty
   }
   
+  private let analytics: AnalyticsService?
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -70,6 +74,9 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
   ) {
     self.signInUseCase = signInUseCase
     self.signUpUseCase = signUpUseCase
+    
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
 }
 
@@ -105,7 +112,20 @@ extension SocialLoginViewModel {
           }
         }
       } receiveValue: { [weak self] _ in
-        self?.signUpState = .success
+        guard let self else { return }
+        
+        self.signUpState = .success
+        
+        switch self.loginType {
+        case .apple:
+          analytics?.logSignUp(method: .apple)
+        case .google:
+          analytics?.logSignUp(method: .google)
+        case .kakao:
+          analytics?.logSignUp(method: .kakao)
+        default:
+          break
+        }
       }
       .store(in: &cancellables)
   }
@@ -170,6 +190,7 @@ extension SocialLoginViewModel {
           }
         }, receiveValue: { [weak self] _ in
           self?.signInState = .loggedIn
+          self?.analytics?.logSignIn(method: .google)
         })
         .store(in: &cancellables)
     }
@@ -238,6 +259,7 @@ extension SocialLoginViewModel {
             }
           } receiveValue: { [weak self] in
             self?.signInState = .loggedIn
+            self?.analytics?.logSignIn(method: .kakao)
           }
           .store(in: &cancellables)
       }
@@ -355,6 +377,7 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
         }
       } receiveValue: { [weak self] _ in
         self?.signInState = .loggedIn
+        self?.analytics?.logSignIn(method: .apple)
       }
       .store(in: &cancellables)
   }

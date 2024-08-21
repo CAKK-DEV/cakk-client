@@ -12,6 +12,9 @@ import Router
 
 import CommonUtil
 
+import DIContainer
+import AnalyticsService
+
 struct Login_Root: View {
 
   // MARK: - Properties
@@ -24,6 +27,16 @@ struct Login_Root: View {
 
   @State private var isShowing = false
   @State private var isShowingAppleSignInExpiredAlert = false
+  
+  private let analytics: AnalyticsService?
+  
+  
+  // MARK: - Initializers
+  
+  public init() {
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
+  }
 
 
   // MARK: - Views
@@ -109,6 +122,8 @@ struct Login_Root: View {
         // 🎬 isShowing animation trigger point
         isShowing = true
       }
+      
+      analytics?.logEngagement(view: self)
     }
     .onReceive(viewModel.$signInState) { loginState in
       if loginState == .loading {

@@ -11,6 +11,9 @@ import CommonUtil
 import DesignSystem
 import Kingfisher
 
+import DIContainer
+import AnalyticsService
+
 public struct ImageZoomableView: View {
   
   // MARK: - Properties
@@ -30,12 +33,17 @@ public struct ImageZoomableView: View {
   @State private var imageDragCurrentLocation: CGPoint = .zero
   @State private var dragOffset: CGSize = .zero
   @State private var dragDistance: CGFloat = 0.0
+  
+  private let analytics: AnalyticsService?
 
   
   // MARK: - Initializers
   
   public init(imageUrl: String) {
     self.imageUrl = imageUrl
+    
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -113,6 +121,9 @@ public struct ImageZoomableView: View {
             }
         )
         .padding(24)
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
 }

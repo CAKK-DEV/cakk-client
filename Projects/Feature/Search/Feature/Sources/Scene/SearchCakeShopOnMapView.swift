@@ -24,6 +24,8 @@ import LocationService
 
 import AdManager
 
+import AnalyticsService
+
 public struct SearchCakeShopOnMapView: View {
   
   // MARK: - Properties
@@ -43,6 +45,8 @@ public struct SearchCakeShopOnMapView: View {
   @State private var isNoResultViewShown = false
   @State private var attempts: Int = 0
 
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -50,6 +54,8 @@ public struct SearchCakeShopOnMapView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(SearchCakeShopOnMapViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   // MARK: - Views
@@ -153,6 +159,7 @@ public struct SearchCakeShopOnMapView: View {
     }
     .onAppear {
       interstitialAdManager.loadInterstitialAd(adUnit: .mapDistanceAd)
+      analytics?.logEngagement(view: self)
     }
     .onChange(of: viewModel.locatedCakeShopsFetchingState) { state in
       if state == .success {
@@ -286,6 +293,11 @@ public struct SearchCakeShopOnMapView: View {
       // Refresh Button
       Button {
         viewModel.fetchLocatedCakeShops()
+        
+        analytics?.logEvent(name: "refresh_on_map_tap",
+                            parameters: [
+                              "distance_option": viewModel.searchDistanceOption.displayName
+                            ])
       } label: {
         let isLoading = viewModel.locatedCakeShopsFetchingState == .loading
         HStack(spacing: 12) {

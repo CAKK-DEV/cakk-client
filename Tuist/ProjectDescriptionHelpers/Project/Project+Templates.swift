@@ -93,7 +93,7 @@ extension Project {
       settings: .init(.settings(
         base: [
           "DEVELOPMENT_TEAM": "497P4L97SV",
-          "OTHER_LDFLAGS": ["-Objc"]
+          "OTHER_LDFLAGS": "$(inherited) -ObjC"
           ],
         configurations: [
           .build(.prod, name: name),
@@ -124,7 +124,7 @@ extension Project {
       settings: .init(.settings(
         base: [
           "DEVELOPMENT_TEAM": "497P4L97SV",
-          "OTHER_LDFLAGS": ["-Objc"]
+          "OTHER_LDFLAGS": "$(inherited) -ObjC"
           ],
         configurations: [
           .build(.prod, name: name),

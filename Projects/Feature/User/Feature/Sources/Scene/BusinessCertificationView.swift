@@ -16,6 +16,8 @@ import DesignSystem
 import Router
 import DIContainer
 
+import AnalyticsService
+
 public struct BusinessCertificationView: View {
   
   // MARK: - Properties
@@ -31,6 +33,8 @@ public struct BusinessCertificationView: View {
     case idCard
   }
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -39,6 +43,8 @@ public struct BusinessCertificationView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(BusinessCertificationViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -85,6 +91,9 @@ public struct BusinessCertificationView: View {
         .padding(.bottom, 16)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
     .onReceive(viewModel.$verificationState, perform: { state in
       switch state {

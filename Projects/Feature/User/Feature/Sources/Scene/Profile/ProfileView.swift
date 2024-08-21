@@ -18,6 +18,8 @@ import UserSession
 
 import DIContainer
 
+import AnalyticsService
+
 public struct ProfileView: View {
   
   // MARK: - Properties
@@ -41,6 +43,8 @@ public struct ProfileView: View {
       Color(hex: "FED6C3")
     ])
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -51,156 +55,163 @@ public struct ProfileView: View {
     
     _profileViewModel = .init(wrappedValue: profileViewModel)
     _businessOwnerProfileViewModel = .init(wrappedValue: businessOwnerProfileViewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
   // MARK: - Views
   
   public var body: some View {
-    if userSession.isSignedIn {
-      ZStack {
-        animatedGradientBackground
-        .ignoresSafeArea()
-        .overlay {
-          MotionedIconsView(isMotionActivated: false)
-            .frame(maxHeight: .infinity, alignment: .top)
-            .padding(.top, -40)
-            .offset(y: backgroundIconOffset)
-            .scaleEffect(backgroundIconScale)
-            .ignoresSafeArea()
-        }
-        
-        ScrollViewOffset { offset in
-          backgroundIconOffset = 40 * (1 + offset / 100)
-          backgroundIconScale = (1 + (offset / 100) * 0.1)
-        } content: {
-          VStack(spacing: 0) {
-            if profileViewModel.currentRoleState == .user {
-              ProfileImageView(imageUrlString: profileViewModel.userProfile?.profileImageUrl)
-                .zIndex(1)
-            } else {
-              ProfileImageView(imageUrlString: businessOwnerProfileViewModel.cakeShopDetail?.thumbnailImageUrl)
-                .zIndex(1)
-            }
-            
+    Group {
+      if userSession.isSignedIn {
+        ZStack {
+          animatedGradientBackground
+          .ignoresSafeArea()
+          .overlay {
+            MotionedIconsView(isMotionActivated: false)
+              .frame(maxHeight: .infinity, alignment: .top)
+              .padding(.top, -40)
+              .offset(y: backgroundIconOffset)
+              .scaleEffect(backgroundIconScale)
+              .ignoresSafeArea()
+          }
+          
+          ScrollViewOffset { offset in
+            backgroundIconOffset = 40 * (1 + offset / 100)
+            backgroundIconScale = (1 + (offset / 100) * 0.1)
+          } content: {
             VStack(spacing: 0) {
-              if let userProfile = profileViewModel.userProfile {
-                VStack(spacing: 8) {
-                  if userProfile.role != .user {
-                    userRoleChipView(role: profileViewModel.userProfile?.role ?? .user)
-                  }
-                  
-                  Text(profileViewModel.currentRoleState == .user
-                       ? userProfile.nickname
-                       : businessOwnerProfileViewModel.cakeShopDetail?.shopName ?? "")
-                  .font(.pretendard(size: 32, weight: .bold))
-                  .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-                  .frame(maxWidth: .infinity)
-                  .padding(.horizontal, 28)
-                  .lineLimit(1)
-                  .multilineTextAlignment(.center)
-                  
-                  if userProfile.role != .user {
-                    changeUserRoleButton()
-                      .padding(.top, 12)
-                  }
-                }
-                .padding(.top, 84)
-              } else {
-                /// placeholder
-                RoundedRectangle(cornerRadius: 12)
-                  .frame(width: 200, height: 28)
-                  .foregroundStyle(DesignSystemAsset.gray20.swiftUIColor)
-                  .padding(.top, 84)
-              }
-              
               if profileViewModel.currentRoleState == .user {
-                HStack(spacing: 24) {
-                  Button {
-                    router.navigate(to: Destination.shopRegistration)
-                  } label: {
-                    headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
-                  }
-                  .modifier(BouncyPressEffect())
-                  .opacity(profileViewModel.userProfile?.role != .user ? 0.5 : 1.0)
-                  .disabled(profileViewModel.userProfile?.role != .user)
-                  
-                  Button {
-                    if let userProfile = profileViewModel.userProfile {
-                      router.navigate(to: Destination.editProfile(profile: userProfile))
-                    } else {
-                      DialogManager.shared.showDialog(.pleaseWait(completion: nil))
-                    }
-                  } label: {
-                    headerItemButton(title: "정보 수정", icon: DesignSystemAsset.fileEdit.swiftUIImage)
-                  }
-                  .modifier(BouncyPressEffect())
-                }
-                .padding(.top, 24)
-                .disabled(profileViewModel.userProfileFetchingState == .loading)
+                ProfileImageView(imageUrlString: profileViewModel.userProfile?.profileImageUrl)
+                  .zIndex(1)
+              } else {
+                ProfileImageView(imageUrlString: businessOwnerProfileViewModel.cakeShopDetail?.thumbnailImageUrl)
+                  .zIndex(1)
               }
               
-              VStack(spacing: 24) {
-                if profileViewModel.currentRoleState != .user {
-                  EditBusinessAccountSection()
-                    .environmentObject(businessOwnerProfileViewModel)
+              VStack(spacing: 0) {
+                if let userProfile = profileViewModel.userProfile {
+                  VStack(spacing: 8) {
+                    if userProfile.role != .user {
+                      userRoleChipView(role: profileViewModel.userProfile?.role ?? .user)
+                    }
+                    
+                    Text(profileViewModel.currentRoleState == .user
+                         ? userProfile.nickname
+                         : businessOwnerProfileViewModel.cakeShopDetail?.shopName ?? "")
+                    .font(.pretendard(size: 32, weight: .bold))
+                    .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 28)
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+                    
+                    if userProfile.role != .user {
+                      changeUserRoleButton()
+                        .padding(.top, 12)
+                    }
+                  }
+                  .padding(.top, 84)
+                } else {
+                  /// placeholder
+                  RoundedRectangle(cornerRadius: 12)
+                    .frame(width: 200, height: 28)
+                    .foregroundStyle(DesignSystemAsset.gray20.swiftUIColor)
+                    .padding(.top, 84)
                 }
                 
-                VStack(spacing: 0) {
-                  Button("리뷰 남기기") {
-                    let url = "https://apps.apple.com/app/6449973946?action=write-review"
-                    guard let writeReviewURL = URL(string: url) else { fatalError("Expected a valid URL") }
-                    UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+                if profileViewModel.currentRoleState == .user {
+                  HStack(spacing: 24) {
+                    Button {
+                      router.navigate(to: Destination.shopRegistration)
+                    } label: {
+                      headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
+                    }
+                    .modifier(BouncyPressEffect())
+                    .opacity(profileViewModel.userProfile?.role != .user ? 0.5 : 1.0)
+                    .disabled(profileViewModel.userProfile?.role != .user)
+                    
+                    Button {
+                      if let userProfile = profileViewModel.userProfile {
+                        router.navigate(to: Destination.editProfile(profile: userProfile))
+                      } else {
+                        DialogManager.shared.showDialog(.pleaseWait(completion: nil))
+                      }
+                    } label: {
+                      headerItemButton(title: "정보 수정", icon: DesignSystemAsset.fileEdit.swiftUIImage)
+                    }
+                    .modifier(BouncyPressEffect())
                   }
-                  .buttonStyle(ListItemButtonStyle())
-                  
-                  Link("피드백 남기기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
-                    .buttonStyle(ListItemButtonStyle())
-                  
-                  Link("문의하기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
-                    .buttonStyle(ListItemButtonStyle())
+                  .padding(.top, 24)
+                  .disabled(profileViewModel.userProfileFetchingState == .loading)
                 }
+                
+                VStack(spacing: 24) {
+                  if profileViewModel.currentRoleState != .user {
+                    EditBusinessAccountSection()
+                      .environmentObject(businessOwnerProfileViewModel)
+                  }
+                  
+                  VStack(spacing: 0) {
+                    Button("리뷰 남기기") {
+                      let url = "https://apps.apple.com/app/6449973946?action=write-review"
+                      guard let writeReviewURL = URL(string: url) else { fatalError("Expected a valid URL") }
+                      UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
+                    }
+                    .buttonStyle(ListItemButtonStyle())
+                    
+                    Link("피드백 남기기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
+                      .buttonStyle(ListItemButtonStyle())
+                    
+                    Link("문의하기", destination: URL(string: "https://www.instagram.com/cakeke_ke?igsh=MWM2ZXN6MjRncHhvbw%3D%3D&utm_source=qr")!)
+                      .buttonStyle(ListItemButtonStyle())
+                  }
+                }
+                .padding(.top, 40)
               }
-              .padding(.top, 40)
+              .frame(maxWidth: .infinity, maxHeight: .infinity)
+              .background(Color.white)
+              .roundedCorner(32, corners: [.topLeft, .topRight])
+              .background { /// 하단 빈 공간 채우기 위한 뷰 입니다.
+                Color.white
+                  .frame(maxWidth: .infinity, minHeight: 1000)
+                  .padding(.top, 1000)
+              }
+              .ignoresSafeArea()
+              .padding(.top, -64)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
-            .roundedCorner(32, corners: [.topLeft, .topRight])
-            .background { /// 하단 빈 공간 채우기 위한 뷰 입니다.
-              Color.white
-                .frame(maxWidth: .infinity, minHeight: 1000)
-                .padding(.top, 1000)
-            }
-            .ignoresSafeArea()
-            .padding(.top, -64)
+            .padding(.top, 56)
+            .padding(.bottom, 100)
           }
-          .padding(.top, 56)
-          .padding(.bottom, 100)
+          .refreshable {
+            profileViewModel.fetchUserProfile()
+            businessOwnerProfileViewModel.fetchMyCakeShopId()
+          }
         }
-        .refreshable {
+        .onFirstAppear {
           profileViewModel.fetchUserProfile()
           businessOwnerProfileViewModel.fetchMyCakeShopId()
         }
+      } else {
+        VStack(spacing: 0) {
+          NavigationBar(centerContent: {
+            Text("내 프로필")
+              .font(.pretendard(size: 17, weight: .bold))
+              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+          })
+          
+          FailureStateView(title: "로그인이 필요한 기능이에요!",
+                           buttonTitle: "로그인하고 다양한 기능 누리기",
+                           buttonAction: {
+            router.presentSheet(destination: UserSheetDestination.login)
+          })
+          .frame(maxWidth: .infinity, maxHeight: .infinity)
+        }
       }
-      .onFirstAppear {
-        profileViewModel.fetchUserProfile()
-        businessOwnerProfileViewModel.fetchMyCakeShopId()
-      }
-    } else {
-      VStack(spacing: 0) {
-        NavigationBar(centerContent: {
-          Text("내 프로필")
-            .font(.pretendard(size: 17, weight: .bold))
-            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-        })
-        
-        FailureStateView(title: "로그인이 필요한 기능이에요!",
-                         buttonTitle: "로그인하고 다양한 기능 누리기",
-                         buttonAction: {
-          router.presentSheet(destination: UserSheetDestination.login)
-        })
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-      }
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   

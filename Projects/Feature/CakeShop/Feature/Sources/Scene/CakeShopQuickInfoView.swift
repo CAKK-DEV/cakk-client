@@ -17,6 +17,8 @@ import DomainCakeShop
 import Router
 import DIContainer
 
+import AnalyticsService
+
 public struct CakeShopQuickInfoView: View {
   
   // MARK: - Properties
@@ -33,6 +35,8 @@ public struct CakeShopQuickInfoView: View {
   
   @State private var isHeartAnimationShown = false
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -40,6 +44,8 @@ public struct CakeShopQuickInfoView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopQuickInfoViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
 
@@ -97,6 +103,11 @@ public struct CakeShopQuickInfoView: View {
             isHeartAnimationShown = !viewModel.isLiked
           }
           UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+          
+          analytics?.logEvent(name: "like_cakeimage_tap", parameters: [
+            "image_url": viewModel.cakeImageUrl,
+            "like_state": viewModel.isLiked
+          ])
         } label: {
           RoundedRectangle(cornerRadius: 20)
             .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
@@ -126,6 +137,7 @@ public struct CakeShopQuickInfoView: View {
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
           router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
+          analytics?.logEvent(name: "visit_cakeshop_from_quickinfo", parameters: ["shop_id": viewModel.shopId])
         })
       }
       .padding(.bottom, 24)
@@ -159,6 +171,7 @@ public struct CakeShopQuickInfoView: View {
     .presentationDragIndicator(.hidden)
     .onAppear {
       viewModel.requestCakeShopQuickInfo()
+      analytics?.logEngagement(view: self)
     }
   }
   

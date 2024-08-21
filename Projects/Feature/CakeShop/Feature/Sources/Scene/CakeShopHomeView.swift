@@ -15,11 +15,23 @@ import DIContainer
 
 import AppTrackingTransparency
 
+import AnalyticsService
+
 struct CakeShopHomeView: View {
   
   // MARK: - Properties
   
   @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapCakeShopTab)
+  
+  private var analytics: AnalyticsService?
+  
+  
+  // MARK: - Properties
+  
+  public init() {
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
+  }
 
   
   // MARK: - Views
@@ -58,6 +70,9 @@ struct CakeShopHomeView: View {
     }
     .onFirstAppear {
       requestIDFAPermission()
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   
