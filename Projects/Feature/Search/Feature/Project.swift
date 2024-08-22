@@ -12,6 +12,7 @@ let project = Project.framework(
     Project.DIContainer,
     Project.LocationService,
     Project.AdManager,
+    Project.AnalyticsService,
     External.PopupView
   ]
 )

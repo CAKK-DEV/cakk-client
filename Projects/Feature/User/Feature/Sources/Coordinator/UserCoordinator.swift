@@ -63,8 +63,10 @@ public struct UserCoordinator: View {
           let _ = diContainer.register(EditProfileViewModel.self) { resolver in
             let updateUserProfileUseCase = resolver.resolve(UpdateUserProfileUseCase.self)!
             let withdrawUseCase = resolver.resolve(WithdrawUseCase.self)!
+            let signOutUseCase = resolver.resolve(SocialLoginSignOutUseCase.self)!
             return EditProfileViewModel(userProfile: profile,
                                         updateUserProfileUseCase: updateUserProfileUseCase,
+                                        signOutUseCase: signOutUseCase,
                                         withdrawUseCase: withdrawUseCase)
           }
           EditProfileView()

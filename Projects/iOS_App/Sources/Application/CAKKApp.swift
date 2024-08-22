@@ -17,6 +17,10 @@ import KakaoSDKAuth
 import DIContainer
 import Swinject
 
+import UserSession
+
+import AnalyticsService
+
 @main
 struct CAKKApp: App {
   
@@ -28,9 +32,13 @@ struct CAKKApp: App {
   // MARK: - Initializers
   
   init() {
-    FirebaseApp.configure()
+    initFirebase()
     initKakaoSDK()
     setupDIContainer()
+    setupAnalytics()
+    loadRocketSimConnect()
+    
+    UserSession.shared.initialize()
   }
   
   
@@ -80,4 +88,20 @@ struct CAKKApp: App {
   private func initFirebase() {
     FirebaseApp.configure()
   }
+  
+  private func setupAnalytics() {
+    DIContainer.shared.container.register(AnalyticsService.self) { _ in
+      AnalyticsServiceImpl()
+    }
+  }
+  
+   private func loadRocketSimConnect() {
+     #if DEBUG
+     guard (Bundle(path: "/Applications/RocketSim.app/Contents/Frameworks/RocketSimConnectLinker.nocache.framework")?.load() == true) else {
+       print("Failed to load linker framework")
+       return
+     }
+     print("RocketSim Connect successfully linked")
+     #endif
+   }
 }

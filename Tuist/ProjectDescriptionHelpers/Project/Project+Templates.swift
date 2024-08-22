@@ -91,7 +91,10 @@ extension Project {
       entitlements: entitlements,
       dependencies: dependencies,
       settings: .init(.settings(
-        base: ["DEVELOPMENT_TEAM": "497P4L97SV"],
+        base: [
+          "DEVELOPMENT_TEAM": "497P4L97SV",
+          "OTHER_LDFLAGS": "$(inherited) -ObjC"
+          ],
         configurations: [
           .build(.prod, name: name),
           .build(.stub, name: name),
@@ -119,7 +122,10 @@ extension Project {
       resources: supportsResources ? ["Resources/**"] : [],
       dependencies: dependencies,
       settings: .init(.settings(
-        base: ["DEVELOPMENT_TEAM": "497P4L97SV"],
+        base: [
+          "DEVELOPMENT_TEAM": "497P4L97SV",
+          "OTHER_LDFLAGS": "$(inherited) -ObjC"
+          ],
         configurations: [
           .build(.prod, name: name),
           .build(.release, name: name),

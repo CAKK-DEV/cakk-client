@@ -16,6 +16,9 @@ import DomainSearch
 
 import Router
 
+import DIContainer
+import AnalyticsService
+
 struct SearchResultView: View {
   
   // MARK: - Properties
@@ -34,7 +37,17 @@ struct SearchResultView: View {
     }
   }
   
+  private let analytics: AnalyticsService?
+  
+  
   // MARK: - Initializers
+  
+  public init(selectedSection: Binding<SearchResultSection>) {
+    _selectedSection = selectedSection
+    
+    let diContainer = DIContainer.shared.container
+    self.analytics = diContainer.resolve(AnalyticsService.self)
+  }
   
   // MARK: - Views
   
@@ -54,6 +67,9 @@ struct SearchResultView: View {
           .tag(SearchResultSection.cakeShop)
       }
       .tabViewStyle(.page(indexDisplayMode: .never))
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   
@@ -88,6 +104,12 @@ struct SearchResultView: View {
                     cakeImageUrl: cakeImage.imageUrl,
                     shopId: cakeImage.shopId)
                   )
+                  
+                  analytics?.logEvent(name: "search_result_image_tap",
+                                      parameters: [
+                                        "shopId": cakeImage.shopId,
+                                        "imageId": cakeImage.id
+                                      ])
                 }
             }
             
@@ -137,6 +159,7 @@ struct SearchResultView: View {
               }
               .onTapGesture {
                 router.navigate(to: PublicSearchDestination.shopDetail(shopId: cakeShop.shopId))
+                analytics?.logEvent(name: "search_result_cakeshop_tap", parameters: ["shopId": cakeShop.shopId])
               }
             }
             

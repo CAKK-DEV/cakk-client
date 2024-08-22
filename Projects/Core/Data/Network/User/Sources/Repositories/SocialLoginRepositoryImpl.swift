@@ -94,4 +94,11 @@ public final class SocialLoginRepositoryImpl: SocialLoginRepository {
       }
       .eraseToAnyPublisher()
   }
+  
+  public func signOut(accessToken: String, refreshToken: String) -> AnyPublisher<Void, any Error> {
+    return provider.requestPublisher(.signOut(accessToken: accessToken, refreshToken: refreshToken))
+      .map { _ in }
+      .mapError { $0 as Error }
+      .eraseToAnyPublisher()
+  }
 }

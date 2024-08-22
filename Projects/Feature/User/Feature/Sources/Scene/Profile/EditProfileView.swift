@@ -20,6 +20,8 @@ import DomainUser
 
 import DIContainer
 
+import AnalyticsService
+
 struct EditProfileView: View {
   
   // MARK: - Properties
@@ -33,6 +35,8 @@ struct EditProfileView: View {
   @State private var isPhotoPickerShown = false
   @State private var isProfileImageOptionActionSheetShown = false
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -43,6 +47,8 @@ struct EditProfileView: View {
     
     let profileViewModel = diContainer.resolve(ProfileViewModel.self)!
     _profileViewModel = .init(wrappedValue: profileViewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -174,13 +180,26 @@ struct EditProfileView: View {
                   primaryButtonTitle: "확인",
                   primaryButtonAction: .custom({
                     viewModel.signOut()
-                    router.navigateBack()
                   }), secondaryButtonTitle: "취소",
                   secondaryButtonAction: .cancel)
               }
               .font(.pretendard(size: 15, weight: .medium))
               .padding(.horizontal, 12)
               .padding(.vertical, 8)
+              .onReceive(viewModel.$signOutState, perform: { newState in
+                switch newState {
+                case .failure:
+                  DialogManager.shared.showDialog(
+                    title: "로그아웃 실패",
+                    message: "로그아웃에 실패하였어요..\n다시 시도해 주세요.",
+                    primaryButtonTitle: "확인",
+                    primaryButtonAction: .cancel)
+                case .success:
+                  router.navigateBack()
+                default:
+                  break
+                }
+              })
               
               Button("회원탈퇴") {
                 DialogManager.shared.showDialog(
@@ -276,6 +295,9 @@ struct EditProfileView: View {
           }
         }
       }
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
   }
   
@@ -376,9 +398,11 @@ import PreviewSupportUser
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase()
+    let signOutUseCase = MockSocialLoginSignOutUseCase()
     let withdrawUseCase = MockWithdrawUseCase()
     return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
                                 updateUserProfileUseCase: updateUserProfileUseCase,
+                                signOutUseCase: signOutUseCase,
                                 withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()
@@ -388,9 +412,11 @@ import PreviewSupportUser
   let diContainer = DIContainer.shared.container
   diContainer.register(EditProfileViewModel.self) { resolver in
     let updateUserProfileUseCase = MockUpdateUserProfileUseCase(scenario: .failure)
+    let signOutUseCase = MockSocialLoginSignOutUseCase(scenario: .failure)
     let withdrawUseCase = MockWithdrawUseCase()
     return EditProfileViewModel(userProfile: UserProfile.makeMockUserProfile(role: .user),
                                 updateUserProfileUseCase: updateUserProfileUseCase,
+                                signOutUseCase: signOutUseCase,
                                 withdrawUseCase: withdrawUseCase)
   }
   return EditProfileView()

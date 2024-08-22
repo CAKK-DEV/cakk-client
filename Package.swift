@@ -16,7 +16,11 @@ let packageSettings = PackageSettings(
     "Kingfisher": .framework,
     "ExpandableText": .framework,
     "GoogleMobileAds": .framework,
-    "PopupView": .framework
+    "PopupView": .framework,
+    "KakaoSDKCommon": .framework,
+    "KakaoSDKAuth": .framework,
+    "KakaoSDKUser": .framework,
+    "Alamofire": .framework
   ],
   baseSettings: .settings(
     configurations: [
@@ -40,7 +44,8 @@ let package = Package(
     .package(url: "https://github.com/onevcat/Kingfisher", from: "7.12.0"),
     .package(url: "https://github.com/n3d1117/ExpandableText.git", from: "1.0.0"),
     .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.7.0"),
-    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.29.0"),
-    .package(url: "https://github.com/exyte/PopupView", from: "3.0.5")
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.1.0"),
+    .package(url: "https://github.com/exyte/PopupView", from: "3.0.5"),
+    .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1")
   ]
 )

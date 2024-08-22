@@ -33,6 +33,11 @@ public extension Project {
     target: "AdManager",
     path: .relativeToRoot("Projects/Shared/AdManager")
   )
+
+  static let AnalyticsService: TargetDependency = .project(
+    target: "AnalyticsService",
+    path: .relativeToRoot("Projects/Shared/AnalyticsService")
+  )
   
 
   // MARK: - DesignSystem

@@ -17,6 +17,7 @@ let project = Project.framework(
     Project.DIContainer,
     Project.Logger,
     Project.AdManager,
+    Project.AnalyticsService,
     External.Kingfisher,
     External.ExpandableText,
     External.FirebaseFirestore
