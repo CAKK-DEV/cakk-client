@@ -17,34 +17,12 @@ import FeatureCakeShopAdmin
 struct AppRouterGroup {
   var routers: [RouteBuilder] {
     [
-      OnboardingRouteBuilder(),
-      
-      TabRouteBuilder(),
-      
-      HomeRouteBuilder(),
-      CategoryRouteBuilder(),
-      CakeShopQuickInfoRouteBuilder(),
-      CakeShopDetailRouteBuilder(),
-      ImageZoomableRouteBuilder(),
-      
-      LoginRouteBuilder(),
-      SignUpRouteBuilder(),
-      SearchMyShopRouteBuilder(),
-      ProfileRouteBuilder(),
-      EditProfileRouteBuilder(),
-      
-      MapRouteBuilder(),
-      SearchRouteBuilder(),
-      
-      BusinessCertificationRouteBuilder(),
-      
-      EditCakeShopBasicInfoRouteBuilder(),
-      EditCakeShopImageRouteBuilder(),
-      EditCakeShopImageDetailRouteBuilder(),
-      NewCakeImageRouteBuilder(),
-      EditExternalLinkRouteBuilder(),
-      EditWorkingDayRouteBuilder(),
-      EditAddressRouteBuilder()
-    ]
+      TabRouteBuilder()
+    ] 
+    + FeatureOnboarding.RouterGroup.make()
+    + FeatureCakeShopAdmin.RouterGroup.make()
+    + FeatureSearch.RouterGroup.make()
+    + FeatureCakeShop.RouterGroup.make()
+    + FeatureUser.RouterGroup.make()
   }
 }
