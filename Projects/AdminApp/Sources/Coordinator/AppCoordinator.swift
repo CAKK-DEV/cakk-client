@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import Router
 
 import FeatureUserAdmin
 import UserSession
@@ -20,12 +19,10 @@ import FeatureCakeShopAdmin
 
 struct AppCoordinator: View {
   
-  @StateObject private var router = Router()
   @StateObject var userSession = UserSession.shared
   
   var body: some View {
     AdminHomeView()
-      .environmentObject(router)
       .fullScreenCover(isPresented: .constant(!userSession.isSignedIn), content: {
         AdminLoginView()
       })

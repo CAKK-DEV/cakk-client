@@ -6,22 +6,9 @@
 //
 
 import SwiftUI
+import CommonUtil
 
 import DesignSystem
-import Router
-
-
-public enum OnboardingPublicDestination: Identifiable {
-  case login
-  
-  public var id: String {
-    switch self {
-    case .login:
-      return "login"
-    }
-  }
-}
-
 
 public struct OnboardingStepCoordinator: View {
   
@@ -58,6 +45,7 @@ public struct OnboardingStepCoordinator: View {
       stepRouter.steps[stepRouter.currentStep]
         .environmentObject(stepRouter)
     }
+    .toolbar(.hidden, for: .navigationBar)
   }
 }
 

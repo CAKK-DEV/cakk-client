@@ -41,93 +41,39 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
     case newUser
   }
   
-  private let signUpUseCase: SocialLoginSignUpUseCase
-  @Published private(set) var signUpState: SignUpState = .idle
-  enum SignUpState: Equatable {
-    case idle
-    case loading
-    case failure
-    case serverError
-    case success
-  }
-  
-  var isEmailValid: Bool {
-    let pattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-    let regex = try? NSRegularExpression(pattern: pattern)
-    let range = NSRange(location: 0, length: userData.email.utf16.count)
-    return regex?.firstMatch(in: userData.email, options: [], range: range) != nil
-  }
-  
-  var isEmailEmpty: Bool {
-    userData.email.isEmpty
-  }
-  
   private let analytics: AnalyticsService?
   private var cancellables = Set<AnyCancellable>()
   
   
   // MARK: - Initializers
   
-  public init(
-    signInUseCase: SocialLoginSignInUseCase,
-    signUpUseCase: SocialLoginSignUpUseCase
-  ) {
+  public init(signInUseCase: SocialLoginSignInUseCase) {
     self.signInUseCase = signInUseCase
-    self.signUpUseCase = signUpUseCase
     
     let diContainer = DIContainer.shared.container
     self.analytics = diContainer.resolve(AnalyticsService.self)
   }
-}
-
-
-// MARK: - SignUP
-
-extension SocialLoginViewModel {
-  public func signUp() {
-    signUpState = .loading
-    
-    /// 모든 항목 존재하는지 검사.
-    guard let credentialData else {
-      Loggers.featureUser.info("Credential 데이터가 존재하지 않습니다.", category: .network)
-      signUpState = .failure
-      return
-    }
-    if userData.nickname.isEmpty && userData.email.isEmpty {
-      Loggers.featureUser.info("이름 또는 이메일정보가 없습니다.", category: .network)
-      signUpState = .failure
-      return
+  
+  
+  // MARK: - Private Methods
+  
+  /// DiContainer에 사용자 데이터와 자격 증명 데이터를 등록하는 함수입니다.
+  ///
+  /// 이 함수는 로그인 뷰모델에서 회원가입 뷰모델로 데이터를 전달하기 위해
+  /// `UserData`와 `CredentialData`를 DiContainer에 등록합니다.
+  /// 이를 통해 다른 뷰모델에서 DI(Dependency Injection) 컨테이너를 통해
+  /// 사용자 데이터를 접근할 수 있게 됩니다.
+  ///
+  private func registerUserCredentialsInDiContainer() {
+    let userData = userData
+    DIContainer.shared.container.register(UserData.self) { _ in
+      return userData
     }
     
-    signUpUseCase.execute(credential: credentialData, userData: userData)
-      .subscribe(on: DispatchQueue.global())
-      .receive(on: DispatchQueue.main)
-      .sink { [weak self] completion in
-        if case .failure(let error) = completion {
-          switch error {
-          case .failure, .userAlreadyExists:
-            self?.signUpState = .failure
-          case .serverError:
-            self?.signUpState = .serverError
-          }
-        }
-      } receiveValue: { [weak self] _ in
-        guard let self else { return }
-        
-        self.signUpState = .success
-        
-        switch self.loginType {
-        case .apple:
-          analytics?.logSignUp(method: .apple)
-        case .google:
-          analytics?.logSignUp(method: .google)
-        case .kakao:
-          analytics?.logSignUp(method: .kakao)
-        default:
-          break
-        }
-      }
-      .store(in: &cancellables)
+    guard let credentialData else { return }
+    DIContainer.shared.container.register(CredentialData.self) { _ in
+      return credentialData
+    }
   }
 }
 
@@ -166,26 +112,30 @@ extension SocialLoginViewModel {
         .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.main)
         .sink(receiveCompletion: { [weak self] completion in
+          guard let self else { return }
+          
           if case .failure(let error) = completion {
             switch error {
             case .failure:
-              self?.signInState = .failure
+              self.signInState = .failure
               
             case .newUser:
               Loggers.featureUser.info("등록된 계정이 없어 계정을 신규등록합니다.", category: .network)
               guard let profile = result.user.profile else {
                 Loggers.featureUser.error("계정 등록에 필요한 계정 정보가 누락되었습니다.", category: .network)
-                self?.signInState = .failure
+                self.signInState = .failure
                 return
               }
-              self?.credentialData = .init(loginProvider: .google, idToken: idToken)
-              self?.loginType = .google
-              self?.userData.nickname = profile.name
-              self?.userData.email = profile.email
-              self?.signInState = .newUser
+              self.credentialData = .init(loginProvider: .google, idToken: idToken)
+              self.loginType = .google
+              self.userData.nickname = profile.name
+              self.userData.email = profile.email
+              
+              self.registerUserCredentialsInDiContainer()
+              self.signInState = .newUser
               
             case .serverError:
-              self?.signInState = .serverError
+              self.signInState = .serverError
             }
           }
         }, receiveValue: { [weak self] _ in
@@ -250,6 +200,8 @@ extension SocialLoginViewModel {
                   self.credentialData = .init(loginProvider: .kakao, idToken: idToken)
                   self.loginType = .kakao
                   self.userData.nickname = name
+                  
+                  self.registerUserCredentialsInDiContainer()
                   self.signInState = .newUser
                 }
                 
@@ -308,6 +260,8 @@ extension SocialLoginViewModel {
                   self.credentialData = .init(loginProvider: .kakao, idToken: idToken)
                   self.loginType = .kakao
                   self.userData.nickname = name
+                  
+                  self.registerUserCredentialsInDiContainer()
                   self.signInState = .newUser
                 }
                 
@@ -355,24 +309,28 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] result in
+        guard let self else { return }
+        
         if case .failure(let error) = result {
           switch error {
           case .failure:
-            self?.signInState = .failure
+            self.signInState = .failure
             
           case .newUser:
             if let email = credential.email,
               let fullName = credential.fullName {
-              self?.credentialData = .init(loginProvider: .apple, idToken: idToken)
-              self?.userData.email = email
-              self?.userData.nickname = "\(fullName.familyName ?? "")\(fullName.givenName ?? "")"
-              self?.signInState = .newUser
+              self.credentialData = .init(loginProvider: .apple, idToken: idToken)
+              self.userData.email = email
+              self.userData.nickname = "\(fullName.familyName ?? "")\(fullName.givenName ?? "")"
+              
+              self.registerUserCredentialsInDiContainer()
+              self.signInState = .newUser
             } else {
-              self?.signInState = .appleSingInExpired
+              self.signInState = .appleSingInExpired
             }
             
           case .serverError:
-            self?.signInState = .serverError
+            self.signInState = .serverError
           }
         }
       } receiveValue: { [weak self] _ in
@@ -387,4 +345,3 @@ extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
     signInState = .failure
   }
 }
-

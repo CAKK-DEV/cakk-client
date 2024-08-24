@@ -8,34 +8,45 @@
 import SwiftUI
 
 import DesignSystem
-import Router
-
 import CommonUtil
 
 import DIContainer
 import AnalyticsService
 
+import LinkNavigator
+
 struct Login_Root: View {
 
   // MARK: - Properties
 
-  @EnvironmentObject private var router: Router
-  @EnvironmentObject private var stepRouter: StepRouter
-  @EnvironmentObject private var viewModel: SocialLoginViewModel
-
-  @Environment(\.dismiss) private var dismiss
+  @StateObject private var viewModel: SocialLoginViewModel
 
   @State private var isShowing = false
   @State private var isShowingAppleSignInExpiredAlert = false
   
+  @State var gradientBackground = AnimatedGradientBackground(
+    backgroundColor: Color(hex: "FEB0CD"),
+    gradientColors: [
+      Color(hex: "FE85A5"),
+      Color(hex: "FE85A5"),
+      Color(hex: "FED6C3")
+    ])
+  
+  @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
+  
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
   
   public init() {
     let diContainer = DIContainer.shared.container
+    
+    _viewModel = .init(wrappedValue: diContainer.resolve(SocialLoginViewModel.self)!)
+    
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
 
 
@@ -43,6 +54,10 @@ struct Login_Root: View {
 
   var body: some View {
     ZStack {
+      gradientBackground
+        .clipped()
+        .ignoresSafeArea()
+      
       VStack(spacing: 0) {
         VStack(spacing: 44) {
           Text("다음 방법들 중 하나로\n로그인 해주세요")
@@ -89,7 +104,7 @@ struct Login_Root: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
 
         Button {
-          stepRouter.pushStep()
+          dismiss()
         } label: {
           Text("로그인 없이 둘러보기")
             .font(.system(size: 15, weight: .bold))
@@ -117,6 +132,12 @@ struct Login_Root: View {
         }
       }
     }
+    .toolbar(.hidden, for: .navigationBar)
+    .onFirstAppear {
+      /// 처음 Login화면에 진입했다는 것은 온보딩을 모두 봤다는 뜻으로 해석할 수 있습니다.
+      /// 따라서 login 화면에 진입하는 시점에 hasSeenOnboarding 값을 true로 업데이트 합니다.
+      hasSeenOnboarding = true
+    }
     .onAppear {
       withAnimation(.bouncy(duration: 1)) {
         // 🎬 isShowing animation trigger point
@@ -137,19 +158,12 @@ struct Login_Root: View {
       case .loading:
         LoadingManager.shared.startLoading()
       case .loggedIn:
-        stepRouter.pushStep()
+        dismiss()
+        
       case .newUser:
-        if viewModel.loginType == .kakao {
-          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: true, onFinish: {
-            stepRouter.pushStep()
-          })))
-        } else {
-          stepRouter.steps.append(AnyView(SignUpStepCoordinator(containsEmailInput: false, onFinish: {
-            stepRouter.pushStep()
-          })))
-        }
-        stepRouter.pushStep()
-
+        guard let loginType = viewModel.loginType else { return }
+        navigator?.next(paths: ["sign_up"], items: ["loginType": loginType.rawValue.description], isAnimated: false)
+        
       case .failure:
         // alert
         LoadingManager.shared.stopLoading()
@@ -192,6 +206,17 @@ struct Login_Root: View {
     }
     .modifier(BouncyPressEffect())
   }
+  
+ 
+  // MARK: - Private Methods
+  
+  private func dismiss() {
+    if navigator?.rootCurrentPaths.first == "tab_root" {
+      navigator?.back(isAnimated: true)
+    } else {
+      navigator?.replace(paths: ["tab_root"], items: [:], isAnimated: true)
+    }
+  }
 }
 
 
@@ -201,12 +226,10 @@ import PreviewSupportUser
 import DomainUser
 
 private struct PreviewContent: View {
-  @StateObject var parentCoordinator = StepRouter(steps: [])
   @StateObject var viewModel: SocialLoginViewModel
 
   init() {
-    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
-                                         signUpUseCase: MockSocialLoginSignUpUseCase())
+    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase())
     _viewModel = .init(wrappedValue: viewModel)
   }
 
@@ -215,7 +238,6 @@ private struct PreviewContent: View {
       Color.gray.ignoresSafeArea()
 
       Login_Root()
-        .environmentObject(parentCoordinator)
         .environmentObject(viewModel)
     }
   }

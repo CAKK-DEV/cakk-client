@@ -10,9 +10,7 @@ import SwiftUI
 import DesignSystem
 
 import Kingfisher
-
-import Router
-
+import LinkNavigator
 import DIContainer
 
 import CommonDomain
@@ -21,8 +19,8 @@ struct CakeCategoryImageListView: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @StateObject private var viewModel: CakeCategoryImageListViewModel
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -32,6 +30,8 @@ struct CakeCategoryImageListView: View {
     let viewModel = diContainer.resolve(CakeCategoryImageListViewModel.self)!
     viewModel.category = category
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -67,11 +67,12 @@ struct CakeCategoryImageListView: View {
                     }
                   }
                   .onTapGesture {
-                    router.presentSheet(destination: CakeShopSheetDestination.quickInfo(
-                      imageId: cakeImage.id,
-                      cakeImageUrl: cakeImage.imageUrl,
-                      shopId: cakeImage.shopId
-                    ))
+                    let items = [
+                      "imageId": cakeImage.id.description,
+                      "cakeImageUrl": cakeImage.imageUrl,
+                      "shopId": cakeImage.shopId.description
+                    ]
+                    navigator?.sheet(paths: ["shop_quick_info"], items: items, isAnimated: true)
                   }
               }
 

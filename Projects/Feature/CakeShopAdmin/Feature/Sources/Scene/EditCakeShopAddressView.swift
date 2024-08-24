@@ -14,16 +14,16 @@ import MapKit
 
 import DomainCakeShop
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct EditCakeShopAddressView: View {
   
   // MARK: - Properties
   
   @StateObject var viewModel: EditCakeShopAddressViewModel
-  @EnvironmentObject private var router: Router
-  
   @State private var reloadTrigger = false
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -32,6 +32,8 @@ public struct EditCakeShopAddressView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeShopAddressViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -47,11 +49,11 @@ public struct EditCakeShopAddressView: View {
               message: "저장되지 않은 내용이 있어요.\n내용을 저장하지 않고 나갈까요??",
               primaryButtonTitle: "네",
               primaryButtonAction: .custom({
-                router.navigateBack()
+                navigator?.back(isAnimated: true)
               }),
               secondaryButtonTitle: "머무르기", secondaryButtonAction: .cancel)
           } else {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }
         } label: {
           Image(systemName: "arrow.left")
@@ -64,25 +66,17 @@ public struct EditCakeShopAddressView: View {
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
       })
       
-      VStack(spacing: 24) {
-        CKTextField(text: $viewModel.cakeShopLocation.address, placeholder: "주소를 입력해주세요")
-          .onSubmit {
-            getCoordinate(from: viewModel.cakeShopLocation.address) { coordinate in
-              if let coordinate = coordinate {
-                viewModel.updateCoordinates(latitude: coordinate.latitude, longitude: coordinate.longitude)
-                self.reloadTrigger.toggle()
-              }
-            }
-          }
-        
-        ShopLocationMapView(annotationItem: .init(shopName: "",
-                                                  latitude: viewModel.cakeShopLocation.latitude, 
-                                                  longitude: viewModel.cakeShopLocation.longitude))
-          .id(reloadTrigger)
+      if viewModel.shopAddressFetchingState == .success {
+        editShopAddressView()
+      } else {
+        VStack {
+          ProgressView()
+        }
+        .frame(maxHeight: .infinity)
       }
-      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-      .padding(.horizontal, 24)
-      .padding(.vertical, 16)
+    }
+    .onAppear {
+      viewModel.fetchShopAddress()
     }
     .toolbar(.hidden, for: .navigationBar)
     .overlay {
@@ -144,6 +138,28 @@ public struct EditCakeShopAddressView: View {
     }
   }
   
+  private func editShopAddressView() -> some View {
+    VStack(spacing: 24) {
+      CKTextField(text: $viewModel.cakeShopLocation.address, placeholder: "주소를 입력해주세요")
+        .onSubmit {
+          getCoordinate(from: viewModel.cakeShopLocation.address) { coordinate in
+            if let coordinate = coordinate {
+              viewModel.updateCoordinates(latitude: coordinate.latitude, longitude: coordinate.longitude)
+              self.reloadTrigger.toggle()
+            }
+          }
+        }
+      
+      ShopLocationMapView(annotationItem: .init(shopName: "",
+                                                latitude: viewModel.cakeShopLocation.latitude,
+                                                longitude: viewModel.cakeShopLocation.longitude))
+        .id(reloadTrigger)
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    .padding(.horizontal, 24)
+    .padding(.vertical, 16)
+  }
+  
   private func getCoordinate(from address: String, completion: @escaping(CLLocationCoordinate2D?) -> ()) {
     let geocoder = CLGeocoder()
     geocoder.geocodeAddressString(address) { placemarks, error in
@@ -160,15 +176,16 @@ public struct EditCakeShopAddressView: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShopAdmin
+import PreviewSupportCakeShop
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditCakeShopAddressViewModel.self) { _ in
+    let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
     let editShopAddressUseCase = MockEditShopAddressUseCase()
-    let cakeShopLocation = CakeShopLocation(address: "",
-                                            latitude: LocationService.defaultCoordinates.latitude,
-                                            longitude: LocationService.defaultCoordinates.longitude)
-    return EditCakeShopAddressViewModel(shopId: 0, cakeShopLocation: cakeShopLocation, editShopAddressUseCase: editShopAddressUseCase)
+    return EditCakeShopAddressViewModel(shopId: 0, 
+                                        cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+                                        editShopAddressUseCase: editShopAddressUseCase)
   }
   return EditCakeShopAddressView()
 }

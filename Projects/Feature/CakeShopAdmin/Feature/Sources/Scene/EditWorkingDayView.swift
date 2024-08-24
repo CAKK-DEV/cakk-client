@@ -13,7 +13,7 @@ import DesignSystem
 import CommonDomain
 import DomainCakeShop
 
-import Router
+import LinkNavigator
 import DIContainer
 
 public struct EditWorkingDayView: View {
@@ -21,11 +21,12 @@ public struct EditWorkingDayView: View {
   // MARK: - Properties
   
   @StateObject private var viewModel: EditWorkingDayViewModel
-  @EnvironmentObject private var router: Router
   @State private var selectedWorkingDay: WorkingDay = .sun
   
   @State private var isStartTimePickerShown = false
   @State private var isEndTimePickerShown = false
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -34,6 +35,8 @@ public struct EditWorkingDayView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditWorkingDayViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -49,11 +52,11 @@ public struct EditWorkingDayView: View {
               message: "저장되지 않은 내용이 있어요.\n내용을 저장하지 않고 나갈까요??",
               primaryButtonTitle: "네",
               primaryButtonAction: .custom({
-                router.navigateBack()
+                navigator?.back(isAnimated: true)
               }),
               secondaryButtonTitle: "머무르기", secondaryButtonAction: .cancel)
           } else {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }
         } label: {
           Image(systemName: "arrow.left")
@@ -66,46 +69,17 @@ public struct EditWorkingDayView: View {
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
       }
       
-      ScrollView(.vertical) {
-        VStack(spacing: 12) {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-              ForEach(WorkingDay.allCases, id: \.self) { workingDay in
-                let isSelected = workingDay == selectedWorkingDay
-                RoundedRectangle(cornerRadius: 16)
-                  .fill(isSelected
-                        ? DesignSystemAsset.gray70.swiftUIColor
-                        : DesignSystemAsset.gray10.swiftUIColor)
-                  .size(52)
-                  .overlay {
-                    Text(workingDay.displayName)
-                      .font(.pretendard(size: 17, weight: .bold))
-                      .foregroundStyle(isSelected
-                                       ? DesignSystemAsset.gray10.swiftUIColor
-                                       : DesignSystemAsset.gray70.swiftUIColor)
-                  }
-                  .onTapGesture {
-                    selectedWorkingDay = workingDay
-                    
-                    withAnimation(.snappy) {
-                      isStartTimePickerShown = false
-                      isEndTimePickerShown = false
-                    }
-                  }
-              }
-            }
-            .padding(.vertical, 12)
-            .padding(.horizontal, 24)
-          }
-          
-          if viewModel.isWorkingDay(selectedWorkingDay) {
-            workingTimePicker()
-              .padding(.horizontal, 24)
-          } else {
-            emptyWorkingTimeView()
-          }
+      if viewModel.workingDaysFetchingState == .success {
+        editWorkingDaysView()
+      } else {
+        VStack {
+          ProgressView()
         }
+        .frame(maxHeight: .infinity)
       }
+    }
+    .onAppear {
+      viewModel.fetchWorkingDay()
     }
     .toolbar(.hidden, for: .navigationBar)
     .overlay {
@@ -172,6 +146,64 @@ public struct EditWorkingDayView: View {
       }
       
       LoadingManager.shared.stopLoading()
+    }
+    .onReceive(viewModel.$workingDaysFetchingState) { state in
+      switch state {
+      case .failure:
+        DialogManager.shared.showDialog(
+          title: "불러오기 실패",
+          message: "영업시간을 불러오는 데에 실패하였어요",
+          primaryButtonTitle: "확인",
+          primaryButtonAction: .custom({
+            navigator?.back(isAnimated: true)
+          }))
+        
+      default:
+        break
+      }
+    }
+  }
+  
+  private func editWorkingDaysView() -> some View {
+    ScrollView(.vertical) {
+      VStack(spacing: 12) {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: 12) {
+            ForEach(WorkingDay.allCases, id: \.self) { workingDay in
+              let isSelected = workingDay == selectedWorkingDay
+              RoundedRectangle(cornerRadius: 16)
+                .fill(isSelected
+                      ? DesignSystemAsset.gray70.swiftUIColor
+                      : DesignSystemAsset.gray10.swiftUIColor)
+                .size(52)
+                .overlay {
+                  Text(workingDay.displayName)
+                    .font(.pretendard(size: 17, weight: .bold))
+                    .foregroundStyle(isSelected
+                                     ? DesignSystemAsset.gray10.swiftUIColor
+                                     : DesignSystemAsset.gray70.swiftUIColor)
+                }
+                .onTapGesture {
+                  selectedWorkingDay = workingDay
+                  
+                  withAnimation(.snappy) {
+                    isStartTimePickerShown = false
+                    isEndTimePickerShown = false
+                  }
+                }
+            }
+          }
+          .padding(.vertical, 12)
+          .padding(.horizontal, 24)
+        }
+        
+        if viewModel.isWorkingDay(selectedWorkingDay) {
+          workingTimePicker()
+            .padding(.horizontal, 24)
+        } else {
+          emptyWorkingTimeView()
+        }
+      }
     }
   }
   
@@ -300,18 +332,17 @@ public struct EditWorkingDayView: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShopAdmin
+import PreviewSupportCakeShop
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditWorkingDayViewModel.self) { _ in
+    let cakeShopAdditionalInfoUseCase = MockCakeShopAdditionalInfoUseCase()
     let editWorkingDayUseCase = MockEditWorkingDayUseCase()
     return EditWorkingDayViewModel(
       shopId: 0,
-      editWorkingDayUseCase: editWorkingDayUseCase,
-      workingDaysWithTime: [
-        .init(workingDay: .sun, startTime: "11:00", endTime: "21:00"),
-        .init(workingDay: .tue, startTime: "11:00", endTime: "21:00")
-      ]
+      cakeShopAdditionalInfoUseCase: cakeShopAdditionalInfoUseCase,
+      editWorkingDayUseCase: editWorkingDayUseCase
     )
   }
   return EditWorkingDayView()

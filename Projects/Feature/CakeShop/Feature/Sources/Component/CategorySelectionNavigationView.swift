@@ -7,21 +7,33 @@
 //
 
 import SwiftUI
-import CommonUtil
 import DesignSystem
+
+import CommonUtil
+import DIContainer
+import LinkNavigator
 
 import CommonDomain
 import DomainCakeShop
-
-import Router
 
 struct CategorySelectionNavigationView: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @Binding var selection: CakeCategory
   @Namespace private var namespace
+  
+  private let navigator: LinkNavigatorType?
+  
+  
+  // MARK: - Initializers
+  
+  init(selection: Binding<CakeCategory>) {
+    _selection = selection
+    
+    let container = DIContainer.shared.container
+    self.navigator = container.resolve(LinkNavigatorType.self)
+  }
   
   
   // MARK: - Views
@@ -29,7 +41,7 @@ struct CategorySelectionNavigationView: View {
   var body: some View {
     return HStack {
       Button {
-        router.navigateBack()
+        navigator?.back(isAnimated: true)
       } label: {
         Image(systemName: "arrow.left")
           .font(.system(size: 20))

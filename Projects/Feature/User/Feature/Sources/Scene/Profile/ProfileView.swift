@@ -11,7 +11,7 @@ import SwiftUI
 import DesignSystem
 import CommonUtil
 
-import Router
+import LinkNavigator
 
 import DomainUser
 import UserSession
@@ -25,7 +25,6 @@ public struct ProfileView: View {
   // MARK: - Properties
   
   @State private var isLoggedIn = false
-  @EnvironmentObject private var router: Router
   
   @StateObject private var profileViewModel: ProfileViewModel
   @StateObject private var businessOwnerProfileViewModel: BusinessOwnerProfileViewModel
@@ -44,6 +43,7 @@ public struct ProfileView: View {
     ])
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -57,6 +57,7 @@ public struct ProfileView: View {
     _businessOwnerProfileViewModel = .init(wrappedValue: businessOwnerProfileViewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -124,7 +125,7 @@ public struct ProfileView: View {
                 if profileViewModel.currentRoleState == .user {
                   HStack(spacing: 24) {
                     Button {
-                      router.navigate(to: Destination.shopRegistration)
+                      navigator?.next(paths: ["search_my_shop"], items: [:], isAnimated: true)
                     } label: {
                       headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
                     }
@@ -133,11 +134,7 @@ public struct ProfileView: View {
                     .disabled(profileViewModel.userProfile?.role != .user)
                     
                     Button {
-                      if let userProfile = profileViewModel.userProfile {
-                        router.navigate(to: Destination.editProfile(profile: userProfile))
-                      } else {
-                        DialogManager.shared.showDialog(.pleaseWait(completion: nil))
-                      }
+                      navigator?.next(paths: ["edit_profile"], items: [:], isAnimated: true)
                     } label: {
                       headerItemButton(title: "정보 수정", icon: DesignSystemAsset.fileEdit.swiftUIImage)
                     }
@@ -204,7 +201,7 @@ public struct ProfileView: View {
           FailureStateView(title: "로그인이 필요한 기능이에요!",
                            buttonTitle: "로그인하고 다양한 기능 누리기",
                            buttonAction: {
-            router.presentSheet(destination: UserSheetDestination.login)
+            navigator?.next(paths: ["login"], items: [:], isAnimated: true)
           })
           .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

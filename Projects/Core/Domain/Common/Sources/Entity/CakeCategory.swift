@@ -8,7 +8,7 @@
 
 import Foundation
 
-public enum CakeCategory: CaseIterable {
+public enum CakeCategory: String, CaseIterable {
   case threeDimensional
   case character
   case photo

@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     Project.CommonUtil,
     Project.DesignSystem,
-    Project.Router,
     Project.LocationService,
     
     Project.DomainUser,

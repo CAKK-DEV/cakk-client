@@ -136,6 +136,15 @@
       }
     },
     {
+      "identity" : "linknavigator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/forXifLess/LinkNavigator",
+      "state" : {
+        "revision" : "61d740d26dbde1350a53342df0791e0a90a112b9",
+        "version" : "1.2.6"
+      }
+    },
+    {
       "identity" : "lottie-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/airbnb/lottie-ios",
@@ -250,6 +259,15 @@
       "state" : {
         "revision" : "3125943807991bc271d366205d98713696d65a1f",
         "version" : "2.8.8"
+      }
+    },
+    {
+      "identity" : "urlencodedform",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/interactord/URLEncodedForm",
+      "state" : {
+        "revision" : "cd690e95f0df333293ec3f9fa9c2c7322ef54bbf",
+        "version" : "1.0.9"
       }
     }
   ],

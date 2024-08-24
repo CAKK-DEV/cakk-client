@@ -12,7 +12,6 @@ import Kingfisher
 
 import DomainCakeShop
 import DIContainer
-import Router
 
 struct CakeShopDetailView: View {
   
@@ -21,7 +20,11 @@ struct CakeShopDetailView: View {
   @StateObject var viewModel: CakeShopDetailViewModel
   let columns = [GridItem(.adaptive(minimum: 88, maximum: 120), spacing: 6)]
   
-  @EnvironmentObject private var router: Router
+  @State private var isEditBasicInfoShown = false
+  @State private var isEditExternalLinkShown = false
+  @State private var isEditWorkingDayShown = false
+  @State private var isEditAddressShown = false
+  @State private var isEditImageShown = false
   
   
   // MARK: - Initializers
@@ -55,39 +58,48 @@ struct CakeShopDetailView: View {
     }
     .navigationTitle(viewModel.cakeShopDetail?.shopName ?? "로딩중..")
     .navigationBarTitleDisplayMode(.inline)
+    .background {
+      NavigationLink("EditShopBasicInfo", isActive: $isEditBasicInfoShown) {
+        EditCakeShopBasicInfoView()
+      }
+      
+      NavigationLink("EditExternalLink", isActive: $isEditExternalLinkShown) {
+        EditExternalLinkView()
+      }
+      
+      NavigationLink("EditWorkingDay", isActive: $isEditWorkingDayShown) {
+        EditWorkingDayView()
+      }
+      
+      NavigationLink("EditAddress", isActive: $isEditAddressShown) {
+        EditCakeShopAddressView()
+      }
+      
+      NavigationLink("EditImage", isActive: $isEditImageShown) {
+        EditCakeShopImagesView()
+      }
+    }
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {
         Menu {
           Button("기본정보 수정") {
-            if let cakeShopDetail = viewModel.cakeShopDetail {
-              router.navigate(to: CakeShopDetailDestination.editBasicInfo(cakeShopDetail: cakeShopDetail))
-            }
+            isEditBasicInfoShown = true
           }
           
           Button("외부링크 수정") {
-            if let cakeShopDetail = viewModel.cakeShopDetail {
-              router.navigate(to: CakeShopDetailDestination.editExternalLink(shopId: cakeShopDetail.shopId, externalLinks: cakeShopDetail.externalShopLinks))
-            }
+            isEditExternalLinkShown = true
           }
           
           Button("영업시간 수정") {
-            if let cakeShopDetail = viewModel.cakeShopDetail,
-               let additionalInfo = viewModel.additionalInfo {
-              router.navigate(to: CakeShopDetailDestination.editWorkingDay(shopId: cakeShopDetail.shopId, workingDaysWithTime: additionalInfo.workingDaysWithTime))
-            }
+            isEditWorkingDayShown = true
           }
           
           Button("가게위치 수정") {
-            if let cakeShopDetail = viewModel.cakeShopDetail,
-               let additionalInfo = viewModel.additionalInfo {
-              router.navigate(to: CakeShopDetailDestination.editAddress(shopId: cakeShopDetail.shopId, cakeShopLocation: additionalInfo.location))
-            }
+            isEditAddressShown = true
           }
           
           Button("케이크 이미지 수정") {
-            if let cakeShopDetail = viewModel.cakeShopDetail {
-              router.navigate(to: CakeShopDetailDestination.editCakeImages(shopId: cakeShopDetail.shopId))
-            }
+            isEditImageShown = true
           }
         } label: {
           Image(systemName: "ellipsis.circle")
@@ -222,7 +234,7 @@ struct CakeShopDetailView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: EditCakeShopDestination.editCakeImageDetail(imageId: cakeImage.id))
+//                router.navigate(to: EditCakeShopDestination.editCakeImageDetail(imageId: cakeImage.id))
               }
           }
           

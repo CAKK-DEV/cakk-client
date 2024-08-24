@@ -16,16 +16,16 @@ import CommonDomain
 import DomainCakeShop
 
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct NewCakeImageView: View {
   
   // MARK: - Properties
   
   @StateObject var viewModel: NewCakeImageViewModel
-  @EnvironmentObject private var router: Router
-  
   @State private var isPhotoPickerShown = false
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -34,6 +34,8 @@ public struct NewCakeImageView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(NewCakeImageViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   // MARK: - Views
@@ -47,7 +49,7 @@ public struct NewCakeImageView: View {
             message: "변경 내용이 저장되지 않았어요.\n그래도 나갈까요?",
             primaryButtonTitle: "확인",
             primaryButtonAction: .custom({
-              router.navigateBack()
+              navigator?.back(isAnimated: true)
             }),
             secondaryButtonTitle: "취소",
             secondaryButtonAction: .cancel)
@@ -241,7 +243,7 @@ public struct NewCakeImageView: View {
                                         message: "업로드에 성공하였어요!",
                                         primaryButtonTitle: "확인",
                                         primaryButtonAction: .custom({
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         }))
         
       default:

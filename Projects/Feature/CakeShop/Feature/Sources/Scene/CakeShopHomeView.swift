@@ -17,7 +17,7 @@ import AppTrackingTransparency
 
 import AnalyticsService
 
-struct CakeShopHomeView: View {
+public struct CakeShopHomeView: View {
   
   // MARK: - Properties
   
@@ -36,7 +36,7 @@ struct CakeShopHomeView: View {
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       NavigationBar(
         size: .large,
@@ -68,6 +68,7 @@ struct CakeShopHomeView: View {
         }
       }
     }
+    .toolbar(.hidden, for: .navigationBar)
     .onFirstAppear {
       requestIDFAPermission()
     }

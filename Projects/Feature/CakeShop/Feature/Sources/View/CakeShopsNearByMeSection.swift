@@ -12,18 +12,20 @@ import DesignSystem
 import DomainCakeShop
 import DomainSearch
 
-import Router
 import DIContainer
 
 import MapKit
 import LocationService
+
+import LinkNavigator
 
 struct CakeShopsNearByMeSection: View {
   
   // MARK: - Properties
   
   @StateObject private var viewModel: CakeShopNearByMeViewModel
-  @EnvironmentObject private var router: Router
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -32,6 +34,8 @@ struct CakeShopsNearByMeSection: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopNearByMeViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -52,7 +56,7 @@ struct CakeShopsNearByMeSection: View {
       }
       .padding(.horizontal, 16)
       .onTapGesture {
-        router.navigate(to: PublicCakeShopDestination.map)
+        navigator?.next(paths: ["map"], items: [:], isAnimated: true)
       }
       
       Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locatedCakeShops) { shop in

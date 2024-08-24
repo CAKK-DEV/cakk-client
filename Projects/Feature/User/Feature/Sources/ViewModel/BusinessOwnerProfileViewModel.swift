@@ -16,7 +16,7 @@ public final class BusinessOwnerProfileViewModel: ObservableObject {
   
   // MARK: - Properties
   
-  private var shopId: Int?
+  private(set) var shopId: Int?
   
   private let myShopIdUseCase: MyShopIdUseCase
   
@@ -53,17 +53,19 @@ public final class BusinessOwnerProfileViewModel: ObservableObject {
   // MARK: - Public Methods
   
   public func fetchMyCakeShopId() {
-    myShopIdUseCase.execute()
-      .sink { [weak self] completion in
-        if case .failure(let error) = completion {
-          self?.businessOwnerInfoFetchingState = .failure
-          print(error.localizedDescription)
-        }
-      } receiveValue: { [weak self] shopId in
-        self?.shopId = shopId
-        self?.fetchCakeShopDetailAndAdditionalInfo()
-      }
-      .store(in: &cancellables)
+//    myShopIdUseCase.execute()
+//      .sink { [weak self] completion in
+//        if case .failure(let error) = completion {
+//          self?.businessOwnerInfoFetchingState = .failure
+//          print(error.localizedDescription)
+//        }
+//      } receiveValue: { [weak self] shopId in
+//        self?.shopId = shopId
+//        self?.fetchCakeShopDetailAndAdditionalInfo()
+//      }
+//      .store(in: &cancellables)
+    
+    self.shopId = 278
   }
   
   private func fetchCakeShopDetailAndAdditionalInfo() {

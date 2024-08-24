@@ -18,7 +18,6 @@ let project = Project.app(
     Project.DomainUser,
     Project.NetworkUser,
 
-    Project.Router,
     Project.DIContainer
   ]
 )

@@ -60,4 +60,8 @@ public enum External {
   public static var PopupView: TargetDependency {
     return .external(name: "PopupView")
   }
+
+  public static var LinkNavigator: TargetDependency {
+    return .external(name: "LinkNavigator")
+  }
 }

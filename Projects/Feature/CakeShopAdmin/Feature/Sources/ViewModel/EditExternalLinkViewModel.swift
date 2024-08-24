@@ -16,8 +16,18 @@ public final class EditExternalLinkViewModel: ObservableObject {
   // MARK: - Properties
   
   private let shopId: Int
+  
+  private let cakeShopDetailUseCase: CakeShopDetailUseCase
+  @Published private(set) var externalLinkFetchingState: ExternalLinkFetchingState = .idle
+  enum ExternalLinkFetchingState: Equatable {
+    case idle
+    case loading
+    case failure(error: CakeShopDetailError)
+    case success
+  }
+  
   private let editExternalLinkUseCase: EditExternalLinkUseCase
-  private let externalShopLinks: [ExternalShopLink]
+  private var externalShopLinks: [ExternalShopLink] = []
   
   @Published var instaUrl: String = ""
   @Published var kakaoUrl: String = ""
@@ -32,34 +42,51 @@ public final class EditExternalLinkViewModel: ObservableObject {
     case invalidUrl
   }
   
-  private var cancesllables = Set<AnyCancellable>()
+  private var cancellables = Set<AnyCancellable>()
   
   
   // MARK: - Initializers
   
   public init(
     shopId: Int,
-    editExternalLinkUseCase: EditExternalLinkUseCase,
-    externalShopLinks: [ExternalShopLink]
+    cakeShopDetailUseCase: CakeShopDetailUseCase,
+    editExternalLinkUseCase: EditExternalLinkUseCase
   ) {
     self.shopId = shopId
+    self.cakeShopDetailUseCase = cakeShopDetailUseCase
     self.editExternalLinkUseCase = editExternalLinkUseCase
-    self.externalShopLinks = externalShopLinks
-    
-    externalShopLinks.forEach { link in
-      switch link.linkType {
-      case .web:
-        self.webUrl = link.linkPath
-      case .instagram:
-        self.instaUrl = link.linkPath
-      case .kakaotalk:
-        self.kakaoUrl = link.linkPath
-      }
-    }
   }
   
   
   // MARK: - Public Methods
+  
+  public func fetchExternalLinks() {
+    externalLinkFetchingState = .loading
+    
+    cakeShopDetailUseCase.execute(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.externalLinkFetchingState = .failure(error: error)
+        } else {
+          self?.externalLinkFetchingState = .success
+        }
+      } receiveValue: { [weak self] cakeShopDetail in
+        self?.externalShopLinks = cakeShopDetail.externalShopLinks
+        self?.externalShopLinks.forEach { link in
+          switch link.linkType {
+          case .web:
+            self?.webUrl = link.linkPath
+          case .instagram:
+            self?.instaUrl = link.linkPath
+          case .kakaotalk:
+            self?.kakaoUrl = link.linkPath
+          }
+        }
+      }
+      .store(in: &cancellables)
+  }
   
   public func updateExternLinks() {
     updatingState = .loading
@@ -96,7 +123,7 @@ public final class EditExternalLinkViewModel: ObservableObject {
         self?.updatingState = .success
       }
     } receiveValue: { _ in }
-      .store(in: &cancesllables)
+      .store(in: &cancellables)
   }
   
   public func hasChanges() -> Bool {

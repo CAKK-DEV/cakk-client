@@ -12,7 +12,7 @@ import DesignSystem
 import CommonDomain
 import DomainCakeShop
 
-import Router
+import LinkNavigator
 
 import DIContainer
 import AnalyticsService
@@ -21,10 +21,10 @@ struct CakeCategorySection: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -32,6 +32,7 @@ struct CakeCategorySection: View {
   public init() {
     let diContainer = DIContainer.shared.container
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -50,7 +51,7 @@ struct CakeCategorySection: View {
   
   private func categoryItem(category: CakeCategory) -> some View {
     Button {
-      router.navigate(to: CakeShopDestination.categoryDetail(initialCategory: category))
+      navigator?.next(paths: ["category"], items: ["category": category.rawValue], isAnimated: true)
       analytics?.logEvent(name: "category_tap_from_home",
                           parameters: ["category": category.displayName])
     } label: {

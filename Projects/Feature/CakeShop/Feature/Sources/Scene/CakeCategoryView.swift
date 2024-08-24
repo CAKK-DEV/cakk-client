@@ -11,8 +11,6 @@ import DesignSystem
 
 import Kingfisher
 
-import Router
-
 import CommonDomain
 
 import DIContainer
@@ -22,7 +20,6 @@ struct CakeCategoryView: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @State private var category: CakeCategory
   
   private let analytics: AnalyticsService?

@@ -6,13 +6,13 @@ let project = Project.framework(
   dependencies: [
     Project.CommonUtil,
     Project.DesignSystem,
-    Project.Router,
     Project.DomainSearch,
     Project.PreviewSupportSearch,
     Project.DIContainer,
     Project.LocationService,
     Project.AdManager,
     Project.AnalyticsService,
-    External.PopupView
+    External.PopupView,
+    External.LinkNavigator
   ]
 )

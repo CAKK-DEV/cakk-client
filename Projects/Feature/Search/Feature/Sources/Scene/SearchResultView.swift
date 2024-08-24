@@ -14,7 +14,7 @@ import Kingfisher
 import CommonDomain
 import DomainSearch
 
-import Router
+import LinkNavigator
 
 import DIContainer
 import AnalyticsService
@@ -24,7 +24,6 @@ struct SearchResultView: View {
   // MARK: - Properties
   
   @EnvironmentObject private var viewModel: SearchViewModel
-  @EnvironmentObject private var router: Router
   
   private let sectionItems = SearchResultSection.allCases.map { $0.item }
   @Binding var selectedSection: SearchResultSection
@@ -38,6 +37,7 @@ struct SearchResultView: View {
   }
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -47,6 +47,7 @@ struct SearchResultView: View {
     
     let diContainer = DIContainer.shared.container
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   // MARK: - Views
@@ -99,12 +100,12 @@ struct SearchResultView: View {
                   }
                 }
                 .onTapGesture {
-                  router.presentSheet(destination: PublicSearchSheetDestination.quickInfo(
-                    imageId: cakeImage.id,
-                    cakeImageUrl: cakeImage.imageUrl,
-                    shopId: cakeImage.shopId)
-                  )
-                  
+                  let items = [
+                    "imageId": cakeImage.id.description,
+                    "cakeImageUrl": cakeImage.imageUrl,
+                    "shopId": cakeImage.shopId.description
+                  ]
+                  navigator?.sheet(paths: ["shop_quick_info"], items: items, isAnimated: true)
                   analytics?.logEvent(name: "search_result_image_tap",
                                       parameters: [
                                         "shopId": cakeImage.shopId,
@@ -158,7 +159,7 @@ struct SearchResultView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: PublicSearchDestination.shopDetail(shopId: cakeShop.shopId))
+                navigator?.next(paths: ["shop_detail"], items: ["shopId": cakeShop.shopId.description], isAnimated: true)
                 analytics?.logEvent(name: "search_result_cakeshop_tap", parameters: ["shopId": cakeShop.shopId])
               }
             }

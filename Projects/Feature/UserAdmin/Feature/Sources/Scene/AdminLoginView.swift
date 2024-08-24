@@ -11,7 +11,6 @@ import SwiftUI
 import DesignSystem
 import CommonUtil
 
-import Router
 import DIContainer
 
 public struct AdminLoginView: View {
@@ -19,7 +18,6 @@ public struct AdminLoginView: View {
   // MARK: - Properties
   
   @StateObject var viewModel: AdminLoginViewModel
-  @EnvironmentObject var router: Router
   
   @State var gradientBackground = AnimatedGradientBackground(
     backgroundColor: Color(hex: "FEB0CD"),

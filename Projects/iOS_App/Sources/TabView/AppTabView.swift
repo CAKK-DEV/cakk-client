@@ -13,6 +13,7 @@ import DesignSystem
 import FeatureUser
 import FeatureOnboarding
 import FeatureCakeShop
+import FeatureSearch
 
 struct AppTabView: View {
   
@@ -26,17 +27,17 @@ struct AppTabView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView(selection: $tabStateManager.selectedTab) {
-        CakeShopTabCoordinator()
+        CakeShopHomeView()
           .tag(CAKKTabBar.Tab.cakeShop)
         
-        SearchTabCoordinator()
+        SearchView()
           .tag(CAKKTabBar.Tab.search)
         
-        LikeTabCoordinator()
+        LikedItemsView()
           .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.liked)
         
-        ProfileTabCoordinator()
+        ProfileView()
           .tag(CAKKTabBar.Tab.profile)
       }
       .ignoresSafeArea(.keyboard, edges: .bottom)

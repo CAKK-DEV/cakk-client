@@ -34,7 +34,6 @@ let project = Project.app(
     Project.KeyChainOAuthToken,
     Project.UserSession,
     Project.DIContainer,
-    Project.Router,
     Project.MoyaUtil
   ],
   entitlements: "App.entitlements"

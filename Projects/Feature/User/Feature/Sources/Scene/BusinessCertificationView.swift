@@ -13,7 +13,7 @@ import PhotosUI
 import CommonUtil
 import DesignSystem
 
-import Router
+import LinkNavigator
 import DIContainer
 
 import AnalyticsService
@@ -24,8 +24,6 @@ public struct BusinessCertificationView: View {
   
   @StateObject var viewModel: BusinessCertificationViewModel
   
-  @EnvironmentObject private var router: Router
-  
   @State private var isBusinessCertPhotoPickerShown = false
   @State private var isIdCardPhotoPickerShown = false
   enum PhotoPickerType {
@@ -34,6 +32,7 @@ public struct BusinessCertificationView: View {
   }
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -45,6 +44,7 @@ public struct BusinessCertificationView: View {
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -55,7 +55,7 @@ public struct BusinessCertificationView: View {
       VStack(spacing: 0) {
         NavigationBar(leadingContent: {
           Button {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           } label: {
             Image(systemName: "arrow.left")
               .font(.system(size: 20))
@@ -123,7 +123,11 @@ public struct BusinessCertificationView: View {
           message: "사장님 인증 요청이 완료 되었어요!\n인증정보 확인 후 빠른 시일 내로 연락 드릴게요.",
           primaryButtonTitle: "확인",
           primaryButtonAction: .custom({
-            router.navigateToRoot()
+            if navigator?.currentPaths.last == "shop_detail" {
+              navigator?.back(isAnimated: true)
+            } else {
+//              navigator?.backToLast(path: "", isAnimated: <#T##Bool#>)
+            }
           })
         )
         

@@ -14,8 +14,8 @@ let project = Project.framework(
     Project.PreviewSupportCakeShop,
     Project.PreviewSupportCakeShopAdmin,
 
-    Project.Router,
     Project.DIContainer,
-    External.Kingfisher
+    External.Kingfisher,
+    External.LinkNavigator
   ]
 )

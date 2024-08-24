@@ -6,17 +6,18 @@
 //
 
 import SwiftUI
-
+import CommonUtil
 import DesignSystem
-import Router
+import DIContainer
 
 struct SignUp_Email: View {
 
   // MARK: - Properties
 
   @EnvironmentObject private var stepRouter: StepRouter
-  @EnvironmentObject private var socialLoginViewModel: SocialLoginViewModel
-  @EnvironmentObject private var emailVerificationViewModel: EmailVerificationViewModel
+  @EnvironmentObject private var signUpViewModel: SocialLoginSignUpViewModel
+  
+  @StateObject private var emailVerificationViewModel: EmailVerificationViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
   
@@ -25,7 +26,10 @@ struct SignUp_Email: View {
 
   // MARK: - Initializers
 
-  init() { }
+  init() { 
+    let emailVerificationViewModel = DIContainer.shared.container.resolve(EmailVerificationViewModel.self)!
+    _emailVerificationViewModel = .init(wrappedValue: emailVerificationViewModel)
+  }
 
 
   // MARK: - Views
@@ -60,15 +64,15 @@ struct SignUp_Email: View {
             .opacity(isShowing ? 1.0 : 0)
             .blur(radius: isShowing ? 0 : 10)
 
-          if !socialLoginViewModel.isEmailValid && !socialLoginViewModel.isEmailEmpty {
+          if !signUpViewModel.isEmailValid && !signUpViewModel.isEmailEmpty {
             Text("이메일 형식이 올바르지 않아요")
               .font(.pretendard(size: 15, weight: .medium))
               .foregroundStyle(DesignSystemAsset.brandcolor2.swiftUIColor)
           }
         }
-        .animation(.easeInOut, value: (!socialLoginViewModel.isEmailValid && !socialLoginViewModel.isEmailEmpty))
+        .animation(.easeInOut, value: (!signUpViewModel.isEmailValid && !signUpViewModel.isEmailEmpty))
 
-        TextField("email", text: $socialLoginViewModel.userData.email)
+        TextField("email", text: $signUpViewModel.userData.email)
           .font(.pretendard(size: 20, weight: .bold))
           .foregroundStyle(Color.white)
           .padding(.horizontal, 20)
@@ -86,24 +90,19 @@ struct SignUp_Email: View {
 
       CKButtonLargeStroked(title: "인증번호 발송", action: {
         withAnimation {
-          emailVerificationViewModel.sendVerificationCodeThrough(email: socialLoginViewModel.userData.email)
+          emailVerificationViewModel.sendVerificationCodeThrough(email: signUpViewModel.userData.email)
         }
       }, isLoading: .constant(emailVerificationViewModel.emailVerificationState == .sendingRequestVerificationCode))
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
       .padding(28)
-      .opacity(socialLoginViewModel.isEmailValid && !socialLoginViewModel.isEmailEmpty ? 1.0 : 0.3)
-//      .disabled(!socialLoginViewModel.isEmailValid || socialLoginViewModel.isEmailEmpty)
-      .animation(.easeInOut, value: !socialLoginViewModel.isEmailValid || socialLoginViewModel.isEmailEmpty)
+      .opacity(signUpViewModel.isEmailValid && !signUpViewModel.isEmailEmpty ? 1.0 : 0.3)
+      .animation(.easeInOut, value: !signUpViewModel.isEmailValid || signUpViewModel.isEmailEmpty)
     }
     .ignoresSafeArea(.keyboard)
     .overlay {
       VStack(spacing: 0) {
-        StepNavigationView(title: "\(stepRouter.currentStep + 1) / \(stepRouter.steps.count)") {
-          // ⬅️ pop step
-          stepRouter.popStep()
-        }
-
+        SignUpStepNavigationView()
         Spacer()
       }
     }
@@ -167,7 +166,7 @@ struct SignUp_Email: View {
       .frame(maxWidth: .infinity, maxHeight: .infinity)
 
       CKButtonLargeStroked(title: "인증하기", action: {
-        emailVerificationViewModel.confirmVerificationCode(email: socialLoginViewModel.userData.email)
+        emailVerificationViewModel.confirmVerificationCode(email: signUpViewModel.userData.email)
       }, isLoading: .constant(emailVerificationViewModel.emailVerificationState == .requestConfirmVerificationCode))
       .largeButtonShadow()
       .modifier(BouncyPressEffect())
@@ -181,11 +180,7 @@ struct SignUp_Email: View {
     .ignoresSafeArea(.keyboard)
     .overlay {
       VStack(spacing: 0) {
-        StepNavigationView(title: "\(stepRouter.currentStep + 1) / \(stepRouter.steps.count)") {
-          // ⬅️ pop step
-          stepRouter.popStep()
-        }
-
+        SignUpStepNavigationView()
         Spacer()
       }
     }
@@ -249,22 +244,27 @@ import DomainUser
 
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
-  @StateObject var socialLoginViewModel: SocialLoginViewModel
+  @StateObject var signUpViewModel: SocialLoginSignUpViewModel
   @StateObject var emailVerificationViewModel: EmailVerificationViewModel
 
   init() {
-    let socialLoginViewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
-                                         signUpUseCase: MockSocialLoginSignUpUseCase())
     let emailVerificationViewModel = EmailVerificationViewModel(sendVerificationCodeUseCase: MockSendVerificationCodeUseCase(),
                                                             confirmVerificationCodeUseCase: MockConfirmVerificationCodeUseCase())
-    _socialLoginViewModel = .init(wrappedValue: socialLoginViewModel)
     _emailVerificationViewModel = .init(wrappedValue: emailVerificationViewModel)
+    
+    let signUpViewModel = SocialLoginSignUpViewModel(
+      loginType: .kakao,
+      userData: UserData(nickname: "", email: "", birthday: .now, gender: .unknown),
+      credentialData: .init(loginProvider: .kakao, idToken: ""),
+      signUpUseCase: MockSocialLoginSignUpUseCase()
+    )
+    _signUpViewModel = .init(wrappedValue: signUpViewModel)
   }
 
   var body: some View {
     SignUp_Email()
       .environmentObject(stepRouter)
-      .environmentObject(socialLoginViewModel)
+      .environmentObject(signUpViewModel)
       .environmentObject(emailVerificationViewModel)
   }
 }

@@ -6,7 +6,7 @@ let project = Project.framework(
   dependencies: [
     Project.CommonUtil,
     Project.DesignSystem,
-    Project.Router,
-    External.Haptico
+    External.Haptico,
+    External.LinkNavigator
   ]
 )

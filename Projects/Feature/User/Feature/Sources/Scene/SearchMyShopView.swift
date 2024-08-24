@@ -11,7 +11,7 @@ import SwiftUI
 import CommonUtil
 import DesignSystem
 
-import Router
+import LinkNavigator
 import DIContainer
 
 import AnalyticsService
@@ -22,12 +22,11 @@ struct SearchMyShopView: View {
   
   @StateObject private var viewModel: SearchMyShopViewModel
   
-  @EnvironmentObject private var router: Router
-  
   @FocusState private var isFocused
   @State private var isSearchResultShown = false
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -38,6 +37,7 @@ struct SearchMyShopView: View {
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -71,7 +71,7 @@ struct SearchMyShopView: View {
         if isSearchResultShown {
           restoreSearch()
         } else {
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         }
       } label: {
         Image(systemName: "arrow.left")
@@ -153,7 +153,7 @@ struct SearchMyShopView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: ShopRegistrationDestination.businessCertification(targetShopId: cakeShop.shopId))
+                navigator?.next(paths: ["business_certification"], items: ["shopId": cakeShop.shopId.description], isAnimated: true)
               }
             }
             

@@ -18,7 +18,7 @@ import DomainSearch
 import MapKit
 
 import DIContainer
-import Router
+import LinkNavigator
 
 import LocationService
 
@@ -31,7 +31,6 @@ public struct SearchCakeShopOnMapView: View {
   // MARK: - Properties
   
   @StateObject var viewModel: SearchCakeShopOnMapViewModel
-  @EnvironmentObject private var router: Router
   
   @State private var isRefreshButtonShown = false
   
@@ -46,6 +45,7 @@ public struct SearchCakeShopOnMapView: View {
   @State private var attempts: Int = 0
 
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -56,6 +56,7 @@ public struct SearchCakeShopOnMapView: View {
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   // MARK: - Views
@@ -153,7 +154,7 @@ public struct SearchCakeShopOnMapView: View {
       } else if LocationService.shared.authorizationStatus != .authorizedAlways
                   && LocationService.shared.authorizationStatus != .authorizedWhenInUse {
         DialogManager.shared.showDialog(.locationPermissionDenied(completion: {
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         }))
       }
     }
@@ -283,7 +284,7 @@ public struct SearchCakeShopOnMapView: View {
     )
     .onTapGesture {
       if let shopId = cakeShop?.id {
-        router.navigate(to: PublicSearchDestination.shopDetail(shopId: shopId))
+        navigator?.next(paths: ["shop_detail"], items: ["shopId": shopId.description], isAnimated: true)
       }
     }
   }
@@ -330,7 +331,7 @@ public struct SearchCakeShopOnMapView: View {
       // Back Button
       HStack {
         Button {
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         } label: {
           ZStack {
             Circle()

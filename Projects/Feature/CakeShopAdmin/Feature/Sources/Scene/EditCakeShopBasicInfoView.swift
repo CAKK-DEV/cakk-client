@@ -14,17 +14,18 @@ import PhotosUI
 import DomainCakeShop
 
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct EditCakeShopBasicInfoView: View {
   
   // MARK: - Properties
   
   @StateObject var viewModel: EditCakeShopBasicInfoViewModel
-  @EnvironmentObject private var router: Router
   
   @State private var isPhotoPickerShown = false
   @State private var isProfileImageOptionActionSheetShown = false
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -33,6 +34,8 @@ public struct EditCakeShopBasicInfoView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeShopBasicInfoViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -40,7 +43,7 @@ public struct EditCakeShopBasicInfoView: View {
   
   public var body: some View {
     VStack(spacing: 0) {
-      NavigationBar {
+      NavigationBar{
         Button {
           if viewModel.basicInfoHasChanges() {
             DialogManager.shared.showDialog(
@@ -48,11 +51,11 @@ public struct EditCakeShopBasicInfoView: View {
               message: "저장되지 않은 내용이 있어요.\n내용을 저장하지 않고 나갈까요??",
               primaryButtonTitle: "네",
               primaryButtonAction: .custom({
-                router.navigateBack()
+                navigator?.back(isAnimated: true)
               }),
               secondaryButtonTitle: "머무르기", secondaryButtonAction: .cancel)
           } else {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }
         } label: {
           Image(systemName: "arrow.left")
@@ -65,56 +68,46 @@ public struct EditCakeShopBasicInfoView: View {
           .font(.pretendard(size: 17, weight: .semiBold))
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
       }
-
-      ScrollView {
-        VStack(spacing: 20) {
-          profileImageView()
-          
-          VStack {
-            SectionHeaderCompact(title: "케이크샵 이름")
-            CKTextField(text: $viewModel.editedBasicInfo.shopName, placeholder: "케이크샵 이름을 입력하세요")
-          }
-          
-          VStack {
-            SectionHeaderCompact(title: "가게 한 줄 소개")
-            CKTextField(text: $viewModel.editedBasicInfo.shopBio, placeholder: "가게 한 줄 소개를 작성해주세요", supportsMultiline: true)
-          }
-          
-          VStack {
-            SectionHeaderCompact(title: "가게 정보")
-            CKTextField(text: $viewModel.editedBasicInfo.shopDescription, placeholder: "가게 정보를 입력해주세요", supportsMultiline: true)
-          }
+      
+      if viewModel.cakeShopDetailFetchingState == .success {
+        editBasicInfoView()
+      } else {
+        VStack {
+          ProgressView()
         }
-        .padding(.horizontal, 24)
-        .padding(.top, 20)
-        .padding(.bottom, 200)
+        .frame(maxHeight: .infinity)
       }
     }
     .toolbar(.hidden, for: .navigationBar)
     .overlay {
-      VStack {
-        Spacer()
-        VStack(spacing: 0) {
-          LinearGradient(colors: [.clear, .white], startPoint: .top, endPoint: .bottom)
-            .frame(height: 20)
-          
-          CKButtonLarge(title: "저장",
-                        fixedSize: .infinity,
-                        action: {
-            DialogManager.shared.showDialog(
-              title: "저장",
-              message: "정말 이 상태로 저장할까요?",
-              primaryButtonTitle: "확인",
-              primaryButtonAction: .custom({
-                viewModel.updateShopBasicInfo()
-              }),
-              secondaryButtonTitle: "취소",
-              secondaryButtonAction: .cancel)
-          }, isLoading: .constant(viewModel.basicInfoUpdatingState == .loading))
-          .padding(.horizontal, 28)
-          .padding(.bottom, 16)
+      if viewModel.cakeShopDetailFetchingState == .success {
+        VStack {
+          Spacer()
+          VStack(spacing: 0) {
+            LinearGradient(colors: [.clear, .white], startPoint: .top, endPoint: .bottom)
+              .frame(height: 20)
+            
+            CKButtonLarge(title: "저장",
+                          fixedSize: .infinity,
+                          action: {
+              DialogManager.shared.showDialog(
+                title: "저장",
+                message: "정말 이 상태로 저장할까요?",
+                primaryButtonTitle: "확인",
+                primaryButtonAction: .custom({
+                  viewModel.updateShopBasicInfo()
+                }),
+                secondaryButtonTitle: "취소",
+                secondaryButtonAction: .cancel)
+            }, isLoading: .constant(viewModel.basicInfoUpdatingState == .loading))
+            .padding(.horizontal, 28)
+            .padding(.bottom, 16)
+          }
         }
       }
+    }
+    .onAppear {
+      viewModel.fetchCakeShopDetail()
     }
     .onChange(of: viewModel.basicInfoUpdatingState) { newState in
       switch newState {
@@ -135,7 +128,7 @@ public struct EditCakeShopBasicInfoView: View {
           message: "가게 정보 업데이트에 성공하였어요",
           primaryButtonTitle: "확인",
           primaryButtonAction: .custom({
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }))
         
       default:
@@ -143,6 +136,48 @@ public struct EditCakeShopBasicInfoView: View {
       }
       
       LoadingManager.shared.stopLoading()
+    }
+    .onReceive(viewModel.$cakeShopDetailFetchingState) { state in
+      switch state {
+      case .failure(let error):
+        if error == .noExists {
+          DialogManager.shared.showDialog(title: "",
+                                          primaryButtonTitle: "확인",
+                                          primaryButtonAction: .custom({
+            navigator?.back(isAnimated: true)
+          }))
+        } else {
+          
+        }
+      default:
+        break
+      }
+    }
+  }
+  
+  private func editBasicInfoView() -> some View {
+    ScrollView {
+      VStack(spacing: 20) {
+        profileImageView()
+        
+        VStack {
+          SectionHeaderCompact(title: "케이크샵 이름")
+          CKTextField(text: $viewModel.editedBasicInfo.shopName, placeholder: "케이크샵 이름을 입력하세요")
+        }
+        
+        VStack {
+          SectionHeaderCompact(title: "가게 한 줄 소개")
+          CKTextField(text: $viewModel.editedBasicInfo.shopBio, placeholder: "가게 한 줄 소개를 작성해주세요", supportsMultiline: true)
+        }
+        
+        VStack {
+          SectionHeaderCompact(title: "가게 정보")
+          CKTextField(text: $viewModel.editedBasicInfo.shopDescription, placeholder: "가게 정보를 입력해주세요", supportsMultiline: true)
+        }
+      }
+      .padding(.horizontal, 24)
+      .padding(.top, 20)
+      .padding(.bottom, 200)
     }
   }
   
@@ -262,14 +297,17 @@ public struct EditCakeShopBasicInfoView: View {
 // MARK: - Preview
 
 import PreviewSupportCakeShopAdmin
+import PreviewSupportCakeShop
 
 #Preview {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditCakeShopBasicInfoViewModel.self) { _ in
-    let useCase = MockEditShopBasicInfoUseCase()
+    let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
+    let editShopBasicInfoUseCase = MockEditShopBasicInfoUseCase()
     return EditCakeShopBasicInfoViewModel(
-      shopDetail: CakeShopDetail.mock(),
-      editShopBasicInfoUseCase: useCase
+      shopId: 1,
+      cakeShopDetailUseCase: cakeShopDetailUseCase,
+      editShopBasicInfoUseCase: editShopBasicInfoUseCase
     )
   }
   return EditCakeShopBasicInfoView()

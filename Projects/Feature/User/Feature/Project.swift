@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     Project.CommonUtil,
     Project.DesignSystem,
-    Project.Router,
 
     Project.DomainCakeShop, // TODO: #1 번 todo 삭제되면 같이 삭제
     
@@ -25,6 +24,7 @@ let project = Project.framework(
     External.KakaoSDKAuth,
     External.KakaoSDKUser,
     External.Kingfisher,
+    External.LinkNavigator,
     .package(product: "GoogleSignIn")
   ],
   packages: [
