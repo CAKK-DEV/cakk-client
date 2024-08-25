@@ -382,7 +382,9 @@ public struct SearchCakeShopOnMapView: View {
           
           Button {
             isNoResultViewShown = false
+            isRefreshButtonShown = true
             viewModel.searchDistanceOption = .threeKilometer
+            UISelectionFeedbackGenerator().selectionChanged()
           } label: {
             Text("검색 범위 늘리기")
               .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
@@ -398,6 +400,7 @@ public struct SearchCakeShopOnMapView: View {
           Button {
             viewModel.searchDistanceOption = distanceOption
             isRefreshButtonShown = true
+            UISelectionFeedbackGenerator().selectionChanged()
           } label: {
             HStack(spacing: 6) {
               if distanceOption.isAdRequired {
