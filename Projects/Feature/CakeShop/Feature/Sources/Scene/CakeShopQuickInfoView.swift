@@ -11,19 +11,16 @@ import DesignSystem
 import CommonUtil
 
 import Kingfisher
+import DIContainer
+import AnalyticsService
+import LinkNavigator
 
 import DomainCakeShop
-
-import Router
-import DIContainer
-
-import AnalyticsService
 
 public struct CakeShopQuickInfoView: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @StateObject var viewModel: CakeShopQuickInfoViewModel
   
   @Environment(\.dismiss) private var dismiss
@@ -36,6 +33,7 @@ public struct CakeShopQuickInfoView: View {
   @State private var isHeartAnimationShown = false
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -46,6 +44,7 @@ public struct CakeShopQuickInfoView: View {
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
 
@@ -125,23 +124,29 @@ public struct CakeShopQuickInfoView: View {
             }
         }
         .modifier(BouncyPressEffect())
-        .onReceive(viewModel.$likeUpdatingState, perform: { state in
+        .onReceive(viewModel.$likeUpdatingState.dropFirst(), perform: { state in
           if case .sessionExpired = state {
             DialogManager.shared.showDialog(.loginRequired(completion: {
-              router.presentSheet(destination: PublicCakeShopSheetDestination.login,
-                                  sheetStyle: .fullScreen)
+              navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
             }))
           }
         })
         .disabled(viewModel.likeUpdatingState == .loading)
         
         CKButtonLargeStroked(title: "방문", fixedSize: 148, action: {
-          router.navigate(to: CakeShopDestination.shopDetail(shopId: viewModel.shopId))
+          navigator?.back(isAnimated: true)
+          /// LinkNavigator에는 completion이 없기 때문에 딜레이를 이용하여 sheet이 없어지는 적절한 타이밍에 오류없이 다음 화면으로 이동 시킵니다.
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
+            let items = RouteHelper.ShopDetail.items(shopId: viewModel.shopId)
+            navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
+          }
+          
           analytics?.logEvent(name: "visit_cakeshop_from_quickinfo", parameters: ["shop_id": viewModel.shopId])
         })
       }
       .padding(.bottom, 24)
     }
+    .toolbar(.hidden, for: .navigationBar)
     .animation(.snappy, value: viewModel.dataFetchingState)
     .overlay {
       VStack(spacing: 0) {

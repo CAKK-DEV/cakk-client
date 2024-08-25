@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     Project.DomainCakeShop,
     Project.CommonUtil,
-    Project.Router,
     Project.DIContainer
   ]
 )

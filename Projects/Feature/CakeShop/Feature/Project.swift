@@ -6,7 +6,6 @@ let project = Project.framework(
   dependencies: [
     Project.CommonUtil,
     Project.DesignSystem,
-    Project.Router,
     Project.DomainCakeShop,
     Project.PreviewSupportCakeShop,
     Project.DomainSearch,
@@ -20,6 +19,7 @@ let project = Project.framework(
     Project.AnalyticsService,
     External.Kingfisher,
     External.ExpandableText,
-    External.FirebaseFirestore
+    External.FirebaseFirestore,
+    External.LinkNavigator
   ]
 )

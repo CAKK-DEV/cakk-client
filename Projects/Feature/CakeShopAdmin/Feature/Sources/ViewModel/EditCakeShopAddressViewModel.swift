@@ -17,11 +17,20 @@ public final class EditCakeShopAddressViewModel: ObservableObject {
   // MARK: - Properties
   
   private let shopId: Int
+  
+  private var originalCakeShopLocation: CakeShopLocation!
+  @Published var cakeShopLocation: CakeShopLocation!
+  
+  private let cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase
+  @Published private(set) var shopAddressFetchingState: ShopAddressFetchingState = .idle
+  enum ShopAddressFetchingState: Equatable {
+    case idle
+    case loading
+    case failure
+    case success
+  }
+  
   private let editShopAddressUseCase: EditShopAddressUseCase
-  
-  private let originalCakeShopLocation: CakeShopLocation
-  @Published var cakeShopLocation: CakeShopLocation
-  
   @Published private(set) var updatingState: UpdatingState = .idle
   enum UpdatingState {
     case idle
@@ -31,24 +40,42 @@ public final class EditCakeShopAddressViewModel: ObservableObject {
     case emptyAddress
   }
   
-  private var cancellabels = Set<AnyCancellable>()
+  private var cancellables = Set<AnyCancellable>()
   
   
   // MARK: - Initializers
   
   public init(
     shopId: Int,
-    cakeShopLocation: CakeShopLocation,
+    cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase,
     editShopAddressUseCase: EditShopAddressUseCase
   ) {
     self.shopId = shopId
-    self.originalCakeShopLocation = cakeShopLocation
-    self.cakeShopLocation = cakeShopLocation
+    self.cakeShopAdditionalInfoUseCase = cakeShopAdditionalInfoUseCase
     self.editShopAddressUseCase = editShopAddressUseCase
   }
   
   
   // MARK: - Public Methods
+  
+  public func fetchShopAddress() {
+    shopAddressFetchingState = .loading
+    
+    cakeShopAdditionalInfoUseCase.execute(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure = completion {
+          self?.shopAddressFetchingState = .failure
+        } else {
+          self?.shopAddressFetchingState = .success
+        }
+      } receiveValue: { [weak self] additionalInfo in
+        self?.originalCakeShopLocation = additionalInfo.location
+        self?.cakeShopLocation = additionalInfo.location
+      }
+      .store(in: &cancellables)
+  }
   
   public func updateShopAddress() {
     if cakeShopLocation.address.isEmpty {
@@ -70,7 +97,7 @@ public final class EditCakeShopAddressViewModel: ObservableObject {
           self?.updatingState = .success
         }
       } receiveValue: { _ in }
-      .store(in: &cancellabels)
+      .store(in: &cancellables)
   }
   
   public func updateCoordinates(latitude: Double, longitude: Double) {

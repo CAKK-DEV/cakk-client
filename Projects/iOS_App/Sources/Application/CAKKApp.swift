@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 
 import FirebaseCore
 
@@ -21,12 +22,22 @@ import UserSession
 
 import AnalyticsService
 
+import LinkNavigator
+
+import FeatureCakeShop
+
 @main
 struct CAKKApp: App {
   
   // MARK: - Properties
   
   @UIApplicationDelegateAdaptor var delegate: AppDelegate
+  @AppStorage("hasSeenOnboarding") var hasSeenOnboarding: Bool = false
+  
+  private var initialPath = [String]()
+  private var navigator: LinkNavigator {
+    delegate.navigator
+  }
   
   
   // MARK: - Initializers
@@ -39,14 +50,21 @@ struct CAKKApp: App {
     loadRocketSimConnect()
     
     UserSession.shared.initialize()
+    
+    if hasSeenOnboarding {
+      initialPath = [RouteHelper.TabRoot.path]
+    } else {
+      initialPath = [RouteHelper.Onboarding.path]
+    }
   }
-  
   
   // MARK: - Internal
   
   var body: some Scene {
     WindowGroup {
-      AppCoordinator()
+      navigator
+        .launch(paths: initialPath, items: [:])
+        .ignoresSafeArea(.all)
         .onOpenURL { url in
           // Kakao 인증 리디렉션 URL 처리
           if AuthApi.isKakaoTalkLoginUrl(url) {
@@ -75,6 +93,10 @@ struct CAKKApp: App {
       FeatureBusinessOwnerAssembly()
     ])
     DIContainer.shared.container = assembler.resolver as! Container
+    
+    DIContainer.shared.container.register(LinkNavigatorType.self) { _ in
+      return delegate.navigator
+    }
   }
   
   private func initKakaoSDK() {

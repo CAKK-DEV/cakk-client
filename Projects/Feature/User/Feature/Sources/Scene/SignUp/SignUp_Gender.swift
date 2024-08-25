@@ -6,16 +6,15 @@
 //
 
 import SwiftUI
-
+import CommonUtil
 import DesignSystem
-import Router
 
 struct SignUp_Gender: View {
 
   // MARK: - Properties
 
   @EnvironmentObject private var stepRouter: StepRouter
-  @EnvironmentObject private var viewModel: SocialLoginViewModel
+  @EnvironmentObject private var viewModel: SocialLoginSignUpViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
 
@@ -104,13 +103,7 @@ struct SignUp_Gender: View {
     }
     .overlay {
       VStack(spacing: 0) {
-        StepNavigationView(title: "\(stepRouter.currentStep + 1) / \(stepRouter.steps.count)", onTapBackButton: {
-          withAnimation {
-            // ⬅️ pop step
-            stepRouter.popStep()
-          }
-        })
-
+        SignUpStepNavigationView()
         Spacer()
       }
     }
@@ -154,11 +147,15 @@ import DomainUser
 
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
-  @StateObject var viewModel: SocialLoginViewModel
+  @StateObject var viewModel: SocialLoginSignUpViewModel
 
   init() {
-    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
-                                         signUpUseCase: MockSocialLoginSignUpUseCase())
+    let viewModel = SocialLoginSignUpViewModel(
+      loginType: .kakao,
+      userData: UserData(nickname: "", email: "", birthday: .now, gender: .unknown),
+      credentialData: .init(loginProvider: .kakao, idToken: ""),
+      signUpUseCase: MockSocialLoginSignUpUseCase()
+    )
     _viewModel = .init(wrappedValue: viewModel)
   }
 

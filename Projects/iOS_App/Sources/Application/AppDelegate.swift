@@ -8,8 +8,14 @@
 
 import UIKit
 import AdManager
+import LinkNavigator
 
 class AppDelegate: NSObject, UIApplicationDelegate {
+  
+  var navigator: LinkNavigator {
+    LinkNavigator(dependency: AppDependency(), builders: AppRouterGroup().routers)
+  }
+  
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
     AdManager.initialize()
     

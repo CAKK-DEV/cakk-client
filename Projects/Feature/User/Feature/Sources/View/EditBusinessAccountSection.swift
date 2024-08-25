@@ -11,17 +11,25 @@ import SwiftUI
 import DesignSystem
 import CommonUtil
 
-import Router
+import LinkNavigator
+import DIContainer
 
 struct EditBusinessAccountSection: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: BusinessOwnerProfileViewModel
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
+  
+  init() {
+    let container = DIContainer.shared.container
+    self.navigator = container.resolve(LinkNavigatorType.self)
+  }
+  
   
   // MARK: - Views
   
@@ -31,37 +39,33 @@ struct EditBusinessAccountSection: View {
         .padding(.horizontal, 24)
       
       listItem(title: "기본 정보 수정") {
-        guard let cakeShopDetail = viewModel.cakeShopDetail else { return }
-        router.navigate(to: PublicUserDestination.editShopBasicInfo(shopDetail: cakeShopDetail))
+        guard let shopId = viewModel.shopId else { return }
+        let items = RouteHelper.EditShopBasicInfo.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopBasicInfo.path], items: items, isAnimated: true)
       }
       
       listItem(title: "가게 영업시간") {
-        guard let cakeShopDetail = viewModel.cakeShopDetail,
-              let cakeShopAdditionalInfo = viewModel.cakeShopAdditionalInfo else {
-          return
-        }
-        router.navigate(to: PublicUserDestination.editWorkingDay(shopId: cakeShopDetail.shopId,
-                                                                 workingDaysWithTime: cakeShopAdditionalInfo.workingDaysWithTime))
+        guard let shopId = viewModel.shopId else { return }
+        let items = RouteHelper.EditShopWorkingDay.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopWorkingDay.path], items: items, isAnimated: true)
       }
       
       listItem(title: "가게 위치") {
-        guard let cakeShopDetail = viewModel.cakeShopDetail,
-              let cakeShopAdditionalInfo = viewModel.cakeShopAdditionalInfo else {
-          return
-        }
-        router.navigate(to: PublicUserDestination.editLocation(shopId: cakeShopDetail.shopId,
-                                                               cakeShopLocation: cakeShopAdditionalInfo.location))
+        guard let shopId = viewModel.shopId else { return }
+        let items = RouteHelper.EditShopAddress.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopAddress.path], items: items, isAnimated: true)
       }
       
       listItem(title: "외부 링크") {
-        guard let cakeShopDetail = viewModel.cakeShopDetail else { return }
-        router.navigate(to: PublicUserDestination.editExternalLink(shopId: cakeShopDetail.shopId,
-                                                                   externalLinks: cakeShopDetail.externalShopLinks))
+        guard let shopId = viewModel.shopId else { return }
+        let items = RouteHelper.EditExternalLink.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditExternalLink.path], items: items, isAnimated: true)
       }
       
       listItem(title: "케이크 사진") {
-        guard let cakeShopDetail = viewModel.cakeShopDetail else { return }
-        router.navigate(to: PublicUserDestination.editCakeImages(shopId: cakeShopDetail.shopId))
+        guard let shopId = viewModel.shopId else { return }
+        let items = RouteHelper.EditShopImage.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopImage.path], items: items, isAnimated: true)
       }
     }
     .padding(.vertical, 12)

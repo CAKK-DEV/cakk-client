@@ -14,14 +14,15 @@ import CommonDomain
 import DomainCakeShop
 
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct EditCakeImageDetailView: View {
   
   // MARK: - Properties
   
   @StateObject private var viewModel: EditCakeImageDetailViewModel
-  @EnvironmentObject private var router: Router
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -30,6 +31,8 @@ public struct EditCakeImageDetailView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeImageDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -45,12 +48,12 @@ public struct EditCakeImageDetailView: View {
               message: "변경 내용이 저장되지 않았어요.\n그래도 나갈까요?",
               primaryButtonTitle: "확인",
               primaryButtonAction: .custom({
-                router.navigateBack()
+                navigator?.back(isAnimated: true)
               }),
               secondaryButtonTitle: "취소",
               secondaryButtonAction: .cancel)
           } else {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }
         } label: {
           Image(systemName: "arrow.left")
@@ -217,7 +220,7 @@ public struct EditCakeImageDetailView: View {
                                         message: "업데이트 성공하였어요!",
                                         primaryButtonTitle: "확인",
                                         primaryButtonAction: .custom({
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         }))
         
       default:
@@ -236,7 +239,7 @@ public struct EditCakeImageDetailView: View {
         return
         
       case .success:
-        router.navigateBack()
+        navigator?.back(isAnimated: true)
         
       default:
         break

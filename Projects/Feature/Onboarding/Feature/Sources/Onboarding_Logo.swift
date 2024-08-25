@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
+import CommonUtil
 import Haptico
 
 import DesignSystem
-import Router
 
 struct OnboardingStep_Logo: View {
 

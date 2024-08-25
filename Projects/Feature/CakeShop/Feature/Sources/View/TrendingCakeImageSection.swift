@@ -13,7 +13,7 @@ import DesignSystem
 import Kingfisher
 
 import DIContainer
-import Router
+import LinkNavigator
 
 struct TrendingCakeImageSection: View {
   
@@ -22,7 +22,7 @@ struct TrendingCakeImageSection: View {
   @StateObject var viewModel: TrendingCakeImagesViewModel
   @State private var columns = 2
   
-  @EnvironmentObject private var router: Router
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -31,6 +31,8 @@ struct TrendingCakeImageSection: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(TrendingCakeImagesViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -52,11 +54,10 @@ struct TrendingCakeImageSection: View {
               }
             }
             .onTapGesture {
-              router.presentSheet(destination: CakeShopSheetDestination.quickInfo(
-                imageId: cakeImage.id,
-                cakeImageUrl: cakeImage.imageUrl,
-                shopId: cakeImage.shopId)
-              )
+              let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                          cakeImageUrl: cakeImage.imageUrl,
+                                                          shopId: cakeImage.shopId)
+              navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
             }
         }
         

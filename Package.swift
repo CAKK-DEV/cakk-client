@@ -20,7 +20,8 @@ let packageSettings = PackageSettings(
     "KakaoSDKCommon": .framework,
     "KakaoSDKAuth": .framework,
     "KakaoSDKUser": .framework,
-    "Alamofire": .framework
+    "Alamofire": .framework,
+    "LinkNavigator": .framework
   ],
   baseSettings: .settings(
     configurations: [
@@ -46,6 +47,7 @@ let package = Package(
     .package(url: "https://github.com/googleads/swift-package-manager-google-mobile-ads.git", from: "11.7.0"),
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.1.0"),
     .package(url: "https://github.com/exyte/PopupView", from: "3.0.5"),
-    .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1")
+    .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1"),
+    .package(url: "https://github.com/forXifLess/LinkNavigator", from: "1.2.6")
   ]
 )

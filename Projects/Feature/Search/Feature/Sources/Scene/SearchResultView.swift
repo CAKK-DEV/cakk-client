@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -14,7 +15,7 @@ import Kingfisher
 import CommonDomain
 import DomainSearch
 
-import Router
+import LinkNavigator
 
 import DIContainer
 import AnalyticsService
@@ -24,7 +25,6 @@ struct SearchResultView: View {
   // MARK: - Properties
   
   @EnvironmentObject private var viewModel: SearchViewModel
-  @EnvironmentObject private var router: Router
   
   private let sectionItems = SearchResultSection.allCases.map { $0.item }
   @Binding var selectedSection: SearchResultSection
@@ -38,6 +38,7 @@ struct SearchResultView: View {
   }
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -47,6 +48,7 @@ struct SearchResultView: View {
     
     let diContainer = DIContainer.shared.container
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   // MARK: - Views
@@ -99,11 +101,10 @@ struct SearchResultView: View {
                   }
                 }
                 .onTapGesture {
-                  router.presentSheet(destination: PublicSearchSheetDestination.quickInfo(
-                    imageId: cakeImage.id,
-                    cakeImageUrl: cakeImage.imageUrl,
-                    shopId: cakeImage.shopId)
-                  )
+                  let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                              cakeImageUrl: cakeImage.imageUrl,
+                                                              shopId: cakeImage.shopId)
+                  navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
                   
                   analytics?.logEvent(name: "search_result_image_tap",
                                       parameters: [
@@ -158,7 +159,8 @@ struct SearchResultView: View {
                 }
               }
               .onTapGesture {
-                router.navigate(to: PublicSearchDestination.shopDetail(shopId: cakeShop.shopId))
+                let items = RouteHelper.ShopDetail.items(shopId: cakeShop.shopId)
+                navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                 analytics?.logEvent(name: "search_result_cakeshop_tap", parameters: ["shopId": cakeShop.shopId])
               }
             }

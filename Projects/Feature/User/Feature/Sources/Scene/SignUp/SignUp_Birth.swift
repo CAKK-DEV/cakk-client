@@ -6,20 +6,23 @@
 //
 
 import SwiftUI
-
+import CommonUtil
 import DesignSystem
-import Router
+
+import DIContainer
+import LinkNavigator
 
 struct SignUp_Birth: View {
 
   // MARK: - Properties
 
   @EnvironmentObject private var stepRouter: StepRouter
-  @EnvironmentObject private var viewModel: SocialLoginViewModel
+  @EnvironmentObject private var viewModel: SocialLoginSignUpViewModel
   @State private var isShowing = false
   @State private var isDisappearing = false
 
   private let birthDateFormatter: DateFormatter
+  private let navigator: LinkNavigatorType?
 
 
   // MARK: - Initializers
@@ -27,6 +30,9 @@ struct SignUp_Birth: View {
   init() {
     birthDateFormatter = DateFormatter()
     birthDateFormatter.dateFormat = "yyyy MM dd"
+    
+    let container = DIContainer.shared.container
+    self.navigator = container.resolve(LinkNavigatorType.self)
   }
 
 
@@ -103,12 +109,7 @@ struct SignUp_Birth: View {
     }
     .overlay {
       VStack(spacing: 0) {
-        StepNavigationView(title: "\(stepRouter.currentStep + 1) / \(stepRouter.steps.count)", onTapBackButton: {
-          withAnimation {
-            // ⬅️ pop step
-            stepRouter.popStep()
-          }
-        })
+        SignUpStepNavigationView()
         .overlay {
           HStack {
             Button {
@@ -144,11 +145,15 @@ import DomainUser
 
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
-  @StateObject var viewModel: SocialLoginViewModel
+  @StateObject var viewModel: SocialLoginSignUpViewModel
 
   init() {
-    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
-                                         signUpUseCase: MockSocialLoginSignUpUseCase())
+    let viewModel = SocialLoginSignUpViewModel(
+      loginType: .kakao,
+      userData: UserData(nickname: "", email: "", birthday: .now, gender: .unknown),
+      credentialData: .init(loginProvider: .kakao, idToken: ""),
+      signUpUseCase: MockSocialLoginSignUpUseCase()
+    )
     _viewModel = .init(wrappedValue: viewModel)
   }
 

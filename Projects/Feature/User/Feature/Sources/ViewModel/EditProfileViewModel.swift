@@ -17,7 +17,15 @@ public final class EditProfileViewModel: ObservableObject {
   
   // MARK: - Properties
   
-  private(set) var originalUserProfile: UserProfile
+  private let userProfileUseCase: UserProfileUseCase
+  private(set) var originalUserProfile: UserProfile!
+  @Published private(set) var userProfileFetchingState: UserProfileFetchingState = .idle
+  enum UserProfileFetchingState: Equatable {
+    case idle
+    case loading
+    case success
+    case failure(error: UserProfileError)
+  }
   
   private let updateUserProfileUseCase: UpdateUserProfileUseCase
   @Published var editedUserProfile: NewUserProfile!
@@ -53,18 +61,12 @@ public final class EditProfileViewModel: ObservableObject {
   // MARK: - Initializers
   
   public init(
-    userProfile: UserProfile,
+    userProfileUseCase: UserProfileUseCase,
     updateUserProfileUseCase: UpdateUserProfileUseCase,
     signOutUseCase: SocialLoginSignOutUseCase,
     withdrawUseCase: WithdrawUseCase
   ) {
-    self.originalUserProfile = userProfile
-    self.editedUserProfile = .init(
-      profileImage: userProfile.profileImageUrl == nil ? .none : .original(imageUrl: userProfile.profileImageUrl!),
-      nickname: userProfile.nickname,
-      email: userProfile.email,
-      gender: userProfile.gender,
-      birthday: userProfile.birthday)
+    self.userProfileUseCase = userProfileUseCase
     self.updateUserProfileUseCase = updateUserProfileUseCase
     self.signOutUseCase = signOutUseCase
     self.withdrawUseCase = withdrawUseCase
@@ -72,6 +74,31 @@ public final class EditProfileViewModel: ObservableObject {
   
   
   // MARK: - Public Methods
+  
+  public func fetchUserProfile() {
+    userProfileFetchingState = .loading
+    
+    userProfileUseCase.execute()
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure(let error) = completion {
+          self?.userProfileFetchingState = .failure(error: error)
+          UserSession.shared.clearSession()
+        } else {
+          self?.userProfileFetchingState = .success
+        }
+      } receiveValue: { [weak self] userProfile in
+        self?.originalUserProfile = userProfile
+        self?.editedUserProfile = .init(
+          profileImage: userProfile.profileImageUrl == nil ? .none : .original(imageUrl: userProfile.profileImageUrl!),
+          nickname: userProfile.nickname,
+          email: userProfile.email,
+          gender: userProfile.gender,
+          birthday: userProfile.birthday)
+      }
+      .store(in: &cancellables)
+  }
   
   public func profileHasChanges() -> Bool {
     if editedUserProfile.profileImage != .none
@@ -115,7 +142,7 @@ public final class EditProfileViewModel: ObservableObject {
       .subscribe(on: DispatchQueue.global())
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
-        if case .failure(let error) = completion {
+        if case .failure = completion {
           self?.signOutState = .failure
         } else {
           UserSession.shared.clearSession()

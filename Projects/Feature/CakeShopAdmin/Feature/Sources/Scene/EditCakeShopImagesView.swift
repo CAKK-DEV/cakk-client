@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -14,14 +15,15 @@ import Kingfisher
 import DomainCakeShop
 
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct EditCakeShopImagesView: View {
   
   // MARK: - Properties
   
   @StateObject var viewModel: EditCakeShopImagesViewModel
-  @EnvironmentObject private var router: Router
+  
+  private let navigator: LinkNavigatorType?
   
 
   // MARK: - Initializers
@@ -30,6 +32,8 @@ public struct EditCakeShopImagesView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditCakeShopImagesViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -39,7 +43,7 @@ public struct EditCakeShopImagesView: View {
     VStack(spacing: 0) {
       NavigationBar(leadingContent: {
         Button {
-          router.navigateBack()
+          navigator?.back(isAnimated: true)
         } label: {
           Image(systemName: "arrow.left")
             .font(.system(size: 20))
@@ -83,7 +87,8 @@ public struct EditCakeShopImagesView: View {
                       }
                     }
                     .onTapGesture {
-                      router.navigate(to: EditCakeShopDestination.editCakeImageDetail(imageId: cakeImage.id))
+                      let items = RouteHelper.EditShopImageDetail.items(cakeImageId: cakeImage.id)
+                      navigator?.next(paths: [RouteHelper.EditShopImageDetail.path], items: items, isAnimated: true)
                     }
                 }
                 
@@ -113,7 +118,8 @@ public struct EditCakeShopImagesView: View {
   
   private func addNewImageButton() -> some View {
     Button {
-      router.navigate(to: EditCakeShopDestination.newCakeImage(shopId: viewModel.shopId))
+      let items = RouteHelper.NewCakeImage.items(shopId: viewModel.shopId)
+      navigator?.next(paths: [RouteHelper.NewCakeImage.path], items: items, isAnimated: true)
     } label: {
       VStack(spacing: 8) {
         Image(systemName: "plus")

@@ -7,10 +7,11 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import DomainSearch
-import Router
+import LinkNavigator
 
 import DIContainer
 
@@ -18,9 +19,10 @@ struct TrendingCakeShopSection: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @Environment(\.horizontalSizeClass) private var horizontalSizeClass
   @StateObject private var viewModel: TrendingCakeShopViewModel
+  
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -29,6 +31,8 @@ struct TrendingCakeShopSection: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(TrendingCakeShopViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -64,7 +68,8 @@ struct TrendingCakeShopSection: View {
                 ForEach(viewModel.trendingCakeShops, id: \.shopId) { trendingCakeShop in
                   TrendingCakeShopView(trendingCakeShop: trendingCakeShop)
                     .onTapGesture {
-                      router.navigate(to: CakeShopDestination.shopDetail(shopId: trendingCakeShop.shopId))
+                      let items = RouteHelper.ShopDetail.items(shopId: trendingCakeShop.shopId)
+                      navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                     }
                 }
               }
@@ -81,8 +86,6 @@ struct TrendingCakeShopSection: View {
       viewModel.fetchTrendingCakeShop()
     }
   }
-  
-  
 }
 
 

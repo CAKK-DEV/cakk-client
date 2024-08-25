@@ -40,21 +40,23 @@ struct CakeShopListView: View {
           ScrollView {
             LazyVStack(spacing: 16) {
               ForEach(viewModel.cakeShops, id: \.shopId) { cakeShop in
-                NavigationLink(destination: CakeShopDetailCoordinator(shopId: cakeShop.shopId)) {
-                  CakeShopThumbnailView(
-                    shopName: cakeShop.name,
-                    shopBio: cakeShop.bio,
-                    workingDays: [],
-                    profileImageUrl: cakeShop.profileImageUrl,
-                    cakeImageUrls: cakeShop.cakeImageUrls
-                  )
-                  .onFirstAppear {
-                    if viewModel.cakeShops.last?.shopId == cakeShop.shopId {
-                      print("load more")
-                      viewModel.fetchMoreCakeShop()
-                    }
-                  }
-                }
+                EmptyView()
+                // TODO: - Implement this
+//                NavigationLink(destination: CakeShopDetailCoordinator(shopId: cakeShop.shopId)) {
+//                  CakeShopThumbnailView(
+//                    shopName: cakeShop.name,
+//                    shopBio: cakeShop.bio,
+//                    workingDays: [],
+//                    profileImageUrl: cakeShop.profileImageUrl,
+//                    cakeImageUrls: cakeShop.cakeImageUrls
+//                  )
+//                  .onFirstAppear {
+//                    if viewModel.cakeShops.last?.shopId == cakeShop.shopId {
+//                      print("load more")
+//                      viewModel.fetchMoreCakeShop()
+//                    }
+//                  }
+//                }
               }
               
               if viewModel.cakeShopFetchingState == .loadMore {

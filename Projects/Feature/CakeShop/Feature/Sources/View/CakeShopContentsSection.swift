@@ -13,7 +13,7 @@ import DesignSystem
 import Kingfisher
 
 import DIContainer
-import Router
+import LinkNavigator
 
 import CommonDomain
 import DomainCakeShop
@@ -26,7 +26,6 @@ struct CakeShopContentsSection: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @EnvironmentObject private var viewModel: CakeShopDetailViewModel
   
   private let sectionItems = DetailSection.allCases.map { $0.item }
@@ -42,11 +41,16 @@ struct CakeShopContentsSection: View {
     }
   }
   
+  private let navigator: LinkNavigatorType?
+  
 
   // MARK: - Initializers
   
   public init(selectedSection: Binding<DetailSection>) {
     _selectedSection = selectedSection
+    
+    let container = DIContainer.shared.container
+    self.navigator = container.resolve(LinkNavigatorType.self)
   }
   
   
@@ -73,7 +77,8 @@ struct CakeShopContentsSection: View {
                              buttonTitle: "사장님 인증하고 메뉴 등록하기!",
                              buttonAction: {
               if let shopId = viewModel.cakeShopDetail?.shopId {
-                router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: shopId))
+                let items = RouteHelper.BusinessCertification.items(shopId: shopId)
+                navigator?.next(paths: [RouteHelper.BusinessCertification.path], items: items, isAnimated: true)
               }
             }, buttonDescription: "사장님 인증이 완료되면 현재 보고있는 케이크샵의\n모든 수정 권한은  사장님께 넘어가요!")
             .frame(height: 400)
@@ -113,8 +118,8 @@ struct CakeShopContentsSection: View {
               }
             }
             .onTapGesture {
-              router.presentSheet(destination: CakeShopDetailFullScreenSheetDestination.imageFullScreen(imageUrl: cakeImage.imageUrl),
-                                  sheetStyle: .fullScreen)
+              let items = RouteHelper.ImageZoomable.items(imageUrl: cakeImage.imageUrl)
+              navigator?.customSheet(paths: [RouteHelper.ImageZoomable.path ], items: items, isAnimated: true, iPhonePresentationStyle: .overCurrentContext, iPadPresentationStyle: .overCurrentContext, prefersLargeTitles: false)
             }
         }
         

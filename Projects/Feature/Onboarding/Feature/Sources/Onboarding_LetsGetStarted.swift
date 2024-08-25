@@ -7,18 +7,24 @@
 
 import SwiftUI
 import CommonUtil
-
 import DesignSystem
-import Router
+import DIContainer
+import LinkNavigator
 
 struct Onboarding_LetsGetStarted: View {
 
   // MARK: - Properties
 
-  @EnvironmentObject private var router: Router
   @EnvironmentObject private var stepRouter: StepRouter
   @State private var isShowing = false
   @State private var isDisappearing = false
+  
+  private let navigator: LinkNavigatorType?
+  
+  public init() {
+    let container = DIContainer.shared.container
+    navigator = container.resolve(LinkNavigatorType.self)
+  }
 
 
   // MARK: - Views
@@ -54,7 +60,7 @@ struct Onboarding_LetsGetStarted: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration - 1.4) {
           withAnimation {
             // ➡️ Finish step
-            router.replace(with: OnboardingPublicDestination.login)
+            navigator?.replace(paths: [RouteHelper.Login.path], items: [:], isAnimated: true)
           }
         }
       })

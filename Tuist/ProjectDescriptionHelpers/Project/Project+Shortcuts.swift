@@ -225,12 +225,4 @@ public extension Project {
     target: "PreviewSupportCakeShopAdmin",
     path: .relativeToRoot("Projects/Feature/CakeShopAdmin/PreviewSupport")
   )
-  
-  
-  // MARK: - Feature / Router
-  
-  static let Router: TargetDependency = .project(
-    target: "Router",
-    path: .relativeToRoot("Projects/Feature/Router")
-  )
 }

@@ -17,11 +17,20 @@ public final class EditWorkingDayViewModel: ObservableObject {
   // MARK: - Properties
   
   private let shopId: Int
+  
+  private var originalWorkingDaysWithTime = [WorkingDayWithTime]()
+  @Published private(set) var workingDaysWithTime = [WorkingDayWithTime]()
+  
+  private let cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase
+  @Published private(set) var workingDaysFetchingState: workingDaysFetchingState = .idle
+  enum workingDaysFetchingState: Equatable {
+    case idle
+    case loading
+    case failure
+    case success
+  }
+
   private let editWorkingDayUseCase: EditWorkingDayUseCase
-  private let originalWorkingDaysWithTime: [WorkingDayWithTime]
-  
-  @Published private(set) var workingDaysWithTime: [WorkingDayWithTime]
-  
   @Published private(set) var updatingState: UpdatingState = .idle
   enum UpdatingState {
     case idle
@@ -39,14 +48,13 @@ public final class EditWorkingDayViewModel: ObservableObject {
   // MARK: - Initializers
   
   public init(
-    shopId: Int, 
-    editWorkingDayUseCase: EditWorkingDayUseCase,
-    workingDaysWithTime: [WorkingDayWithTime]
+    shopId: Int,
+    cakeShopAdditionalInfoUseCase: CakeShopAdditionalInfoUseCase,
+    editWorkingDayUseCase: EditWorkingDayUseCase
   ) {
     self.shopId = shopId
+    self.cakeShopAdditionalInfoUseCase = cakeShopAdditionalInfoUseCase
     self.editWorkingDayUseCase = editWorkingDayUseCase
-    self.originalWorkingDaysWithTime = workingDaysWithTime
-    self.workingDaysWithTime = workingDaysWithTime
     
     shortDateFormatter.dateFormat = "HH:mm:ss"
     regularDateFormatter.dateFormat = "a hh:mm"
@@ -54,6 +62,25 @@ public final class EditWorkingDayViewModel: ObservableObject {
   
   
   // MARK: - Public Methods
+  
+  public func fetchWorkingDay() {
+    self.workingDaysFetchingState = .loading
+    
+    cakeShopAdditionalInfoUseCase.execute(shopId: shopId)
+      .subscribe(on: DispatchQueue.global())
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] completion in
+        if case .failure = completion {
+          self?.workingDaysFetchingState = .failure
+        } else {
+          self?.workingDaysFetchingState = .success
+        }
+      } receiveValue: { [weak self] additionalInfo in
+        self?.originalWorkingDaysWithTime = additionalInfo.workingDaysWithTime
+        self?.workingDaysWithTime = additionalInfo.workingDaysWithTime
+      }
+      .store(in: &cancellables)
+  }
   
   public func updateWorkingDays() {
     updatingState = .loading

@@ -7,18 +7,30 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
-import Router
+import DIContainer
+import LinkNavigator
 
 struct SignUp_Processing: View {
   
   // MARK: - Properties
   
   @EnvironmentObject private var stepRouter: StepRouter
-  @EnvironmentObject private var viewModel: SocialLoginViewModel
+  @EnvironmentObject private var viewModel: SocialLoginSignUpViewModel
   
   @State private var isShowingSuccessStateView = false
+  
+  private let navigator: LinkNavigatorType?
+  
+  
+  // MARK: - Initializers
+  
+  init() {
+    let container = DIContainer.shared.container
+    self.navigator = container.resolve(LinkNavigatorType.self)
+  }
   
   
   // MARK: - Views
@@ -64,12 +76,12 @@ struct SignUp_Processing: View {
           message: "회원가입에 실패하였어요.\n다시 시도해주세요.",
           primaryButtonTitle: "확인",
           primaryButtonAction: .custom({
-            stepRouter.popToRoot()
+            navigator?.backToLast(path: "login", isAnimated: false)
           }))
         
       case .serverError:
         DialogManager.shared.showDialog(.serverError(completion: {
-          stepRouter.popToRoot()
+          navigator?.backToLast(path: "login", isAnimated: false)
         }))
         
       case .success:
@@ -96,18 +108,22 @@ import DomainUser
 
 private struct PreviewContent: View {
   @StateObject var stepRouter = StepRouter(steps: [])
-  @StateObject var viewModel: SocialLoginViewModel
+  @StateObject var viewModel: SocialLoginSignUpViewModel
   
   init() {
-    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase(),
-                                         signUpUseCase: MockSocialLoginSignUpUseCase())
+    let viewModel = SocialLoginSignUpViewModel(
+      loginType: .kakao,
+      userData: UserData(nickname: "", email: "", birthday: .now, gender: .unknown),
+      credentialData: .init(loginProvider: .kakao, idToken: ""),
+      signUpUseCase: MockSocialLoginSignUpUseCase()
+    )
     _viewModel = .init(wrappedValue: viewModel)
   }
 
   var body: some View {
     SignUp_Processing()
       .environmentObject(stepRouter)
-      .environmentObject(viewModel)
+//      .environmentObject(viewModel)
   }
 }
 

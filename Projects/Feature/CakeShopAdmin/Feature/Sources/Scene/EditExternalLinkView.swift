@@ -12,14 +12,15 @@ import DesignSystem
 import DomainCakeShop
 
 import DIContainer
-import Router
+import LinkNavigator
 
 public struct EditExternalLinkView: View {
   
   // MARK: - Properties
   
   @StateObject var viewModel: EditExternalLinkViewModel
-  @EnvironmentObject private var router: Router
+
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -28,6 +29,8 @@ public struct EditExternalLinkView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(EditExternalLinkViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -43,11 +46,11 @@ public struct EditExternalLinkView: View {
               message: "저장되지 않은 내용이 있어요.\n내용을 저장하지 않고 나갈까요??",
               primaryButtonTitle: "네",
               primaryButtonAction: .custom({
-                router.navigateBack()
+                navigator?.back(isAnimated: true)
               }),
               secondaryButtonTitle: "머무르기", secondaryButtonAction: .cancel)
           } else {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }
         } label: {
           Image(systemName: "arrow.left")
@@ -60,50 +63,19 @@ public struct EditExternalLinkView: View {
           .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
       })
       
-      ScrollView {
-        VStack(spacing: 20) {
-          VStack(spacing: 0) {
-            SectionHeaderCompact(title: "인스타그램")
-            CKTextField(text: $viewModel.instaUrl, placeholder: "인스타그램 주소를 입력해주세요")
-              .ignoresSafeArea(.keyboard)
-          }
-          
-          VStack(spacing: 0) {
-            SectionHeaderCompact(title: "카카오 채널")
-            CKTextField(text: $viewModel.kakaoUrl, placeholder: "카카오 채널 주소를 입력해주세요")
-              .ignoresSafeArea(.keyboard)
-          }
-          
-          VStack(spacing: 0) {
-            SectionHeaderCompact(title: "웹사이트")
-            CKTextField(text: $viewModel.webUrl, placeholder: "웹 사이트 주소를 입력해주세요")
-              .ignoresSafeArea(.keyboard)
-          }
-        }
-        .padding(.horizontal, 24)
-        .padding(.top, 12)
-        .padding(.bottom, 200)
-      }
-      .overlay {
+      if viewModel.externalLinkFetchingState == .success {
+        editExternalLinkView()
+      } else {
         VStack {
-          CKButtonLarge(title: "저장", fixedSize: .infinity) {
-            DialogManager.shared.showDialog(
-              title: "저장",
-              message: "정말 이 상태로 저장할까요?",
-              primaryButtonTitle: "확인",
-              primaryButtonAction: .custom({
-                viewModel.updateExternLinks()
-              }),
-              secondaryButtonTitle: "취소",
-              secondaryButtonAction: .cancel)
-          }
+          ProgressView()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
-        .padding(.vertical, 16)
-        .padding(.horizontal, 28)
+        .frame(maxHeight: .infinity)
       }
     }
     .toolbar(.hidden, for: .navigationBar)
+    .onAppear {
+      viewModel.fetchExternalLinks()
+    }
     .onReceive(viewModel.$updatingState) { newState in
       switch newState {
       case .failure:
@@ -138,23 +110,68 @@ public struct EditExternalLinkView: View {
       LoadingManager.shared.stopLoading()
     }
   }
+  
+  private func editExternalLinkView() -> some View {
+    ScrollView {
+      VStack(spacing: 20) {
+        VStack(spacing: 0) {
+          SectionHeaderCompact(title: "인스타그램")
+          CKTextField(text: $viewModel.instaUrl, placeholder: "인스타그램 주소를 입력해주세요")
+            .ignoresSafeArea(.keyboard)
+        }
+        
+        VStack(spacing: 0) {
+          SectionHeaderCompact(title: "카카오 채널")
+          CKTextField(text: $viewModel.kakaoUrl, placeholder: "카카오 채널 주소를 입력해주세요")
+            .ignoresSafeArea(.keyboard)
+        }
+        
+        VStack(spacing: 0) {
+          SectionHeaderCompact(title: "웹사이트")
+          CKTextField(text: $viewModel.webUrl, placeholder: "웹 사이트 주소를 입력해주세요")
+            .ignoresSafeArea(.keyboard)
+        }
+      }
+      .padding(.horizontal, 24)
+      .padding(.top, 12)
+      .padding(.bottom, 200)
+    }
+    .overlay {
+      VStack {
+        CKButtonLarge(title: "저장", fixedSize: .infinity) {
+          DialogManager.shared.showDialog(
+            title: "저장",
+            message: "정말 이 상태로 저장할까요?",
+            primaryButtonTitle: "확인",
+            primaryButtonAction: .custom({
+              viewModel.updateExternLinks()
+            }),
+            secondaryButtonTitle: "취소",
+            secondaryButtonAction: .cancel)
+        }
+      }
+      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+      .padding(.vertical, 16)
+      .padding(.horizontal, 28)
+    }
+  }
 }
 
 
 // MARK: - Preview
 
 import PreviewSupportCakeShopAdmin
+import PreviewSupportCakeShop
 
 #Preview("Success") {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditExternalLinkViewModel.self) { _ in
-    let useCase = MockEditExternalLinkUseCase()
+    let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
+    let editExternalLinkUseCase = MockEditExternalLinkUseCase()
     return EditExternalLinkViewModel(
       shopId: 0,
-      editExternalLinkUseCase: useCase,
-      externalShopLinks: [
-        .init(linkType: .instagram, linkPath: "https://instangra/profile/cakk")
-      ])
+      cakeShopDetailUseCase: cakeShopDetailUseCase,
+      editExternalLinkUseCase: editExternalLinkUseCase)
   }
   return EditExternalLinkView()
 }
@@ -162,13 +179,12 @@ import PreviewSupportCakeShopAdmin
 #Preview("Failure") {
   let diContainer = DIContainer.shared.container
   diContainer.register(EditExternalLinkViewModel.self) { _ in
-    let useCase = MockEditExternalLinkUseCase(scenario: .failure)
+    let cakeShopDetailUseCase = MockCakeShopDetailUseCase()
+    let editExternalLinkUseCase = MockEditExternalLinkUseCase(scenario: .failure)
     return EditExternalLinkViewModel(
       shopId: 0,
-      editExternalLinkUseCase: useCase,
-      externalShopLinks: [
-        .init(linkType: .instagram, linkPath: "https://instangra/profile/cakk")
-      ])
+      cakeShopDetailUseCase: cakeShopDetailUseCase,
+      editExternalLinkUseCase: editExternalLinkUseCase)
   }
   return EditExternalLinkView()
 }

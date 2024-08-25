@@ -14,7 +14,7 @@ import ExpandableText
 import Kingfisher
 
 import DIContainer
-import Router
+import LinkNavigator
 
 import DomainCakeShop
 
@@ -24,7 +24,6 @@ public struct CakeShopDetailView: View {
   
   // MARK: - Properties
   
-  @EnvironmentObject private var router: Router
   @StateObject var viewModel: CakeShopDetailViewModel
   
   @State private var selectedDetailSection = CakeShopContentsSection.DetailSection.images
@@ -33,6 +32,7 @@ public struct CakeShopDetailView: View {
   @State private var isHeartAnimationShown = false
   
   private var analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -43,6 +43,7 @@ public struct CakeShopDetailView: View {
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -55,7 +56,7 @@ public struct CakeShopDetailView: View {
           isDividerShown: false,
           leadingContent: {
           Button {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           } label: {
             Image(systemName: "arrow.left")
               .font(.system(size: 20))
@@ -129,11 +130,11 @@ public struct CakeShopDetailView: View {
             message: "존재하지 않는 케이크샵이에요.",
             primaryButtonTitle: "확인",
             primaryButtonAction: .custom({
-              router.navigateBack()
+              navigator?.back(isAnimated: true)
             }))
         } else {
           DialogManager.shared.showDialog(.unknownError(completion: {
-            router.navigateBack()
+            navigator?.back(isAnimated: true)
           }))
         }
       default:
@@ -193,9 +194,9 @@ public struct CakeShopDetailView: View {
           if viewModel.isOwned {
             if viewModel.isMyShop {
               /// 사장의 경우 외부 링크 즉시 수정 가능하도록 이동
-              if let cakeShopDetail = viewModel.cakeShopDetail {
-                router.navigate(to: PublicCakeShopDestination.editExternalLink(shopId: cakeShopDetail.shopId,
-                                                                               externalLinks: cakeShopDetail.externalShopLinks))
+              if let shopId = viewModel.cakeShopDetail?.shopId {
+                let items = RouteHelper.EditExternalLink.items(shopId: shopId)
+                navigator?.next(paths: [RouteHelper.EditExternalLink.path], items: items, isAnimated: true)
               }
             } else {
               DialogManager.shared.showDialog(
@@ -211,7 +212,8 @@ public struct CakeShopDetailView: View {
               message: "외부링크는 케이크샵 사장님만 등록 가능해요.\n혹시 \"\(cakeShopDetail.shopName)\"(이)가 내 케이크샵이라면 사장님 인증을 완료하고 외부 링크를 등록해보세요!",
               primaryButtonTitle: "사장님 인증",
               primaryButtonAction: .custom({
-                router.navigate(to: PublicCakeShopDestination.businessCertification(targetShopId: cakeShopDetail.shopId))
+                let items = RouteHelper.BusinessCertification.items(shopId: cakeShopDetail.shopId)
+                navigator?.next(paths: [RouteHelper.BusinessCertification.path], items: items, isAnimated: true)
               }), secondaryButtonTitle: "취소",
               secondaryButtonAction: .cancel)
           }
@@ -305,7 +307,9 @@ public struct CakeShopDetailView: View {
             title: "로그인 필요",
             message: "로그인이 필요한 기능이에요.\n로그인하여 더 많은 기능을 누려보세요!",
             primaryButtonTitle: "확인",
-            primaryButtonAction: .cancel)
+            primaryButtonAction: .custom({
+              navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
+            }))
         }
       })
       .disabled(viewModel.likeUpdatingState == .loading)

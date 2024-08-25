@@ -17,17 +17,16 @@ import UserSession
 
 import DomainUser
 
-import Router
+import LinkNavigator
 import DIContainer
 
 import AnalyticsService
 
-struct LikedItemsView: View {
+public struct LikedItemsView: View {
   
   // MARK: - Properties
   
   @StateObject private var viewModel: LikedItemsViewModel
-  @EnvironmentObject private var router: Router
   
   @StateObject private var userSession = UserSession.shared
   
@@ -44,22 +43,24 @@ struct LikedItemsView: View {
   @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapLikedTab)
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
   
-  init() {
+  public init() {
     let container = DIContainer.shared.container
     let viewModel = container.resolve(LikedItemsViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
     
     self.analytics = container.resolve(AnalyticsService.self)
+    self.navigator = container.resolve(LinkNavigatorType.self)
   }
   
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     if userSession.isSignedIn {
       VStack(spacing: 0) {
         navigationBar()
@@ -113,7 +114,7 @@ struct LikedItemsView: View {
     FailureStateView(title: "로그인이 필요한 기능이에요!",
                      buttonTitle: "로그인하고 다양한 기능 누리기", 
                      buttonAction: {
-      router.presentSheet(destination: UserSheetDestination.login, sheetStyle: .fullScreen)
+      navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
     })
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
@@ -161,11 +162,10 @@ struct LikedItemsView: View {
                       }
                     }
                     .onTapGesture {
-                      router.presentSheet(destination: PublicUserSheetDestination.quickInfo(
-                        imageId: cakeImage.imageId,
-                        cakeImageUrl: cakeImage.imageUrl,
-                        shopId: cakeImage.shopId)
-                      )
+                      let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                                  cakeImageUrl: cakeImage.imageUrl,
+                                                                  shopId: cakeImage.shopId)
+                      navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
                     }
                 }
                 .animation(.snappy, value: viewModel.cakeImages)
@@ -246,7 +246,8 @@ struct LikedItemsView: View {
                     }
                   }
                   .onTapGesture {
-                    router.navigate(to: PublicUserDestination.shopDetail(shopId: cakeShop.id))
+                    let items = RouteHelper.ShopDetail.items(shopId: cakeShop.id)
+                    navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                   }
                 }
                 .animation(.snappy, value: viewModel.cakeShops)

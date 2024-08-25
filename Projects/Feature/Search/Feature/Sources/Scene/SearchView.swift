@@ -15,11 +15,11 @@ import LocationService
 import DomainSearch
 
 import DIContainer
-import Router
+import LinkNavigator
 
 import AnalyticsService
 
-struct SearchView: View {
+public struct SearchView: View {
   
   // MARK: - Properties
   
@@ -31,10 +31,10 @@ struct SearchView: View {
   @State private var isSearchResultViewShown = false
   @FocusState private var isFocused
   
-  @EnvironmentObject private var router: Router
   @StateObject var tabDoubleTapObserver = TabDoubleTapObserver(.doubleTapSearchTab)
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
   
   
   // MARK: - Initializers
@@ -48,12 +48,13 @@ struct SearchView: View {
     _searchHistoryViewModel = .init(wrappedValue: searchHistoryViewModel)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
   // MARK: - Views
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 0) {
       searchBar()
       
@@ -271,7 +272,7 @@ struct SearchView: View {
         Spacer()
         
         Button {
-          router.navigate(to: SearchDestination.map)
+          navigator?.next(paths: [RouteHelper.Map.path], items: [:], isAnimated: true)
         } label: {
           Text("지도 보기")
             .font(.pretendard(size: 15, weight: .semiBold))

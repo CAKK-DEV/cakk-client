@@ -13,14 +13,13 @@ import Kingfisher
 
 import DIContainer
 import AnalyticsService
+import LinkNavigator
 
 public struct ImageZoomableView: View {
   
   // MARK: - Properties
   
   private let imageUrl: String
-  
-  @Environment(\.dismiss) private var dismiss
   
   /// 이미지를 멀리 pan 하면 할 수록 배경 및 닫기 버튼의 opacity를 조절하기 위한 프로퍼티 입니다.
   @State private var opacity: Double = 1
@@ -35,6 +34,7 @@ public struct ImageZoomableView: View {
   @State private var dragDistance: CGFloat = 0.0
   
   private let analytics: AnalyticsService?
+  private let navigator: LinkNavigatorType?
 
   
   // MARK: - Initializers
@@ -44,6 +44,7 @@ public struct ImageZoomableView: View {
     
     let diContainer = DIContainer.shared.container
     self.analytics = diContainer.resolve(AnalyticsService.self)
+    self.navigator = diContainer.resolve(LinkNavigatorType.self)
   }
   
   
@@ -59,7 +60,7 @@ public struct ImageZoomableView: View {
           Spacer()
           
           Button {
-            dismiss()
+            navigator?.back(isAnimated: true)
           } label: {
             Circle()
               .fill(.white.opacity(0.15))
@@ -116,12 +117,13 @@ public struct ImageZoomableView: View {
                   opacity = 0
                 }
                 
-                dismiss()
+                navigator?.back(isAnimated: true)
               }
             }
         )
         .padding(24)
     }
+    .toolbar(.hidden, for: .navigationBar)
     .onAppear {
       analytics?.logEngagement(view: self)
     }
