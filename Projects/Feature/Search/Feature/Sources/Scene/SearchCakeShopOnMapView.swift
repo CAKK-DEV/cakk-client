@@ -198,6 +198,12 @@ public struct SearchCakeShopOnMapView: View {
           Circle()
             .fill(DesignSystemAsset.gray10.swiftUIColor)
             .size(72)
+            .overlay {
+              DesignSystemAsset.cakePin.swiftUIImage
+                .resizable()
+                .scaledToFit()
+                .size(32)
+            }
         }
         
         VStack(spacing: 8) {
@@ -230,9 +236,15 @@ public struct SearchCakeShopOnMapView: View {
       HStack(spacing: 6) {
         ForEach(0..<4, id: \.self) { index in
           if let imageUrlString = cakeShop?.cakeImageUrls[safe: index] {
-            RoundedRectangle(cornerRadius: 16)
+            Color.clear
               .overlay {
                 KFImage(URL(string: imageUrlString))
+                  .placeholder {
+                    DesignSystemAsset.cakePin.swiftUIImage
+                      .resizable()
+                      .scaledToFit()
+                      .size(40)
+                  }
                   .resizable()
                   .scaledToFill()
                   .frame(maxWidth: .infinity)
@@ -248,7 +260,7 @@ public struct SearchCakeShopOnMapView: View {
                 DesignSystemAsset.cakePin.swiftUIImage
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 44)
+                  .frame(width: 40)
                   .contentShape(Rectangle())
               }
           }
