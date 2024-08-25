@@ -1,5 +1,5 @@
 //
-//  CategoryDetailViewModel.swift
+//  CakeCategoryImageListViewModel.swift
 //  FeatureCakeShop
 //
 //  Created by 이승기 on 6/2/24.
@@ -16,15 +16,11 @@ import CommonDomain
 import DomainCakeShop
 import DomainSearch
 
-public final class CategoryDetailViewModel: ObservableObject {
+public final class CakeCategoryImageListViewModel: ObservableObject {
   
   // MARK: - Properties
   
-  @Published var category: CakeCategory {
-    didSet {
-      fetchCakeImages()
-    }
-  }
+  var category: CakeCategory
   let useCase: CakeImagesByCategoryUseCase
   
   private var cancellables = Set<AnyCancellable>()
@@ -45,12 +41,11 @@ public final class CategoryDetailViewModel: ObservableObject {
   // MARK: - Initializers
   
   public init(
-    initialCategory: CakeCategory,
+    category: CakeCategory,
     useCase: CakeImagesByCategoryUseCase
   ) {
-    _category = .init(initialValue: initialCategory)
+    self.category = category
     self.useCase = useCase
-    
     fetchCakeImages()
   }
   
@@ -66,7 +61,7 @@ public final class CategoryDetailViewModel: ObservableObject {
     currentFetchMoreCancellable?.cancel()
     
     currentFetchCancellable = useCase.execute(category: category, count: 10, lastCakeId: nil)
-      .subscribe(on: DispatchQueue.global())
+      .subscribe(on: DispatchQueue.global(qos: .userInitiated))
       .receive(on: DispatchQueue.main)
       .sink { [weak self] completion in
         if case let .failure(error) = completion {
@@ -76,7 +71,8 @@ public final class CategoryDetailViewModel: ObservableObject {
           self?.imageFetchingState = .success
         }
       } receiveValue: { [weak self] value in
-        self?.cakeImages = value
+        guard let self else { return }
+        self.cakeImages = value
       }
     currentFetchCancellable?.store(in: &cancellables)
   }
@@ -89,7 +85,7 @@ public final class CategoryDetailViewModel: ObservableObject {
     
     if let lastCakeId = cakeImages.last?.id {
       currentFetchMoreCancellable = useCase.execute(category: category, count: 10, lastCakeId: lastCakeId)
-        .subscribe(on: DispatchQueue.global())
+        .subscribe(on: DispatchQueue.global(qos: .userInitiated))
         .receive(on: DispatchQueue.main)
         .sink { [weak self] completion in
           if case let .failure(error) = completion {
@@ -99,9 +95,36 @@ public final class CategoryDetailViewModel: ObservableObject {
             self?.imageFetchingState = .success
           }
         } receiveValue: { [weak self] value in
-          self?.cakeImages.append(contentsOf: value)
+          guard let self else { return }
+          self.cakeImages.append(contentsOf: value)
         }
       currentFetchMoreCancellable?.store(in: &cancellables)
     }
   }
+}
+
+
+// MARK: - Preview
+
+import DIContainer
+import PreviewSupportSearch
+
+#Preview("Success") {
+  let diContainer = DIContainer.shared.container
+  diContainer.register(CakeCategoryImageListViewModel.self) { resolver in
+    let useCase = MockCakeImagesByCategoryUseCase(scenario: .success)
+    return CakeCategoryImageListViewModel(category: .threeDimensional,
+                                          useCase: useCase)
+  }
+  return CakeCategoryImageListView(category: .character)
+}
+
+#Preview("Failure") {
+  let diContainer = DIContainer.shared.container
+  diContainer.register(CakeCategoryImageListViewModel.self) { resolver in
+    let useCase = MockCakeImagesByCategoryUseCase(scenario: .failure)
+    return CakeCategoryImageListViewModel(category: .threeDimensional,
+                                          useCase: useCase)
+  }
+  return CakeCategoryImageListView(category: .character)
 }

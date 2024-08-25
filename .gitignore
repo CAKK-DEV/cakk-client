@@ -75,3 +75,15 @@ Tuist/Dependencies
 
 ### Tuist build files ###
 /.build
+
+
+### Fastlane ###
+.env.default
+.env
+*.cer
+Gemfile
+Gemfile.lock
+*.ipa
+*.app.dSYM.zip
+*.mobileprovision
+report.xml

@@ -87,12 +87,13 @@ public struct CakeShopCoordinator: View {
       .navigationDestination(for: CakeShopDestination.self) { destination in
         switch destination {
         case .categoryDetail(let initialCategory):
-          let _ = diContainer.register(CategoryDetailViewModel.self) { resolver in
+          let _ = diContainer.register(CakeCategoryImageListViewModel.self) { resolver in
             let useCase = resolver.resolve(CakeImagesByCategoryUseCase.self)!
-            return CategoryDetailViewModel(initialCategory: initialCategory,
-                                           useCase: useCase)
+            return CakeCategoryImageListViewModel(category: initialCategory,
+                                                  useCase: useCase)
           }.inObjectScope(.transient)
-          CakeCategoryDetailView()
+          
+          CakeCategoryView(category: initialCategory)
             .navigationBarBackButtonHidden()
             .environmentObject(router)
           

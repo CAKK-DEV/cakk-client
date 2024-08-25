@@ -14,6 +14,8 @@ import DesignSystem
 import Router
 import DIContainer
 
+import AnalyticsService
+
 struct SearchMyShopView: View {
   
   // MARK: - Properties
@@ -25,6 +27,8 @@ struct SearchMyShopView: View {
   @FocusState private var isFocused
   @State private var isSearchResultShown = false
   
+  private let analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -32,6 +36,8 @@ struct SearchMyShopView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(SearchMyShopViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -49,6 +55,8 @@ struct SearchMyShopView: View {
     }
     .onAppear {
       isFocused = true
+      
+      analytics?.logEngagement(view: self)
     }
     .onChange(of: isFocused) { isFocused in
       if isFocused {
@@ -188,6 +196,8 @@ struct SearchMyShopView: View {
     }
     viewModel.fetchCakeShop()
     isFocused = false
+    
+    analytics?.logEvent(name: "search_my_shop", parameters: ["keyword": viewModel.searchKeyword])
   }
 }
 

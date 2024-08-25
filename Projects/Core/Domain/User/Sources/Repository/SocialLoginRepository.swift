@@ -12,4 +12,5 @@ import Combine
 public protocol SocialLoginRepository {
   func signIn(credential: CredentialData) -> AnyPublisher<SocialLoginResponse, SocialLoginSignInError>
   func signUp(auth: AuthData) -> AnyPublisher<SocialLoginResponse, SocialLoginSignUpError>
+  func signOut(accessToken: String, refreshToken: String) -> AnyPublisher<Void, Error>
 }

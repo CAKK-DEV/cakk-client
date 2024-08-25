@@ -27,7 +27,7 @@ struct CategorySelectionNavigationView: View {
   // MARK: - Views
   
   var body: some View {
-    HStack {
+    return HStack {
       Button {
         router.navigateBack()
       } label: {
@@ -41,36 +41,39 @@ struct CategorySelectionNavigationView: View {
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(spacing: 8) {
             ForEach(CakeCategory.allCases, id: \.self) { category in
-              Button {
-                withAnimation(.spring(duration: 0.3, bounce: 0.145, blendDuration: 1)) {
-                  selection = category
-                  value.scrollTo(category, anchor: .center)
+              let isSelected = selection == category
+              ZStack {
+                if isSelected {
+                  Capsule()
+                    .fill(DesignSystemAsset.black.swiftUIColor)
+                    .frame(height: 38)
+                    .matchedGeometryEffect(id: "selection_capsule", in: namespace)
                 }
+                
+                Text(category.displayName)
+                  .font(.pretendard(size: 15, weight: isSelected ? .bold : .medium))
+                  .foregroundStyle(isSelected ? .white : DesignSystemAsset.black.swiftUIColor)
+                  .padding(.horizontal, 14)
+                  .padding(.vertical, 8)
+                  .clipShape(Capsule())
+              }
+              .onTapGesture {
                 UISelectionFeedbackGenerator().selectionChanged()
-              } label: {
-                let isSelected = selection == category
-                ZStack {
-                  if isSelected {
-                    Capsule()
-                      .fill(DesignSystemAsset.black.swiftUIColor)
-                      .frame(height: 38)
-                      .matchedGeometryEffect(id: "selection_capsule", in: namespace)
-                  }
-                  
-                  Text(category.displayName)
-                    .font(.pretendard(size: 15, weight: isSelected ? .bold : .medium))
-                    .foregroundStyle(isSelected ? .white : DesignSystemAsset.black.swiftUIColor)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
-                    .clipShape(Capsule())
+                withAnimation(.snappy) {
+                  selection = category
                 }
               }
-              .buttonStyle(PlainButtonStyle())
             }
           }
           .padding(.horizontal, 20)
         }
-        .onAppear {
+        .animation(.snappy, value: selection)
+        .onChange(of: selection) { _ in
+          withAnimation {
+            value.scrollTo(selection, anchor: .center)
+          }
+        }
+        .onFirstAppear {
           withoutAnimation {
             value.scrollTo(selection, anchor: .center)
           }

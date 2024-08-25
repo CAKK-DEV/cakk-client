@@ -18,6 +18,8 @@ import Router
 
 import DomainCakeShop
 
+import AnalyticsService
+
 public struct CakeShopDetailView: View {
   
   // MARK: - Properties
@@ -30,6 +32,8 @@ public struct CakeShopDetailView: View {
   @State private var navigationTitleOpacity: CGFloat = 0
   @State private var isHeartAnimationShown = false
   
+  private var analytics: AnalyticsService?
+  
   
   // MARK: - Initializers
   
@@ -37,6 +41,8 @@ public struct CakeShopDetailView: View {
     let diContainer = DIContainer.shared.container
     let viewModel = diContainer.resolve(CakeShopDetailViewModel.self)!
     _viewModel = .init(wrappedValue: viewModel)
+    
+    self.analytics = diContainer.resolve(AnalyticsService.self)
   }
   
   
@@ -91,19 +97,22 @@ public struct CakeShopDetailView: View {
         Spacer()
         
         if let shopDetail = viewModel.cakeShopDetail {
-          ZStack {
-            bottomPromptButton(shopDetail: shopDetail)
-              .offset(y: selectedDetailSection == .order ? 0 : 200)
-              .animation(.smooth, value: selectedDetailSection)
-              .opacity(viewModel.isOwned ? 0 : 1)
-          }
-          .background {
+//          ZStack {
+//            bottomPromptButton(shopDetail: shopDetail)
+//              .offset(y: selectedDetailSection == .order ? 0 : 200)
+//              .animation(.smooth, value: selectedDetailSection)
+//              .opacity(viewModel.isOwned ? 0 : 1)
+//          }
+//          .background {
             bottomGeneralButtons(shopDetail: shopDetail)
               .offset(y: selectedDetailSection != .order ? 0 : 200)
               .animation(.snappy, value: selectedDetailSection)
-          }
+//          }
         }
       }
+    }
+    .onAppear {
+      analytics?.logEngagement(view: self)
     }
     .onFirstAppear {
       viewModel.fetchCakeShopDetail()
@@ -237,6 +246,8 @@ public struct CakeShopDetailView: View {
       Button {
         viewModel.increaseCakeShopPromptCount()
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        
+        analytics?.logEvent(name: "prompt_cakeshop_tap", parameters: ["shop_id": viewModel.cakeShopDetail?.shopId ?? -1])
       } label: {
         VStack(spacing: 5) {
           DesignSystemAsset.thumbsUp.swiftUIImage
@@ -265,6 +276,11 @@ public struct CakeShopDetailView: View {
           isHeartAnimationShown = !viewModel.isLiked
         }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        
+        analytics?.logEvent(name: "like_cakeshop_tap", parameters: [
+          "shop_id": viewModel.cakeShopDetail?.shopId ?? -1,
+          "like_state": viewModel.isLiked
+        ])
       } label: {
         RoundedRectangle(cornerRadius: 20)
           .stroke(DesignSystemAsset.gray30.swiftUIColor, lineWidth: 1)
