@@ -274,9 +274,6 @@ public struct CakeShopDetailView: View {
     HStack {
       Button {
         viewModel.toggleLike()
-        withAnimation {
-          isHeartAnimationShown = !viewModel.isLiked
-        }
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         
         analytics?.logEvent(name: "like_cakeshop_tap", parameters: [
@@ -302,7 +299,8 @@ public struct CakeShopDetailView: View {
       }
       .modifier(BouncyPressEffect())
       .onReceive(viewModel.$likeUpdatingState, perform: { state in
-        if case .sessionExpired = state {
+        switch state {
+        case .sessionExpired:
           DialogManager.shared.showDialog(
             title: "로그인 필요",
             message: "로그인이 필요한 기능이에요.\n로그인하여 더 많은 기능을 누려보세요!",
@@ -310,6 +308,14 @@ public struct CakeShopDetailView: View {
             primaryButtonAction: .custom({
               navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
             }))
+          
+        case .success:
+          withAnimation {
+            isHeartAnimationShown = !viewModel.isLiked
+          }
+          
+        default:
+          break
         }
       })
       .disabled(viewModel.likeUpdatingState == .loading)
