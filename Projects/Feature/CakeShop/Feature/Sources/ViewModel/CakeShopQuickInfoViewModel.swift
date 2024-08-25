@@ -39,6 +39,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
     case idle
     case loading
     case failure
+    case success
     case sessionExpired
   }
   
@@ -113,7 +114,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
             self?.likeUpdatingState = .failure
           }
         } else {
-          self?.likeUpdatingState = .idle
+          self?.likeUpdatingState = .success
           self?.isLiked = true
           
           /// 케이크 이미지 좋아요가 변경되었다면 좋아요 한 케이크이미지 데이터를 리프레시하기 위한 플래그 입니다
@@ -138,7 +139,7 @@ public final class CakeShopQuickInfoViewModel: ObservableObject {
             self?.likeUpdatingState = .failure
           }
         } else {
-          self?.likeUpdatingState = .idle
+          self?.likeUpdatingState = .success
           self?.isLiked = false
           
           /// 케이크 이미지 좋아요가 변경되었다면 좋아요 한 케이크이미지 데이터를 리프레시하기 위한 플래그 입니다

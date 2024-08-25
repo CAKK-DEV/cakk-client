@@ -98,9 +98,6 @@ public struct CakeShopQuickInfoView: View {
       HStack(spacing: 8) {
         Button {
           viewModel.toggleLike()
-          withAnimation {
-            isHeartAnimationShown = !viewModel.isLiked
-          }
           UIImpactFeedbackGenerator(style: .medium).impactOccurred()
           
           analytics?.logEvent(name: "like_cakeimage_tap", parameters: [
@@ -125,10 +122,19 @@ public struct CakeShopQuickInfoView: View {
         }
         .modifier(BouncyPressEffect())
         .onReceive(viewModel.$likeUpdatingState.dropFirst(), perform: { state in
-          if case .sessionExpired = state {
+          switch state {
+          case .sessionExpired:
             DialogManager.shared.showDialog(.loginRequired(completion: {
               navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
             }))
+          
+          case .success:
+            withAnimation {
+              isHeartAnimationShown = !viewModel.isLiked
+            }
+          
+          default:
+            break
           }
         })
         .disabled(viewModel.likeUpdatingState == .loading)

@@ -63,6 +63,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
     case idle
     case loading
     case failure
+    case success
     case sessionExpired
   }
   
@@ -259,7 +260,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
           }
           
         case .finished:
-          self?.likeUpdatingState = .idle
+          self?.likeUpdatingState = .success
           self?.isLiked = true
           
           /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
@@ -286,7 +287,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
           }
           
         case .finished:
-          self?.likeUpdatingState = .idle
+          self?.likeUpdatingState = .success
           self?.isLiked = false
           
           /// 케이크샵 좋아요가 변경되었다면 좋아요한 케이크샵 데이터를 리프레시하기 위한 플래그 입니다
