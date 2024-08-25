@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainUser
 
 public struct SignUpRouteBuilder: RouteBuilder {
-  public var matchPath: String { "sign_up" }
+  public var matchPath: String { RouteHelper.SignUp.path }
   
   public init() { }
   
@@ -48,11 +49,11 @@ public struct SignUpRouteBuilder: RouteBuilder {
         SignUpStepCoordinator(
           containsEmailInput: loginType == .kakao,
           onFinish: {
-          if navigator.rootCurrentPaths.contains("tab_root") {
-            navigator.backToLast(path: "login", isAnimated: false)
+            if navigator.rootCurrentPaths.contains(RouteHelper.TabRoot.path) {
+              navigator.backToLast(path: RouteHelper.Login.path, isAnimated: false)
             navigator.back(isAnimated: true)
           } else {
-            navigator.replace(paths: ["tab_root"], items: [:], isAnimated: true)
+            navigator.replace(paths: [RouteHelper.TabRoot.path], items: [:], isAnimated: true)
           }
         })
       }

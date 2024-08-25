@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 public struct ImageZoomableRouteBuilder: RouteBuilder {
-  public var matchPath: String { "image_zoomable" }
+  public var matchPath: String { RouteHelper.ImageZoomable.path }
   
   public init() { }
   

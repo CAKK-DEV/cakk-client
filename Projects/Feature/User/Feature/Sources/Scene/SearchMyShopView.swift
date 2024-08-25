@@ -153,7 +153,8 @@ struct SearchMyShopView: View {
                 }
               }
               .onTapGesture {
-                navigator?.next(paths: ["business_certification"], items: ["shopId": cakeShop.shopId.description], isAnimated: true)
+                let items = RouteHelper.BusinessCertification.items(shopId: cakeShop.shopId)
+                navigator?.next(paths: [RouteHelper.BusinessCertification.path], items: items, isAnimated: true)
               }
             }
             

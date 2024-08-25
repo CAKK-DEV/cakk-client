@@ -272,7 +272,7 @@ public struct SearchView: View {
         Spacer()
         
         Button {
-          navigator?.next(paths: ["map"], items: [:], isAnimated: true)
+          navigator?.next(paths: [RouteHelper.Map.path], items: [:], isAnimated: true)
         } label: {
           Text("지도 보기")
             .font(.pretendard(size: 15, weight: .semiBold))

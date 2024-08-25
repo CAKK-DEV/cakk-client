@@ -7,12 +7,13 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 import DomainSearch
 
 public struct MapRouteBuilder: RouteBuilder {
-  public var matchPath: String { "map" }
+  public var matchPath: String { RouteHelper.Map.path }
   
   public init() { }
   

@@ -127,7 +127,7 @@ public struct CakeShopQuickInfoView: View {
         .onReceive(viewModel.$likeUpdatingState.dropFirst(), perform: { state in
           if case .sessionExpired = state {
             DialogManager.shared.showDialog(.loginRequired(completion: {
-              navigator?.fullSheet(paths: ["login"], items: [:], isAnimated: true, prefersLargeTitles: false)
+              navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
             }))
           }
         })
@@ -137,7 +137,8 @@ public struct CakeShopQuickInfoView: View {
           navigator?.back(isAnimated: true)
           /// LinkNavigator에는 completion이 없기 때문에 딜레이를 이용하여 sheet이 없어지는 적절한 타이밍에 오류없이 다음 화면으로 이동 시킵니다.
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
-            navigator?.next(paths: ["shop_detail"], items: ["shopId": viewModel.shopId.description], isAnimated: true)
+            let items = RouteHelper.ShopDetail.items(shopId: viewModel.shopId)
+            navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
           }
           
           analytics?.logEvent(name: "visit_cakeshop_from_quickinfo", parameters: ["shop_id": viewModel.shopId])

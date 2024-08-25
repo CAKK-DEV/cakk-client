@@ -125,7 +125,7 @@ public struct ProfileView: View {
                 if profileViewModel.currentRoleState == .user {
                   HStack(spacing: 24) {
                     Button {
-                      navigator?.next(paths: ["search_my_shop"], items: [:], isAnimated: true)
+                      navigator?.next(paths: [RouteHelper.SearchMyShop.path], items: [:], isAnimated: true)
                     } label: {
                       headerItemButton(title: "가게 등록", icon: DesignSystemAsset.shop.swiftUIImage)
                     }
@@ -134,7 +134,7 @@ public struct ProfileView: View {
                     .disabled(profileViewModel.userProfile?.role != .user)
                     
                     Button {
-                      navigator?.next(paths: ["edit_profile"], items: [:], isAnimated: true)
+                      navigator?.next(paths: [RouteHelper.EditProfile.path], items: [:], isAnimated: true)
                     } label: {
                       headerItemButton(title: "정보 수정", icon: DesignSystemAsset.fileEdit.swiftUIImage)
                     }
@@ -201,7 +201,7 @@ public struct ProfileView: View {
           FailureStateView(title: "로그인이 필요한 기능이에요!",
                            buttonTitle: "로그인하고 다양한 기능 누리기",
                            buttonAction: {
-            navigator?.next(paths: ["login"], items: [:], isAnimated: true)
+            navigator?.next(paths: [RouteHelper.Login.path], items: [:], isAnimated: true)
           })
           .frame(maxWidth: .infinity, maxHeight: .infinity)
         }

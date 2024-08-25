@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
@@ -15,7 +16,7 @@ import DomainSearch
 import DomainUser
 
 public struct CakeShopDetailRouteBuilder: RouteBuilder {
-  public var matchPath: String { "shop_detail" }
+  public var matchPath: String { RouteHelper.ShopDetail.path }
   
   public init() { }
   

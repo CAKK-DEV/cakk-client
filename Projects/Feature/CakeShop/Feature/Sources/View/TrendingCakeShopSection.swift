@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import DomainSearch
@@ -67,7 +68,8 @@ struct TrendingCakeShopSection: View {
                 ForEach(viewModel.trendingCakeShops, id: \.shopId) { trendingCakeShop in
                   TrendingCakeShopView(trendingCakeShop: trendingCakeShop)
                     .onTapGesture {
-                      navigator?.next(paths: ["shop_detail"], items: ["shopId": trendingCakeShop.shopId.description], isAnimated: true)
+                      let items = RouteHelper.ShopDetail.items(shopId: trendingCakeShop.shopId)
+                      navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                     }
                 }
               }

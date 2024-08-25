@@ -162,7 +162,8 @@ struct Login_Root: View {
         
       case .newUser:
         guard let loginType = viewModel.loginType else { return }
-        navigator?.next(paths: ["sign_up"], items: ["loginType": loginType.rawValue.description], isAnimated: false)
+        let items = RouteHelper.SignUp.items(loginType: loginType.rawValue)
+        navigator?.next(paths: [RouteHelper.SignUp.path], items: items, isAnimated: false)
         
       case .failure:
         // alert
@@ -211,10 +212,10 @@ struct Login_Root: View {
   // MARK: - Private Methods
   
   private func dismiss() {
-    if navigator?.rootCurrentPaths.first == "tab_root" {
+    if navigator?.rootCurrentPaths.first == RouteHelper.TabRoot.path {
       navigator?.back(isAnimated: true)
     } else {
-      navigator?.replace(paths: ["tab_root"], items: [:], isAnimated: true)
+      navigator?.replace(paths: [RouteHelper.TabRoot.path], items: [:], isAnimated: true)
     }
   }
 }

@@ -114,7 +114,7 @@ public struct LikedItemsView: View {
     FailureStateView(title: "로그인이 필요한 기능이에요!",
                      buttonTitle: "로그인하고 다양한 기능 누리기", 
                      buttonAction: {
-      navigator?.fullSheet(paths: ["login"], items: [:], isAnimated: true, prefersLargeTitles: false)
+      navigator?.fullSheet(paths: [RouteHelper.Login.path], items: [:], isAnimated: true, prefersLargeTitles: false)
     })
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
@@ -162,12 +162,10 @@ public struct LikedItemsView: View {
                       }
                     }
                     .onTapGesture {
-                      let items = [
-                        "imageId": cakeImage.imageId.description,
-                        "cakeImageUrl": cakeImage.imageUrl,
-                        "shopId": cakeImage.shopId.description
-                      ]
-                      navigator?.sheet(paths: ["shop_quick_info"], items: items, isAnimated: true)
+                      let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                                  cakeImageUrl: cakeImage.imageUrl,
+                                                                  shopId: cakeImage.shopId)
+                      navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
                     }
                 }
                 .animation(.snappy, value: viewModel.cakeImages)
@@ -248,7 +246,8 @@ public struct LikedItemsView: View {
                     }
                   }
                   .onTapGesture {
-                    navigator?.next(paths: ["shop_detail"], items: ["shopId": cakeShop.id.description], isAnimated: true)
+                    let items = RouteHelper.ShopDetail.items(shopId: cakeShop.id)
+                    navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                   }
                 }
                 .animation(.snappy, value: viewModel.cakeShops)

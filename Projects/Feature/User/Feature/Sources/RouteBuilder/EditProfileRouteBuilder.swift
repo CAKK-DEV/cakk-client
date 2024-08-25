@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainUser
 
 public struct EditProfileRouteBuilder: RouteBuilder {
-  public var matchPath: String { "edit_profile" }
+  public var matchPath: String { RouteHelper.EditProfile.path }
   
   public init() { }
   

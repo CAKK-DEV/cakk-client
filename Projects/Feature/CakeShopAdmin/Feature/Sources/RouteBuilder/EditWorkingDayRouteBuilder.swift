@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainCakeShop
 
 public struct EditWorkingDayRouteBuilder: RouteBuilder {
-  public var matchPath: String { "edit_shop_working_day" }
+  public var matchPath: String { RouteHelper.EditShopWorkingDay.path }
   
   public init() { }
   

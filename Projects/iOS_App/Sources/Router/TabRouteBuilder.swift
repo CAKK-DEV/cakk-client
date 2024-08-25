@@ -7,11 +7,12 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 struct TabRouteBuilder: RouteBuilder {
-  var matchPath: String { "tab_root" }
+  var matchPath: String { RouteHelper.TabRoot.path }
   
   public var build: (LinkNavigatorType, [String: String], DependencyType) -> MatchingViewController? {
     { navigator, items, dependency in

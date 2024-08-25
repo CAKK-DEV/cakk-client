@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -67,12 +68,10 @@ struct CakeCategoryImageListView: View {
                     }
                   }
                   .onTapGesture {
-                    let items = [
-                      "imageId": cakeImage.id.description,
-                      "cakeImageUrl": cakeImage.imageUrl,
-                      "shopId": cakeImage.shopId.description
-                    ]
-                    navigator?.sheet(paths: ["shop_quick_info"], items: items, isAnimated: true)
+                    let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                                cakeImageUrl: cakeImage.imageUrl, 
+                                                                shopId: cakeImage.shopId)
+                    navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
                   }
               }
 

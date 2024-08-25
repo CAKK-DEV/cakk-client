@@ -77,7 +77,8 @@ struct CakeShopContentsSection: View {
                              buttonTitle: "사장님 인증하고 메뉴 등록하기!",
                              buttonAction: {
               if let shopId = viewModel.cakeShopDetail?.shopId {
-                navigator?.next(paths: ["business_certification"], items: ["shopId": shopId.description], isAnimated: true)
+                let items = RouteHelper.BusinessCertification.items(shopId: shopId)
+                navigator?.next(paths: [RouteHelper.BusinessCertification.path], items: items, isAnimated: true)
               }
             }, buttonDescription: "사장님 인증이 완료되면 현재 보고있는 케이크샵의\n모든 수정 권한은  사장님께 넘어가요!")
             .frame(height: 400)
@@ -117,7 +118,8 @@ struct CakeShopContentsSection: View {
               }
             }
             .onTapGesture {
-              navigator?.customSheet(paths: ["image_zoomable"], items: ["imageUrl": cakeImage.imageUrl], isAnimated: true, iPhonePresentationStyle: .overCurrentContext, iPadPresentationStyle: .overCurrentContext, prefersLargeTitles: false)
+              let items = RouteHelper.ImageZoomable.items(imageUrl: cakeImage.imageUrl)
+              navigator?.customSheet(paths: [RouteHelper.ImageZoomable.path ], items: items, isAnimated: true, iPhonePresentationStyle: .overCurrentContext, iPadPresentationStyle: .overCurrentContext, prefersLargeTitles: false)
             }
         }
         

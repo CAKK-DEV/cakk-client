@@ -7,10 +7,11 @@
 //
 
 import LinkNavigator
+import CommonUtil
 import DIContainer
 
 public struct OnboardingRouteBuilder: RouteBuilder {
-  public var matchPath: String { "onboarding" }
+  public var matchPath: String { RouteHelper.Onboarding.path }
   
   public init() { }
   

@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainCakeShop
 
 public struct EditExternalLinkRouteBuilder: RouteBuilder {
-  public var matchPath: String { "edit_shop_external_link" }
+  public var matchPath: String { RouteHelper.EditExternalLink.path }
   
   public init() { }
   

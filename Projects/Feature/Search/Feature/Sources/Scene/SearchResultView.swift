@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -100,12 +101,11 @@ struct SearchResultView: View {
                   }
                 }
                 .onTapGesture {
-                  let items = [
-                    "imageId": cakeImage.id.description,
-                    "cakeImageUrl": cakeImage.imageUrl,
-                    "shopId": cakeImage.shopId.description
-                  ]
-                  navigator?.sheet(paths: ["shop_quick_info"], items: items, isAnimated: true)
+                  let items = RouteHelper.ShopQuickInfo.items(imageId: cakeImage.id,
+                                                              cakeImageUrl: cakeImage.imageUrl,
+                                                              shopId: cakeImage.shopId)
+                  navigator?.sheet(paths: [RouteHelper.ShopQuickInfo.path], items: items, isAnimated: true)
+                  
                   analytics?.logEvent(name: "search_result_image_tap",
                                       parameters: [
                                         "shopId": cakeImage.shopId,
@@ -159,7 +159,8 @@ struct SearchResultView: View {
                 }
               }
               .onTapGesture {
-                navigator?.next(paths: ["shop_detail"], items: ["shopId": cakeShop.shopId.description], isAnimated: true)
+                let items = RouteHelper.ShopDetail.items(shopId: cakeShop.shopId)
+                navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
                 analytics?.logEvent(name: "search_result_cakeshop_tap", parameters: ["shopId": cakeShop.shopId])
               }
             }

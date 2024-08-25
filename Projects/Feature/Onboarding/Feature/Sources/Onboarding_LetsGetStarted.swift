@@ -60,7 +60,7 @@ struct Onboarding_LetsGetStarted: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + animationDuration - 1.4) {
           withAnimation {
             // ➡️ Finish step
-            navigator?.replace(paths: ["login"], items: [:], isAnimated: true)
+            navigator?.replace(paths: [RouteHelper.Login.path], items: [:], isAnimated: true)
           }
         }
       })

@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainSearch
 
 public struct SearchMyShopRouteBuilder: RouteBuilder {
-  public var matchPath: String { "search_my_shop" }
+  public var matchPath: String { RouteHelper.SearchMyShop.path }
   
   public init() { }
   

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import DomainCakeShop
@@ -56,7 +57,7 @@ struct CakeShopsNearByMeSection: View {
       }
       .padding(.horizontal, 16)
       .onTapGesture {
-        navigator?.next(paths: ["map"], items: [:], isAnimated: true)
+        navigator?.next(paths: [RouteHelper.Map.path], items: [:], isAnimated: true)
       }
       
       Map(coordinateRegion: $viewModel.region, showsUserLocation: true, annotationItems: viewModel.locatedCakeShops) { shop in

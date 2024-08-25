@@ -7,12 +7,12 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
-import SwiftUI
 import DIContainer
 
 public struct HomeRouteBuilder: RouteBuilder {
-  public var matchPath: String { "home" }
+  public var matchPath: String { RouteHelper.Home.path }
   
   public init() { }
   

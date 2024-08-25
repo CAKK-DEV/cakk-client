@@ -40,27 +40,32 @@ struct EditBusinessAccountSection: View {
       
       listItem(title: "기본 정보 수정") {
         guard let shopId = viewModel.shopId else { return }
-        navigator?.next(paths: ["edit_shop_basic_info"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.EditShopBasicInfo.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopBasicInfo.path], items: items, isAnimated: true)
       }
       
       listItem(title: "가게 영업시간") {
         guard let shopId = viewModel.shopId else { return }
-        navigator?.next(paths: ["edit_shop_working_day"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.EditShopWorkingDay.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopWorkingDay.path], items: items, isAnimated: true)
       }
       
       listItem(title: "가게 위치") {
         guard let shopId = viewModel.shopId else { return }
-        navigator?.next(paths: ["edit_shop_address"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.EditShopAddress.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopAddress.path], items: items, isAnimated: true)
       }
       
       listItem(title: "외부 링크") {
         guard let shopId = viewModel.shopId else { return }
-        navigator?.next(paths: ["edit_shop_external_link"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.EditExternalLink.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditExternalLink.path], items: items, isAnimated: true)
       }
       
       listItem(title: "케이크 사진") {
         guard let shopId = viewModel.shopId else { return }
-        navigator?.next(paths: ["edit_shop_image"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.EditShopImage.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.EditShopImage.path], items: items, isAnimated: true)
       }
     }
     .padding(.vertical, 12)

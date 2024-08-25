@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 
 import FirebaseCore
 
@@ -51,9 +52,9 @@ struct CAKKApp: App {
     UserSession.shared.initialize()
     
     if hasSeenOnboarding {
-      initialPath = ["tab_root"]
+      initialPath = [RouteHelper.TabRoot.path]
     } else {
-      initialPath = ["onboarding"]
+      initialPath = [RouteHelper.Onboarding.path]
     }
   }
   

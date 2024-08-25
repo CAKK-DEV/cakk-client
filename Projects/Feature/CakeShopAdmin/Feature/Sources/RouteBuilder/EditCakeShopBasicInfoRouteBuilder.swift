@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainCakeShop
 
 public struct EditCakeShopBasicInfoRouteBuilder: RouteBuilder {
-  public var matchPath: String { "edit_shop_basic_info" }
+  public var matchPath: String { RouteHelper.EditShopBasicInfo.path }
   
   public init() { }
   

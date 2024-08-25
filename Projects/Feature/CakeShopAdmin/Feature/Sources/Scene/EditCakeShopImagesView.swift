@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import Kingfisher
@@ -86,7 +87,8 @@ public struct EditCakeShopImagesView: View {
                       }
                     }
                     .onTapGesture {
-                      navigator?.next(paths: ["edit_shop_image_detail"], items: ["cakeImageId": cakeImage.id.description], isAnimated: true)
+                      let items = RouteHelper.EditShopImageDetail.items(cakeImageId: cakeImage.id)
+                      navigator?.next(paths: [RouteHelper.EditShopImageDetail.path], items: items, isAnimated: true)
                     }
                 }
                 
@@ -116,7 +118,8 @@ public struct EditCakeShopImagesView: View {
   
   private func addNewImageButton() -> some View {
     Button {
-      navigator?.next(paths: ["new_cake_image"], items: ["shopId": viewModel.shopId.description], isAnimated: true)
+      let items = RouteHelper.NewCakeImage.items(shopId: viewModel.shopId)
+      navigator?.next(paths: [RouteHelper.NewCakeImage.path], items: items, isAnimated: true)
     } label: {
       VStack(spacing: 8) {
         Image(systemName: "plus")

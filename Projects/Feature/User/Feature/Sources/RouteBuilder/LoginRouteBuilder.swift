@@ -16,7 +16,7 @@ import DIContainer
 import DomainUser
 
 public struct LoginRouteBuilder: RouteBuilder {
-  public var matchPath: String { "login" }
+  public var matchPath: String { RouteHelper.Login.path }
   
   public init() { }
   

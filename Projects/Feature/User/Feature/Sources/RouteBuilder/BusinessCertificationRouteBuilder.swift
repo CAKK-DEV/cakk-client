@@ -7,13 +7,14 @@
 //
 
 import Foundation
+import CommonUtil
 import LinkNavigator
 import DIContainer
 
 import DomainBusinessOwner
 
 public struct BusinessCertificationRouteBuilder: RouteBuilder {
-  public var matchPath: String { "business_certification" }
+  public var matchPath: String { RouteHelper.BusinessCertification.path }
   
   public init() { }
   

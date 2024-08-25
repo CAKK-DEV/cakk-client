@@ -284,7 +284,8 @@ public struct SearchCakeShopOnMapView: View {
     )
     .onTapGesture {
       if let shopId = cakeShop?.id {
-        navigator?.next(paths: ["shop_detail"], items: ["shopId": shopId.description], isAnimated: true)
+        let items = RouteHelper.ShopDetail.items(shopId: shopId)
+        navigator?.next(paths: [RouteHelper.ShopDetail.path], items: items, isAnimated: true)
       }
     }
   }

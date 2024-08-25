@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CommonUtil
 import DesignSystem
 
 import CommonDomain
@@ -51,7 +52,8 @@ struct CakeCategorySection: View {
   
   private func categoryItem(category: CakeCategory) -> some View {
     Button {
-      navigator?.next(paths: ["category"], items: ["category": category.rawValue], isAnimated: true)
+      let items = RouteHelper.Category.items(category: category.rawValue)
+      navigator?.next(paths: [RouteHelper.Category.path], items: items, isAnimated: true)
       analytics?.logEvent(name: "category_tap_from_home",
                           parameters: ["category": category.displayName])
     } label: {
