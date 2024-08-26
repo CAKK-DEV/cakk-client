@@ -20,9 +20,9 @@ final class FeatureSearchAssembly: Assembly {
   func assemble(container: Container) {
     container.register(MoyaProvider<SearchAPI>.self) { _ in
       #if STUB
-      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>()
       #endif
     }
     

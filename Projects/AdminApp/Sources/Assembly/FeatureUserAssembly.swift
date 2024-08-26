@@ -20,9 +20,9 @@ final class FeatureUserAssembly: Assembly {
   public func assemble(container: Container) {
     container.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>()
       #endif
     }
     

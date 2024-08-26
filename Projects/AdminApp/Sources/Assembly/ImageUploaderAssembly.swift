@@ -17,7 +17,7 @@ import NetworkImage
 final class ImageUploaderAssembly: Assembly {
   func assemble(container: Container) {
     container.register(MoyaProvider<ImageUploadAPI>.self) { _ in
-      MoyaProvider<ImageUploadAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<ImageUploadAPI>()
     }
     
     container.register(ImageUploadRepository.self) { resolver in

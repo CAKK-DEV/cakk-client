@@ -5,7 +5,6 @@ let project = Project.framework(
   name: "NetworkUser",
   dependencies: [
     Project.DomainUser,
-    Project.MoyaUtil,
     Project.UserSession,
     Project.NetworkImage
   ],
