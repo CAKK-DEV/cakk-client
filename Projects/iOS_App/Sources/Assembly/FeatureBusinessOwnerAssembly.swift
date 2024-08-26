@@ -24,9 +24,9 @@ final class FeatureBusinessOwnerAssembly: Assembly {
   public func assemble(container: Container) {
     container.register(MoyaProvider<BusinessOwnerAPI>.self) { _ in
       #if STUB
-      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) })
       #else
-      MoyaProvider<BusinessOwnerAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<BusinessOwnerAPI>()
       #endif
     }
     

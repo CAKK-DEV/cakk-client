@@ -23,9 +23,9 @@ final class FeatureCakeShopAssembly: Assembly {
   func assemble(container: Container) {
     container.register(MoyaProvider<CakeShopAPI>.self) { _ in
       #if STUB
-      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<CakeShopAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<CakeShopAPI>()
       #endif
     }
     

@@ -50,9 +50,9 @@ struct ExampleApp: App {
 
     diContainer.register(MoyaProvider<CakeShopAPI>.self) { _ in
       #if STUB
-      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<CakeShopAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<CakeShopAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<CakeShopAPI>()
       #endif
     }
     
@@ -117,9 +117,9 @@ struct ExampleApp: App {
     
     diContainer.register(MoyaProvider<LikeAPI>.self) { _ in
       #if STUB
-      MoyaProvider<LikeAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<LikeAPI>(stubClosure: { _ in .delayed(seconds: 0.2) })
       #else
-      MoyaProvider<LikeAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<LikeAPI>()
       #endif
     }
     

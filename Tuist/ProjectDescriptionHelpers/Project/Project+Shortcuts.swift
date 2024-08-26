@@ -9,11 +9,6 @@ public extension Project {
     path: .relativeToRoot("Projects/Shared/Util/CommonUtil")
   )
   
-  static let MoyaUtil: TargetDependency = .project(
-    target: "MoyaUtil",
-    path: .relativeToRoot("Projects/Shared/Util/MoyaUtil")
-  )
-  
   static let TokenUtil: TargetDependency = .project(
     target: "TokenUtil",
     path: .relativeToRoot("Projects/Shared/Util/TokenUtil")

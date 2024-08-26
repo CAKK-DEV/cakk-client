@@ -33,8 +33,7 @@ let project = Project.app(
     
     Project.KeyChainOAuthToken,
     Project.UserSession,
-    Project.DIContainer,
-    Project.MoyaUtil
+    Project.DIContainer
   ],
   entitlements: "App.entitlements"
 )

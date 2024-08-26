@@ -80,9 +80,9 @@ struct ExampleApp: App {
   private func setupDIContainer() {
     diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>()
       #endif
     }
     
@@ -135,9 +135,9 @@ struct ExampleApp: App {
     
     diContainer.register(MoyaProvider<BusinessOwnerAPI>.self) { _ in
       #if STUB
-      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<BusinessOwnerAPI>(stubClosure: { _ in .delayed(seconds: 0.2) })
       #else
-      MoyaProvider<BusinessOwnerAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<BusinessOwnerAPI>()
       #endif
     }
     
@@ -153,9 +153,9 @@ struct ExampleApp: App {
     
     diContainer.register(MoyaProvider<SearchAPI>.self) { _ in
       #if STUB
-      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 0.2) })
       #else
-      MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>()
       #endif
     }
     

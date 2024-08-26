@@ -20,9 +20,9 @@ final class FeatureLikeAssembly: Assembly {
   public func assemble(container: Container) {
     container.register(MoyaProvider<LikeAPI>.self) { _ in
       #if STUB
-      MoyaProvider<LikeAPI>(stubClosure: { _ in .delayed(seconds: 0.2) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<LikeAPI>(stubClosure: { _ in .delayed(seconds: 0.2) })
       #else
-      MoyaProvider<LikeAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<LikeAPI>()
       #endif
     }
     

@@ -19,7 +19,6 @@ import NetworkUser
 import Moya
 import MoyaUtil
 
-import Router
 import DIContainer
 
 @main
@@ -56,9 +55,9 @@ struct ExampleApp: App {
     
     diContainer.register(MoyaProvider<UserAPI>.self) { _ in
       #if STUB
-      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<UserAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<UserAPI>()
       #endif
     }
     
@@ -74,9 +73,9 @@ struct ExampleApp: App {
     
     diContainer.register(MoyaProvider<SearchAPI>.self) { _ in
       #if STUB
-      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 1) }, plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>(stubClosure: { _ in .delayed(seconds: 1) })
       #else
-      MoyaProvider<SearchAPI>(plugins: [MoyaLoggingPlugin()])
+      MoyaProvider<SearchAPI>()
       #endif
     }
     
