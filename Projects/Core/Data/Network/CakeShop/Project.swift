@@ -8,7 +8,7 @@ let project = Project.framework(
   ],
   dependencies: [
     Project.DomainCakeShop,
-    Project.DomainOAuthToken
+    Project.DomainOAuthToken,
     Project.UserSession,
     Project.NetworkImage,
     Project.Logger
