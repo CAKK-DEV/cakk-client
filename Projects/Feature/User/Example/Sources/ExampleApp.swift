@@ -8,8 +8,6 @@
 
 import SwiftUI
 
-import Router
-
 import FeatureUser
 
 import DomainUser
@@ -24,7 +22,6 @@ import NetworkSearch
 import NetworkUser
 
 import Moya
-import MoyaUtil
 
 import GoogleSignIn
 import KakaoSDKCommon

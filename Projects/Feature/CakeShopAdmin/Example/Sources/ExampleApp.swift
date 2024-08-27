@@ -17,7 +17,6 @@ import DomainUser
 import NetworkUser
 
 import Moya
-import MoyaUtil
 
 import DIContainer
 
