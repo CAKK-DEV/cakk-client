@@ -23,17 +23,17 @@ let project = Project.app(
     ],
   ],
   dependencies: [
-    Project.FeatureUserAdmin,
-    Project.NetworkBusinessOwner,
-    Project.NetworkUser,
+    // Project.FeatureUserAdmin,
+    // Project.NetworkBusinessOwner,
+    // Project.NetworkUser,
 
-    Project.FeatureCakeShopAdmin,
-    Project.NetworkCakeShop,
-    Project.NetworkSearch,
+    // Project.FeatureCakeShopAdmin,
+    // Project.NetworkCakeShop,
+    // Project.NetworkSearch,
     
-    Project.KeyChainOAuthToken,
-    Project.UserSession,
-    Project.DIContainer
+    // Project.KeyChainOAuthToken,
+    // Project.UserSession,
+    // Project.DIContainer
   ],
   entitlements: "App.entitlements"
 )

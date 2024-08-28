@@ -41,17 +41,12 @@ let project = Project.app(
     Project.FeatureCakeShop,
     Project.NetworkCakeShop,
 
-    Project.DomainBusinessOwner,
     Project.NetworkBusinessOwner,
 
     Project.FeatureCakeShopAdmin,
 
     Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
-    Project.UserSession,
-    Project.DIContainer,
-
-    Project.NetworkImage,
 
     Project.AdManager,
     External.FirebaseAnalytics,

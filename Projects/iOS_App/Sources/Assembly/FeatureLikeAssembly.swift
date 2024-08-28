@@ -10,7 +10,6 @@ import Foundation
 import Swinject
 
 import Moya
-import MoyaUtil
 
 import FeatureUser
 import DomainUser

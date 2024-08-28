@@ -166,34 +166,6 @@ public extension Project {
   )
 
   
-  // MARK: - Feature / Example
-  
-  static let ExampleCakeShop: TargetDependency = .project(
-    target: "ExampleCakeShop",
-    path: .relativeToRoot("Projects/Feature/CakeShop/Example")
-  )
-  
-  static let ExampleUser: TargetDependency = .project(
-    target: "ExampleUser",
-    path: .relativeToRoot("Projects/Feature/User/Example")
-  )
-  
-  static let ExampleOnboarding: TargetDependency = .project(
-    target: "ExampleOnboarding",
-    path: .relativeToRoot("Projects/Feature/Onboarding/Example")
-  )
-
-  static let ExampleSearch: TargetDependency = .project(
-    target: "ExampleSearch",
-    path: .relativeToRoot("Projects/Feature/Search/Example")
-  )
-
-  static let ExampleBusiness: TargetDependency = .project(
-    target: "ExampleBusiness",
-    path: .relativeToRoot("Projects/Feature/Business/Example")
-  )
-
-  
   // MARK: - Feature / Preview Supports
 
   static let PreviewSupportUser: TargetDependency = .project(
