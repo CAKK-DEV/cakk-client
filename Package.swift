@@ -19,6 +19,7 @@ let packageSettings = PackageSettings(
     "PopupView": .framework,
     "KakaoSDKCommon": .framework,
     "KakaoSDKAuth": .framework,
+    "KakaoSDKShare": .framework,
     "KakaoSDKUser": .framework,
     "Alamofire": .framework,
     "LinkNavigator": .framework
@@ -49,5 +50,6 @@ let package = Package(
     .package(url: "https://github.com/exyte/PopupView", from: "3.0.5"),
     .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1"),
     .package(url: "https://github.com/forXifLess/LinkNavigator", from: "1.2.6")
+    .package(url: "https://github.com/forXifLess/LinkNavigator", from: "1.2.6"),
   ]
 )

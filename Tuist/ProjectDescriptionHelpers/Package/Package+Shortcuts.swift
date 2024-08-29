@@ -37,6 +37,10 @@ public enum External {
     return .external(name: "KakaoSDKUser")
   }
 
+  public static var KakaoSDKShare: TargetDependency {
+    return .external(name: "KakaoSDKShare")
+  }
+
   public static var Kingfisher: TargetDependency {
     return .external(name: "Kingfisher")
   }

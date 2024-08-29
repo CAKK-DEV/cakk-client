@@ -30,6 +30,7 @@ public struct CakeShopDetailView: View {
   
   @State private var navigationTitleOpacity: CGFloat = 0
   @State private var isHeartAnimationShown = false
+  @State private var isShareViewShown = false
   
   private var analytics: AnalyticsService?
   private let navigator: LinkNavigatorType?
@@ -69,7 +70,15 @@ public struct CakeShopDetailView: View {
               .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
               .opacity(navigationTitleOpacity)
           }
-        })
+        }) {
+          Button {
+            isShareViewShown = true
+          } label: {
+            Image(systemName: "square.and.arrow.up")
+              .font(.system(size: 20))
+              .foregroundColor(DesignSystemAsset.black.swiftUIColor)
+          }
+        }
         
         if let cakeShopDetail = viewModel.cakeShopDetail {
           ScrollViewOffset { offset in
@@ -141,6 +150,10 @@ public struct CakeShopDetailView: View {
         break
       }
     }
+    .sheet(isPresented: $isShareViewShown, content: {
+      ShareCakeShopView()
+        .environmentObject(viewModel)
+    })
   }
   
   private func headerView(cakeShopDetail: CakeShopDetail) -> some View {

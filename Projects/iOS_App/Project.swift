@@ -22,6 +22,10 @@ let project = Project.app(
       [
         "CFBundleTypeRole": "Editor",
         "CFBundleURLSchemes": ["$(KAKAO_URL_SCHEME)"]
+      ],
+      [
+        "CFBundleTypeRole": "Editor",
+        "CFBundleURLSchemes": ["cakk"]
       ]
     ],
     "NSPhotoLibraryUsageDescription": "프로필 사진 선택을 위해 사진첩 접근 권한이 필요합니다.",

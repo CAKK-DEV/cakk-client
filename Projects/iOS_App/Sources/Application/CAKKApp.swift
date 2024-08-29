@@ -39,6 +39,8 @@ struct CAKKApp: App {
     delegate.navigator
   }
   
+  private let deepLinkHandler = DeepLinkHandler()
+  
   
   // MARK: - Initializers
   
@@ -75,6 +77,11 @@ struct CAKKApp: App {
           // Google 인증 리디렉션 URL 처리
           if GIDSignIn.sharedInstance.handle(url) {
             return
+          }
+          
+          // URLScheme 기반 딥링크 처리
+          if let deepLink = DeepLink(url: url) {
+            deepLinkHandler.handle(deepLink: deepLink)
           }
         }
     }
