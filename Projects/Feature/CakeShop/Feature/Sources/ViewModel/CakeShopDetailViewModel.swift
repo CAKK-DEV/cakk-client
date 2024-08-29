@@ -23,7 +23,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   
   // MARK: - Properties
   
-  private let shopId: Int
+  private(set) var shopId: Int
   
   private let cakeShopDetailUseCase: CakeShopDetailUseCase
   @Published private(set) var cakeShopDetail: CakeShopDetail?

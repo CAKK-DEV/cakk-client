@@ -20,6 +20,7 @@ let project = Project.framework(
     External.Kingfisher,
     External.ExpandableText,
     External.FirebaseFirestore,
-    External.LinkNavigator
+    External.LinkNavigator,
+    External.KakaoSDKShare
   ]
 )
