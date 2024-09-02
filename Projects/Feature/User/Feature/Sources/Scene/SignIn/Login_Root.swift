@@ -19,7 +19,7 @@ struct Login_Root: View {
 
   // MARK: - Properties
 
-  @StateObject private var viewModel: SocialLoginViewModel
+  @StateObject private var viewModel: SocialLoginSignInViewModel
 
   @State private var isShowing = false
   @State private var isShowingAppleSignInExpiredAlert = false
@@ -43,7 +43,7 @@ struct Login_Root: View {
   public init() {
     let diContainer = DIContainer.shared.container
     
-    _viewModel = .init(wrappedValue: diContainer.resolve(SocialLoginViewModel.self)!)
+    _viewModel = .init(wrappedValue: diContainer.resolve(SocialLoginSignInViewModel.self)!)
     
     self.analytics = diContainer.resolve(AnalyticsService.self)
     self.navigator = diContainer.resolve(LinkNavigatorType.self)
@@ -227,10 +227,10 @@ import PreviewSupportUser
 import DomainUser
 
 private struct PreviewContent: View {
-  @StateObject var viewModel: SocialLoginViewModel
+  @StateObject var viewModel: SocialLoginSignInViewModel
 
   init() {
-    let viewModel = SocialLoginViewModel(signInUseCase: MockSocialLoginSignInUseCase())
+    let viewModel = SocialLoginSignInViewModel(signInUseCase: MockSocialLoginSignInUseCase())
     _viewModel = .init(wrappedValue: viewModel)
   }
 

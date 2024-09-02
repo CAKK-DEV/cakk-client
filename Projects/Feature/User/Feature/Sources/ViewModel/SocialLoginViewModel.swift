@@ -1,5 +1,5 @@
 //
-//  SocialLoginViewModel.swift
+//  SocialLoginSignInViewModel.swift
 //  CAKK
 //
 //  Created by 이승기 on 5/13/24.
@@ -21,7 +21,7 @@ import Logger
 import DIContainer
 import AnalyticsService
 
-public final class SocialLoginViewModel: NSObject, ObservableObject {
+public final class SocialLoginSignInViewModel: NSObject, ObservableObject {
   
   // MARK: - Properties
   
@@ -80,7 +80,7 @@ public final class SocialLoginViewModel: NSObject, ObservableObject {
 
 // MARK: - Google SignIn
 
-extension SocialLoginViewModel {
+extension SocialLoginSignInViewModel {
   public func signInWithGoogle() {
     Loggers.featureUser.info("구글 로그인에 시도합니다.", category: .network)
     guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else { return }
@@ -150,7 +150,7 @@ extension SocialLoginViewModel {
 
 // MARK: - KaKao SignIn
 
-extension SocialLoginViewModel {
+extension SocialLoginSignInViewModel {
   public func signInWithKakao() {
     Loggers.featureUser.info("카카오 로그인에 시도합니다.", category: .network)
     signInState = .loading
@@ -281,7 +281,7 @@ extension SocialLoginViewModel {
 
 // MARK: - Apple SignIn
 
-extension SocialLoginViewModel: ASAuthorizationControllerDelegate {
+extension SocialLoginSignInViewModel: ASAuthorizationControllerDelegate {
   public func signInWithApple() {
     Loggers.featureUser.info("애플 로그인에 시도합니다.", category: .network)
     signInState = .loading

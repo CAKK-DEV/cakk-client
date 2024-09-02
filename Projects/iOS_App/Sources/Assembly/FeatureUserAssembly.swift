@@ -48,9 +48,9 @@ final class FeatureUserAssembly: Assembly {
       return SocialLoginSignOutUseCaseImpl(socialLoginRepository: repository)
     }
     
-    container.register(SocialLoginViewModel.self) { resolver in
+    container.register(SocialLoginSignInViewModel.self) { resolver in
       let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
-      return SocialLoginViewModel(signInUseCase: signInUseCase)
+      return SocialLoginSignInViewModel(signInUseCase: signInUseCase)
     }.inObjectScope(.transient)
     
     container.register(UserProfileRepository.self) { resolver in
