@@ -23,7 +23,6 @@ public struct CakeShopQuickInfoView: View {
   
   @StateObject var viewModel: CakeShopQuickInfoViewModel
   
-  @Environment(\.dismiss) private var dismiss
   @State private var currentDetent: PresentationDetent = .fraction(0.7)
   
   @State private var imageOffset: CGPoint = .zero
@@ -160,7 +159,7 @@ public struct CakeShopQuickInfoView: View {
           Spacer()
           
           Button {
-            dismiss()
+            navigator?.back(isAnimated: true)
           } label: {
             Circle()
               .fill(DesignSystemAsset.gray10.swiftUIColor)
