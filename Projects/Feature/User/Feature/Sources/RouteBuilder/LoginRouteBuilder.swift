@@ -23,7 +23,7 @@ public struct LoginRouteBuilder: RouteBuilder {
   public var build: (LinkNavigatorType, [String: String], DependencyType) -> MatchingViewController? {
     { navigator, items, dependency in
       let container = DIContainer.shared.container
-      container.register(SocialLoginViewModel.self) { resolver in
+      container.register(SocialLoginSignInViewModel.self) { resolver in
         let signInUseCase = resolver.resolve(SocialLoginSignInUseCase.self)!
         return .init(signInUseCase: signInUseCase)
       }
