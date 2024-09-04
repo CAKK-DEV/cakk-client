@@ -57,10 +57,8 @@ struct CakeCategoryImageListView: View {
           ScrollView {
             VStack(spacing: 100) {
               FlexibleGridView(data: viewModel.cakeImages) { cakeImage in
-                KFImage(URL(string: cakeImage.imageUrl))
-                  .resizable()
-                  .aspectRatio(contentMode: .fit)
-                  .background(DesignSystemAsset.gray20.swiftUIColor)
+                CakeImageGridItem(imageUrlString: cakeImage.imageUrl)
+                  .background(DesignSystemAsset.gray10.swiftUIColor)
                   .clipShape(RoundedRectangle(cornerRadius: 14))
                   .onAppear {
                     if cakeImage.id == viewModel.cakeImages.last?.id {
