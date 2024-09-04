@@ -142,7 +142,7 @@ public final class UserProfileRepositoryImpl: UserProfileRepository {
         case 200..<300:
           let decodedResponse = try JSONDecoder().decode(MyShopResponseDTO.self, from: response.data)
           
-          Loggers.networkUser.info("나의 케이크샵 아이디를 불러오는데 성공하였습니다.\n\(decodedResponse.data == nil ? "소유하고있는 케이크샵이 없습니다." : "내 케이크샵 아이디: \(decodedResponse.data!.cakeShopId)")", category: .network)
+          Loggers.networkUser.info("나의 케이크샵 아이디를 불러오는데 성공하였습니다.\n\(decodedResponse.data == nil ? "소유하고있는 케이크샵이 없습니다." : "내 케이크샵 아이디: \(decodedResponse.data!.cakeShopId ?? -1)")", category: .network)
           return decodedResponse.data?.cakeShopId
           
         default:

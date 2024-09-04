@@ -197,8 +197,7 @@ public final class CakeShopDetailViewModel: ObservableObject {
   }
   
   public func makeNaverMapUrl() -> URL? {
-    guard let placeName = cakeShopDetail?.shopName,
-          let appName = Bundle.main.bundleIdentifier else {
+    guard let placeName = cakeShopDetail?.shopName else {
       return nil
     }
     
