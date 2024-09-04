@@ -71,9 +71,7 @@ struct CategorySelectionNavigationView: View {
               }
               .onTapGesture {
                 UISelectionFeedbackGenerator().selectionChanged()
-                withAnimation(.snappy) {
-                  selection = category
-                }
+                selection = category
               }
             }
           }
