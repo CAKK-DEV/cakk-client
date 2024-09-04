@@ -12,3 +12,10 @@ clean:
 generate:
 	tuist install
 	tuist generate
+
+graph:
+	tuist graph --skip-external-dependencies
+
+package:
+  tuist clean
+	tuist install
