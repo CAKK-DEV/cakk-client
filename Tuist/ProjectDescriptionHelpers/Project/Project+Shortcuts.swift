@@ -34,14 +34,11 @@ public extension Project {
     path: .relativeToRoot("Projects/Shared/AnalyticsService")
   )
   
-
-  // MARK: - DesignSystem
-  
   static let DesignSystem: TargetDependency = .project(
     target: "DesignSystem",
-    path: .relativeToRoot("Projects/DesignSystem")
+    path: .relativeToRoot("Projects/Shared/DesignSystem")
   )
-
+  
 
   // MARK: - Core
 
