@@ -4,8 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureOnboarding",
   dependencies: [
-    Project.CommonUtil,
-    Project.DesignSystem,
+    Project.Shared,
     External.Haptico,
     External.LinkNavigator
   ]

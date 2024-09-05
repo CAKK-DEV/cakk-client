@@ -1,4 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.framework(name: "Logger")
+let project = Project.framework(
+  name: "Logger"
+)

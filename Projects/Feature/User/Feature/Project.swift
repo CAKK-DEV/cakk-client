@@ -4,8 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureUser",
   dependencies: [
-    Project.CommonUtil,
-    Project.DesignSystem,
+    Project.Shared,
 
     Project.DomainCakeShop, // TODO: #1 번 todo 삭제되면 같이 삭제
     
@@ -16,9 +15,6 @@ let project = Project.framework(
     Project.PreviewSupportSearch,
     
     Project.UserSession,
-    Project.DIContainer,
-    Project.Logger,
-    Project.AnalyticsService,
 
     External.KakaoSDKCommon,
     External.KakaoSDKAuth,

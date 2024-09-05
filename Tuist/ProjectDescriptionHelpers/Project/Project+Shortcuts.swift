@@ -3,6 +3,11 @@ import ProjectDescription
 public extension Project {
   
   // MARK: - Shared
+  
+  static let Shared: TargetDependency = .project(
+    target: "Shared",
+    path: .relativeToRoot("Projects/Shared")
+  )
 
   static let CommonUtil: TargetDependency = .project(
     target: "CommonUtil",
@@ -42,10 +47,10 @@ public extension Project {
 
   // MARK: - Core
 
-   static let DIContainer: TargetDependency = .project(
-    target: "DIContainer",
-    path: .relativeToRoot("Projects/Shared/DIContainer")
-  )
+  static let DIContainer: TargetDependency = .project(
+   target: "DIContainer",
+   path: .relativeToRoot("Projects/Shared/DIContainer")
+ )
   
   
   // MARK: - Core / Domain

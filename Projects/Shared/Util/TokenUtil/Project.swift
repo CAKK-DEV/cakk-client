@@ -1,4 +1,6 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = Project.framework(name: "TokenUtil")
+let project = Project.framework(
+  name: "TokenUtil"
+)

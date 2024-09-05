@@ -4,8 +4,8 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "NetworkSearch",
   dependencies: [
-    Project.DomainSearch,
-    Project.Logger
+    Project.Shared,
+    Project.DomainSearch
   ],
   supportsResources: true
 )

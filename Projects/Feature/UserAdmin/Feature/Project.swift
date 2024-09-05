@@ -4,9 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "FeatureUserAdmin",
   dependencies: [
-    Project.CommonUtil,
-    Project.DesignSystem,
-    Project.LocationService,
+    Project.Shared,
     
     Project.DomainUser,
     Project.DomainBusinessOwner,

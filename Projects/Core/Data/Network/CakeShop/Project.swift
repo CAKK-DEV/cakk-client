@@ -7,11 +7,11 @@ let project = Project.framework(
     "BASE_URL": "$(BASE_URL)"
   ],
   dependencies: [
+    Project.Shared,
     Project.DomainCakeShop,
     Project.DomainOAuthToken,
     Project.UserSession,
     Project.NetworkImage,
-    Project.Logger
   ],
   supportsResources: true
 )

@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "OAuthToken",
   dependencies: [
-    Project.TokenUtil,
+    Project.Shared,
     Project.DomainOAuthToken
   ]
 )

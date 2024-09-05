@@ -35,24 +35,23 @@ let project = Project.app(
     "GADApplicationIdentifier": "$(GAD_APPLICATION_ID)"
   ],
   dependencies: [
-    Project.FeatureUser,
+   Project.FeatureUser,
     Project.NetworkUser,
 
-    Project.FeatureSearch,
+   Project.FeatureSearch,
     Project.NetworkSearch,
     Project.UserDefaultsSearchHistory,
 
-    Project.FeatureCakeShop,
+   Project.FeatureCakeShop,
     Project.NetworkCakeShop,
 
     Project.NetworkBusinessOwner,
 
-    Project.FeatureCakeShopAdmin,
+   Project.FeatureCakeShopAdmin,
 
-    Project.FeatureOnboarding,
+   Project.FeatureOnboarding,
     Project.KeyChainOAuthToken,
 
-    Project.AdManager,
     External.FirebaseAnalytics,
     External.LinkNavigator
   ],

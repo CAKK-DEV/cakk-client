@@ -4,8 +4,7 @@ import ProjectDescriptionHelpers
 let project = Project.framework(
   name: "PreviewSupportCakeShopAdmin",
   dependencies: [
+    Project.Shared,
     Project.DomainCakeShop,
-    Project.CommonUtil,
-    Project.DIContainer
   ]
 )

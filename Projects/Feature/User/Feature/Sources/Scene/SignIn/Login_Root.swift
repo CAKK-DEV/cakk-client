@@ -163,7 +163,7 @@ struct Login_Root: View {
       case .newUser:
         guard let loginType = viewModel.loginType else { return }
         let items = RouteHelper.SignUp.items(loginType: loginType.rawValue)
-        navigator?.next(paths: [RouteHelper.SignUp.path], items: items, isAnimated: false)
+        navigator?.replace(paths: [RouteHelper.SignUp.path], items: items, isAnimated: true)
         
       case .failure:
         // alert

@@ -7,5 +7,3 @@ let project = Project.framework(
     External.Kingfisher
   ]
 )
-
-
