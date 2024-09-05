@@ -17,5 +17,5 @@ graph:
 	tuist graph --skip-external-dependencies
 
 package:
-  tuist clean
+	tuist clean
 	tuist install
