@@ -51,38 +51,37 @@ public final class BusinessCertificationViewModel: ObservableObject {
   // MARK: - Public Methods
   
   public func uploadCertifications() {
-    verificationState = .success
-//    guard let selectedBusinessCertImage, let selectedIdCardImage else {
-//      verificationState = .imageRequired
-//      return
-//    }
-//    
-//    if contact.isEmpty {
-//      verificationState = .contactRequired
-//      return
-//    }
-//    
-//    verificationState = .loading
-//    
-//    cakeShopOwnerVerificationUseCase.execute(shopId: shopId,
-//                                       businessRegistrationImage: selectedBusinessCertImage,
-//                                       idCardImage: selectedIdCardImage,
-//                                       contact: contact,
-//                                       message: additionalMessage)
-//    .subscribe(on: DispatchQueue.global())
-//    .receive(on: DispatchQueue.main)
-//    .sink { [weak self] completion in
-//      if case .failure(let error) = completion {
-//        if error == .serverError {
-//          self?.verificationState = .serverError
-//        } else {
-//          self?.verificationState = .failure
-//        }
-//        print(error.localizedDescription)
-//      } else {
-//        self?.verificationState = .success
-//      }
-//    } receiveValue: { _ in }
-//    .store(in: &cancellables)
+    guard let selectedBusinessCertImage, let selectedIdCardImage else {
+      verificationState = .imageRequired
+      return
+    }
+    
+    if contact.isEmpty {
+      verificationState = .contactRequired
+      return
+    }
+    
+    verificationState = .loading
+    
+    cakeShopOwnerVerificationUseCase.execute(shopId: shopId,
+                                       businessRegistrationImage: selectedBusinessCertImage,
+                                       idCardImage: selectedIdCardImage,
+                                       contact: contact,
+                                       message: additionalMessage)
+    .subscribe(on: DispatchQueue.global())
+    .receive(on: DispatchQueue.main)
+    .sink { [weak self] completion in
+      if case .failure(let error) = completion {
+        if error == .serverError {
+          self?.verificationState = .serverError
+        } else {
+          self?.verificationState = .failure
+        }
+        print(error.localizedDescription)
+      } else {
+        self?.verificationState = .success
+      }
+    } receiveValue: { _ in }
+    .store(in: &cancellables)
   }
 }
