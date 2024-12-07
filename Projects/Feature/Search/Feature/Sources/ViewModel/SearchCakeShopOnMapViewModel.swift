@@ -32,7 +32,7 @@ public final class SearchCakeShopOnMapViewModel: ObservableObject {
                                                                             longitude: LocationService.shared.userLocation?.longitude ?? LocationService.defaultCoordinates.longitude),
                                              span: MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5))
   
-  @Published var searchDistanceOption: SearchDistanceOption = .fiveHundredMeter
+  @Published var searchDistanceOption = SearchDistanceOption.allCases.first!
 
   private var cancellables = Set<AnyCancellable>()
   
