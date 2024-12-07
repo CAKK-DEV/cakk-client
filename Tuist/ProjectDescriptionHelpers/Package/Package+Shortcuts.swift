@@ -68,4 +68,8 @@ public enum External {
   public static var LinkNavigator: TargetDependency {
     return .external(name: "LinkNavigator")
   }
+
+  public static var SwiftUIPager: TargetDependency {
+    return .external(name: "SwiftUIPager")
+  }
 }

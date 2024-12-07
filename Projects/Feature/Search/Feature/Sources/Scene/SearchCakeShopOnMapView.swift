@@ -16,6 +16,7 @@ import Kingfisher
 import DomainSearch
 
 import MapKit
+import SwiftUIPager
 
 import DIContainer
 import LinkNavigator
@@ -48,6 +49,8 @@ public struct SearchCakeShopOnMapView: View {
   private let navigator: LinkNavigatorType?
   
   @Namespace private var namespace
+  
+  @StateObject private var page: Page = .first()
   
   
   // MARK: - Initializers
@@ -101,11 +104,21 @@ public struct SearchCakeShopOnMapView: View {
           }
           .onTapGesture {
             viewModel.setSelected(cakeShop: shop)
+            
+            if let index = viewModel.locatedCakeShops.firstIndex(of: shop) {
+              page.update(.new(index: index))
+            }
           }
         }
       }
       .animation(.smooth)
       .ignoresSafeArea()
+      .simultaneousGesture(
+        DragGesture()
+          .onChanged { _ in
+            isRefreshButtonShown = true
+          }
+      )
       
       // Navigation bar
       VStack(spacing: 0) {
@@ -114,30 +127,38 @@ public struct SearchCakeShopOnMapView: View {
       }
       .padding(.top, 8)
       
-      // CakeShop View
+      // Bottom CakeShop Pager
       VStack(spacing: 16) {
         Spacer()
-        cakeShopView(viewModel.selectedCakeShop)
-          .padding(.horizontal, 14)
-          .frame(maxWidth: 420)
-          .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
-          .opacity(viewModel.selectedCakeShop == nil ? 0 : 1)
-          .scaleEffect(cakeShopViewScale)
-          .offset(x: cakeShopViewDragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : cakeShopViewDragOffset.height)
-          .animation(.snappy, value: viewModel.selectedCakeShop == nil)
-          .animation(.snappy, value: viewModel.selectedCakeShop)
-          .offset(motionData.movingOffset)
-          .onChange(of: viewModel.selectedCakeShop == nil) { newValue in
-            if newValue {
-              motionData.stopMotionUpdates()
-            } else {
-              motionData.fetchMotionData(duration: 15)
+        
+        if viewModel.locatedCakeShops.isEmpty == false {
+          Pager(
+            page: page,
+            data: viewModel.locatedCakeShops,
+            id: \.self) { cakeShop in
+              cakeShopView(cakeShop)
             }
-          }
+            .onPageChanged { newIndex in
+              let selectedCakeShop = viewModel.locatedCakeShops[newIndex]
+              
+              viewModel.setSelected(cakeShop: selectedCakeShop)
+              viewModel.region = .init(center: .init(latitude: selectedCakeShop.latitude, longitude: selectedCakeShop.longitude),
+                                       span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            }
+            .preferredItemSize(CGSize(width: 319, height: 176))
+            .itemSpacing(16)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
+            .alignment(.start(20))
+            .multiplePagination()
+            .sensitivity(.high)
+            .bounces(true)
+            .frame(height: 176)
+            .animation(.snappy, value: page.index)
+            .padding(.vertical, 16)
+            .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 4)
+        }
       }
-    }
-    .onReceive(viewModel.$region.throttle(for: .milliseconds(500), scheduler: RunLoop.main, latest: false)) { _ in
-      isRefreshButtonShown = true
     }
     .onFirstAppear {
       viewModel.fetchLocatedCakeShops()
@@ -180,7 +201,7 @@ public struct SearchCakeShopOnMapView: View {
           KFImage(URL(string: profileImageUrl))
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .size(72)
+            .size(60)
             .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(Circle())
             .overlay {
@@ -190,7 +211,7 @@ public struct SearchCakeShopOnMapView: View {
         } else {
           Circle()
             .fill(DesignSystemAsset.gray10.swiftUIColor)
-            .size(72)
+            .size(60)
             .overlay {
               DesignSystemAsset.cakePin.swiftUIImage
                 .resizable()
@@ -199,9 +220,9 @@ public struct SearchCakeShopOnMapView: View {
             }
         }
         
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
           Text(cakeShop?.name ?? "")
-            .font(.pretendard(size: 17, weight: .bold))
+            .font(.pretendard(size: 15, weight: .bold))
             .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
             .frame(maxWidth: .infinity, alignment: .leading)
             .lineLimit(1)
@@ -213,17 +234,7 @@ public struct SearchCakeShopOnMapView: View {
             .multilineTextAlignment(.leading)
             .lineLimit(2)
         }
-        .padding(.vertical, 8)
         .padding(.leading, 12)
-        
-        Button {
-          viewModel.selectedCakeShop = nil
-        } label: {
-          Image(systemName: "xmark")
-            .font(.system(size: 15))
-            .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
-            .size(24)
-        }
       }
       
       HStack(spacing: 6) {
@@ -244,16 +255,16 @@ public struct SearchCakeShopOnMapView: View {
                   .background(DesignSystemAsset.gray10.swiftUIColor)
               }
               .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 16))
+              .clipShape(RoundedRectangle(cornerRadius: 13))
           } else {
             DesignSystemAsset.gray10.swiftUIColor
               .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 16))
+              .clipShape(RoundedRectangle(cornerRadius: 13))
               .overlay {
                 DesignSystemAsset.cakePin.swiftUIImage
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 40)
+                  .frame(width: 32)
                   .contentShape(Rectangle())
               }
           }
@@ -263,30 +274,8 @@ public struct SearchCakeShopOnMapView: View {
     }
     .padding(16)
     .background(Color.white.ignoresSafeArea())
-    .clipShape(RoundedRectangle(cornerRadius: 30))
-    .shadow(color: .black.opacity(0.25), radius: 20, x: 0, y: 4)
-    .gesture(DragGesture()
-      .onChanged { gesture in
-        withAnimation(.smooth) {
-          cakeShopViewDragOffset = gesture.translation
-          
-          /// 까지 아래로 당겨졌을 때 scale 조정, 최대로 작아질 수 있는 scale은 0.9
-          cakeShopViewScale = min(max(1 - gesture.translation.height / 70, 0.9), 1)
-          
-          /// 아래로 당기는 Velocity가 1200이 넘고 100보다 아래로 당겨지면 케이크샵 뷰 가림
-          print(gesture.translation.height)
-          if gesture.velocity.height > 1200 && gesture.translation.height > 100 || gesture.translation.height > 100 {
-            viewModel.selectedCakeShop = nil
-          }
-        }
-      }
-      .onEnded { gesture in
-        withAnimation(.smooth) {
-          cakeShopViewDragOffset = .zero
-          cakeShopViewScale = 1
-        }
-      }
-    )
+    .clipShape(RoundedRectangle(cornerRadius: 22))
+    .modifier(BouncyPressEffect())
     .onTapGesture {
       if let shopId = cakeShop?.id {
         let items = RouteHelper.ShopDetail.items(shopId: shopId)
