@@ -16,7 +16,7 @@ final class TabStateManager: ObservableObject {
   
   // MARK: - Properties
   
-  @Published var selectedTab: CAKKTabBar.Tab = .cakeShop
+  @Published var selectedTab: CAKKTabBar.Tab = .main
   private var cancellables = Set<AnyCancellable>()
   
   
@@ -36,7 +36,7 @@ final class TabStateManager: ObservableObject {
         
         if newTab == self.selectedTab {
           switch newTab {
-          case .cakeShop:
+          case .main:
             NotificationCenter.default.post(name: .doubleTapCakeShopTab, object: nil)
           case .search:
             NotificationCenter.default.post(name: .doubleTapSearchTab, object: nil)

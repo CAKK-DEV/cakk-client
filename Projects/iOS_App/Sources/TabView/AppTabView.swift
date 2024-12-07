@@ -27,8 +27,8 @@ struct AppTabView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       TabView(selection: $tabStateManager.selectedTab) {
-        CakeShopHomeView()
-          .tag(CAKKTabBar.Tab.cakeShop)
+        SearchCakeShopOnMapView()
+          .tag(CAKKTabBar.Tab.main)
         
         SearchView()
           .tag(CAKKTabBar.Tab.search)

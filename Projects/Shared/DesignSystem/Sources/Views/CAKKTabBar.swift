@@ -15,7 +15,7 @@ public struct CAKKTabBar: View {
   
   @Binding private var selectedTab: Tab
   public enum Tab {
-    case cakeShop
+    case main
     case search
     case liked
     case profile
@@ -42,14 +42,14 @@ public struct CAKKTabBar: View {
         Spacer()
         
         Button() {
-          selectedTab = .cakeShop
+          selectedTab = .main
           UISelectionFeedbackGenerator().selectionChanged()
         } label: {
           ZStack {
             DesignSystemAsset.cakeSlice.swiftUIImage
               .resizable()
               .size(24)
-              .foregroundStyle(selectedTab == .cakeShop
+              .foregroundStyle(selectedTab == .main
                                ? DesignSystemAsset.black.swiftUIColor
                                : DesignSystemAsset.gray40.swiftUIColor)
           }
@@ -126,7 +126,7 @@ public struct CAKKTabBar: View {
     Color.black.ignoresSafeArea()
     
     VStack {
-      CAKKTabBar(selectedTab: .constant(.cakeShop))
+      CAKKTabBar(selectedTab: .constant(.main))
       CAKKTabBar(selectedTab: .constant(.search))
       CAKKTabBar(selectedTab: .constant(.liked))
       CAKKTabBar(selectedTab: .constant(.profile))
