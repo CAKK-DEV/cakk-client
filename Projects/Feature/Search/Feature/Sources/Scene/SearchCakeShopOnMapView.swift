@@ -374,6 +374,10 @@ public struct SearchCakeShopOnMapView: View {
     .background(DesignSystemAsset.white.swiftUIColor)
     .clipShape(RoundedRectangle(cornerRadius: 16))
     .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 4)
+    .onTapGesture {
+      let items = RouteHelper.Search.items()
+      navigator?.next(paths: [RouteHelper.Search.path], items: items, isAnimated: true)
+    }
   }
   
   private func moveToMyLocationButton() -> some View {
