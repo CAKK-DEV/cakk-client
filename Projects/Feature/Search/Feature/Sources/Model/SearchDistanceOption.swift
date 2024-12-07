@@ -9,41 +9,41 @@
 import Foundation
 
 enum SearchDistanceOption: CaseIterable {
-  case fiveHundredMeter
   case oneKilometer
   case threeKilometer
+  case tenKilometer
   
   var isAdRequired: Bool {
     switch self {
-    case .fiveHundredMeter:
-      return false
     case .oneKilometer:
       return false
     case .threeKilometer:
+      return false
+    case .tenKilometer:
       return true
     }
   }
   
   var displayName: String {
     switch self {
-    case .fiveHundredMeter:
-      return "500m"
     case .oneKilometer:
       return "1km"
     case .threeKilometer:
       return "3km"
+    case .tenKilometer:
+      return "6km"
     }
   }
   
   /// 단위는 미터 단위 입니다.
   var distance: Int {
     switch self {
-    case .fiveHundredMeter:
-      return 500
     case .oneKilometer:
       return 1000
     case .threeKilometer:
       return 3000
+    case .tenKilometer:
+      return 10000
     }
   }
 }

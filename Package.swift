@@ -22,7 +22,8 @@ let packageSettings = PackageSettings(
     "KakaoSDKShare": .framework,
     "KakaoSDKUser": .framework,
     "Alamofire": .framework,
-    "LinkNavigator": .framework
+    "LinkNavigator": .framework,
+    "SwiftUIPager": .framework
   ],
   baseSettings: .settings(
     configurations: [
@@ -50,5 +51,6 @@ let package = Package(
     .package(url: "https://github.com/exyte/PopupView", from: "3.0.5"),
     .package(url: "https://github.com/Alamofire/Alamofire", from: "5.9.1"),
     .package(url: "https://github.com/forXifLess/LinkNavigator", from: "1.2.6"),
+    .package(url: "https://github.com/fermoya/SwiftUIPager.git", from: "2.1.0"),
   ]
 )

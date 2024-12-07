@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct LocatedCakeShop: Identifiable, Equatable {
+public struct LocatedCakeShop: Identifiable, Equatable, Hashable {
   public let id: Int
   public let profileImageUrl: String?
   public let name: String

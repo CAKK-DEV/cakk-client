@@ -16,6 +16,7 @@ import Kingfisher
 import DomainSearch
 
 import MapKit
+import SwiftUIPager
 
 import DIContainer
 import LinkNavigator
@@ -46,6 +47,10 @@ public struct SearchCakeShopOnMapView: View {
 
   private let analytics: AnalyticsService?
   private let navigator: LinkNavigatorType?
+  
+  @Namespace private var namespace
+  
+  @StateObject private var page: Page = .first()
   
   
   // MARK: - Initializers
@@ -99,53 +104,62 @@ public struct SearchCakeShopOnMapView: View {
           }
           .onTapGesture {
             viewModel.setSelected(cakeShop: shop)
+            
+            if let index = viewModel.locatedCakeShops.firstIndex(of: shop) {
+              page.update(.new(index: index))
+            }
           }
         }
       }
       .animation(.smooth)
       .ignoresSafeArea()
+      .simultaneousGesture(
+        DragGesture()
+          .onChanged { _ in
+            isRefreshButtonShown = true
+          }
+      )
       
       // Navigation bar
       VStack(spacing: 0) {
         navigationBar()
         Spacer()
       }
-      .padding(.vertical, 20)
-      .padding(.horizontal, 16)
+      .padding(.top, 8)
       
-      // CakeShop View
+      // Bottom CakeShop Pager
       VStack(spacing: 16) {
         Spacer()
-        cakeShopView(viewModel.selectedCakeShop)
-          .padding(.horizontal, 14)
-          .frame(maxWidth: 420)
-          .scaleEffect(viewModel.selectedCakeShop == nil ? 0.65 : 1)
-          .opacity(viewModel.selectedCakeShop == nil ? 0 : 1)
-          .scaleEffect(cakeShopViewScale)
-          .offset(x: cakeShopViewDragOffset.width,  y: viewModel.selectedCakeShop == nil ? 500 : cakeShopViewDragOffset.height)
-          .animation(.snappy, value: viewModel.selectedCakeShop == nil)
-          .animation(.snappy, value: viewModel.selectedCakeShop)
-          .offset(motionData.movingOffset)
-          .onChange(of: viewModel.selectedCakeShop == nil) { newValue in
-            if newValue {
-              motionData.stopMotionUpdates()
-            } else {
-              motionData.fetchMotionData(duration: 15)
-            }
-          }
         
-        bottomConfigureBar()
-          .padding(.horizontal, 14)
-          .padding(.bottom, 12)
-          .frame(maxWidth: 420)
+        if viewModel.locatedCakeShops.isEmpty == false {
+          Pager(
+            page: page,
+            data: viewModel.locatedCakeShops,
+            id: \.self) { cakeShop in
+              cakeShopView(cakeShop)
+            }
+            .onPageChanged { newIndex in
+              let selectedCakeShop = viewModel.locatedCakeShops[newIndex]
+              
+              viewModel.setSelected(cakeShop: selectedCakeShop)
+              viewModel.region = .init(center: .init(latitude: selectedCakeShop.latitude, longitude: selectedCakeShop.longitude),
+                                       span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            }
+            .preferredItemSize(CGSize(width: 319, height: 176))
+            .itemSpacing(16)
+            .padding(.horizontal, 20)
+            .padding(.bottom, 16)
+            .alignment(.start(20))
+            .multiplePagination()
+            .sensitivity(.high)
+            .bounces(true)
+            .frame(height: 176)
+            .animation(.snappy, value: page.index)
+            .padding(.vertical, 16)
+            .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 4)
+        }
       }
     }
-    .gesture(
-      DragGesture()
-        .onChanged { _ in
-          isRefreshButtonShown = true
-        }
-    )
     .onFirstAppear {
       viewModel.fetchLocatedCakeShops()
       
@@ -187,7 +201,7 @@ public struct SearchCakeShopOnMapView: View {
           KFImage(URL(string: profileImageUrl))
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .size(72)
+            .size(60)
             .background(DesignSystemAsset.gray10.swiftUIColor)
             .clipShape(Circle())
             .overlay {
@@ -197,7 +211,7 @@ public struct SearchCakeShopOnMapView: View {
         } else {
           Circle()
             .fill(DesignSystemAsset.gray10.swiftUIColor)
-            .size(72)
+            .size(60)
             .overlay {
               DesignSystemAsset.cakePin.swiftUIImage
                 .resizable()
@@ -206,9 +220,9 @@ public struct SearchCakeShopOnMapView: View {
             }
         }
         
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
           Text(cakeShop?.name ?? "")
-            .font(.pretendard(size: 17, weight: .bold))
+            .font(.pretendard(size: 15, weight: .bold))
             .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
             .frame(maxWidth: .infinity, alignment: .leading)
             .lineLimit(1)
@@ -220,17 +234,7 @@ public struct SearchCakeShopOnMapView: View {
             .multilineTextAlignment(.leading)
             .lineLimit(2)
         }
-        .padding(.vertical, 8)
         .padding(.leading, 12)
-        
-        Button {
-          viewModel.selectedCakeShop = nil
-        } label: {
-          Image(systemName: "xmark")
-            .font(.system(size: 15))
-            .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
-            .size(24)
-        }
       }
       
       HStack(spacing: 6) {
@@ -251,16 +255,16 @@ public struct SearchCakeShopOnMapView: View {
                   .background(DesignSystemAsset.gray10.swiftUIColor)
               }
               .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 16))
+              .clipShape(RoundedRectangle(cornerRadius: 13))
           } else {
             DesignSystemAsset.gray10.swiftUIColor
               .aspectRatio(1/1, contentMode: .fit)
-              .clipShape(RoundedRectangle(cornerRadius: 16))
+              .clipShape(RoundedRectangle(cornerRadius: 13))
               .overlay {
                 DesignSystemAsset.cakePin.swiftUIImage
                   .resizable()
                   .scaledToFit()
-                  .frame(width: 40)
+                  .frame(width: 32)
                   .contentShape(Rectangle())
               }
           }
@@ -270,30 +274,8 @@ public struct SearchCakeShopOnMapView: View {
     }
     .padding(16)
     .background(Color.white.ignoresSafeArea())
-    .clipShape(RoundedRectangle(cornerRadius: 30))
-    .shadow(color: .black.opacity(0.25), radius: 20, x: 0, y: 4)
-    .gesture(DragGesture()
-      .onChanged { gesture in
-        withAnimation(.smooth) {
-          cakeShopViewDragOffset = gesture.translation
-          
-          /// 까지 아래로 당겨졌을 때 scale 조정, 최대로 작아질 수 있는 scale은 0.9
-          cakeShopViewScale = min(max(1 - gesture.translation.height / 70, 0.9), 1)
-          
-          /// 아래로 당기는 Velocity가 1200이 넘고 100보다 아래로 당겨지면 케이크샵 뷰 가림
-          print(gesture.translation.height)
-          if gesture.velocity.height > 1200 && gesture.translation.height > 100 || gesture.translation.height > 100 {
-            viewModel.selectedCakeShop = nil
-          }
-        }
-      }
-      .onEnded { gesture in
-        withAnimation(.smooth) {
-          cakeShopViewDragOffset = .zero
-          cakeShopViewScale = 1
-        }
-      }
-    )
+    .clipShape(RoundedRectangle(cornerRadius: 22))
+    .modifier(BouncyPressEffect())
     .onTapGesture {
       if let shopId = cakeShop?.id {
         let items = RouteHelper.ShopDetail.items(shopId: shopId)
@@ -303,147 +285,139 @@ public struct SearchCakeShopOnMapView: View {
   }
   
   private func navigationBar() -> some View {
-    ZStack {
-      // Refresh Button
-      Button {
-        viewModel.fetchLocatedCakeShops()
+    VStack {
+      HStack(spacing: 8) {
+        searchBar()
+          .frame(maxWidth: .infinity)
         
-        analytics?.logEvent(name: "refresh_on_map_tap",
-                            parameters: [
-                              "distance_option": viewModel.searchDistanceOption.displayName
-                            ])
-      } label: {
-        let isLoading = viewModel.locatedCakeShopsFetchingState == .loading
-        HStack(spacing: 12) {
-          Text(isLoading ? "검색중" : "이 지역 재검색")
-            .font(.pretendard(size: 15, weight: .semiBold))
-            .foregroundStyle(isLoading ? .white.opacity(0.65) : .white)
-          
-          if isLoading {
-            ProgressView()
-              .tint(.white)
-          }
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(height: 48)
-        .background(DesignSystemAsset.black.swiftUIColor)
-        .clipShape(Capsule())
-        .overlay {
-          Capsule()
-            .stroke(DesignSystemAsset.gray70.swiftUIColor, lineWidth: 2)
-        }
-        .shadow(color: .black.opacity(0.25), radius: 20, y: 4)
+        moveToMyLocationButton()
       }
-      .modifier(BouncyPressEffect())
-      .opacity(isRefreshButtonShown ? 1.0 : 0.0)
-      .offset(y: isRefreshButtonShown ? 0 : -60)
-      .animation(.snappy, value: isRefreshButtonShown)
-      .disabled(viewModel.locatedCakeShopsFetchingState == .loading)
+      .frame(maxWidth: .infinity)
+      .padding(.horizontal, 16)
+      .zIndex(1)
       
-      // Back Button
-      HStack {
-        Button {
-          navigator?.back(isAnimated: true)
-        } label: {
-          ZStack {
-            Circle()
-              .fill(.white)
-            
-            Circle()
-              .stroke(DesignSystemAsset.gray10.swiftUIColor, lineWidth: 1.5)
-            
-            Image(systemName: "arrow.left")
-              .font(.system(size: 20, weight: .medium))
-              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-          }
-          .size(48)
-          .shadow(color: .black.opacity(0.25), radius: 20, y: 4)
-        }
-        .modifier(BouncyPressEffect())
-      }
-      .frame(maxWidth: .infinity, alignment: .leading)
+      refreshButton()
+        .padding(.top, 20)
+        .zIndex(0)
     }
-    .frame(maxWidth: .infinity)
   }
   
-  private func bottomConfigureBar() -> some View {
-    HStack {
-      if isNoResultViewShown {
-        HStack(spacing: 12) {
-          Text("🤔")
-            .font(.system(size: 24))
-          
-          Text("근처에 발견된 케이크샵이 없어요.\n범위를 넓히거나 위치를 이동하여 다시 검색해 보세요!")
-            .font(.pretendard(size: 11, weight: .medium))
-            .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-            .multilineTextAlignment(.leading)
-            .frame(maxWidth: .infinity, alignment: .leading)
-          
-          Button {
-            isNoResultViewShown = false
-            isRefreshButtonShown = true
-            viewModel.searchDistanceOption = .threeKilometer
-            UISelectionFeedbackGenerator().selectionChanged()
-          } label: {
-            Text("검색 범위 늘리기")
-              .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-              .font(.pretendard(size: 12, weight: .semiBold))
-              .padding(.horizontal, 12)
-              .frame(height: 40)
-              .background(.white)
-              .clipShape(RoundedRectangle(cornerRadius: 10))
-          }
-        }
-      } else {
-        ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
-          Button {
-            viewModel.searchDistanceOption = distanceOption
-            isRefreshButtonShown = true
-            UISelectionFeedbackGenerator().selectionChanged()
-          } label: {
-            HStack(spacing: 6) {
-              if distanceOption.isAdRequired {
-                DesignSystemAsset.ad.swiftUIImage
-                  .resizable()
-                  .size(20)
-                  .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
-              }
-              
-              Text(distanceOption.displayName)
-                .font(.pretendard(size: 12, weight: .semiBold))
-                .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
-            }
-            .padding(.horizontal, 12)
-            .frame(height: 40)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .opacity(viewModel.searchDistanceOption == distanceOption ? 1 : 0.5)
-          }
-          .modifier(BouncyPressEffect())
-        }
+  private func refreshButton() -> some View {
+    Button {
+      viewModel.fetchLocatedCakeShops()
+      
+      analytics?.logEvent(name: "refresh_on_map_tap",
+                          parameters: [
+                            "distance_option": viewModel.searchDistanceOption.displayName
+                          ])
+    } label: {
+      let isLoading = viewModel.locatedCakeShopsFetchingState == .loading
+      
+      HStack(spacing: 12) {
+        Text(isLoading ? "검색중" : "이 지역 재검색")
+          .font(.pretendard(size: 15, weight: .semiBold))
+          .foregroundStyle(isLoading ? .white.opacity(0.65) : .white)
+          .padding(.leading, 20)
         
-        Spacer()
-        
-        Button {
-          viewModel.moveToUserLocation()
-          UISelectionFeedbackGenerator().selectionChanged()
-        } label: {
+        if isLoading {
+          ProgressView()
+            .tint(.white)
+            .padding(.trailing, 20)
+        } else {
+          distanceSelector()
+            .padding(.vertical, 4)
+            .padding(.trailing, 4)
+        }
+      }
+      .frame(height: 48)
+      .background(DesignSystemAsset.black.swiftUIColor)
+      .clipShape(Capsule())
+      .overlay {
+        Capsule()
+          .stroke(DesignSystemAsset.gray70.swiftUIColor, lineWidth: 2)
+      }
+      .shadow(color: .black.opacity(0.25), radius: 20, y: 4)
+    }
+    .modifier(BouncyPressEffect())
+    .opacity(isRefreshButtonShown ? 1.0 : 0.0)
+    .offset(y: isRefreshButtonShown ? 0 : -60)
+    .animation(.snappy, value: isRefreshButtonShown)
+    .disabled(viewModel.locatedCakeShopsFetchingState == .loading)
+  }
+  
+  private func searchBar() -> some View {
+    HStack(spacing: 8) {
+      Text("매장, 지역으로 검색해 보세요")
+        .font(.pretendard(size: 17, weight: .medium))
+        .foregroundStyle(DesignSystemAsset.gray40.swiftUIColor)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 20)
+      
+      DesignSystemAsset.magnifyingGlass.swiftUIImage
+        .resizable()
+        .size(18)
+        .foregroundStyle(DesignSystemAsset.black.swiftUIColor)
+        .padding(.trailing, 18)
+    }
+    .frame(height: 48)
+    .background(DesignSystemAsset.white.swiftUIColor)
+    .clipShape(RoundedRectangle(cornerRadius: 16))
+    .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 4)
+    .onTapGesture {
+      let items = RouteHelper.Search.items()
+      navigator?.next(paths: [RouteHelper.Search.path], items: items, isAnimated: true)
+    }
+  }
+  
+  private func moveToMyLocationButton() -> some View {
+    Button {
+      viewModel.moveToUserLocation()
+    } label: {
+      RoundedRectangle(cornerRadius: 16)
+        .stroke(DesignSystemAsset.gray20.swiftUIColor, lineWidth: 1.5)
+        .overlay {
           Image(systemName: "location.fill")
-            .font(.system(size: 20))
-            .foregroundStyle(Color.black.opacity(0.5))
-            .foregroundStyle(.regularMaterial)
+            .font(.system(size: 18))
+            .foregroundStyle(DesignSystemAsset.gray70.swiftUIColor)
             .frame(width: 40, height: 40)
         }
-        .modifier(BouncyPressEffect())
+        .background(DesignSystemAsset.white.swiftUIColor)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+    .size(48)
+    .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 4)
+    .modifier(BouncyPressEffect())
+  }
+  
+  private func distanceSelector() -> some View {
+    HStack(spacing: 3) {
+      ForEach(SearchDistanceOption.allCases, id: \.self) { distanceOption in
+        let isSelectedDistance = viewModel.searchDistanceOption == distanceOption
+        
+        Button {
+          viewModel.searchDistanceOption = distanceOption
+          isRefreshButtonShown = true
+          UISelectionFeedbackGenerator().selectionChanged()
+        } label: {
+          Text(distanceOption.displayName)
+            .font(.pretendard(size: 13, weight: .semiBold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 10)
+            .background {
+              if isSelectedDistance {
+                Capsule()
+                  .fill(isSelectedDistance ? DesignSystemAsset.black.swiftUIColor : Color.clear)
+                  .matchedGeometryEffect(id: "distance_selector.background", in: namespace)
+              }
+            }
+        }
       }
     }
-    .padding(.horizontal, 20)
-    .frame(height: 64)
-    .background(.regularMaterial)
-    .clipShape(RoundedRectangle(cornerRadius: 24))
-    .animation(.snappy, value: isNoResultViewShown)
-    .modifier(Shake(animatableData: CGFloat(attempts)))
+    .padding(2)
+    .background(DesignSystemAsset.gray70.swiftUIColor)
+    .clipShape(Capsule())
+    .animation(.snappy(duration: 0.35), value: viewModel.searchDistanceOption)
   }
   
   

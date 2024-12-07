@@ -8,6 +8,7 @@ let project = Project.framework(
     Project.DomainSearch,
     Project.PreviewSupportSearch,
     External.PopupView,
-    External.LinkNavigator
+    External.LinkNavigator,
+    External.SwiftUIPager
   ]
 )
