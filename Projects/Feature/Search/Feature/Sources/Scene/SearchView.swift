@@ -81,9 +81,13 @@ public struct SearchView: View {
   private func searchBar() -> some View {
     VStack {
       HStack(spacing: 4) {
-        if isSearchResultViewShown {
+        if navigator?.currentPaths.count ?? 2 != 1 {
           Button {
-            restoreSearch()
+            if isSearchResultViewShown {
+              restoreSearch()
+            } else {
+              navigator?.back(isAnimated: true)
+            }
           } label: {
             Image(systemName: "arrow.left")
               .font(.system(size: 20))
@@ -92,7 +96,6 @@ public struct SearchView: View {
           }
           .padding(.leading, -8)
         }
-        
         
         RoundedRectangle(cornerRadius: 16)
           .fill(DesignSystemAsset.gray10.swiftUIColor)
@@ -266,25 +269,6 @@ public struct SearchView: View {
           .padding(.bottom, 100)
       }
       .padding(.top, 16)
-    }
-    .overlay {
-      VStack {
-        Spacer()
-        
-        Button {
-          navigator?.next(paths: [RouteHelper.Map.path], items: [:], isAnimated: true)
-        } label: {
-          Text("지도 보기")
-            .font(.pretendard(size: 15, weight: .semiBold))
-            .padding(.horizontal, 20)
-            .padding(.vertical, 12)
-            .foregroundStyle(.white)
-            .background(Capsule().fill(DesignSystemAsset.black.swiftUIColor))
-        }
-        .shadow(radius: 10, y: 4)
-        .padding(.bottom, 24)
-        .modifier(BouncyPressEffect())
-      }
     }
   }
   
