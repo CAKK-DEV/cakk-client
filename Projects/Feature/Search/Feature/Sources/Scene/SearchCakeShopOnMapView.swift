@@ -275,7 +275,6 @@ public struct SearchCakeShopOnMapView: View {
     .padding(16)
     .background(Color.white.ignoresSafeArea())
     .clipShape(RoundedRectangle(cornerRadius: 22))
-    .modifier(BouncyPressEffect())
     .onTapGesture {
       if let shopId = cakeShop?.id {
         let items = RouteHelper.ShopDetail.items(shopId: shopId)
