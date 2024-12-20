@@ -53,11 +53,12 @@ struct CAKKApp: App {
     
     UserSession.shared.initialize()
     
-    if hasSeenOnboarding {
+    // Onboarding 임시 제거
+//    if hasSeenOnboarding {
       initialPath = [RouteHelper.TabRoot.path]
-    } else {
-      initialPath = [RouteHelper.Onboarding.path]
-    }
+//    } else {
+//      initialPath = [RouteHelper.Onboarding.path]
+//    }
   }
   
   // MARK: - Internal
