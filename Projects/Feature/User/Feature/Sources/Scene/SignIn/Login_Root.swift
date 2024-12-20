@@ -158,7 +158,10 @@ struct Login_Root: View {
       case .loading:
         LoadingManager.shared.startLoading()
       case .loggedIn:
-        dismiss()
+        // Loading 인디케이터가 사라진 후에 확실히 dismiss 시켜주기 위해 약간 딜레이
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+          dismiss()
+        }
         
       case .newUser:
         guard let loginType = viewModel.loginType else { return }
