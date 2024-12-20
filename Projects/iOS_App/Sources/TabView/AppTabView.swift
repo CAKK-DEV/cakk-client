@@ -25,12 +25,14 @@ struct AppTabView: View {
   // MARK: - Views
   
   var body: some View {
-    ZStack(alignment: .bottom) {
+    VStack(spacing: 0) {
       TabView(selection: $tabStateManager.selectedTab) {
         SearchCakeShopOnMapView()
+          .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.main)
         
         SearchView()
+          .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.search)
         
         LikedItemsView()
@@ -38,17 +40,18 @@ struct AppTabView: View {
           .tag(CAKKTabBar.Tab.liked)
         
         ProfileView()
+          .toolbar(.hidden, for: .tabBar)
           .tag(CAKKTabBar.Tab.profile)
       }
       .ignoresSafeArea(.keyboard, edges: .bottom)
-      .toolbar(.hidden, for: .tabBar)
+      .frame(maxHeight: .infinity)
       
       CAKKTabBar(selectedTab: $tabStateManager.selectedTab)
         .ignoresSafeArea(.keyboard)
         .offset(y: keyboardObserver.isKeyboardVisible ? 200 : 0)
         .animation(.snappy, value: keyboardObserver.isKeyboardVisible)
+        .environmentObject(keyboardObserver)
     }
-    .environmentObject(keyboardObserver)
   }
 }
 
